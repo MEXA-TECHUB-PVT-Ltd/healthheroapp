@@ -3,6 +3,7 @@ import React from 'react';
 import {Button} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { AppColors } from '../Helping/AppColor';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 
 const CustomButton = ({
   onPress,
@@ -38,7 +39,7 @@ const CustomButton = ({
       style={[
         style,
         {
-          borderRadius: borderRadius ? borderRadius : 5,
+          borderRadius: borderRadius ? borderRadius : responsiveHeight(50),
           borderColor: borderColor ? borderColor : '#00000020',
           backgroundColor: buttonColor ? buttonColor : AppColors.buttonText,
           height: heightButton,
