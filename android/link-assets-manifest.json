@@ -1,0 +1,17 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "fonts/Interstate-bold.ttf",
+      "sha1": "20f2e0409a4ff9e0099fcf6a1a602050938303b5"
+    },
+    {
+      "path": "fonts/Interstate-light.ttf",
+      "sha1": "695af5ced6d79083dc60ab607b7775fe4f4ba3ba"
+    },
+    {
+      "path": "fonts/Interstate-regular.ttf",
+      "sha1": "f04ec75d55c632d2ca12fe75d8924a6ecb4923c1"
+    }
+  ]
+}
