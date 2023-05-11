@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {TextInput} from 'react-native-paper';
+import {responsiveHeight} from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Input = ({
@@ -17,7 +18,9 @@ const Input = ({
   disabled,
   fontWeight,
   numLine,
-  keyboardType,multiline
+  keyboardType,
+  multiline,
+  height,
 }) => {
   const [showIcon, setShowIcon] = useState(true);
   return (
@@ -29,24 +32,31 @@ const Input = ({
         multiline={multiline}
         placeholder={placeholder}
         value={value}
-        outlineStyle={{borderRadius: 8, borderColor: '#00000001'}}
+        outlineStyle={{
+          borderRadius: responsiveHeight(20),
+          borderColor: '#00000001',
+        }}
         mode="outlined"
         secureTextEntry={enableIcon && showIcon ? true : false}
         onChangeText={onChangeText}
         style={[
           style,
           {
-            backgroundColor: '#00000009',
+            backgroundColor: '#232441',
             marginVertical: 7,
             paddingVertical: paddingVertical ? paddingVertical : 0,
             fontWeight: fontWeight ? fontWeight : '500',
+            height: height ? height : responsiveHeight(6),
+            fontSize: 11,
+            fontFamily: 'Interstate-regular',
+            letterSpacing: 0.4,
           },
         ]}
-        placeholderTextColor={'#00000090'}
+        placeholderTextColor={'white'}
         left={
           !noIcon && (
             <TextInput.Icon
-              icon={() => <Icon name={leftIcon} size={23} color="#00000090" />}
+              icon={() => <Icon name={leftIcon} size={23} color="white" />}
             />
           )
         }
@@ -54,12 +64,14 @@ const Input = ({
           rightIcon ? (
             <TextInput.Icon
               icon={() => (
-                <Icon
-                  onPress={() => setShowIcon(!showIcon)}
-                  name={!showIcon ? offIcon : rightIcon}
-                  size={23}
-                  color="#00000090"
-                />
+                <View style={{marginTop:responsiveHeight(1.5)}}>
+                  <Icon
+                    onPress={() => setShowIcon(!showIcon)}
+                    name={!showIcon ? offIcon : rightIcon}
+                    size={23}
+                    color="white"
+                  />
+                </View>
               )}
             />
           ) : null

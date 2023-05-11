@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import React, {useCallback, useRef, useState} from 'react';
 import {
+  responsiveFontSize,
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
@@ -16,32 +17,35 @@ import SwiperFlatList from 'react-native-swiper-flatlist';
 import CssStyle from '../StyleSheet/CssStyle';
 import {useFocusEffect} from '@react-navigation/native';
 const {width, height} = Dimensions.get('screen');
-
+import LinearGradient from 'react-native-linear-gradient';
 import Icon from '../assets/icon1';
-const StartScreen = () => {
+import CustomButton from '../component/CustomButton';
+import {AppColors} from '../Helping/AppColor';
+
+const StartScreen = ({navigation}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const dataImages = [
     {
       image: require('../assets/first.png'),
-      headerText: 'Generate QR Code',
+      headerText: 'Lets Explore The Fitness',
       description:
-        'Some versions of Microsoft Word also generate the text using the function. Jus',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elitr, sed diam nonumy',
       color: 'blue',
     },
-    // {
-    //   image: require('../../Assets/Second.png'),
-    //   headerText: 'Manage Long Links',
-    //   description:
-    //     'Some versions of Microsoft Word also generate the text using the function. Jus',
-    //   color: 'blue',
-    // },
-    // {
-    //   image: require('../../Assets/Third.png'),
-    //   headerText: 'Modify Links/QR Codes',
-    //   description:
-    //     'Some versions of Microsoft Word also generate the text using the function. Jus',
-    //   color: 'blue',
-    // },
+    {
+      image: require('../assets/second.png'),
+      headerText: 'Lets Explore The Fitness',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elitr, sed diam nonumy',
+      color: 'blue',
+    },
+    {
+      image: require('../assets/third.png'),
+      headerText: 'Lets Explore The Fitness',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elitr, sed diam nonumy',
+      color: 'blue',
+    },
   ];
   useFocusEffect(
     useCallback(() => {
@@ -61,17 +65,15 @@ const StartScreen = () => {
   const backgroundColor = isLight => (isLight ? 'black' : 'lightblue');
   const color = isLight => backgroundColor(!isLight);
   return (
-    <View style={[CssStyle.mainContainer]}>
+    <View style={[CssStyle.mainContainer, {backgroundColor: '#0B183C'}]}>
       <SwiperFlatList
         ref={flatNode}
         index={activeIndex}
         showPagination
         data={dataImages}
+        scrollEnabled={false}
         renderItem={({item, index}) => (
-          <View
-            key={index}
-            style={{
-            }}>
+          <View key={index} style={{flex: 1}}>
             <Image
               resizeMode="contain"
               source={item.image}
@@ -80,97 +82,84 @@ const StartScreen = () => {
                 height: responsiveHeight(100),
               }}
             />
-            <View style={{}}>
+            <LinearGradient
+              colors={['#0B183C00', '#0B183C']}
+              start={{x: 1, y: 0}}
+              end={{x: 1, y: 0.68}}
+              style={{
+                // position: 'absolute',
+                bottom: responsiveHeight(61.5),
+                paddingHorizontal: responsiveWidth(5),
+                paddingBottom: responsiveHeight(20),
+                paddingTop: responsiveHeight(26),
+              }}>
               <Text
                 style={{
-                  color: '#000',
-                  fontWeight: '600',
-                  fontSize: 17,
+                  color: 'white',
+                  fontSize: responsiveFontSize(4),
                   marginBottom: 12,
+                  fontFamily: 'Interstate-bold',
+                  width: responsiveWidth(60),
+                  lineHeight: responsiveHeight(5.5),
                 }}>
                 {item.headerText}
               </Text>
-              <Text style={{width: width - 60, color: 'black'}}>
+              <Text
+                style={{
+                  width: width - 60,
+                  color: 'white',
+                  fontFamily: 'Interstate-regular',
+                  lineHeight: responsiveHeight(3),
+                  fontSize: 16,
+                }}>
                 {item.description}
               </Text>
-            </View>
+            </LinearGradient>
           </View>
         )}
-        paginationStyle={{alignSelf: 'flex-start'}}
-        paginationActiveColor="#022D94"
+        paginationStyle={{}}
+        paginationActiveColor="white"
         paginationStyleItem={{
-          width: 22,
-          height: 8,
-          borderRadius: 5,
-          marginHorizontal: responsiveWidth(-4),
-          marginLeft: responsiveWidth(5),
-          // margin: 0,
-          // alignItems: 'flex-start',
+          width: responsiveWidth(23),
+          height: responsiveHeight(0.4),
+          borderRadius: responsiveHeight(30),
+          top: responsiveHeight(-7),
         }}
-        paginationDefaultColor="#00000050"
-        paginationStyleItemActive={{width: 22}}
+        paginationDefaultColor={AppColors.buttonText}
       />
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          paddingRight: 22,
-        }}>
-        <TouchableOpacity
-          onPress={() => {
-            {
-              if (activeIndex !== 0) {
+      <View style={{backgroundColor: '#0B183C'}}>
+        <View
+          style={{
+            bottom: responsiveHeight(2),
+            left: responsiveWidth(10),
+          }}>
+          <CustomButton
+            onPress={() => {
+              if (activeIndex !== dataImages.length - 1) {
+                setActiveIndex(activeIndex + 1);
                 flatNode.current.scrollToIndex({
                   animated: true,
-                  index: activeIndex - 1,
+                  index: activeIndex + 1,
                 });
-                setActiveIndex(activeIndex - 1);
               } else {
+                navigation.navigate('BottomTab');
               }
+            }}
+            activeOpacity={1}
+            style={{width: responsiveWidth(80)}}
+            buttonText={
+              activeIndex !== dataImages.length - 1 ? 'Next' : 'Continue'
             }
-          }}
-          activeOpacity={1}
-          style={{
-            borderRadius: 8,
-            paddingVertical: 13,
-            marginLeft: 10,
-            backgroundColor: activeIndex == 0 ? '#00000020' : '#022D94',
-            paddingHorizontal: 19,
-          }}>
-          <Icon
-            name="chevron-back-outline"
-            size={22}
-            color={activeIndex == 0 ? 'black' : 'white'}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            if (activeIndex !== dataImages.length - 1) {
-              setActiveIndex(activeIndex + 1);
-              flatNode.current.scrollToIndex({
-                animated: true,
-                index: activeIndex + 1,
-              });
-            } else {
-              navigation.navigate('Login');
-            }
-          }}
-          activeOpacity={1}
-          style={{
-            borderRadius: 8,
-            // paddingHorizontal: 7,
-            paddingVertical: 13,
-            marginLeft: 10,
-            backgroundColor: '#022D94',
-            paddingHorizontal: 19,
-          }}>
-          <Icon name="chevron-forward-outline" size={22} color="white" />
-        </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 };
+// LinearGradient
+//       colors={['#0B183C', 'red']}
+//       start={{x: 3, y: 3}}
+//       end={{x: 1, y: 1}}
 
 export default StartScreen;
 
