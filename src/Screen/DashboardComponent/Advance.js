@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CssStyle from '../../StyleSheet/CssStyle';
 import {AppColors} from '../../Helping/AppColor';
 import {
@@ -15,6 +15,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Input from '../../component/Input';
+import { GetAdvance } from '../../services/WorkoutPlan';
 
 const Advance = ({navigation}) => {
   const dataFLex = [
@@ -31,13 +32,32 @@ const Advance = ({navigation}) => {
     {item: 2},
     {item: 3},
   ];
+  const [advance,setAdvance]=useState([])
+  const BeginnerApi = async () => {
+    try {
+      const result = await GetAdvance();
+      // console.log(result);
+      if (result.status == true) {
+        setAdvance(result.result);
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    BeginnerApi();
+  }, []);
   const [searchAdd, setSearchAdd] = useState('');
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
       <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
         <View style={[CssStyle.flexJustify, {marginTop: responsiveHeight(3)}]}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={{marginLeft: responsiveWidth(-2)}}
+            onPress={() => navigation.goBack()}>
             <Icon name="chevron-back-outline" size={23} color={'#FF5100'} />
           </TouchableOpacity>
           {searchAdd == 'Search this' ? (
@@ -61,7 +81,7 @@ const Advance = ({navigation}) => {
                 Advance
               </Text>
               <TouchableOpacity onPress={() => setSearchAdd('Search this')}>
-                <Icon name="search" size={23} color={'#FF5100'} />
+                <Icon name="search" size={23} color={'white'} />
               </TouchableOpacity>
             </>
           )}
@@ -69,14 +89,15 @@ const Advance = ({navigation}) => {
 
         <View style={{marginTop: responsiveHeight(4)}}>
           <FlatList
-            data={dataFLex}
+            data={advance}
             numColumns={2}
             showsVerticalScrollIndicator={false}
             renderItem={({item, inde}) => (
               <View
                 style={{
-                  width: responsiveWidth(50),
+                  // width: responsiveWidth(50),
                   marginBottom: responsiveHeight(2),
+                  marginRight: responsiveWidth(7),
                 }}>
                 <Image
                   borderRadius={responsiveWidth(2)}
@@ -93,7 +114,8 @@ const Advance = ({navigation}) => {
                     fontSize: 13,
                     fontFamily: 'Interstate-regular',
                     alignSelf: 'center',
-                    marginVertical: responsiveHeight(0.3),
+                    marginVertical: responsiveHeight(0.4),
+                    paddingTop: responsiveHeight(1),
                   }}>
                   Yoga exercise
                 </Text>

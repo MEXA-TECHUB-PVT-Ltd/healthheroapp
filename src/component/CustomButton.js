@@ -2,8 +2,8 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {Button} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { AppColors } from '../Helping/AppColor';
-import { responsiveHeight } from 'react-native-responsive-dimensions';
+import {AppColors} from '../Helping/AppColor';
+import {responsiveHeight} from 'react-native-responsive-dimensions';
 
 const CustomButton = ({
   onPress,
@@ -22,9 +22,11 @@ const CustomButton = ({
   borderColor,
   imageIcon,
   heightButton,
+  loading,
 }) => {
   return (
     <Button
+      loading={loading}
       icon={() =>
         imageIcon ? (
           imageIcon

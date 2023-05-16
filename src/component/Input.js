@@ -33,6 +33,7 @@ const Input = ({
         numberOfLines={numLine}
         disabled={disabled}
         multiline={multiline}
+        cursorColor='white'
         placeholder={placeholder}
         value={value}
         outlineStyle={{

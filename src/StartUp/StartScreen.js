@@ -126,6 +126,9 @@ const StartScreen = ({navigation}) => {
           top: responsiveHeight(-7),
         }}
         paginationDefaultColor={'white'}
+        paginationStyleItemInactive={{
+          // backgroundColor: flatNode.current == 0 ? 'yellow' : 'green',
+        }}
       />
       <View style={{backgroundColor: '#0B183C'}}>
         <View
