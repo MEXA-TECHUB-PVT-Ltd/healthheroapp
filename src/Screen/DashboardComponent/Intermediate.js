@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import CssStyle from '../../StyleSheet/CssStyle';
 import {AppColors} from '../../Helping/AppColor';
 import {
@@ -31,6 +31,7 @@ const Intermediate = ({navigation}) => {
     {item: 2},
     {item: 3},
   ];
+  const [searchAdd, setSearchAdd] = useState('');
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -39,18 +40,30 @@ const Intermediate = ({navigation}) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon name="chevron-back-outline" size={23} color={'#FF5100'} />
           </TouchableOpacity>
-          <Text
-            style={{
-              fontFamily: 'Interstate-bold',
-              color: 'white',
-              fontSize: 16,
-              // marginVertical: responsiveHeight(2),
-            }}>
-            Intermediate
-          </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-            <Icon name="search" size={23} color={'#FF5100'} />
-          </TouchableOpacity>
+          {searchAdd == 'Search this' ? (
+            <Input
+              noIcon={true}
+              style={{width: responsiveWidth(80)}}
+              // height={responsiveHeight(5)}
+              placeholder={'SEARCH ...'}
+              rightIcon="search"
+              onChangeText={e => setSearchAdd('')}
+            />
+          ) : (
+            <>
+              <Text
+                style={{
+                  fontFamily: 'Interstate-bold',
+                  color: 'white',
+                  fontSize: 16,
+                }}>
+                Intermediate
+              </Text>
+              <TouchableOpacity onPress={() => setSearchAdd('Search this')}>
+                <Icon name="search" size={23} color={'#FF5100'} />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
 
         <View style={{marginTop: responsiveHeight(4)}}>
@@ -78,8 +91,8 @@ const Intermediate = ({navigation}) => {
                     color: 'white',
                     fontSize: 13,
                     fontFamily: 'Interstate-regular',
-                    alignSelf: 'center',
-                    marginVertical: responsiveHeight(0.3),
+                    // alignSelf: 'center',
+                    marginVertical: responsiveHeight(0.6),
                   }}>
                   Yoga exercise
                 </Text>
@@ -88,7 +101,8 @@ const Intermediate = ({navigation}) => {
                     color: 'white',
                     fontSize: 12,
                     fontFamily: 'Interstate-regular',
-                    alignSelf: 'center',
+                    opacity: 0.5,
+                    // alignSelf: 'center',
                   }}>
                   21 min | 400 k
                 </Text>

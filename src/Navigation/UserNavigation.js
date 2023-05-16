@@ -11,6 +11,11 @@ import Advance from '../Screen/DashboardComponent/Advance';
 import Intermediate from '../Screen/DashboardComponent/Intermediate';
 import WorkoutPlan from '../Screen/DashboardComponent/WorkoutPlan';
 import Exercise from '../Screen/DashboardComponent/Exercise';
+import Login from '../Auth/Login';
+import SignUp from '../Auth/SignUp';
+import ForgotPassword from '../Auth/ForgotPassword';
+import Verification from '../Auth/Verification';
+import ResetPassword from '../Auth/ResetPassword';
 
 const UserNavigation = () => {
   const Stack = createStackNavigator();
@@ -26,6 +31,11 @@ const UserNavigation = () => {
       <Stack.Screen name="Intermediate" component={Intermediate} />
       <Stack.Screen name="WorkoutPlan" component={WorkoutPlan} />
       <Stack.Screen name="Exercise" component={Exercise} />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="SignUp" component={SignUp} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen name="Verification" component={Verification} />
+      <Stack.Screen name="ResetPassword" component={ResetPassword} />
       <Stack.Screen name="BottomTab" component={BottomTab} />
     </Stack.Navigator>
   );

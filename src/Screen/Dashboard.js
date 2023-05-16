@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import CssStyle from '../StyleSheet/CssStyle';
 import {AppColors} from '../Helping/AppColor';
 import {
@@ -32,6 +32,7 @@ const Dashboard = ({navigation}) => {
           backgroundColor: AppColors.blueColor,
         },
       ]}>
+      {/* {console.log(new Date().toDateString())} */}
       <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
         <View style={[CssStyle.flexJustify, {marginTop: responsiveHeight(4)}]}>
           <View>
@@ -50,7 +51,7 @@ const Dashboard = ({navigation}) => {
                 fontSize: 12,
                 marginVertical: responsiveHeight(2),
               }}>
-              Today, Oct 14, 2022
+              Today, {new Date().toDateString().slice(4, 15).replace(' ', ', ')}
             </Text>
             <Text
               style={{
@@ -71,6 +72,7 @@ const Dashboard = ({navigation}) => {
           </Text>
         </View>
         <Input
+          onPressRightIcon={() => navigation.navigate('Search')}
           noIcon={true}
           height={responsiveHeight(5)}
           placeholder={'SEARCH WORKOUT'}
@@ -161,15 +163,14 @@ const Dashboard = ({navigation}) => {
           </View>
           <View style={{position: 'relative'}}>
             <Image
-              resizeMode="contain"
+              resizeMode="cover"
               source={require('../assets/Image7.png')}
               style={{
-                width: responsiveHeight(33.4),
-                height: responsiveHeight(43.4),
-                marginVertical: responsiveWidth(-2),
+                width: responsiveHeight(30.4),
+                height: responsiveHeight(40.4),
                 position: 'absolute',
-                bottom: responsiveHeight(-19.7),
-                left: responsiveWidth(-10),
+                bottom: responsiveHeight(-19.78),
+                left: responsiveWidth(-7),
               }}
             />
           </View>
@@ -184,7 +185,7 @@ const Dashboard = ({navigation}) => {
             }}>
             Beginner
           </Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => navigation.navigate('Beginner')}>
             <Text
               style={{
                 color: AppColors.buttonText,
@@ -215,6 +216,7 @@ const Dashboard = ({navigation}) => {
                   color: 'white',
                   fontSize: 13,
                   fontFamily: 'Interstate-regular',
+                  marginTop: responsiveWidth(1),
                 }}>
                 Yoga exercise
               </Text>
@@ -239,7 +241,7 @@ const Dashboard = ({navigation}) => {
             }}>
             Intermediate
           </Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => navigation.navigate('Intermediate')}>
             <Text
               style={{
                 color: AppColors.buttonText,
@@ -270,6 +272,7 @@ const Dashboard = ({navigation}) => {
                   color: 'white',
                   fontSize: 13,
                   fontFamily: 'Interstate-regular',
+                  marginTop: responsiveHeight(1),
                 }}>
                 Yoga exercise
               </Text>
@@ -294,7 +297,7 @@ const Dashboard = ({navigation}) => {
             }}>
             Advance
           </Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => navigation.navigate('Advance')}>
             <Text
               style={{
                 color: AppColors.buttonText,
@@ -325,6 +328,7 @@ const Dashboard = ({navigation}) => {
                   color: 'white',
                   fontSize: 13,
                   fontFamily: 'Interstate-regular',
+                  marginTop: responsiveHeight(1),
                 }}>
                 Yoga exercise
               </Text>

@@ -71,7 +71,7 @@ const StartScreen = ({navigation}) => {
         index={activeIndex}
         showPagination
         data={dataImages}
-        scrollEnabled={false}
+        // scrollEnabled={false}
         renderItem={({item, index}) => (
           <View key={index} style={{flex: 1}}>
             <Image
@@ -118,14 +118,14 @@ const StartScreen = ({navigation}) => {
           </View>
         )}
         paginationStyle={{}}
-        paginationActiveColor="white"
+        paginationActiveColor={AppColors.buttonText}
         paginationStyleItem={{
           width: responsiveWidth(23),
           height: responsiveHeight(0.4),
           borderRadius: responsiveHeight(30),
           top: responsiveHeight(-7),
         }}
-        paginationDefaultColor={AppColors.buttonText}
+        paginationDefaultColor={'white'}
       />
       <View style={{backgroundColor: '#0B183C'}}>
         <View
@@ -142,7 +142,7 @@ const StartScreen = ({navigation}) => {
                   index: activeIndex + 1,
                 });
               } else {
-                navigation.navigate('BottomTab');
+                navigation.navigate('Login');
               }
             }}
             activeOpacity={1}

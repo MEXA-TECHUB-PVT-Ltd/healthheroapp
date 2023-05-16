@@ -77,7 +77,7 @@ const Exercise = ({navigation}) => {
                   <Text
                     style={{
                       color: 'white',
-                      fontSize: 17,
+                      fontSize: 15,
                       fontFamily: 'Interstate-regular',
                     }}>
                     Yoga Exercise
@@ -85,10 +85,10 @@ const Exercise = ({navigation}) => {
                   <Text
                     style={{
                       color: 'white',
-                      fontSize: 13,
+                      fontSize: 12,
                       fontFamily: 'Interstate-regular',
                       marginVertical: responsiveHeight(1),
-                      opacity: 0.7,
+                      opacity: 0.5,
                     }}>
                     Lorem ipsum dolor sit emet , consectetur amet elitr dolor
                     sit emet , consectetur amet elitr dolor sit emet ,
@@ -110,6 +110,7 @@ const Exercise = ({navigation}) => {
                           color: 'white',
                           fontFamily: 'Interstate-regular',
                           fontSize: 12,
+                          opacity: 0.5,
                           marginLeft: responsiveWidth(2),
                         }}>
                         400 kcal
@@ -126,6 +127,7 @@ const Exercise = ({navigation}) => {
                           color: 'white',
                           fontFamily: 'Interstate-regular',
                           fontSize: 12,
+                          opacity: 0.5,
                           marginLeft: responsiveWidth(2),
                         }}>
                         45 min
