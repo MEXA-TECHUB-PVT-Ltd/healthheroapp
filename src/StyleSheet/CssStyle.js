@@ -1,6 +1,9 @@
 import {StyleSheet, Platform, Dimensions} from 'react-native';
-import {responsiveHeight, responsiveWidth} from 'react-native-responsive-dimensions';
-import { AppColors } from '../Helping/AppColor';
+import {
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
+import {AppColors} from '../Helping/AppColor';
 const {width, height} = Dimensions.get('screen');
 export default CssStyle = StyleSheet.create({
   flexCenter: {
@@ -41,7 +44,8 @@ export default CssStyle = StyleSheet.create({
     height: Platform.OS == 'ios' ? height / 3 - 24 : height / 3 - 10,
     backgroundColor: 'white',
     borderRadius: 20,
-    alignItems: 'center',paddingHorizontal:responsiveWidth(5)
+    alignItems: 'center',
+    paddingHorizontal: responsiveWidth(5),
   },
   mainContainerModelCopied: {
     backgroundColor: '#00000040',
@@ -49,7 +53,12 @@ export default CssStyle = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  dataReset: {paddingVertical: 44, color: 'black', letterSpacing: 0.7,fontSize:13.5},
+  dataReset: {
+    paddingVertical: 44,
+    color: 'black',
+    letterSpacing: 0.7,
+    fontSize: 13.5,
+  },
   headerText: {
     paddingTop: 30,
     color: AppColors.buttonText,
@@ -62,5 +71,18 @@ export default CssStyle = StyleSheet.create({
     fontSize: 16,
     letterSpacing: 0.8,
     marginVertical: responsiveHeight(3),
+  },
+  signInText: {
+    color: 'white',
+    fontFamily: 'Interstate-bold',
+    fontSize: 35,
+    width: responsiveWidth(60),
+    lineHeight: responsiveHeight(5),
+  },
+  signInInfo: {
+    color: 'white',
+    letterSpacing: 0.2,
+    width: responsiveWidth(60),
+    marginVertical: responsiveHeight(1.8),
   },
 });

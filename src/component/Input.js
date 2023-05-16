@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {TextInput} from 'react-native-paper';
-import {responsiveHeight} from 'react-native-responsive-dimensions';
+import {responsiveHeight, responsiveWidth} from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Input = ({
@@ -21,6 +21,9 @@ const Input = ({
   keyboardType,
   multiline,
   height,
+  onPressRightIcon,
+  bgColor,
+  fontSize,
 }) => {
   const [showIcon, setShowIcon] = useState(true);
   return (
@@ -42,16 +45,17 @@ const Input = ({
         style={[
           style,
           {
-            backgroundColor: '#232441',
+            backgroundColor: bgColor ? bgColor : '#232441',
             marginVertical: 7,
             paddingVertical: paddingVertical ? paddingVertical : 0,
             fontWeight: fontWeight ? fontWeight : '500',
             height: height ? height : responsiveHeight(6),
-            fontSize: 11,
+            fontSize: fontSize ? fontSize : 11,
             fontFamily: 'Interstate-regular',
-            letterSpacing: 0.4,
+            letterSpacing: 0.4,paddingLeft:responsiveWidth(1.4)
           },
         ]}
+        textColor="white"
         placeholderTextColor={'white'}
         left={
           !noIcon && (
@@ -64,13 +68,19 @@ const Input = ({
           rightIcon ? (
             <TextInput.Icon
               icon={() => (
-                <View style={{marginTop:responsiveHeight(1.5)}}>
-                  <Icon
-                    onPress={() => setShowIcon(!showIcon)}
-                    name={!showIcon ? offIcon : rightIcon}
-                    size={23}
-                    color="white"
-                  />
+                <View style={{marginTop: responsiveHeight(1.5)}}>
+                  <TouchableOpacity
+                    onPress={
+                      onPressRightIcon
+                        ? onPressRightIcon
+                        : () => setShowIcon(!showIcon)
+                    }>
+                    <Icon
+                      name={!showIcon ? offIcon : rightIcon}
+                      size={23}
+                      color="white"
+                    />
+                  </TouchableOpacity>
                 </View>
               )}
             />

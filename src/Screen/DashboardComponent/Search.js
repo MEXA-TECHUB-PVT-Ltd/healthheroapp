@@ -42,7 +42,7 @@ const Search = ({navigation}) => {
             rightIcon="search"
           />
         </View>
-        <View style={{marginTop: responsiveHeight(3)}}>
+        <View style={{marginTop: responsiveHeight(2)}}>
           <Text
             style={{
               fontFamily: 'Interstate-bold',
@@ -70,6 +70,7 @@ const Search = ({navigation}) => {
                     color: 'white',
                     fontSize: 12,
                     alignSelf: 'center',
+                    opacity: 0.6,
                   }}>
                   {item.text}
                 </Text>
@@ -106,6 +107,7 @@ const Search = ({navigation}) => {
                     color: 'white',
                     fontSize: 12,
                     alignSelf: 'center',
+                    opacity: 0.6,
                   }}>
                   {item.text}
                 </Text>

@@ -46,7 +46,7 @@ const Beginner = ({navigation}) => {
           style={{
             fontFamily: 'Interstate-bold',
             color: 'white',
-            fontSize: 37,
+            fontSize: 35,
             marginVertical: responsiveHeight(2),
           }}>
           Beginner
@@ -77,7 +77,7 @@ const Beginner = ({navigation}) => {
                   <Text
                     style={{
                       color: 'white',
-                      fontSize: 17,
+                      fontSize: 15,
                       fontFamily: 'Interstate-regular',
                     }}>
                     Yoga Exercise
@@ -85,10 +85,10 @@ const Beginner = ({navigation}) => {
                   <Text
                     style={{
                       color: 'white',
-                      fontSize: 13,
+                      fontSize: 12,
                       fontFamily: 'Interstate-regular',
-                      marginVertical: responsiveHeight(1),
-                      opacity: 0.7,
+                      marginVertical: responsiveHeight(0.7),
+                      opacity: 0.5,
                     }}>
                     Lorem ipsum dolor sit emet , consectetur amet elitr dolor
                     sit emet , consectetur amet elitr dolor sit emet ,
@@ -102,7 +102,7 @@ const Beginner = ({navigation}) => {
                     <View
                       style={[
                         CssStyle.flexData,
-                        {marginVertical: responsiveHeight(1)},
+                        {marginVertical: responsiveHeight(0.6)},
                       ]}>
                       <Logo width={16} height={16} />
                       <Text
@@ -111,6 +111,7 @@ const Beginner = ({navigation}) => {
                           fontFamily: 'Interstate-regular',
                           fontSize: 12,
                           marginLeft: responsiveWidth(2),
+                          opacity: 0.5,
                         }}>
                         400 kcal
                       </Text>
@@ -127,6 +128,7 @@ const Beginner = ({navigation}) => {
                           fontFamily: 'Interstate-regular',
                           fontSize: 12,
                           marginLeft: responsiveWidth(2),
+                          opacity: 0.5,
                         }}>
                         45 min
                       </Text>

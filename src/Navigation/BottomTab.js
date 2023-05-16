@@ -15,8 +15,9 @@ const BottomTab = () => {
       initialRouteName="Dashboard"
       screenOptions={{
         headerShown: false,
-        tabBarActiveBackgroundColor: '#0B183C90',
+        tabBarActiveBackgroundColor: '#0B183C',
         tabBarInactiveBackgroundColor: '#0B183C',
+        tabBarHideOnKeyboard: true,
       }}>
       <Bottom.Screen
         options={{
@@ -52,8 +53,8 @@ const BottomTab = () => {
         }}
         name="Dashboard1"
         component={() => (
-          <View>
-            <Text>Fields</Text>
+          <View style={{flex: 1, backgroundColor: 'red'}}>
+            <Text>asdfsd</Text>
           </View>
         )}
       />
