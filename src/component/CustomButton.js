@@ -3,7 +3,10 @@ import React from 'react';
 import {Button} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {AppColors} from '../Helping/AppColor';
-import {responsiveHeight} from 'react-native-responsive-dimensions';
+import {
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 
 const CustomButton = ({
   onPress,
@@ -23,6 +26,7 @@ const CustomButton = ({
   imageIcon,
   heightButton,
   loading,
+  marginLeft,
 }) => {
   return (
     <Button
@@ -55,7 +59,8 @@ const CustomButton = ({
           color: colorText ? colorText : 'white',
           fontWeight: '100',
           paddingVertical: paddingVertical ? paddingVertical : 0,
-          textTransform: 'capitalize',
+          marginLeft: marginLeft,
+          // textTransform: 'capitalize',
         },
       ]}
       onPress={onPress}>

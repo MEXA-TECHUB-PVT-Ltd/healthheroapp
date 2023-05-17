@@ -7,7 +7,7 @@ import SignUp from '../Auth/SignUp';
 import ForgotPassword from '../Auth/ForgotPassword';
 import Verification from '../Auth/Verification';
 import ResetPassword from '../Auth/ResetPassword';
-import { BottomTab } from './BottomTab';
+import { BottomTab, UserNavigation } from './BottomTab';
 
 const AuthNavigation = () => {
   const AuthStack = createStackNavigator();
@@ -21,7 +21,7 @@ const AuthNavigation = () => {
       <AuthStack.Screen name="ForgotPassword" component={ForgotPassword} />
       <AuthStack.Screen name="Verification" component={Verification} />
       <AuthStack.Screen name="ResetPassword" component={ResetPassword} />
-      <AuthStack.Screen name="BottomTab" component={BottomTab} />
+      <AuthStack.Screen name="UserNavigation" component={UserNavigation} />
     </AuthStack.Navigator>
   );
 };

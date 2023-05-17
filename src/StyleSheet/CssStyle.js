@@ -78,11 +78,13 @@ export default CssStyle = StyleSheet.create({
     fontSize: 34,
     width: responsiveWidth(67),
     lineHeight: responsiveHeight(5),
+    marginLeft: responsiveWidth(2),
   },
   signInInfo: {
     color: 'white',
     letterSpacing: 0.2,
     width: responsiveWidth(60),
     marginVertical: responsiveHeight(1.8),
+    marginLeft: responsiveWidth(2.8),
   },
 });

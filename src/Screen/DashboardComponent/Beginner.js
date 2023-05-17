@@ -60,6 +60,7 @@ const Beginner = ({navigation}) => {
             height={responsiveHeight(5)}
             placeholder={'SEARCH ...'}
             rightIcon="search"
+            offIcon={'search'}
           />
         </View>
         <Text

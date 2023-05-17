@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -25,10 +32,10 @@ const ForgotPassword = ({navigation}) => {
       if (result.success == true) {
         setLoading(false);
         setEmail('');
-        navigation.navigate('Verification',{item:result.data.email});
+        navigation.navigate('Verification', {item: result.data.email});
       } else {
         setLoading(false);
-        console.error(result.message);
+        setData('Enter valid email address');
       }
     } catch (error) {
       console.log(error);
@@ -41,17 +48,18 @@ const ForgotPassword = ({navigation}) => {
     setTimeout(() => {
       setData('');
     }, 2500);
-  }, []);
+  }, [data]);
 
   return (
     <LinearGradient
-      colors={['#0B183FBA', '#0A1637']}
-      start={{x: 0, y: -1}}
-      end={{x: 0, y: 0.3}}
+      colors={['#0F1F5500', '#0B183FBA', '#0A1637']}
+      start={{x: 0, y: -0.3}}
+      end={{x: 1, y: 0.9}}
       style={{
         paddingHorizontal: responsiveWidth(5),
         flex: 1,
         paddingTop: responsiveHeight(3),
+        backgroundColor: '#0A1F58',
       }}>
       <TouchableOpacity
         style={{marginLeft: responsiveWidth(-2)}}
@@ -73,37 +81,38 @@ const ForgotPassword = ({navigation}) => {
           }}
         />
       </View>
-
-      <Text style={CssStyle.signInText}>Forget Password</Text>
-      <Text style={CssStyle.signInInfo}>
-        train and live the new experience of exercising at home
-      </Text>
-      <Input
-        bgColor={'#ffffff40'}
-        placeholder={'Email'}
-        noIcon={true}
-        value={email}
-        onChangeText={e => setEmail(e)}
-        fontSize={16}
-        style={{marginTop: responsiveHeight(2)}}
-      />
-      {data && (
-        <Text style={{color: 'red', marginLeft: responsiveWidth(3)}}>
-          Enter the email address
+      <KeyboardAvoidingView behavior="position">
+        <Text style={CssStyle.signInText}>Forget Password</Text>
+        <Text style={CssStyle.signInInfo}>
+          train and live the new experience of exercising at home
         </Text>
-      )}
-      <View
-        style={{
-          paddingHorizontal: responsiveWidth(5),
-          marginTop: responsiveHeight(3),
-        }}>
-        <CustomButton
-          loading={loading}
-          buttonText={'Send Code'}
-          onPress={() => (email ? Forget() : setData('email'))}
-          style={{}}
+        <Input
+          bgColor={'#ffffff40'}
+          placeholder={'Email'}
+          noIcon={true}
+          value={email}
+          onChangeText={e => setEmail(e)}
+          fontSize={16}
+          style={{marginTop: responsiveHeight(2)}}
         />
-      </View>
+        {data && (
+          <Text style={{color: 'red', marginLeft: responsiveWidth(3)}}>
+            {data ? data : ' Enter the email address'}
+          </Text>
+        )}
+        <View
+          style={{
+            paddingHorizontal: responsiveWidth(5),
+            marginTop: responsiveHeight(3),
+          }}>
+          <CustomButton
+            loading={loading}
+            buttonText={'Send Code'}
+            onPress={() => (email ? Forget() : setData('email'))}
+            style={{}}
+          />
+        </View>
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 };
