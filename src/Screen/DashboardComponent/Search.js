@@ -20,6 +20,7 @@ import {
   GetAdvance,
   GetBeginner,
   GetIntermediate,
+  GetSearchData,
 } from '../../services/WorkoutPlan';
 import Logo from '../../assets/Icon3';
 import {HelpingComponent} from '../../Helping/HelpingComponent';
@@ -111,50 +112,94 @@ const Search = ({navigation}) => {
       )
     : dataSearch;
   const [dataArray, setDataArray] = useState([]);
-  const [selectItem, setSelectItem] = useState(false);
-  // const [beginner, setBeginner] = useState([]);
-  // const BeginnerApi = async () => {
-  //   try {
-  //     const result = await GetBeginner();
-  //     // console.log(result);
-  //     if (result.status == true) {
-  //       setBeginner(result.result);
-  //     } else {
-  //       console.error(result.message);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   BeginnerApi();
-  // }, []);
+  const [getSearch, setGetSearch] = useState([]);
+  const GetSearchApi = async () => {
+    try {
+      const result = await GetSearchData(search);
+      // console.log(result);
+      if (result.status == true) {
+        setGetSearch(result.result);
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GetSearchApi();
+  }, [search]);
+  console.log(getSearch);
   return (
     <View style={[CssStyle.mainContainer, {backgroundColor: '#0B183C'}]}>
       <StatusBar hidden={true} />
       <View style={{paddingHorizontal: responsiveWidth(5)}}>
-        <View style={[CssStyle.flexJustify, {marginTop: responsiveHeight(3)}]}>
+        <View
+          style={[
+            {
+              marginTop: responsiveHeight(3),
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            },
+          ]}>
           <TouchableOpacity
+            style={{marginTop: responsiveHeight(2.8)}}
             onPress={() => {
               status ? (setStatus(''), setSearch('')) : navigation.goBack();
             }}>
             <Icon name="chevron-back-outline" size={23} color={'#FF5100'} />
           </TouchableOpacity>
-          <Input
-            noIcon={true}
-            style={{width: responsiveWidth(80)}}
-            height={responsiveHeight(5)}
-            fontSize={14}
-            placeholder={'SEARCH ...'}
-            rightIcon="search"
-            offIcon={'search'}
-            onPressRightIcon={() => {
-              dataArray.push({searchItem: search}), setSearch('');
-              setDataArray([...dataArray]);
-            }}
-            value={search}
-            onChangeText={e => setSearch(e)}
-          />
+          <View>
+            <Input
+              noIcon={true}
+              style={{width: responsiveWidth(80)}}
+              height={responsiveHeight(5)}
+              fontSize={14}
+              placeholder={'SEARCH ...'}
+              rightIcon="search"
+              offIcon={'search'}
+              onPressRightIcon={() => {
+                dataArray.push({searchItem: search}), setSearch('');
+                setDataArray([...dataArray]);
+              }}
+              value={search}
+              onChangeText={e => setSearch(e)}
+            />
+            {search.length > 1 && (
+              <FlatList
+                data={getSearch}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => (
+                  <View
+                    style={[
+                      CssStyle.flexJustify,
+                      {
+                        marginBottom: responsiveHeight(2),
+                        paddingHorizontal: responsiveWidth(5),
+                        borderRadius: responsiveWidth(2),
+                        // borderColor: 'white',
+                        // borderWidth: 1,
+                        paddingVertical: responsiveHeight(1),
+                      },
+                    ]}>
+                    <View style={CssStyle.flexData}>
+                      <Icon name="search" size={23} color={'#FF5100'} />
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 15,
+                          fontFamily: 'Interstate-regular',
+                          opacity: 0.8,
+                          marginLeft: responsiveWidth(3),
+                        }}>
+                        {item.workout_title}
+                      </Text>
+                    </View>
+                  </View>
+                )}
+              />
+            )}
+          </View>
         </View>
         {status == 'Beginner' ||
         status == 'Advance' ||

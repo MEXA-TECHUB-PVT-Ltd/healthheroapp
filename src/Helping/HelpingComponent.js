@@ -45,4 +45,53 @@ export const HelpingComponent = ({item, index}) => {
   );
 };
 
-const styles = StyleSheet.create({});
+export const FocusedComponent = ({item, index, dataArray, setDataArray}) => {
+  const [focusedArea, setFocusedArea] = useState(false);
+  return focusedArea ? (
+    <TouchableOpacity
+      onPress={() => {
+        setFocusedArea(false), dataArray.splice(1, index);
+        // setDataArray([...dataArray]);
+      }}
+      style={[
+        {
+          backgroundColor: '#FF5100',
+          width: responsiveWidth(35),
+          paddingVertical: responsiveHeight(2),
+          borderRadius: responsiveWidth(2),
+          marginBottom: responsiveHeight(4),
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      ]}>
+      <Text style={[styles.signInText]}>{item.text}</Text>
+    </TouchableOpacity>
+  ) : (
+    <TouchableOpacity
+      onPress={() => {
+        setFocusedArea(true), dataArray.push({itemArea: item.text});
+      }}
+      style={[
+        {
+          backgroundColor: '#626377',
+          width: responsiveWidth(35),
+          paddingVertical: responsiveHeight(2),
+          borderRadius: responsiveWidth(2),
+          marginBottom: responsiveHeight(4),
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      ]}>
+      <Text style={[styles.signInText]}>{item.text}</Text>
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  signInText: {
+    color: 'white',
+    fontFamily: 'Interstate-bold',
+    fontSize: 17,
+    lineHeight: responsiveHeight(3),
+  },
+});

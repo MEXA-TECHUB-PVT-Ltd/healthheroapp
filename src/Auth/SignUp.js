@@ -2,8 +2,10 @@ import {
   Image,
   ImageBackground,
   KeyboardAvoidingView,
+  Modal,
   StyleSheet,
   Text,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -21,6 +23,7 @@ import {LoginApi, SignUpApi} from '../services/AuthScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {Add} from '../store/action';
+import {CustomModelCenter} from '../component/CustomModel';
 
 const SignUp = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -43,11 +46,12 @@ const SignUp = ({navigation}) => {
         setEmail('');
         setPassword('');
         setResultData(result.result);
-        navigation.navigate('BottomTab');
+        setOpenModel(true);
+        // navigation.navigate('UserNavigation', {screen: 'Gender'});
       } else {
         setLoading(false);
         console.error(result.message);
-        setData(result.message);
+        setData('Error');
       }
     } catch (error) {
       console.log(error);
@@ -72,6 +76,19 @@ const SignUp = ({navigation}) => {
       setEmailValidError('');
     }
   };
+  const [openModel, setOpenModel] = useState(false);
+  const [passwordValidError, setPasswordValidError] = useState('');
+  const handleValidPassword = val => {
+    let reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,12}$/;
+
+    if (val.length === 0) {
+      setPasswordValidError('Password not valid');
+    } else if (reg.test(val) === false) {
+      setPasswordValidError('Enter valid  password');
+    } else if (reg.test(val) === true) {
+      setPasswordValidError('');
+    }
+  };
   return (
     <ImageBackground
       style={{flex: 1}}
@@ -82,10 +99,7 @@ const SignUp = ({navigation}) => {
         start={{x: 1, y: 0.1}}
         end={{x: 1, y: 0.5}}
         style={{
-          // bottom: responsiveHeight(61.5),
           paddingHorizontal: responsiveWidth(5),
-          // paddingBottom: responsiveHeight(20),
-          // paddingTop: responsiveHeight(26),
           flex: 1,
         }}>
         <KeyboardAvoidingView behavior="position">
@@ -130,6 +144,10 @@ const SignUp = ({navigation}) => {
             <Text style={{color: 'red'}}>Enter the valid email address</Text>
           ) : data == 'email' ? (
             <Text style={{color: 'red'}}>Enter the email</Text>
+          ) : data == 'Error' ? (
+            <Text style={{color: 'red'}}>
+              Email is invalid or already have an account
+            </Text>
           ) : (
             data == 'Fill' && (
               <Text style={{color: 'red', fontWeight: '500'}}>
@@ -143,14 +161,17 @@ const SignUp = ({navigation}) => {
             noIcon={true}
             fontSize={16}
             value={password}
-            onChangeText={e => setPassword(e)}
+            onChangeText={e => {
+              setPassword(e), handleValidPassword(e);
+            }}
             rightIcon="eye-outline"
             offIcon={'eye-off-outline'}
             enableIcon={true}
           />
           {data == 'passwordLength' ? (
             <Text style={{color: 'red', marginLeft: responsiveWidth(4)}}>
-              Password must be at least 6 character
+              Password must be contain one Uppercase alphabet and atleast 6
+              character
             </Text>
           ) : data == 'password' ? (
             <Text style={{color: 'red', marginLeft: responsiveWidth(4)}}>
@@ -191,7 +212,7 @@ const SignUp = ({navigation}) => {
                 ? setData('password')
                 : emailValidError
                 ? setData('emailFormat')
-                : password.length < 7
+                : passwordValidError
                 ? setData('passwordLength')
                 : SignUp()
             }
@@ -208,10 +229,87 @@ const SignUp = ({navigation}) => {
           />
         </View>
       </LinearGradient>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={openModel}
+        onRequestClose={() => setOpenModel(false)}>
+        <TouchableWithoutFeedback
+          style={{flex: 1}}
+          onPress={() => setOpenModel(false)}>
+          <View style={{flex: 1, backgroundColor: '#00000090'}}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+              }}>
+              <View
+                style={{
+                  backgroundColor: AppColors.blueColor,
+                  alignItems: 'center',
+                  borderTopEndRadius: responsiveHeight(3),
+                  borderTopLeftRadius: responsiveHeight(3),
+                  paddingVertical: responsiveHeight(4.8),
+                }}>
+                <Text style={[styles.signInText]}>Enter Username</Text>
+                <Input
+                  bgColor={'#ffffff60'}
+                  placeholder={'Username'}
+                  noIcon={true}
+                  value={username}
+                  onChangeText={e => {
+                    setUsername(e);
+                  }}
+                  fontSize={16}
+                  style={{
+                    marginTop: responsiveHeight(2),
+                    width: responsiveWidth(88),
+                  }}
+                />
+                {data == 'username' && (
+                  <Text
+                    style={{
+                      color: AppColors.buttonText,
+                      fontWeight: '500',
+                    }}>
+                    Enter username
+                  </Text>
+                )}
+                <CustomButton
+                  buttonText={'Continue'}
+                  onPress={() => {
+                    username.length > 2
+                      ? navigation.navigate('UserNavigation', {
+                          screen: 'Gender',
+                          params: {item: username},
+                        })
+                      : setData('username');
+                  }}
+                  buttonColor={'transparent'}
+                  mode="outlined"
+                  fontWeight={'500'}
+                  borderColor={'white'}
+                  style={{
+                    marginTop: responsiveHeight(3.7),
+                    width: responsiveWidth(48),
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </ImageBackground>
   );
 };
 
 export default SignUp;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  signInText: {
+    color: 'white',
+    fontFamily: 'Interstate-regular',
+    fontSize: 24,
+    lineHeight: responsiveHeight(5),
+  },
+});
