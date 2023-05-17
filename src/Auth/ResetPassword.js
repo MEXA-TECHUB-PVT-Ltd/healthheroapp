@@ -52,13 +52,28 @@ const ResetPassword = ({navigation, route}) => {
     }
   };
   useEffect(() => {
-    setData('');
+    setTimeout(() => {
+      setData('');
+    }, 2500);
   }, [data]);
+  const [emailValidError, setEmailValidError] = useState('');
+  const handleValidEmail = val => {
+    let reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,12}$/;
+
+    if (val.length === 0) {
+      setEmailValidError('Password not valid');
+    } else if (reg.test(val) === false) {
+      setEmailValidError('Enter valid  password');
+    } else if (reg.test(val) === true) {
+      setEmailValidError('');
+    }
+  };
+  console.log(emailValidError);
   return (
     <LinearGradient
-      colors={['#0B183C', AppColors.blueColor]}
-      start={{x: 0, y: -1}}
-      end={{x: 0, y: 0.3}}
+    colors={['#0F1F5500', '#0B183FBA', '#0A1637']}
+    start={{x: 0, y: -2.5}}
+    end={{x: 0, y: 0.6}}
       style={{
         paddingHorizontal: responsiveWidth(5),
         flex: 1,
@@ -90,7 +105,9 @@ const ResetPassword = ({navigation, route}) => {
       </Text>
       <Input
         value={password}
-        onChangeText={e => setPassword(e)}
+        onChangeText={e => {
+          setPassword(e), handleValidEmail(e);
+        }}
         bgColor={'#ffffff40'}
         placeholder={'Password'}
         noIcon={true}
@@ -100,14 +117,14 @@ const ResetPassword = ({navigation, route}) => {
         offIcon={'eye-off-outline'}
         enableIcon={true}
       />
-      {data == 'EnterPassword' ? (
+      {data == 'Enter' ? (
         <Text style={{color: 'red'}}>Enter the password</Text>
-      ) : data == 'Enter' ? (
+      ) : data == 'EnterPassword' ? (
         <Text style={{color: 'red'}}>Fill the fields</Text>
       ) : (
         data == 'Length' && (
           <Text style={{color: 'red'}}>
-            Password must be atleast 6 character
+            Password contain atleast one uppercase ,lowecase
           </Text>
         )
       )}
@@ -134,10 +151,12 @@ const ResetPassword = ({navigation, route}) => {
           onPress={() =>
             password && confirmPassword
               ? password == confirmPassword
-                ? ResetPasswordValue()
-                : password.length < 7 || confirmPassword.length < 7
-                ? setData('Length')
-                : setData('Enter')
+                ? emailValidError
+                  ? setData('Length')
+                  : ResetPasswordValue()
+                : // : password.length < 7 || confirmPassword.length < 7
+                  // ? setData('Length')
+                  setData('Length')
               : setData('EnterPassword')
           }
           style={{}}
@@ -145,13 +164,13 @@ const ResetPassword = ({navigation, route}) => {
       </View>
       <Modal
         animationType="slide"
-        transparent={false}
+        transparent={true}
         visible={openModel}
         onRequestClose={() => setOpenModel(false)}>
         <TouchableWithoutFeedback
           style={{flex: 1}}
           onPress={() => setOpenModel(false)}>
-          <View style={{flex: 1, backgroundColor: '#00000090'}}>
+          <View style={{flex: 1, backgroundColor: '#00000030'}}>
             <View
               style={{
                 flex: 1,

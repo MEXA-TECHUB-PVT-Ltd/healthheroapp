@@ -1,12 +1,12 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Dashboard from '../Screen/Dashboard';
-import Home from '../assets/Icon5';
-import Logo from '../assets/Icon3';
-import Heart from '../assets/Icon2';
-import WinnerLogo from '../assets/icon1';
-import Contact from '../assets/Icon4';
+import Home from '../assets/Icon5.png';
+import Logo from '../assets/Icon3.png';
+import Heart from '../assets/Icon2.png';
+import WinnerLogo from '../assets/icon1.png';
+import Contact from '../assets/Icon4.png';
 import Goal from '../Screen/Goal';
 import HeartProfile from '../Screen/HeartProfile';
 import Winner from '../Screen/Winner';
@@ -20,6 +20,7 @@ import WorkoutPlan from '../Screen/DashboardComponent/WorkoutPlan';
 import Exercise from '../Screen/DashboardComponent/Exercise';
 import AuthNavigation from './AuthNavigation';
 import Discover from '../Screen/DashboardComponent/Discover';
+import {AppColors} from '../Helping/AppColor';
 
 export const BottomTab = () => {
   const Bottom = createBottomTabNavigator();
@@ -36,7 +37,15 @@ export const BottomTab = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <>
-              <Home width={16} height={16} />
+              <Image
+                resizeMode="contain"
+                source={Home}
+                style={{
+                  width: 20,
+                  height: 19,
+                  tintColor: focused ? AppColors.buttonText : 'white',
+                }}
+              />
             </>
           ),
           tabBarShowLabel: false,
@@ -51,7 +60,15 @@ export const BottomTab = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <>
-              <Logo width={16} height={16} />
+              <Image
+                resizeMode="contain"
+                source={WinnerLogo}
+                style={{
+                  width: 20,
+                  height: 19,
+                  tintColor: focused ? AppColors.buttonText : 'white',
+                }}
+              />
             </>
           ),
           tabBarShowLabel: false,
@@ -66,7 +83,15 @@ export const BottomTab = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <>
-              <Heart width={16} height={16} />
+              <Image
+                resizeMode="contain"
+                source={Heart}
+                style={{
+                  width: 20,
+                  height: 19,
+                  tintColor: focused ? AppColors.buttonText : 'white',
+                }}
+              />
             </>
           ),
           tabBarShowLabel: false,
@@ -81,7 +106,15 @@ export const BottomTab = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <>
-              <WinnerLogo width={16} height={16} />
+              <Image
+                resizeMode="contain"
+                source={Contact}
+                style={{
+                  width: 20,
+                  height: 19,
+                  tintColor: focused ? AppColors.buttonText : 'white',
+                }}
+              />
             </>
           ),
           tabBarShowLabel: false,
@@ -96,7 +129,15 @@ export const BottomTab = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <>
-              <Contact width={16} height={16} />
+              <Image
+                resizeMode="contain"
+                source={Contact}
+                style={{
+                  width: 20,
+                  height: 19,
+                  tintColor: focused ? AppColors.buttonText : 'white',
+                }}
+              />
             </>
           ),
           tabBarShowLabel: false,

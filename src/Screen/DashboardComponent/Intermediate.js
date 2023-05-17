@@ -15,9 +15,11 @@ import {
 } from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Input from '../../component/Input';
-import { GetIntermediate } from '../../services/WorkoutPlan';
+import {GetIntermediate} from '../../services/WorkoutPlan';
 
-const Intermediate = ({navigation}) => {
+const Intermediate = ({navigation, route}) => {
+  const {item} = route.params ? route.params : '';
+  console.log(item);
   const dataFLex = [
     {item: 1},
     {item: 2},
@@ -33,7 +35,7 @@ const Intermediate = ({navigation}) => {
     {item: 3},
   ];
   const [searchAdd, setSearchAdd] = useState('');
-  const [intermediate,setIntermediate]=useState([])
+  const [intermediate, setIntermediate] = useState([]);
   const BeginnerApi = async () => {
     try {
       const result = await GetIntermediate();
@@ -54,32 +56,57 @@ const Intermediate = ({navigation}) => {
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
       <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
-        <View style={[CssStyle.flexJustify, {marginTop: responsiveHeight(3)}]}>
-          <TouchableOpacity
-            style={{marginLeft: responsiveWidth(-2)}}
-            onPress={() => navigation.goBack()}>
-            <Icon name="chevron-back-outline" size={23} color={'#FF5100'} />
-          </TouchableOpacity>
+        <View style={[CssStyle.flexJustify]}>
           {searchAdd == 'Search this' ? (
-            <Input
-              noIcon={true}
-              style={{width: responsiveWidth(80)}}
-              // height={responsiveHeight(5)}
-              placeholder={'SEARCH ...'}
-              rightIcon="search"
-              onChangeText={e => setSearchAdd('')}
-            />
+            <>
+              <TouchableOpacity
+                style={{
+                  marginLeft: responsiveWidth(-2),
+                  marginTop: responsiveHeight(2.5),
+                  marginBottom: responsiveHeight(-1.9),
+                }}
+                onPress={() => setSearchAdd('')}>
+                <Icon name="close" size={23} color={'white'} />
+              </TouchableOpacity>
+              <Input
+                noIcon={true}
+                marginVertical={0}
+                style={{
+                  width: responsiveWidth(80),
+                  marginTop: responsiveHeight(2.5),
+                  marginBottom: responsiveHeight(-1.1),
+                }}
+                height={responsiveHeight(5)}
+                placeholder={'SEARCH ...'}
+                rightIcon="search"
+                offIcon={'search'}
+                onChangeText={e => setSearchAdd('')}
+              />
+            </>
           ) : (
             <>
+              <TouchableOpacity
+                style={{
+                  marginLeft: responsiveWidth(-2),
+                  marginTop: responsiveHeight(4.2),
+                }}
+                onPress={() => navigation.goBack()}>
+                <Icon name="chevron-back-outline" size={23} color={'white'} />
+              </TouchableOpacity>
               <Text
                 style={{
-                  fontFamily: 'Interstate-bold',
+                  fontFamily: 'Interstate-regular',
                   color: 'white',
-                  fontSize: 16,
+                  marginTop: responsiveHeight(4.2),
+                  fontSize: 18,
                 }}>
-                Intermediate
+                {item.name}
               </Text>
-              <TouchableOpacity onPress={() => setSearchAdd('Search this')}>
+              <TouchableOpacity
+                style={{
+                  marginTop: responsiveHeight(4.2),
+                }}
+                onPress={() => setSearchAdd('Search this')}>
                 <Icon name="search" size={23} color={'white'} />
               </TouchableOpacity>
             </>
@@ -88,7 +115,7 @@ const Intermediate = ({navigation}) => {
 
         <View style={{marginTop: responsiveHeight(4)}}>
           <FlatList
-            data={intermediate}
+            data={item?.itemData}
             numColumns={2}
             showsVerticalScrollIndicator={false}
             renderItem={({item, inde}) => (

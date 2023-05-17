@@ -97,13 +97,14 @@ const SignUp = ({navigation}) => {
               height: responsiveHeight(15),
               marginTop: responsiveHeight(20),
               marginBottom: responsiveHeight(1),
+              marginLeft: responsiveWidth(1),
             }}
           />
           <Text style={CssStyle.signInText}>Create Account</Text>
           <Text style={CssStyle.signInInfo}>
             train and live the new experience of exercising at home
           </Text>
-          <Input
+          {/* <Input
             bgColor={'#ffffff60'}
             placeholder={'Username'}
             noIcon={true}
@@ -113,7 +114,7 @@ const SignUp = ({navigation}) => {
             }}
             fontSize={16}
             style={{marginTop: responsiveHeight(1)}}
-          />
+          /> */}
           <Input
             bgColor={'#ffffff60'}
             placeholder={'Email'}
@@ -123,7 +124,7 @@ const SignUp = ({navigation}) => {
               setEmail(e), handleValidEmail(e);
             }}
             fontSize={16}
-            style={{}}
+            style={{marginTop: responsiveHeight(6)}}
           />
           {data == 'emailFormat' ? (
             <Text style={{color: 'red'}}>Enter the valid email address</Text>
@@ -174,7 +175,7 @@ const SignUp = ({navigation}) => {
             paddingHorizontal: responsiveWidth(12),
             marginHorizontal: responsiveWidth(-5),
             marginTop: responsiveHeight(1),
-            paddingTop: responsiveHeight(2),
+            paddingTop: responsiveHeight(3),
             backgroundColor: AppColors.blueColor,
             flex: 1,
           }}>

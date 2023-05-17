@@ -1,14 +1,16 @@
 import {
+  ActivityIndicator,
   BackHandler,
   FlatList,
   Image,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import CssStyle from '../StyleSheet/CssStyle';
 import {AppColors} from '../Helping/AppColor';
 import {
@@ -20,6 +22,11 @@ import Logo from '../assets/Icon3';
 import CustomButton from '../component/CustomButton';
 import {useFocusEffect} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {
+  GetAdvance,
+  GetBeginner,
+  GetIntermediate,
+} from '../services/WorkoutPlan';
 
 const Dashboard = ({navigation}) => {
   const dataGym = [
@@ -40,7 +47,66 @@ const Dashboard = ({navigation}) => {
       return () => backHandler.remove();
     }, []),
   );
-  return (
+  const [loading, setLoading] = useState(false);
+  const BeginnerApi = async () => {
+    setLoading(true);
+    try {
+      const result = await GetBeginner();
+      // console.log(result);
+      if (result.status == true) {
+        setBeginner(result.result);
+        setLoading(false);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading;
+      console.log(error);
+    }
+  };
+  const AdvanceApi = async () => {
+    try {
+      const result = await GetAdvance();
+      // console.log(result);
+      if (result.status == true) {
+        setAdvance(result.result);
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const IntermediateApi = async () => {
+    try {
+      const result = await GetIntermediate();
+      // console.log(result);
+      if (result.status == true) {
+        setIntermediate(result.result);
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    BeginnerApi();
+    AdvanceApi();
+    IntermediateApi();
+  }, []);
+  const [advance, setAdvance] = useState([]);
+  const [beginner, setBeginner] = useState([]);
+  const [intermediate, setIntermediate] = useState([]);
+  const [status, setStatus] = useState('');
+  return loading ? (
+    <ActivityIndicator
+      size={'large'}
+      color="black"
+      style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
+    />
+  ) : (
     <ScrollView
       style={[
         CssStyle.mainContainer,
@@ -48,6 +114,7 @@ const Dashboard = ({navigation}) => {
           backgroundColor: AppColors.blueColor,
         },
       ]}>
+      <StatusBar hidden={true} />
       {/* {console.log(new Date().toDateString())} */}
       <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
         <View style={[CssStyle.flexJustify, {marginTop: responsiveHeight(4)}]}>
@@ -127,7 +194,7 @@ const Dashboard = ({navigation}) => {
               marginTop: responsiveHeight(1.8),
             },
           ]}>
-          <View style={{width:responsiveWidth(40)}}>
+          <View style={{width: responsiveWidth(40)}}>
             <Text
               style={{
                 color: 'white',
@@ -223,7 +290,12 @@ const Dashboard = ({navigation}) => {
             }}>
             Beginner
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Beginner')}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('Intermediate', {
+                item: {itemData: beginner, name: 'Beginner'},
+              })
+            }>
             <Text
               style={{
                 color: AppColors.buttonText,
@@ -235,7 +307,7 @@ const Dashboard = ({navigation}) => {
         </View>
         <View style={{marginRight: responsiveWidth(-5)}}>
           <FlatList
-            data={dataGym}
+            data={beginner}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             renderItem={({item, index}) => (
@@ -243,7 +315,7 @@ const Dashboard = ({navigation}) => {
                 style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
                 <Image
                   borderRadius={responsiveWidth(2)}
-                  source={item.image}
+                  source={require('../assets/second.png')}
                   style={{
                     width: responsiveWidth(34),
                     height: responsiveHeight(15),
@@ -281,7 +353,12 @@ const Dashboard = ({navigation}) => {
             }}>
             Intermediate
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Intermediate')}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('Intermediate', {
+                item: {itemData: intermediate, name: 'Intermediate'},
+              })
+            }>
             <Text
               style={{
                 color: AppColors.buttonText,
@@ -296,7 +373,7 @@ const Dashboard = ({navigation}) => {
             marginRight: responsiveWidth(-5),
           }}>
           <FlatList
-            data={dataGym}
+            data={intermediate}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             renderItem={({item, index}) => (
@@ -304,7 +381,7 @@ const Dashboard = ({navigation}) => {
                 style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
                 <Image
                   borderRadius={responsiveWidth(2)}
-                  source={item.image}
+                  source={require('../assets/second.png')}
                   style={{
                     width: responsiveWidth(34),
                     height: responsiveHeight(15),
@@ -342,7 +419,12 @@ const Dashboard = ({navigation}) => {
             }}>
             Advance
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Advance')}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('Intermediate', {
+                item: {itemData: advance, name: 'Advance'},
+              })
+            }>
             <Text
               style={{
                 color: AppColors.buttonText,
@@ -357,7 +439,7 @@ const Dashboard = ({navigation}) => {
             marginRight: responsiveWidth(-5),
           }}>
           <FlatList
-            data={dataGym}
+            data={advance}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             renderItem={({item, index}) => (
@@ -365,7 +447,7 @@ const Dashboard = ({navigation}) => {
                 style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
                 <Image
                   borderRadius={responsiveWidth(2)}
-                  source={item.image}
+                  source={require('../assets/second.png')}
                   style={{
                     width: responsiveWidth(34),
                     height: responsiveHeight(15),

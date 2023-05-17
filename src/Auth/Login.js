@@ -2,6 +2,7 @@ import {
   Image,
   ImageBackground,
   KeyboardAvoidingView,
+  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -43,9 +44,9 @@ const Login = ({navigation}) => {
         setEmail('');
         setPassword('');
         setResultData(result.result);
-        navigation.navigate('BottomTab', {
-          screen: 'Dashboard',
-          params: result.result,
+        navigation.navigate('UserNavigation', {
+          // screen: 'Dashboard',
+          // params: result.result,
         });
         setErrorMessage('');
       } else {
@@ -67,9 +68,13 @@ const Login = ({navigation}) => {
   }, [data, setErrorMessage]);
   return (
     <ImageBackground
-      style={{flex: 1}}
-      resizeMode="cover"
+      style={{
+        flex: 1,
+        // resizeMode: 'contain',
+      }}
+      // resizeMode="contain"
       source={require('../assets/signIn.png')}>
+      <StatusBar hidden={true} />
       <LinearGradient
         colors={['#0B183C00', '#0B183Ce1']}
         start={{x: 1, y: 0.1}}
@@ -87,6 +92,7 @@ const Login = ({navigation}) => {
               height: responsiveHeight(15),
               marginTop: responsiveHeight(20),
               marginBottom: responsiveHeight(1),
+              marginLeft: responsiveWidth(1),
             }}
           />
           <Text style={CssStyle.signInText}>Sign in</Text>
@@ -164,6 +170,7 @@ const Login = ({navigation}) => {
           <CustomButton
             loading={loading}
             buttonText={'Login'}
+            marginLeft={loading ? responsiveWidth(5) : responsiveWidth(3)}
             onPress={() =>
               !email && !password
                 ? setData('Fill')

@@ -1,7 +1,10 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {TextInput} from 'react-native-paper';
-import {responsiveHeight, responsiveWidth} from 'react-native-responsive-dimensions';
+import {
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Input = ({
@@ -24,6 +27,7 @@ const Input = ({
   onPressRightIcon,
   bgColor,
   fontSize,
+  marginVertical,
 }) => {
   const [showIcon, setShowIcon] = useState(true);
   return (
@@ -33,7 +37,7 @@ const Input = ({
         numberOfLines={numLine}
         disabled={disabled}
         multiline={multiline}
-        cursorColor='white'
+        cursorColor="white"
         placeholder={placeholder}
         value={value}
         outlineStyle={{
@@ -47,13 +51,14 @@ const Input = ({
           style,
           {
             backgroundColor: bgColor ? bgColor : '#232441',
-            marginVertical: 7,
+            marginVertical: marginVertical ? marginVertical : 7,
             paddingVertical: paddingVertical ? paddingVertical : 0,
             fontWeight: fontWeight ? fontWeight : '500',
             height: height ? height : responsiveHeight(6),
             fontSize: fontSize ? fontSize : 11,
-            fontFamily: 'Interstate-regular',
-            letterSpacing: 0.4,paddingLeft:responsiveWidth(1.4)
+            fontFamily: 'Roboto-bold',
+            letterSpacing: 0.4,
+            paddingLeft: responsiveWidth(1.4),
           },
         ]}
         textColor="white"

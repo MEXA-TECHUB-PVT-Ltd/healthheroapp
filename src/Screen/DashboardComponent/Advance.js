@@ -68,6 +68,7 @@ const Advance = ({navigation}) => {
               placeholder={'SEARCH ...'}
               rightIcon="search"
               onChangeText={e => setSearchAdd('')}
+            offIcon={'search'}
             />
           ) : (
             <>

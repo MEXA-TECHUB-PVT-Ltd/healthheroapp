@@ -36,14 +36,14 @@ const StartScreen = ({navigation}) => {
     },
     {
       image: require('../assets/second.png'),
-      headerText: 'Lets Explore The Fitness',
+      headerText: 'Lorem ipsum dolor sit amet',
       description:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elitr, sed diam nonumy',
       color: 'blue',
     },
     {
       image: require('../assets/third.png'),
-      headerText: 'Lets Explore The Fitness',
+      headerText: 'Lorem ipsum dolor sit amet',
       description:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elitr, sed diam nonumy',
       color: 'blue',
@@ -91,12 +91,8 @@ const StartScreen = ({navigation}) => {
     currentStepLabelColor: '#3E94A6',
   };
   return (
-    <View style={[CssStyle.mainContainer, {backgroundColor: '#0B183C'}]}>
-      <StatusBar
-        hidden={true}
-        // backgroundColor={'transparent'}
-        barStyle="dark-content"
-      />
+    <>
+    {/* <StatusBar hidden={true}  backgroundColor='white' /> */}
       <SwiperFlatList
         ref={flatNode}
         index={activeIndex}
@@ -119,7 +115,7 @@ const StartScreen = ({navigation}) => {
               end={{x: 1, y: 0.68}}
               style={{
                 // position: 'absolute',
-                bottom: responsiveHeight(61.5),
+                bottom: responsiveHeight(58.5),
                 paddingHorizontal: responsiveWidth(5),
                 paddingBottom: responsiveHeight(20),
                 paddingTop: responsiveHeight(26),
@@ -127,11 +123,12 @@ const StartScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'white',
-                  fontSize: responsiveFontSize(4),
-                  marginBottom: 12,
+                  fontSize: responsiveFontSize(5.67),
+                  marginBottom: 4,
                   fontFamily: 'Interstate-bold',
-                  width: responsiveWidth(60),
-                  lineHeight: responsiveHeight(5.5),
+                  marginLeft: responsiveWidth(1.2),
+                  width: responsiveWidth(90),
+                  lineHeight: responsiveHeight(6),
                 }}>
                 {item.headerText}
               </Text>
@@ -142,6 +139,7 @@ const StartScreen = ({navigation}) => {
                   fontFamily: 'Interstate-regular',
                   lineHeight: responsiveHeight(3),
                   fontSize: 16,
+                  marginLeft: responsiveWidth(2),
                 }}>
                 {item.description}
               </Text>
@@ -151,10 +149,10 @@ const StartScreen = ({navigation}) => {
         paginationStyle={{}}
         paginationActiveColor={AppColors.buttonText}
         paginationStyleItem={{
-          width: responsiveWidth(23),
+          width: responsiveWidth(26),
           height: responsiveHeight(0.4),
           borderRadius: responsiveHeight(30),
-          top: responsiveHeight(-7),
+          top: responsiveHeight(-9.3),
         }}
         paginationDefaultColor={'white'}
         paginationStyleItemInactive={
@@ -166,7 +164,7 @@ const StartScreen = ({navigation}) => {
       <View style={{backgroundColor: '#0B183C'}}>
         <View
           style={{
-            bottom: responsiveHeight(2),
+            bottom: responsiveHeight(3.7),
             left: responsiveWidth(10),
           }}>
           <CustomButton
@@ -189,17 +187,7 @@ const StartScreen = ({navigation}) => {
           />
         </View>
       </View>
-      {/* <StepIndicator
-        customStyles={customStyles}
-        currentPosition={0}
-        // labels={labels}
-        stepCount={3}
-        direction="horizontal"
-        renderStepIndicator={({position, stepstatus}) => (
-          <Icon name={'search'} size={18} color="#fff" />
-        )}
-      /> */}
-    </View>
+    </>
   );
 };
 // LinearGradient
@@ -210,3 +198,18 @@ const StartScreen = ({navigation}) => {
 export default StartScreen;
 
 const styles = StyleSheet.create({});
+
+{
+  /* <StepIndicator
+        customStyles={customStyles}
+        currentPosition={0}
+        // labels={labels}
+        stepCount={3}
+        direction="horizontal"
+        renderStepIndicator={({position, stepstatus}) => (
+          <Icon name={'search'} size={18} color="#fff" />
+        )}
+      /> */
+}
+// </View>
+// );

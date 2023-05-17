@@ -1,5 +1,12 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import {
+  Image,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   responsiveHeight,
@@ -41,17 +48,25 @@ const Verification = ({navigation, route}) => {
       } else {
         setLoading(false);
         console.error(result.message);
+        setData(result.message);
       }
     } catch (error) {
       console.log(error);
       setLoading(false);
     }
   };
+
+  const [data, setData] = useState('');
+  useEffect(() => {
+    setTimeout(() => {
+      setData('');
+    }, 2500);
+  }, [data]);
   return (
     <LinearGradient
-      colors={['#0B183FBA', '#0A1637']}
-      start={{x: 0, y: -1}}
-      end={{x: 0, y: 0.3}}
+      colors={['#0F1F5500', '#0B183FBA', '#0A1637']}
+      start={{x: 0, y: -2}}
+      end={{x: 0, y: 0.6}}
       style={{
         paddingHorizontal: responsiveWidth(5),
         flex: 1,
@@ -77,45 +92,59 @@ const Verification = ({navigation, route}) => {
           }}
         />
       </View>
-
-      <Text
-        style={[CssStyle.signInText, {marginBottom: responsiveHeight(1.7)}]}>
-        Verify
-      </Text>
-      <Text style={CssStyle.signInInfo}>
-        train and live the new experience of exercising at home
-      </Text>
-      <CodeField
-        ref={ref}
-        {...props}
-        // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
-        value={value}
-        onChangeText={setValue}
-        cellCount={CELL_COUNT}
-        rootStyle={styles.codeFieldRoot}
-        keyboardType="number-pad"
-        textContentType="oneTimeCode"
-        renderCell={({index, symbol, isFocused}) => (
+      <KeyboardAvoidingView behavior="position">
+        <Text
+          style={[CssStyle.signInText, {marginBottom: responsiveHeight(1.7)}]}>
+          Verify
+        </Text>
+        <Text style={CssStyle.signInInfo}>
+          train and live the new experience of exercising at home
+        </Text>
+        <CodeField
+          ref={ref}
+          {...props}
+          // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
+          value={value}
+          onChangeText={setValue}
+          cellCount={CELL_COUNT}
+          rootStyle={styles.codeFieldRoot}
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          renderCell={({index, symbol, isFocused}) => (
+            <Text
+              key={index}
+              style={[styles.cell, isFocused && styles.focusCell]}
+              onLayout={getCellOnLayoutHandler(index)}>
+              {symbol || (isFocused ? <Cursor /> : null)}
+            </Text>
+          )}
+        />
+        {data && (
           <Text
-            key={index}
-            style={[styles.cell, isFocused && styles.focusCell]}
-            onLayout={getCellOnLayoutHandler(index)}>
-            {symbol || (isFocused ? <Cursor /> : null)}
+            style={{
+              color: AppColors.buttonText,
+              fontSize: 12,
+              marginLeft: responsiveWidth(16),
+              marginTop: responsiveHeight(2),
+            }}>
+            {data}
           </Text>
         )}
-      />
-      <View
-        style={{
-          paddingHorizontal: responsiveWidth(5),
-          marginTop: responsiveHeight(3),
-        }}>
-        <CustomButton
-          loading={loading}
-          buttonText={'Verify OTP'}
-          onPress={() => Verify()}
-          style={{}}
-        />
-      </View>
+        <View
+          style={{
+            paddingHorizontal: responsiveWidth(5),
+            marginTop: responsiveHeight(3),
+          }}>
+          <CustomButton
+            loading={loading}
+            buttonText={'Verify OTP'}
+            onPress={() =>
+              value.length < 5 ? Verify() : setData('Enter complete OTP')
+            }
+            style={{marginTop: responsiveHeight(2)}}
+          />
+        </View>
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 };
@@ -123,17 +152,24 @@ const Verification = ({navigation, route}) => {
 export default Verification;
 
 const styles = StyleSheet.create({
-  codeFieldRoot: {marginTop: 20, paddingHorizontal: responsiveWidth(15)},
+  codeFieldRoot: {
+    marginTop: 20,
+    paddingHorizontal: responsiveWidth(15),
+    alignContent: 'center',
+  },
   cell: {
     width: 45,
     height: 50,
-    // lineHeight: 38,
+    lineHeight: 48,
     fontSize: 24,
     textAlign: 'center',
-    borderRadius: 10,
+    borderRadius: 15,
     backgroundColor: '#ffffff65',
+    alignSelf: 'center',
+    color: 'white',
   },
   focusCell: {
     borderColor: '#fff',
+    color: 'white',
   },
 });
