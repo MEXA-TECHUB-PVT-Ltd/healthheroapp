@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CssStyle from '../../StyleSheet/CssStyle';
 import {AppColors} from '../../Helping/AppColor';
 import {
@@ -15,6 +15,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Input from '../../component/Input';
+import { GetIntermediate } from '../../services/WorkoutPlan';
 
 const Intermediate = ({navigation}) => {
   const dataFLex = [
@@ -32,12 +33,31 @@ const Intermediate = ({navigation}) => {
     {item: 3},
   ];
   const [searchAdd, setSearchAdd] = useState('');
+  const [intermediate,setIntermediate]=useState([])
+  const BeginnerApi = async () => {
+    try {
+      const result = await GetIntermediate();
+      // console.log(result);
+      if (result.status == true) {
+        setIntermediate(result.result);
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    BeginnerApi();
+  }, []);
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
       <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
         <View style={[CssStyle.flexJustify, {marginTop: responsiveHeight(3)}]}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={{marginLeft: responsiveWidth(-2)}}
+            onPress={() => navigation.goBack()}>
             <Icon name="chevron-back-outline" size={23} color={'#FF5100'} />
           </TouchableOpacity>
           {searchAdd == 'Search this' ? (
@@ -60,7 +80,7 @@ const Intermediate = ({navigation}) => {
                 Intermediate
               </Text>
               <TouchableOpacity onPress={() => setSearchAdd('Search this')}>
-                <Icon name="search" size={23} color={'#FF5100'} />
+                <Icon name="search" size={23} color={'white'} />
               </TouchableOpacity>
             </>
           )}
@@ -68,14 +88,15 @@ const Intermediate = ({navigation}) => {
 
         <View style={{marginTop: responsiveHeight(4)}}>
           <FlatList
-            data={dataFLex}
+            data={intermediate}
             numColumns={2}
             showsVerticalScrollIndicator={false}
             renderItem={({item, inde}) => (
               <View
                 style={{
-                  width: responsiveWidth(50),
+                  // width: responsiveWidth(50),
                   marginBottom: responsiveHeight(2),
+                  marginRight: responsiveWidth(7),
                 }}>
                 <Image
                   borderRadius={responsiveWidth(2)}
@@ -91,8 +112,9 @@ const Intermediate = ({navigation}) => {
                     color: 'white',
                     fontSize: 13,
                     fontFamily: 'Interstate-regular',
-                    // alignSelf: 'center',
+                    alignSelf: 'center',
                     marginVertical: responsiveHeight(0.6),
+                    paddingTop: responsiveHeight(1),
                   }}>
                   Yoga exercise
                 </Text>
@@ -102,7 +124,7 @@ const Intermediate = ({navigation}) => {
                     fontSize: 12,
                     fontFamily: 'Interstate-regular',
                     opacity: 0.5,
-                    // alignSelf: 'center',
+                    alignSelf: 'center',
                   }}>
                   21 min | 400 k
                 </Text>

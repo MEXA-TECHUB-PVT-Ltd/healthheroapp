@@ -1,5 +1,5 @@
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import CssStyle from '../../StyleSheet/CssStyle';
 import {AppColors} from '../../Helping/AppColor';
 import {
@@ -10,6 +10,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Input from '../../component/Input';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Logo from '../../assets/Icon3';
+import {GetBeginner} from '../../services/WorkoutPlan';
 
 const Beginner = ({navigation}) => {
   const dataFLex = [
@@ -26,12 +27,31 @@ const Beginner = ({navigation}) => {
     {item: 2},
     {item: 3},
   ];
+  const [beginner, setBeginner] = useState([]);
+  const BeginnerApi = async () => {
+    try {
+      const result = await GetBeginner();
+      // console.log(result);
+      if (result.status == true) {
+        setBeginner(result.result);
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    BeginnerApi();
+  }, []);
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
       <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
         <View style={[CssStyle.flexJustify, {marginTop: responsiveHeight(3)}]}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={{marginLeft: responsiveWidth(-2)}}
+            onPress={() => navigation.goBack()}>
             <Icon name="chevron-back-outline" size={23} color={'#FF5100'} />
           </TouchableOpacity>
           <Input
@@ -54,7 +74,7 @@ const Beginner = ({navigation}) => {
 
         <View style={{marginTop: responsiveHeight(1)}}>
           <FlatList
-            data={dataFLex}
+            data={beginner}
             showsVerticalScrollIndicator={false}
             renderItem={({item, inde}) => (
               <View
@@ -79,13 +99,14 @@ const Beginner = ({navigation}) => {
                       color: 'white',
                       fontSize: 15,
                       fontFamily: 'Interstate-regular',
+                      opacity: 0.8,
                     }}>
                     Yoga Exercise
                   </Text>
                   <Text
                     style={{
                       color: 'white',
-                      fontSize: 12,
+                      fontSize: 11,
                       fontFamily: 'Interstate-regular',
                       marginVertical: responsiveHeight(0.7),
                       opacity: 0.5,

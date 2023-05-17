@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -6,7 +6,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import CssStyle from '../StyleSheet/CssStyle';
-import Logo from '../assets/Icon3';
+import Logo from '../assets/whiteLogo.png';
 import Input from '../component/Input';
 import CustomButton from '../component/CustomButton';
 import {AppColors} from '../Helping/AppColor';
@@ -17,8 +17,10 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import {VerifyOTP} from '../services/AuthScreen';
 
-const Verification = ({navigation}) => {
+const Verification = ({navigation, route}) => {
+  const {item} = route.params;
   const CELL_COUNT = 4;
   const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
@@ -26,11 +28,30 @@ const Verification = ({navigation}) => {
     value,
     setValue,
   });
+  const [loading, setLoading] = useState(false);
+  const Verify = async () => {
+    setLoading(true);
+    try {
+      const result = await VerifyOTP(item, value);
+      console.log(result);
+      if (result.status == true) {
+        setLoading(false);
+        setValue('');
+        navigation.navigate('ResetPassword', {item: result.result.email});
+      } else {
+        setLoading(false);
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
   return (
     <LinearGradient
       colors={['#0B183FBA', '#0A1637']}
-      start={{x: 0, y: 0}}
-      end={{x: 0, y: 0.2}}
+      start={{x: 0, y: -1}}
+      end={{x: 0, y: 0.3}}
       style={{
         paddingHorizontal: responsiveWidth(5),
         flex: 1,
@@ -46,7 +67,15 @@ const Verification = ({navigation}) => {
         />
       </TouchableOpacity>
       <View style={{alignItems: 'center', marginBottom: responsiveHeight(16)}}>
-        <Logo width={100} height={100} />
+        <Image
+          source={Logo}
+          resizeMode="contain"
+          style={{
+            width: responsiveWidth(24),
+            height: responsiveHeight(15),
+            marginBottom: responsiveHeight(-2),
+          }}
+        />
       </View>
 
       <Text
@@ -81,8 +110,9 @@ const Verification = ({navigation}) => {
           marginTop: responsiveHeight(3),
         }}>
         <CustomButton
+          loading={loading}
           buttonText={'Verify OTP'}
-          onPress={() => navigation.navigate('ResetPassword')}
+          onPress={() => Verify()}
           style={{}}
         />
       </View>

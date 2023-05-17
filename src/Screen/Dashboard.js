@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   FlatList,
   Image,
   ScrollView,
@@ -7,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import CssStyle from '../StyleSheet/CssStyle';
 import {AppColors} from '../Helping/AppColor';
 import {
@@ -17,6 +18,8 @@ import {
 import Input from '../component/Input';
 import Logo from '../assets/Icon3';
 import CustomButton from '../component/CustomButton';
+import {useFocusEffect} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Dashboard = ({navigation}) => {
   const dataGym = [
@@ -24,6 +27,19 @@ const Dashboard = ({navigation}) => {
     {image: require('../assets/third.png')},
     {image: require('../assets/first.png')},
   ];
+  useFocusEffect(
+    useCallback(() => {
+      const backAction = () => {
+        // console.log('hello sir');
+        BackHandler.exitApp();
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+      );
+      return () => backHandler.remove();
+    }, []),
+  );
   return (
     <ScrollView
       style={[
@@ -71,13 +87,35 @@ const Dashboard = ({navigation}) => {
             30°C
           </Text>
         </View>
-        <Input
+        {/* <Input
           onPressRightIcon={() => navigation.navigate('Search')}
           noIcon={true}
           height={responsiveHeight(5)}
           placeholder={'SEARCH WORKOUT'}
           rightIcon="search"
-        />
+        /> */}
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Search')}
+          style={[
+            CssStyle.flexJustify,
+            {
+              backgroundColor: '#232441',
+              borderRadius: responsiveHeight(20),
+              paddingVertical: responsiveHeight(1),
+              paddingHorizontal: responsiveWidth(5),
+              marginTop: responsiveHeight(3),
+            },
+          ]}>
+          <Text
+            style={{
+              fontSize: 11,
+              color: 'white',
+              fontFamily: 'Interstate-regular',
+            }}>
+            SEARCH WORKOUT
+          </Text>
+          <Icon name={'search'} size={19} color="white" />
+        </TouchableOpacity>
         <View
           style={[
             CssStyle.flexData,
@@ -85,16 +123,16 @@ const Dashboard = ({navigation}) => {
               backgroundColor: '#FF5100',
               borderRadius: responsiveWidth(3),
               paddingHorizontal: responsiveWidth(3),
-              paddingVertical: responsiveHeight(2.7),
+              paddingVertical: responsiveHeight(2),
               marginTop: responsiveHeight(1.8),
             },
           ]}>
-          <View>
+          <View style={{width:responsiveWidth(40)}}>
             <Text
               style={{
                 color: 'white',
                 fontFamily: 'Interstate-bold',
-                fontSize: 50,
+                fontSize: 46,
               }}>
               7 X 4
             </Text>
@@ -102,7 +140,7 @@ const Dashboard = ({navigation}) => {
               style={{
                 color: 'white',
                 fontFamily: 'Interstate-bold',
-                fontSize: 30,
+                fontSize: 27,
               }}>
               Challenge
             </Text>
@@ -167,10 +205,10 @@ const Dashboard = ({navigation}) => {
               source={require('../assets/Image7.png')}
               style={{
                 width: responsiveHeight(30.4),
-                height: responsiveHeight(40.4),
+                height: responsiveHeight(38.4),
                 position: 'absolute',
-                bottom: responsiveHeight(-19.78),
-                left: responsiveWidth(-7),
+                bottom: responsiveHeight(-18.6),
+                left: responsiveWidth(-10),
               }}
             />
           </View>
@@ -195,42 +233,44 @@ const Dashboard = ({navigation}) => {
             </Text>
           </TouchableOpacity>
         </View>
-        <FlatList
-          data={dataGym}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => (
-            <View
-              style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
-              <Image
-                borderRadius={responsiveWidth(2)}
-                source={item.image}
-                style={{
-                  width: responsiveWidth(34),
-                  height: responsiveHeight(15),
-                }}
-                resizeMode="contain"
-              />
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 13,
-                  fontFamily: 'Interstate-regular',
-                  marginTop: responsiveWidth(1),
-                }}>
-                Yoga exercise
-              </Text>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 12,
-                  fontFamily: 'Interstate-regular',
-                }}>
-                21 min | 400 k
-              </Text>
-            </View>
-          )}
-        />
+        <View style={{marginRight: responsiveWidth(-5)}}>
+          <FlatList
+            data={dataGym}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item, index}) => (
+              <View
+                style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
+                <Image
+                  borderRadius={responsiveWidth(2)}
+                  source={item.image}
+                  style={{
+                    width: responsiveWidth(34),
+                    height: responsiveHeight(15),
+                  }}
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 13,
+                    fontFamily: 'Interstate-regular',
+                    marginTop: responsiveWidth(1),
+                  }}>
+                  Yoga exercise
+                </Text>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 12,
+                    fontFamily: 'Interstate-regular',
+                  }}>
+                  21 min | 400 k
+                </Text>
+              </View>
+            )}
+          />
+        </View>
         <View
           style={[CssStyle.flexJustify, {marginVertical: responsiveHeight(2)}]}>
           <Text
@@ -251,42 +291,47 @@ const Dashboard = ({navigation}) => {
             </Text>
           </TouchableOpacity>
         </View>
-        <FlatList
-          data={dataGym}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => (
-            <View
-              style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
-              <Image
-                borderRadius={responsiveWidth(2)}
-                source={item.image}
-                style={{
-                  width: responsiveWidth(34),
-                  height: responsiveHeight(15),
-                }}
-                resizeMode="contain"
-              />
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 13,
-                  fontFamily: 'Interstate-regular',
-                  marginTop: responsiveHeight(1),
-                }}>
-                Yoga exercise
-              </Text>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 12,
-                  fontFamily: 'Interstate-regular',
-                }}>
-                21 min | 400 k
-              </Text>
-            </View>
-          )}
-        />
+        <View
+          style={{
+            marginRight: responsiveWidth(-5),
+          }}>
+          <FlatList
+            data={dataGym}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item, index}) => (
+              <View
+                style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
+                <Image
+                  borderRadius={responsiveWidth(2)}
+                  source={item.image}
+                  style={{
+                    width: responsiveWidth(34),
+                    height: responsiveHeight(15),
+                  }}
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 13,
+                    fontFamily: 'Interstate-regular',
+                    marginTop: responsiveHeight(1),
+                  }}>
+                  Yoga exercise
+                </Text>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 12,
+                    fontFamily: 'Interstate-regular',
+                  }}>
+                  21 min | 400 k
+                </Text>
+              </View>
+            )}
+          />
+        </View>
         <View
           style={[CssStyle.flexJustify, {marginVertical: responsiveHeight(2)}]}>
           <Text
@@ -307,42 +352,47 @@ const Dashboard = ({navigation}) => {
             </Text>
           </TouchableOpacity>
         </View>
-        <FlatList
-          data={dataGym}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => (
-            <View
-              style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
-              <Image
-                borderRadius={responsiveWidth(2)}
-                source={item.image}
-                style={{
-                  width: responsiveWidth(34),
-                  height: responsiveHeight(15),
-                }}
-                resizeMode="contain"
-              />
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 13,
-                  fontFamily: 'Interstate-regular',
-                  marginTop: responsiveHeight(1),
-                }}>
-                Yoga exercise
-              </Text>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 12,
-                  fontFamily: 'Interstate-regular',
-                }}>
-                21 min | 400 k
-              </Text>
-            </View>
-          )}
-        />
+        <View
+          style={{
+            marginRight: responsiveWidth(-5),
+          }}>
+          <FlatList
+            data={dataGym}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item, index}) => (
+              <View
+                style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
+                <Image
+                  borderRadius={responsiveWidth(2)}
+                  source={item.image}
+                  style={{
+                    width: responsiveWidth(34),
+                    height: responsiveHeight(15),
+                  }}
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 13,
+                    fontFamily: 'Interstate-regular',
+                    marginTop: responsiveHeight(1),
+                  }}>
+                  Yoga exercise
+                </Text>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 12,
+                    fontFamily: 'Interstate-regular',
+                  }}>
+                  21 min | 400 k
+                </Text>
+              </View>
+            )}
+          />
+        </View>
         <View
           style={{marginVertical: responsiveHeight(2), alignItems: 'center'}}>
           <CustomButton
@@ -351,7 +401,7 @@ const Dashboard = ({navigation}) => {
             style={{width: responsiveWidth(70)}}
             buttonColor={'transparent'}
             colorText="white"
-            onPress={() => navigation.navigate('Search')}
+            onPress={() => navigation.navigate('Discover')}
             borderColor={'#FF5100'}
           />
         </View>
