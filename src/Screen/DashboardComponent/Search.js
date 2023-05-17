@@ -13,6 +13,7 @@ import {
   GetBeginner,
   GetIntermediate,
 } from '../../services/WorkoutPlan';
+import {HelpingComponent} from '../../Helping/HelpingComponent';
 
 const Search = ({navigation}) => {
   const buttonMap = [
@@ -100,6 +101,8 @@ const Search = ({navigation}) => {
         x.workout_title.toLowerCase().includes(search.toLowerCase()),
       )
     : dataSearch;
+  const [dataArray, setDataArray] = useState([]);
+  const [selectItem, setSelectItem] = useState(false);
   return (
     <View style={[CssStyle.mainContainer, {backgroundColor: '#0b183c'}]}>
       <View style={{paddingHorizontal: responsiveWidth(5)}}>
@@ -110,9 +113,15 @@ const Search = ({navigation}) => {
           <Input
             noIcon={true}
             style={{width: responsiveWidth(80)}}
-            height={responsiveHeight(5)}
+            height={responsiveHeight(6)}
+            fontSize={14}
             placeholder={'SEARCH ...'}
             rightIcon="search"
+            offIcon={'search'}
+            onPressRightIcon={() => {
+              dataArray.push({searchItem: search}), setSearch('');
+              setDataArray([...dataArray]);
+            }}
             value={search}
             onChangeText={e => setSearch(e)}
           />
@@ -191,29 +200,8 @@ const Search = ({navigation}) => {
             Workout Plans
           </Text>
           <View style={[CssStyle.flexData, {flexWrap: 'wrap'}]}>
-            {workoutPlan.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => navigation.navigate(item.nav)}
-                style={{
-                  borderRadius: responsiveWidth(5),
-                  backgroundColor: '#FF510055',
-                  marginRight: responsiveWidth(2),
-                  paddingVertical: responsiveHeight(0.9),
-                  paddingHorizontal: responsiveWidth(2.3),
-                  marginBottom: responsiveHeight(2),
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Interstate-bold',
-                    color: 'white',
-                    fontSize: 12,
-                    alignSelf: 'center',
-                    opacity: 0.8,
-                  }}>
-                  {item.text}
-                </Text>
-              </TouchableOpacity>
+            {dataArray.map((item, index) => (
+              <HelpingComponent item={item} index={index} key={index} />
             ))}
           </View>
         </View>

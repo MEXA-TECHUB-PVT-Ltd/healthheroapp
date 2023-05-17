@@ -20,7 +20,7 @@ import {AppColors} from '../Helping/AppColor';
 import {LoginApi, SignUpApi} from '../services/AuthScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
-import { Add } from '../store/action';
+import {Add} from '../store/action';
 
 const SignUp = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -30,6 +30,7 @@ const SignUp = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [emailValidError, setEmailValidError] = useState('');
   const dispatch = useDispatch();
+  const [username, setUsername] = useState('');
 
   const SignUp = async () => {
     setLoading(true);
@@ -104,6 +105,17 @@ const SignUp = ({navigation}) => {
           </Text>
           <Input
             bgColor={'#ffffff60'}
+            placeholder={'Username'}
+            noIcon={true}
+            value={username}
+            onChangeText={e => {
+              setUsername(e);
+            }}
+            fontSize={16}
+            style={{marginTop: responsiveHeight(1)}}
+          />
+          <Input
+            bgColor={'#ffffff60'}
             placeholder={'Email'}
             noIcon={true}
             value={email}
@@ -111,7 +123,7 @@ const SignUp = ({navigation}) => {
               setEmail(e), handleValidEmail(e);
             }}
             fontSize={16}
-            style={{marginTop: responsiveHeight(5)}}
+            style={{}}
           />
           {data == 'emailFormat' ? (
             <Text style={{color: 'red'}}>Enter the valid email address</Text>
@@ -161,8 +173,8 @@ const SignUp = ({navigation}) => {
           style={{
             paddingHorizontal: responsiveWidth(12),
             marginHorizontal: responsiveWidth(-5),
-            marginTop: responsiveHeight(3),
-            paddingTop: responsiveHeight(2.7),
+            marginTop: responsiveHeight(1),
+            paddingTop: responsiveHeight(2),
             backgroundColor: AppColors.blueColor,
             flex: 1,
           }}>
