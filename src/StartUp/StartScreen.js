@@ -2,6 +2,7 @@ import {
   BackHandler,
   Dimensions,
   Image,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -21,6 +22,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from '../assets/icon1';
 import CustomButton from '../component/CustomButton';
 import {AppColors} from '../Helping/AppColor';
+import StepIndicator from 'react-native-step-indicator';
 
 const StartScreen = ({navigation}) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -64,8 +66,37 @@ const StartScreen = ({navigation}) => {
 
   const backgroundColor = isLight => (isLight ? 'black' : 'lightblue');
   const color = isLight => backgroundColor(!isLight);
+  // const labels = ['Cart', 'Delivery Address', 'Order Summary'];
+  const customStyles = {
+    stepIndicatorSize: 6,
+    currentStepIndicatorSize: 50,
+    separatorStrokeWidth: 0,
+    currentStepStrokeWidth: 1,
+    stepStrokeCurrentColor: '#3E94A6',
+    stepStrokeWidth: 3,
+    stepStrokeFinishedColor: '#3E94A6',
+    stepStrokeUnFinishedColor: '#3E94A6',
+    separatorFinishedColor: '#3E94A6',
+    separatorUnFinishedColor: '#3E94A6',
+    stepIndicatorFinishedColor: '#3E94A6',
+    stepIndicatorUnFinishedColor: '#ffffff',
+    stepIndicatorCurrentColor: '#ffffff',
+    // stepIndicatorLabelFontSize: 13,
+    // currentStepIndicatorLabelFontSize: 13,
+    stepIndicatorLabelCurrentColor: '#3E94A6',
+    stepIndicatorLabelFinishedColor: '#ffffff',
+    stepIndicatorLabelUnFinishedColor: '#aaaaaa',
+    labelColor: '#999999',
+    labelSize: 13,
+    currentStepLabelColor: '#3E94A6',
+  };
   return (
     <View style={[CssStyle.mainContainer, {backgroundColor: '#0B183C'}]}>
+      <StatusBar
+        hidden={true}
+        // backgroundColor={'transparent'}
+        barStyle="dark-content"
+      />
       <SwiperFlatList
         ref={flatNode}
         index={activeIndex}
@@ -126,9 +157,11 @@ const StartScreen = ({navigation}) => {
           top: responsiveHeight(-7),
         }}
         paginationDefaultColor={'white'}
-        paginationStyleItemInactive={{
-          // backgroundColor: flatNode.current == 0 ? 'yellow' : 'green',
-        }}
+        paginationStyleItemInactive={
+          {
+            // backgroundColor: flatNode.current == 0 ? 'yellow' : 'green',
+          }
+        }
       />
       <View style={{backgroundColor: '#0B183C'}}>
         <View
@@ -156,6 +189,16 @@ const StartScreen = ({navigation}) => {
           />
         </View>
       </View>
+      {/* <StepIndicator
+        customStyles={customStyles}
+        currentPosition={0}
+        // labels={labels}
+        stepCount={3}
+        direction="horizontal"
+        renderStepIndicator={({position, stepstatus}) => (
+          <Icon name={'search'} size={18} color="#fff" />
+        )}
+      /> */}
     </View>
   );
 };

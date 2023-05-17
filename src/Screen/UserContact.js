@@ -15,7 +15,7 @@ const UserContact = ({}) => {
   };
   const signOUt = async () => {
     await AsyncStorage.removeItem('userID');
-    navigation.navigate('Auth');
+    navigation.navigate('Auth', {screen: 'Login'});
   };
   return (
     <View>
