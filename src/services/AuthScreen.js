@@ -42,6 +42,7 @@ export const SignUpApi = async (email, password) => {
   }
 };
 export const ForgetPasswordApi = async email => {
+  console.log(email);
   try {
     const requestOptions = {
       method: 'POST',
@@ -109,10 +110,10 @@ export const ResetPasswordApi = async (email, password) => {
 export const UpdateProfileApi = async (
   id,
   name,
-  focusedArea,
   gender,
-  weight,
+  focusedArea,
   height,
+  weight,
   weightUnit,
   heightUnit,
 ) => {
@@ -122,10 +123,10 @@ export const UpdateProfileApi = async (
       body: new URLSearchParams({
         user_id: id,
         user_name: name,
-        focusedAreas: focusedArea,
         gender: gender,
-        weight: weight,
+        focusedAreas: focusedArea,
         height: height,
+        weight: weight,
         weight_unit: weightUnit,
         height_unit: heightUnit,
       }).toString(),
