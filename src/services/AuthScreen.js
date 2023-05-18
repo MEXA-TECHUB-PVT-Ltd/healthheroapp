@@ -110,6 +110,7 @@ export const ResetPasswordApi = async (email, password) => {
 export const UpdateProfileApi = async (
   id,
   name,
+  deviceId,
   gender,
   focusedArea,
   height,
@@ -120,9 +121,10 @@ export const UpdateProfileApi = async (
   try {
     const requestOptions = {
       method: 'PUT',
-      body: new URLSearchParams({
+      body: JSON.stringify({
         user_id: id,
         user_name: name,
+        device_id: deviceId,
         gender: gender,
         focusedAreas: focusedArea,
         height: height,
@@ -131,7 +133,7 @@ export const UpdateProfileApi = async (
         height_unit: heightUnit,
       }).toString(),
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Content-Type': 'application/json',
       },
     };
     const response = await fetch(

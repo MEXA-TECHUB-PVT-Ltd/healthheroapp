@@ -68,8 +68,9 @@ const Gender = ({navigation, route}) => {
       const result = await UpdateProfileApi(
         item?.itemResult.user_id,
         item?.itemName,
+        item?.itemResult.device_id,
         addData,
-        focusedArea,
+        ['arms', 'abs'],
         heightValue,
         weightValue,
         weightData,
@@ -78,6 +79,7 @@ const Gender = ({navigation, route}) => {
       console.log(result);
       if (result.status == true) {
         setLoading(false);
+        navigation.navigate('main');
       } else {
         console.error(result.message);
         setLoading(false);
@@ -241,7 +243,7 @@ const Gender = ({navigation, route}) => {
         max={210}
         step={1}
         fractionDigits={0}
-        initialValue={heightValue}
+        initialValue={0}
         decelerationRate={0.3}
         gapBetweenSteps={5}
         indicatorColor="#FF5100"
