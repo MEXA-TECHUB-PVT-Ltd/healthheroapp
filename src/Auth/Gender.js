@@ -20,10 +20,35 @@ import {useFocusEffect} from '@react-navigation/native';
 import CustomButton from '../component/CustomButton';
 import {FocusedComponent} from '../Helping/HelpingComponent';
 import {UpdateProfileApi} from '../services/AuthScreen';
+import {RulerPicker} from 'react-native-ruler-picker';
 
 const Gender = ({navigation, route}) => {
-  const {item} = route.params;
-  console.log(item);
+  const {item} = route.params ? route.params : '';
+  const [addData, setAddData] = useState('male');
+  const [focusedArea, setFocusedArea] = useState('Arms');
+  const [dataArray, setDataArray] = useState([]);
+  const weightUnitData = [{text: 'gm'}, {text: 'kg'}];
+  const [weightData, setWeightData] = useState('gm');
+  const heightUnitData = [{text: 'ft'}, {text: 'in'}];
+  const [heightData, setHeightData] = useState('ft');
+  const flatNode = useRef();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [weightValue, setWeightValue] = useState('');
+  const [heightValue, setHeightValue] = useState(0);
+  // console.log(item);
+  // console.log(
+  //   item.itemResult.user_id,
+  //   item.itemName,
+  //   addData,
+  //   focusedArea,
+  //   weightData,
+  //   heightData,
+  //   heightValue,
+  //   weightValue,
+  //   'dummy',
+  // );
+
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
@@ -37,20 +62,20 @@ const Gender = ({navigation, route}) => {
       return () => backHandler.remove();
     }, []),
   );
-  const [loading, setLoading] = useState(false);
   const UpdateProfile = async () => {
     setLoading(true);
     try {
       const result = await UpdateProfileApi(
-        id,
-        name,
+        item?.itemResult.user_id,
+        item?.itemName,
+        addData,
         focusedArea,
-        gender,
-        weight,
-        height,
-        weightUnit,
-        heightUnit,
+        heightValue,
+        weightValue,
+        weightData,
+        heightData,
       );
+      console.log(result);
       if (result.status == true) {
         setLoading(false);
       } else {
@@ -63,10 +88,9 @@ const Gender = ({navigation, route}) => {
     }
   };
   const genderCollectionData = [
-    {text: 'Male', image: require('../assets/maleGender.png')},
-    {text: 'Female', image: require('../assets/FemaleGender.png')},
+    {text: 'male', image: require('../assets/maleGender.png')},
+    {text: 'female', image: require('../assets/FemaleGender.png')},
   ];
-  const [addData, setAddData] = useState('Male');
   const GenderCollection = () => (
     <View style={[CssStyle.flexJustify, {}]}>
       {genderCollectionData.map((item, index) => (
@@ -114,7 +138,9 @@ const Gender = ({navigation, route}) => {
             resizeMode="contain"
             style={{width: 103, height: 103, marginTop: responsiveHeight(1.7)}}
           />
-          <Text style={[styles.signInText, {}]}>{item.text}</Text>
+          <Text style={[styles.signInText, {textTransform: 'capitalize'}]}>
+            {item.text}
+          </Text>
         </TouchableOpacity>
       ))}
     </View>
@@ -125,8 +151,7 @@ const Gender = ({navigation, route}) => {
     {text: 'Abs'},
     {text: 'Legs'},
   ];
-  const [focusedArea, setFocusedArea] = useState('Arms');
-  const [dataArray, setDataArray] = useState([]);
+
   const FocusedArea = () => (
     <View style={[CssStyle.flexData, {}]}>
       <View>
@@ -154,8 +179,90 @@ const Gender = ({navigation, route}) => {
       {/* </View> */}
     </View>
   );
-  const WeightArea = () => <Text style={{color: 'white'}}>HEllo sir</Text>;
-  const HeightArea = () => <Text style={{color: 'white'}}>HEllo sir</Text>;
+  const WeightArea = () => (
+    <View>
+      <View style={[CssStyle.flexJustify, {marginTop: responsiveHeight(11)}]}>
+        {weightUnitData.map((item, index) => (
+          <CustomButton
+            key={index}
+            buttonText={item.text}
+            onPress={() => setWeightData(item.text)}
+            style={{width: responsiveWidth(42)}}
+            styleText={{textTransform: 'uppercase'}}
+            mode={weightData == item.text ? '' : 'outlined'}
+            borderColor={weightData == item.text ? '' : 'white'}
+            buttonColor={weightData == item.text ? '' : 'transparent'}
+          />
+        ))}
+      </View>
+      <RulerPicker
+        min={0}
+        max={110}
+        step={1}
+        fractionDigits={0}
+        initialValue={0}
+        gapBetweenSteps={5}
+        indicatorColor="#FF5100"
+        longStepColor="#FF5100"
+        indicatorHeight={75}
+        longStepHeight={70}
+        shortStepHeight={20}
+        stepWidth={3}
+        unitTextStyle={{color: 'white', fontSize: responsiveFontSize(2)}}
+        valueTextStyle={{
+          color: 'white',
+          fontSize: responsiveFontSize(6),
+        }}
+        // onValueChange={number => console.log(number)}
+        height={responsiveHeight(38)}
+        onValueChangeEnd={number => setWeightValue(number)}
+        unit={weightData}
+      />
+    </View>
+  );
+  const HeightArea = () => (
+    <View>
+      <View style={[CssStyle.flexJustify, {marginTop: responsiveHeight(11)}]}>
+        {heightUnitData.map((item, index) => (
+          <CustomButton
+            key={index}
+            buttonText={item.text}
+            onPress={() => setHeightData(item.text)}
+            style={{width: responsiveWidth(42)}}
+            styleText={{textTransform: 'uppercase'}}
+            mode={heightData == item.text ? '' : 'outlined'}
+            borderColor={heightData == item.text ? '' : 'white'}
+            buttonColor={heightData == item.text ? '' : 'transparent'}
+          />
+        ))}
+      </View>
+      <RulerPicker
+        min={0}
+        max={210}
+        step={1}
+        fractionDigits={0}
+        initialValue={heightValue}
+        decelerationRate={0.3}
+        gapBetweenSteps={5}
+        indicatorColor="#FF5100"
+        longStepColor="#FF5100"
+        indicatorHeight={75}
+        longStepHeight={70}
+        shortStepHeight={20}
+        stepWidth={3}
+        width={responsiveWidth(90)}
+        unitTextStyle={{color: 'white', fontSize: responsiveFontSize(2)}}
+        valueTextStyle={{
+          color: 'white',
+          fontSize: responsiveFontSize(6),
+        }}
+        // onValueChange={number => console.log(number)}
+        height={responsiveHeight(38)}
+        onValueChangeEnd={number => setHeightValue(number)}
+        unit={heightData}
+      />
+    </View>
+  );
   const dataImages = [
     {
       image: require('../assets/first.png'),
@@ -186,9 +293,6 @@ const Gender = ({navigation, route}) => {
       genderData: <HeightArea />,
     },
   ];
-  const flatNode = useRef();
-  const [activeIndex, setActiveIndex] = useState(0);
-  console.log(addData, focusedArea);
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -230,6 +334,7 @@ const Gender = ({navigation, route}) => {
           index={activeIndex}
           showPagination
           data={dataImages}
+          scrollEnabled={false}
           renderItem={({item, index}) => (
             <View
               style={{
@@ -252,13 +357,17 @@ const Gender = ({navigation, route}) => {
                 </Text>
                 <Text
                   style={{
-                    width: responsiveWidth(79),
+                    width:
+                      item.headerText == 'Current Height'
+                        ? responsiveWidth(85)
+                        : responsiveWidth(79),
                     color: 'white',
                     // fontFamily: 'Interstate-regular',
                     lineHeight: responsiveHeight(3),
                     marginLeft: responsiveWidth(1),
                     fontSize: 13,
                     fontWeight: '400',
+                    opacity: 0.77,
                   }}>
                   {item.description}
                 </Text>
@@ -292,6 +401,7 @@ const Gender = ({navigation, route}) => {
               position: 'absolute',
             }}>
             <CustomButton
+              loading={loading}
               onPress={() => {
                 if (activeIndex !== dataImages.length - 1) {
                   setActiveIndex(activeIndex + 1);
@@ -300,7 +410,7 @@ const Gender = ({navigation, route}) => {
                     index: activeIndex + 1,
                   });
                 } else {
-                  navigation.navigate('');
+                  UpdateProfile();
                 }
               }}
               activeOpacity={1}

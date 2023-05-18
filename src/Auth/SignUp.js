@@ -39,9 +39,11 @@ const SignUp = ({navigation}) => {
     setLoading(true);
     try {
       const result = await SignUpApi(email, password);
+      console.log(result);
       if (result.status == true) {
         setLoading(false);
         await AsyncStorage.setItem('userID', `${result.result.user_id}`);
+        // await AsyncStorage.setItem('userName', result.result.);
         dispatch(Add(result.result.user_id));
         setEmail('');
         setPassword('');
@@ -281,7 +283,12 @@ const SignUp = ({navigation}) => {
                     username.length > 2
                       ? navigation.navigate('UserNavigation', {
                           screen: 'Gender',
-                          params: {item: username},
+                          params: {
+                            item: {
+                              itemResult: resultData,
+                              itemName: username,
+                            },
+                          },
                         })
                       : setData('username');
                   }}
