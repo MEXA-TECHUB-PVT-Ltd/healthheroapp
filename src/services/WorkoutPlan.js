@@ -93,3 +93,30 @@ export const GetSearchData = async name => {
     return error;
   }
 };
+
+
+// ------------- workout plan exercise------------------
+
+export const ExerciseOfTheDay = async name => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      //   body: new URLSearchParams({
+      //     email: email,
+      //     password: password,
+      //   }).toString(),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrl}workout_plan_exersises/exersise_of_day
+        `,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+}

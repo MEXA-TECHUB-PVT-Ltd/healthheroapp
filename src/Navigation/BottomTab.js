@@ -22,6 +22,7 @@ import AuthNavigation from './AuthNavigation';
 import Discover from '../Screen/DashboardComponent/Discover';
 import {AppColors} from '../Helping/AppColor';
 import Gender from '../Auth/Gender';
+import WorkoutExercise from '../Screen/GoalComponent/WorkoutExercise';
 
 export const BottomTab = () => {
   const Bottom = createBottomTabNavigator();
@@ -169,6 +170,7 @@ export const UserNavigation = () => {
       <Stack.Screen name="Auth" component={AuthNavigation} />
       <Stack.Screen name="Discover" component={Discover} />
       <Stack.Screen name="Gender" component={Gender} />
+      <Stack.Screen name="WorkoutExercise" component={WorkoutExercise} />
     </Stack.Navigator>
   );
 };
