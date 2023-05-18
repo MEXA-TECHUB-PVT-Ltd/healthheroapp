@@ -266,7 +266,7 @@ const Dashboard = ({navigation}) => {
               <Text style={{color: '#FF5100'}}>Start Now</Text>
             </TouchableOpacity>
           </View>
-          <View style={{position: 'relative'}}>
+          <View style={{}}>
             <Image
               resizeMode="cover"
               source={require('../assets/Image7.png')}

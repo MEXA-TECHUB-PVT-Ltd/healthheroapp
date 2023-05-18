@@ -106,3 +106,40 @@ export const ResetPasswordApi = async (email, password) => {
     return error;
   }
 };
+export const UpdateProfileApi = async (
+  id,
+  name,
+  focusedArea,
+  gender,
+  weight,
+  height,
+  weightUnit,
+  heightUnit,
+) => {
+  try {
+    const requestOptions = {
+      method: 'PUT',
+      body: new URLSearchParams({
+        user_id: id,
+        user_name: name,
+        focusedAreas: focusedArea,
+        gender: gender,
+        weight: weight,
+        height: height,
+        weight_unit: weightUnit,
+        height_unit: heightUnit,
+      }).toString(),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrl}user/updateProfile?current_user_id=${id}`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};

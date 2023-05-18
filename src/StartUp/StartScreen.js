@@ -92,7 +92,7 @@ const StartScreen = ({navigation}) => {
   };
   return (
     <>
-    {/* <StatusBar hidden={true}  backgroundColor='white' /> */}
+      {/* <StatusBar hidden={true}  backgroundColor='white' /> */}
       <SwiperFlatList
         ref={flatNode}
         index={activeIndex}
@@ -177,6 +177,7 @@ const StartScreen = ({navigation}) => {
                 });
               } else {
                 navigation.navigate('Login');
+                // navigation.navigate('UserNavigation', {screen: 'Gender'});
               }
             }}
             activeOpacity={1}

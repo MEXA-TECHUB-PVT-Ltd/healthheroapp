@@ -21,6 +21,7 @@ import Exercise from '../Screen/DashboardComponent/Exercise';
 import AuthNavigation from './AuthNavigation';
 import Discover from '../Screen/DashboardComponent/Discover';
 import {AppColors} from '../Helping/AppColor';
+import Gender from '../Auth/Gender';
 
 export const BottomTab = () => {
   const Bottom = createBottomTabNavigator();
@@ -158,25 +159,16 @@ export const UserNavigation = () => {
     <Stack.Navigator
       initialRouteName="main"
       screenOptions={{headerShown: false}}>
-      {/* <Stack.Screen name="LogoVersion" component={LogoVersion} /> */}
-      {/* <Stack.Screen name="StartScreen" component={StartScreen} /> */}
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="main" component={BottomTab} />
-      {/* <Stack.Screen name="Dashboard" component={Dashboard} /> */}
       <Stack.Screen name="Beginner" component={Beginner} />
       <Stack.Screen name="Advance" component={Advance} />
       <Stack.Screen name="Intermediate" component={Intermediate} />
       <Stack.Screen name="WorkoutPlan" component={WorkoutPlan} />
       <Stack.Screen name="Exercise" component={Exercise} />
       <Stack.Screen name="Auth" component={AuthNavigation} />
-      {/* <Stack.Screen name="UserContact" component={UserContact} /> */}
-      {/* <Stack.Screen name="Login" component={Login} /> */}
-      {/* <Stack.Screen name="SignUp" component={SignUp} /> */}
-      {/* <Stack.Screen name="ForgotPassword" component={ForgotPassword} /> */}
-      {/* <Stack.Screen name="Verification" component={Verification} /> */}
-      {/* <Stack.Screen name="ResetPassword" component={ResetPassword} /> */}
       <Stack.Screen name="Discover" component={Discover} />
-      {/* <Stack.Screen name="BottomTab" component={BottomTab} /> */}
+      <Stack.Screen name="Gender" component={Gender} />
     </Stack.Navigator>
   );
 };
