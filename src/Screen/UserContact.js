@@ -1,29 +1,497 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React, {useEffect} from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import CssStyle from '../StyleSheet/CssStyle';
+import {AppColors} from '../Helping/AppColor';
+import {
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
+import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Loader from '../component/Loader';
+import {Line} from '../component/Line';
 import CustomButton from '../component/CustomButton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {RestartProgressAPI} from '../services/WorkoutPlan';
+import {useSelector} from 'react-redux';
+const UserContact = ({navigation}) => {
+  const [loading, setLoading] = useState(false);
+  const [openRestartModel, setOpenRestartModel] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [changeGender, setChangeGender] = useState(false);
+  const [traningText, setTraningText] = useState(false);
+  const [restartProcess, setRestartProcess] = useState(false);
+  const genderData = [{item: 'male'}, {item: 'female'}];
+  const [openModel, setOpenModel] = useState(false);
+  // const [isEnabled, setIsEnabled] = useState(false);
+  // const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
-const UserContact = ({}) => {
-  const navigation = useNavigation();
-  useEffect(() => {
-    Storage();
-  }, []);
-  const Storage = async () => {
-    const result = await AsyncStorage.getItem('userID');
-    console.log(result);
-  };
-  const signOUt = async () => {
-    await AsyncStorage.removeItem('userID');
-    navigation.navigate('Auth', {screen: 'Login'});
+  const workOut = [
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Gender',
+      nav: '',
+    },
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Training rest',
+      nav: '',
+    },
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Count Down time',
+      nav: '',
+    },
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Restart progress',
+      nav: '',
+    },
+  ];
+  const WorkOutSection = () => (
+    <>
+      <Text style={[CssStyle.settingText, {marginTop: responsiveHeight(0)}]}>
+        Workout
+      </Text>
+      <View style={[{}]}>
+        {workOut.map((item, index) => (
+          <TouchableOpacity
+            onPress={() => {
+              item.text == 'Restart progress'
+                ? setOpenRestartModel(true)
+                : navigation.navigate(item.nav);
+            }}
+            key={index}>
+            <View style={[CssStyle.flexJustify, {}]}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontFamily: 'Interstate-regular',
+                  fontSize: 14,
+                  letterSpacing: 0.8,
+                }}>
+                {item.text}
+              </Text>
+              {item.icon}
+            </View>
+            {index !== workOut.length - 1 && (
+              <Line style={{marginVertical: responsiveHeight(2)}} />
+            )}
+          </TouchableOpacity>
+        ))}
+      </View>
+    </>
+  );
+  const generalSetting = [
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Update Password',
+      nav: 'Reminder',
+    },
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Go Premium',
+      nav: 'Imperial',
+    },
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Workout Reminder',
+      nav: 'Language',
+    },
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Metric & Imperial units',
+      nav: 'Language',
+    },
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Keep the screen on',
+      nav: '',
+    },
+  ];
+  const SupportUs = [
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Share with friends',
+      nav: '',
+    },
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Remove ads',
+      nav: '',
+    },
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Feedback',
+      nav: '',
+    },
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Rate us',
+      nav: '',
+    },
+    {
+      icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
+      text: 'Privacy policy',
+      nav: '',
+    },
+  ];
+  const GeneralSettings = () => (
+    <>
+      <Text style={CssStyle.settingText}>General Settings</Text>
+      <View style={[{}]}>
+        {generalSetting.map((item, index) => (
+          <TouchableOpacity
+            disabled={item.text == 'Keep the screen on' ? true : false}
+            onPress={() => {
+              navigation.navigate(item.nav);
+            }}
+            key={index}>
+            <View style={CssStyle.flexJustify}>
+              {/* <View style={[CssStyle.flexData, {}]}> */}
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 14,
+                  letterSpacing: 0.8,
+                }}>
+                {item.text}
+              </Text>
+              {/* </View> */}
+              {item.text == 'Keep the screen on' ? (
+                <Switch
+                  style={{marginLeft: responsiveWidth(1)}}
+                  trackColor={{false: '#D8D8D880', true: '#006FFF40'}}
+                  thumbColor={isEnabled ? AppColors.buttonText : '#D8D8D8'}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleSwitch}
+                  value={isEnabled}
+                />
+              ) : (
+                item.icon
+              )}
+            </View>
+            {index !== generalSetting.length - 1 && (
+              <Line style={{marginVertical: responsiveHeight(2)}} />
+            )}
+          </TouchableOpacity>
+        ))}
+      </View>
+    </>
+  );
+  const SupportUsComponent = () => (
+    <>
+      <Text style={CssStyle.settingText}>Support Us </Text>
+      <View style={[{flex: 1, marginBottom: responsiveHeight(3)}]}>
+        {SupportUs.map((item, index) => (
+          <TouchableOpacity
+            onPress={() => {
+              item.text == 'Privacy policy'
+                ? navigation.navigate('PrivacyPolicy')
+                : {};
+            }}
+            key={index}>
+            <View style={[CssStyle.flexJustify, {}]}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 14,
+                  letterSpacing: 0.8,
+                }}>
+                {item.text}
+              </Text>
+              {item.icon}
+            </View>
+            {index !== SupportUs.length - 1 && (
+              <Line style={{marginVertical: responsiveHeight(2)}} />
+            )}
+          </TouchableOpacity>
+        ))}
+      </View>
+    </>
+  );
+  const id = useSelector(data => data.id);
+  const RestartProgress = async () => {
+    setLoading(true);
+    try {
+      const result = await RestartProgressAPI(id);
+      console.log(result);
+      if (result.status == true) {
+        setLoading(false);
+        setOpenRestartModel(false);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
   return (
-    <View>
-      <CustomButton buttonText={'Log out'} onPress={() => signOUt()} />
-    </View>
+    <ScrollView
+      style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
+      <View
+        style={{
+          alignItems: 'center',
+          backgroundColor: AppColors.buttonText,
+          borderBottomLeftRadius: responsiveWidth(5),
+          borderBottomEndRadius: responsiveWidth(5),
+          paddingVertical: responsiveHeight(1),
+        }}>
+        <Text style={[styles.signInText]}>Profile</Text>
+      </View>
+      <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
+        <View
+          style={{alignItems: 'center', marginVertical: responsiveHeight(5.4)}}>
+          <View
+            style={{
+              width: responsiveWidth(21),
+              height: responsiveHeight(10),
+              backgroundColor: AppColors.buttonText,
+              borderRadius: responsiveWidth(3),
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text
+              style={{
+                fontFamily: 'Interstate-bold',
+                fontSize: 34,
+                color: 'white',
+              }}>
+              JF
+            </Text>
+          </View>
+          <View style={[CssStyle.flexData, {marginTop: responsiveHeight(2.2)}]}>
+            <Text
+              style={{
+                fontFamily: 'Interstate-bold',
+                fontSize: 24,
+                color: 'white',
+              }}>
+              Juana Franco
+            </Text>
+            <Image
+              style={{width: 14, height: 14, marginLeft: responsiveWidth(2)}}
+              resizeMode="contain"
+              source={require('../assets/Health-Hero/Iconfeather-edit-3.png')}
+            />
+          </View>
+          <Text
+            style={{
+              fontFamily: 'Interstate-regular',
+              fontSize: 16,
+              color: 'white',
+              marginVertical: responsiveHeight(1),
+            }}>
+            juanafrance@gmail.com
+          </Text>
+        </View>
+        <WorkOutSection />
+        <GeneralSettings />
+        <SupportUsComponent />
+        <View
+          style={{alignItems: 'center', marginVertical: responsiveHeight(4.5)}}>
+          <CustomButton
+            onPress={() => setOpenModel(true)}
+            activeOpacity={1}
+            imageIcon={
+              <MaterialIcons
+                style={{transform: [{rotate: '180deg'}]}}
+                name="logout"
+                size={23}
+                color="white"
+              />
+            }
+            buttonColor={AppColors.buttonText}
+            style={{width: responsiveWidth(80)}}
+            buttonText={'Logout'}
+          />
+        </View>
+      </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={openModel}
+        onRequestClose={() => setOpenModel(false)}>
+        <TouchableWithoutFeedback
+          style={{flex: 1}}
+          onPress={() => setOpenModel(false)}>
+          <View style={{flex: 1, backgroundColor: '#00000090'}}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+              }}>
+              <View
+                style={{
+                  backgroundColor: AppColors.blueColor,
+                  borderTopEndRadius: responsiveHeight(3),
+                  borderTopLeftRadius: responsiveHeight(3),
+                  paddingVertical: responsiveHeight(4.8),
+                  paddingHorizontal: responsiveWidth(6),
+                }}>
+                <View style={{alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      fontFamily: 'Interstate-bold',
+                      fontSize: 25,
+                      color: 'white',
+                      marginBottom: responsiveHeight(5),
+                    }}>
+                    Logout
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'Interstate-regular',
+                      color: 'white',
+                      marginBottom: responsiveHeight(2),
+                      fontSize: 16,
+                    }}>
+                    Do you really want to logout?
+                  </Text>
+                </View>
+
+                <View style={[CssStyle.flexJustify, {}]}>
+                  <CustomButton
+                    buttonText={'Cancel'}
+                    onPress={() => {
+                      setOpenModel(false);
+                    }}
+                    buttonColor={'transparent'}
+                    mode="outlined"
+                    fontWeight={'500'}
+                    borderColor={'white'}
+                    style={{
+                      marginTop: responsiveHeight(3.7),
+                      width: responsiveWidth(41),
+                    }}
+                  />
+                  <CustomButton
+                    buttonText={'Logout'}
+                    onPress={() => {
+                      setOpenModel(false),
+                        navigation.navigate('Auth', {screen: 'Login'});
+                    }}
+                    // buttonColor={'transparent'}
+                    // mode="outlined"
+                    fontWeight={'500'}
+                    // borderColor={'white'}
+                    style={{
+                      marginTop: responsiveHeight(3.7),
+                      width: responsiveWidth(41),
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={openRestartModel}
+        onRequestClose={() => setOpenRestartModel(false)}>
+        <TouchableWithoutFeedback
+          style={{flex: 1}}
+          onPress={() => setOpenRestartModel(false)}>
+          <View style={{flex: 1, backgroundColor: '#00000090'}}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+              }}>
+              <View
+                style={{
+                  backgroundColor: AppColors.blueColor,
+                  borderTopEndRadius: responsiveHeight(3),
+                  borderTopLeftRadius: responsiveHeight(3),
+                  paddingVertical: responsiveHeight(4.8),
+                  paddingHorizontal: responsiveWidth(6),
+                }}>
+                <View style={{alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      fontFamily: 'Interstate-bold',
+                      fontSize: 25,
+                      color: 'white',
+                      marginBottom: responsiveHeight(5),
+                    }}>
+                    Restart Progress
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'Interstate-regular',
+                      color: 'white',
+                      marginBottom: responsiveHeight(2),
+                      fontSize: 15,
+                      opacity: 0.9,
+                    }}>
+                    Would you like to restart your workout progress?
+                  </Text>
+                </View>
+
+                <View style={[CssStyle.flexJustify, {}]}>
+                  <CustomButton
+                    buttonText={'Cancel'}
+                    onPress={() => {
+                      setOpenRestartModel(false);
+                    }}
+                    buttonColor={'transparent'}
+                    mode="outlined"
+                    fontWeight={'500'}
+                    borderColor={'white'}
+                    style={{
+                      marginTop: responsiveHeight(3.7),
+                      width: responsiveWidth(41),
+                    }}
+                  />
+                  <CustomButton
+                    loading={loading}
+                    buttonText={'Restart'}
+                    onPress={() => {
+                      RestartProgress();
+                    }}
+                    // buttonColor={'transparent'}
+                    // mode="outlined"
+                    fontWeight={'500'}
+                    // borderColor={'white'}
+                    style={{
+                      marginTop: responsiveHeight(3.7),
+                      width: responsiveWidth(41),
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    </ScrollView>
   );
 };
 
 export default UserContact;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  signInText: {
+    color: 'white',
+    fontFamily: 'Interstate-bold',
+    fontSize: 35,
+    lineHeight: responsiveHeight(5),
+    opacity: 0.9,
+  },
+});

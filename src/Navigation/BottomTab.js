@@ -4,8 +4,9 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Dashboard from '../Screen/Dashboard';
 import Home from '../assets/Icon5.png';
 import Logo from '../assets/Icon3.png';
-import Heart from '../assets/Icon2.png';
-import WinnerLogo from '../assets/icon1.png';
+import Heart from '../assets/Health-Hero/Group722.png';
+import WinnerLogo from '../assets/Health-Hero/Icon.png';
+import TextLogo from '../assets/Health-Hero/Iconfeather-file-text.png';
 import Contact from '../assets/Icon4.png';
 import Goal from '../Screen/Goal';
 import HeartProfile from '../Screen/HeartProfile';
@@ -31,6 +32,7 @@ import AllPlan from '../Screen/GoalComponent/Plan/AllPlan';
 import CreatePlan from '../Screen/GoalComponent/Plan/CreatePlan';
 import StartExercise from '../Screen/GoalComponent/StartExercise';
 import RestTime from '../Screen/GoalComponent/RestTime';
+import QuitExercise from '../Screen/GoalComponent/QuitExercise';
 
 export const BottomTab = () => {
   const Bottom = createBottomTabNavigator();
@@ -39,8 +41,8 @@ export const BottomTab = () => {
       initialRouteName="Dashboard"
       screenOptions={{
         headerShown: false,
-        tabBarActiveBackgroundColor: '#0B183C',
-        tabBarInactiveBackgroundColor: '#0B183C',
+        tabBarActiveBackgroundColor: '#0A1F58',
+        tabBarInactiveBackgroundColor: '#0A1F58',
         tabBarHideOnKeyboard: true,
       }}>
       <Bottom.Screen
@@ -118,7 +120,7 @@ export const BottomTab = () => {
             <>
               <Image
                 resizeMode="contain"
-                source={Contact}
+                source={TextLogo}
                 style={{
                   width: 20,
                   height: 19,
@@ -187,6 +189,7 @@ export const UserNavigation = () => {
       <Stack.Screen name="CreatePlan" component={CreatePlan} />
       <Stack.Screen name="StartExercise" component={StartExercise} />
       <Stack.Screen name="RestTime" component={RestTime} />
+      <Stack.Screen name="QuitExercise" component={QuitExercise} />
     </Stack.Navigator>
   );
 };

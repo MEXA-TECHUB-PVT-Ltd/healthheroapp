@@ -26,6 +26,7 @@ import {
   GetWorkoutPlanAll,
   GetWorkoutPlanById,
 } from '../../services/WorkoutPlan';
+import Loader from '../../component/Loader';
 
 const WorkoutDetail = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -33,23 +34,23 @@ const WorkoutDetail = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [workoutPlanData, setWorkoutPlanData] = useState([]);
 
-  const GetWorkoutId = async () => {
-    setLoading(true);
-    try {
-      const result = await GetWorkoutPlanById(item?.workout_plan_id);
-      // console.log(result, 'getworkoutid');
-      if (result.status == true) {
-        // setWorkoutPlanData(result.result);
-        setLoading(false);
-      } else {
-        console.error(result.message);
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading;
-      console.log(error);
-    }
-  };
+  // const GetWorkoutId = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const result = await GetWorkoutPlanById(item?.workout_plan_id);
+  //     // console.log(result, 'getworkoutid');
+  //     if (result.status == true) {
+  //       // setWorkoutPlanData(result.result);
+  //       setLoading(false);
+  //     } else {
+  //       console.error(result.message);
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     setLoading;
+  //     console.log(error);
+  //   }
+  // };
   const GetWorkOutAll = async () => {
     setLoading(true);
     try {
@@ -68,11 +69,13 @@ const WorkoutDetail = ({navigation, route}) => {
     }
   };
   useEffect(() => {
-    GetWorkoutId();
+    // GetWorkoutId();
     GetWorkOutAll();
   }, []);
   // console.log(workoutPlanData, 'pland data');
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <View style={[CssStyle.mainContainer, {}]}>
       <ImageBackground
         // resizeMode="contain"
@@ -97,7 +100,9 @@ const WorkoutDetail = ({navigation, route}) => {
           marginTop: responsiveHeight(-3),
           paddingTop: responsiveHeight(2.7),
         }}>
-        <Text style={[styles.signInText]}>Muscular Workout</Text>
+        <Text style={[styles.signInText]}>
+          {workoutPlanData[0]?.workout_title}
+        </Text>
         <View
           style={[
             CssStyle.flexJustify,
@@ -111,13 +116,20 @@ const WorkoutDetail = ({navigation, route}) => {
             },
           ]}>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            16 <Text style={{color: 'white'}}>workouts</Text>
+            {workoutPlanData?.length}{' '}
+            <Text style={{color: 'white'}}>workouts</Text>
           </Text>
-          <Text style={{color: '#FF5100', fontFamily: 'Interstate-bold'}}>
-            Beginner
+          <Text
+            style={{
+              color: '#FF5100',
+              fontFamily: 'Interstate-bold',
+              textTransform: 'capitalize',
+            }}>
+            {workoutPlanData[0]?.level_of_workout}
           </Text>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            30 <Text style={{color: 'white'}}>min</Text>
+            {workoutPlanData[0]?.time.slice(0, 5)}{' '}
+            <Text style={{color: 'white'}}>min</Text>
           </Text>
         </View>
         <View style={{marginTop: responsiveHeight(3)}}>
@@ -215,7 +227,9 @@ const WorkoutDetail = ({navigation, route}) => {
           left: responsiveWidth(10),
         }}>
         <CustomButton
-          onPress={() => navigation.navigate('GetExercise', {item: 'hello'})}
+          onPress={() =>
+            navigation.navigate('StartExercise', {item: workoutPlanData[0]})
+          }
           activeOpacity={1}
           buttonColor={AppColors.buttonText}
           paddingVertical={2}

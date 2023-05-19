@@ -21,7 +21,9 @@ import {AppColors} from '../../Helping/AppColor';
 import Logo from '../../assets/Icon3';
 import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
-const StartExercise = ({navigation}) => {
+const StartExercise = ({navigation, route}) => {
+  const {item} = route.params ? route.params : '';
+  // console.log(item);
   const countdownRef = useRef();
 
   return (
@@ -31,7 +33,7 @@ const StartExercise = ({navigation}) => {
         // resizeMode: 'contain',
       }}
       // resizeMode="contain"
-      source={require('../../assets/signIn.png')}>
+      source={require('../../assets/Health-Hero/backgroundOther.png')}>
       <LinearGradient
         colors={['#0B183C00', '#0B183Ce1']}
         start={{x: 1, y: 0.1}}
@@ -42,7 +44,7 @@ const StartExercise = ({navigation}) => {
         }}>
         <TouchableOpacity
           style={{
-            marginLeft: responsiveWidth(3),
+            marginLeft: responsiveWidth(1),
             paddingTop: responsiveHeight(3),
             flex: 1.5,
           }}
@@ -57,7 +59,8 @@ const StartExercise = ({navigation}) => {
             // outerCircleStyle={{backgroundColor: 'yellow', aspectRatio: 1,}}
             // outerCircleStyle
             color={'#FF7B27'}
-            shadowColor="#C6C6C6"
+            // containerStyle={{backgroundColor: 'transparent',aspectRatio:}}
+            // shadowColor="#C6C6C6"
             bgColor={AppColors.blueColor}>
             <View style={CssStyle.flexData}>
               <Countdown
@@ -178,7 +181,7 @@ const StartExercise = ({navigation}) => {
           <View style={{alignItems: 'center', marginTop: responsiveHeight(4)}}>
             <CustomButton
               onPress={() =>
-                navigation.navigate('GetExercise', {item: 'hello'})
+                navigation.navigate('GetExercise', {item: item})
               }
               activeOpacity={1}
               buttonColor={AppColors.buttonText}

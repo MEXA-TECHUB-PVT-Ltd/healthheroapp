@@ -1,10 +1,12 @@
 import {
   Image,
   ImageBackground,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import React, {useRef, useState} from 'react';
@@ -22,8 +24,12 @@ import Logo from '../../assets/Icon3';
 import CustomButton from '../../component/CustomButton';
 
 const GetExercise = ({navigation, route}) => {
+  const {item} = route.params ? route.params : '';
+  console.log(item);
   const countdownRef = useRef();
   const [completedModel, setCompletedModel] = useState(false);
+  const [openModel, setOpenModel] = useState(false);
+  const [dataNumber, setDataNumber] = useState(0);
   return (
     <ScrollView style={[CssStyle.mainContainer, {}]}>
       <ImageBackground
@@ -36,10 +42,10 @@ const GetExercise = ({navigation, route}) => {
         }>
         <TouchableOpacity
           style={{
-            marginLeft: responsiveWidth(3),
+            paddingLeft: responsiveWidth(5),
             paddingTop: responsiveHeight(3),
           }}
-          onPress={() => navigation.goBack()}>
+          onPress={() => setOpenModel(true)}>
           <Icon name="chevron-back-outline" size={25} color={'white'} />
         </TouchableOpacity>
       </ImageBackground>
@@ -54,7 +60,7 @@ const GetExercise = ({navigation, route}) => {
           paddingTop: responsiveHeight(5),
         }}>
         <Text style={[styles.signInText]}>
-          {completedModel ? 'Yoga' : ' Puss Press'}
+          {completedModel ? 'Yoga' : `${item.workout_title}`}
         </Text>
         <View
           style={[
@@ -72,10 +78,10 @@ const GetExercise = ({navigation, route}) => {
             16 <Text style={{color: 'white'}}>moves</Text>
           </Text>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-bold'}}>
-            Beginner
+            {item.level_of_workout}
           </Text>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            {completedModel ? '25' : '30'}{' '}
+            {completedModel ? '25' : `${item.time.slice(0, 5)}`}{' '}
             <Text style={{color: 'white'}}>sec</Text>
           </Text>
         </View>
@@ -94,7 +100,7 @@ const GetExercise = ({navigation, route}) => {
             onPress={() =>
               completedModel
                 ? setCompletedModel(false)
-                : navigation.navigate('ExerciseDetail')
+                : navigation.navigate('RestTime')
             }>
             <Icon
               name="chevron-back-outline"
@@ -103,8 +109,8 @@ const GetExercise = ({navigation, route}) => {
             />
           </TouchableOpacity>
           <ProgressCircle
-            percent={30 * 3.34}
-            radius={60}
+            percent={item.time.slice(0, 2) * 60}
+            radius={52}
             borderWidth={4}
             // outerCircleStyle={{backgroundColor: 'yellow', aspectRatio: 1,}}
             // outerCircleStyle
@@ -119,7 +125,7 @@ const GetExercise = ({navigation, route}) => {
                 textStyle={styles.watchTime}
                 initialSeconds={completedModel ? 6 : 30}
                 onTimes={e => {
-                  //   setDataNumber(e);
+                  setDataNumber(e);
                 }}
                 onPause={e => {}}
                 onEnd={
@@ -162,7 +168,9 @@ const GetExercise = ({navigation, route}) => {
               paddingBottom: responsiveHeight(7),
             }}>
             <CustomButton
-              onPress={() => navigation.navigate('Focused')}
+              onPress={() =>
+                navigation.navigate('Focused', {item: item.workout_plan_id})
+              }
               activeOpacity={1}
               buttonColor={AppColors.buttonText}
               paddingVertical={3}
@@ -260,6 +268,85 @@ const GetExercise = ({navigation, route}) => {
           </View>
         )}
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={openModel}
+        onRequestClose={() => setOpenModel(false)}>
+        <TouchableWithoutFeedback
+          style={{flex: 1}}
+          onPress={() => setOpenModel(false)}>
+          <View style={{flex: 1, backgroundColor: '#00000060'}}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+              }}>
+              <View
+                style={{
+                  backgroundColor: AppColors.blueColor,
+                  alignItems: 'center',
+                  borderTopEndRadius: responsiveHeight(3),
+                  borderTopLeftRadius: responsiveHeight(3),
+                  paddingTop: responsiveHeight(4),
+                  paddingBottom: responsiveHeight(5),
+                }}>
+                <ProgressCircle
+                  percent={30 * 3.34}
+                  radius={50}
+                  borderWidth={4}
+                  // outerCircleStyle={{backgroundColor: 'yellow', aspectRatio: 1,}}
+                  // outerCircleStyle
+                  color={'#FF7B27'}
+                  shadowColor="#C6C6C6"
+                  bgColor={AppColors.blueColor}>
+                  <View style={CssStyle.flexData}>
+                    {/* <Text style={styles.watchTime}></Text> */}
+                    <Countdown
+                      ref={countdownRef}
+                      style={styles.timer}
+                      textStyle={styles.watchTime}
+                      initialSeconds={completedModel ? 6 : 30}
+                      onTimes={e => {}}
+                      onPause={e => {}}
+                      onEnd={e => {}}
+                    />
+                  </View>
+                  {/* } */}
+                  {/* </Text> */}
+                </ProgressCircle>
+                <View
+                  style={[
+                    CssStyle.flexJustify,
+                    {marginTop: responsiveHeight(5.7)},
+                  ]}>
+                  <CustomButton
+                    onPress={() => {
+                      navigation.navigate('QuitExercise'), setOpenModel(false);
+                    }}
+                    activeOpacity={1}
+                    buttonColor={'transparent'}
+                    mode="outlined"
+                    borderColor={'white'}
+                    style={{width: responsiveWidth(38)}}
+                    buttonText={'Quit'}
+                  />
+                  <CustomButton
+                    onPress={() => setOpenModel(false)}
+                    activeOpacity={1}
+                    style={{
+                      width: responsiveWidth(38),
+                      marginLeft: responsiveWidth(4),
+                    }}
+                    buttonColor={AppColors.buttonText}
+                    buttonText={'Continue'}
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </ScrollView>
   );
 };

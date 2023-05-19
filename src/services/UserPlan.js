@@ -23,8 +23,14 @@ export const GetPlanApi = async id => {
     return error;
   }
 };
-export const CreatePlanApi = async (id, name, description, exercise,dateTime) => {
-  console.log(id, name, description, exercise,dateTime)
+export const CreatePlanApi = async (
+  id,
+  name,
+  description,
+  exercise,
+  dateTime,
+) => {
+  console.log(id, name, description, exercise, dateTime);
   try {
     const requestOptions = {
       method: 'POST',
@@ -33,7 +39,7 @@ export const CreatePlanApi = async (id, name, description, exercise,dateTime) =>
         plan_name: name,
         description: description,
         exersise_ids: exercise,
-        created_at:dateTime
+        created_at: dateTime,
       }).toString(),
       headers: {
         'Content-Type': 'application/json',
@@ -41,6 +47,30 @@ export const CreatePlanApi = async (id, name, description, exercise,dateTime) =>
     };
     const response = await fetch(
       `${BaseUrlPlan}create_my_plan`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+export const AddExercise = async (id, exercise, planId) => {
+  console.log(id, exercise, planId);
+  try {
+    const requestOptions = {
+      method: 'PUT',
+      body: JSON.stringify({
+        user_id: id,
+        exersise_id: exercise,
+        plan_id: planId,
+      }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlPlan}addExersise_in_myPlan`,
       requestOptions,
     );
     const result = await response.json();

@@ -48,9 +48,8 @@ const RestTime = ({navigation}) => {
   useEffect(() => {
     GetPlan();
   }, [data]);
-  const [sec, setSec] = useState(20);
-
-
+  const [sec, setSec] = useState(0);
+  const [dataNumber, setDataNumber] = useState('');
   return (
     <ImageBackground
       style={{
@@ -91,9 +90,9 @@ const RestTime = ({navigation}) => {
                 ref={countdownRef}
                 style={styles.timer}
                 textStyle={styles.watchTime}
-                initialSeconds={15}
+                initialSeconds={sec + 15}
                 onTimes={e => {
-                  //   setDataNumber(e);
+                  setDataNumber(e);
                 }}
                 onPause={e => {}}
                 onEnd={
@@ -126,19 +125,20 @@ const RestTime = ({navigation}) => {
               fontSize: 17,
               marginBottom: responsiveHeight(2),
             }}>
-            Upcoming Exercise
+            Next Exercise
           </Text>
           <View
             style={[CssStyle.flexData, {marginBottom: responsiveHeight(2)}]}>
-            <View style={{width: responsiveWidth(29)}}>
+            <View style={{width: responsiveWidth(31)}}>
               <Image
                 source={require('../../assets/Rectangle33.png')}
-                resizeMode="contain"
+                // resizeMode="contain"
                 style={{
-                  width: 99,
-                  height: 90,
+                  width: 110,
+                  height: 85,
                   //   marginRight: responsiveWidth(2),
                 }}
+                borderRadius={responsiveWidth(2)}
               />
             </View>
             <View style={{width: responsiveWidth(53)}}>
@@ -202,31 +202,33 @@ const RestTime = ({navigation}) => {
               </View>
             </View>
           </View>
-          <View style={[CssStyle.flexJustify, { width: responsiveWidth(80)}]}>
-            <CustomButton
-              onPress={() => {
-                setSec(sec + 20);
-              }}
-              buttonText={'20s'}
-              iconName="add"
-              style={{width: responsiveWidth(38)}}
-              fontWeight="bold"
-              buttonColor={'white'}
-              colorText={'white'}
-              borderColor={'white'}
-              mode="outlined"
-              // paddingVertical={3}
-              iconColor={'white'}
-            />
-            <CustomButton
-              onPress={() => {
-                navigation.navigate('Feeling'), countdownRef.current.stop();
-              }}
-              buttonText={'Skip'}
-              style={{width: responsiveWidth(38)}}
-              fontWeight="bold"
-              iconColor="white"
-            />
+          <View style={{alignItems: 'center', marginTop: responsiveHeight(7)}}>
+            <View style={[CssStyle.flexJustify, {width: responsiveWidth(80)}]}>
+              <CustomButton
+                onPress={() => {
+                  setSec(sec + 20);
+                }}
+                buttonText={'20s'}
+                iconName="add"
+                style={{width: responsiveWidth(38)}}
+                fontWeight="bold"
+                buttonColor={'transparent'}
+                colorText={'white'}
+                borderColor={'white'}
+                mode="outlined"
+                // paddingVertical={3}
+                iconColor={'white'}
+              />
+              <CustomButton
+                onPress={() => {
+                  navigation.goBack(), countdownRef.current.stop();
+                }}
+                buttonText={'Skip'}
+                style={{width: responsiveWidth(38)}}
+                fontWeight="bold"
+                iconColor="white"
+              />
+            </View>
           </View>
         </View>
       </LinearGradient>
