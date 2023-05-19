@@ -67,10 +67,9 @@ export default CssStyle = StyleSheet.create({
   },
   settingText: {
     color: AppColors.buttonText,
-    fontWeight: 'bold',
     fontSize: 16,
-    letterSpacing: 0.8,
     marginVertical: responsiveHeight(3),
+    fontFamily: 'Interstate-regular',
   },
   signInText: {
     color: 'white',

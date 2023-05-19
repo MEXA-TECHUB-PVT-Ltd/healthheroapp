@@ -162,6 +162,54 @@ export const GetWorkoutPlanAll = async () => {
     return error;
   }
 };
+export const PostReview = async (id, plan_id, review) => {
+  try {
+    const requestOptions = {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: id,
+        workout_plan_id: plan_id,
+        review: review,
+      }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlWorkout}review_on_workout
+        `,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const RestartProgressAPI = async id => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      // body: JSON.stringify({
+      //   user_id: id,
+      //   plan_id: planId,
+      //   exersise_id: exercise,
+      // }).toString(),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlWorkout}restartProgress?user_id=${id}`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
 
 // ------------- workout plan exercise------------------
 
@@ -180,6 +228,29 @@ export const ExerciseOfTheDay = async name => {
     const response = await fetch(
       `${BaseUrl}workout_plan_exersises/exersise_of_day
         `,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+export const GetExerciseID = async () => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      // body: JSON.stringify({
+      //   user_id: id,
+      //   plan_id: planId,
+      //   exersise_id: exercise,
+      // }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrl}workout_plan_exersises/getAllExersises?page=1&limit=3`,
       requestOptions,
     );
     const result = await response.json();

@@ -21,12 +21,15 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import CustomButton from '../../../component/CustomButton';
 import Lottie from 'lottie-react-native';
 import assets from '../../../assets';
-import {GetPlanApi} from '../../../services/UserPlan';
-import {useSelector} from 'react-redux';
+import {AddExercise, GetPlanApi} from '../../../services/UserPlan';
+import {useDispatch, useSelector} from 'react-redux';
 import Loader from '../../../component/Loader';
+import {GetExerciseID} from '../../../services/WorkoutPlan';
+import {ExerCise} from '../../../store/action';
 
 const AllPlan = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
+  // console.log(item);
   const [selectItem, setSelectItem] = useState('');
   const dataPlan = [
     {indoor: 'Beginner', lesson: 'Exercises', text: 'hello'},
@@ -37,11 +40,12 @@ const AllPlan = ({navigation, route}) => {
   const data = useSelector(data => data.id);
   const [planData, setPlanData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [addToExerciseData, setAddToExerciseData] = useState('');
   const GetPlan = async () => {
     setLoading(true);
     try {
       const result = await GetPlanApi(data);
-      console.log(result);
+      // console.log(result);
       if (result.status == true) {
         setPlanData(result.result);
         setLoading(false);
@@ -54,9 +58,76 @@ const AllPlan = ({navigation, route}) => {
       console.log(error);
     }
   };
+  const dispatch = useDispatch();
+  const [exerciseId, setExerciseId] = useState('');
+  const GetExerciseId = async () => {
+    setLoading(true);
+    try {
+      const result = await GetExerciseID();
+      console.log(result.result[0], 'get exercise id');
+      if (result.status == true) {
+        setExerciseId(result.result);
+        setLoading(false);
+        // dispatch(ExerCise(result.result[0].exersise_id));
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading;
+      console.log(error);
+    }
+  };
+  const AddToExercise = async () => {
+    setLoading(true);
+    try {
+      const result = await AddExercise(
+        data,
+        exerciseId[0]?.exersise_id,
+        addToExerciseData.workout_plan_id,
+      );
+      // console.log(result);
+      if (result.status == true) {
+        setOpenModel(true);
+        setLoading(false);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading;
+      console.log(error);
+    }
+  };
   useEffect(() => {
     GetPlan();
-  }, [data]);
+    GetExerciseId();
+  }, []);
+  useEffect(() => {
+    var mount = true;
+    const listener = navigation.addListener('focus', async () => {
+      setLoading(true);
+      setLoading(true);
+      try {
+        const result = await GetPlanApi(data);
+        // console.log(result);
+        if (result.status == true) {
+          setPlanData(result.result);
+          setLoading(false);
+        } else {
+          console.error(result.message);
+          setLoading(false);
+        }
+      } catch (error) {
+        setLoading;
+        console.log(error);
+      }
+    });
+    return () => {
+      listener;
+      mount = false;
+    };
+  }, []);
   return loading ? (
     <Loader />
   ) : (
@@ -82,7 +153,7 @@ const AllPlan = ({navigation, route}) => {
           </Text>
           <TouchableOpacity
             style={{marginRight: responsiveWidth(2)}}
-            onPress={() => navigation.navigate('CreatePlan', {id: item})}>
+            onPress={() => navigation.navigate('CreatePlan')}>
             <Octicons name="diff-added" size={23} color={'white'} />
           </TouchableOpacity>
         </View>
@@ -91,19 +162,21 @@ const AllPlan = ({navigation, route}) => {
             data={planData}
             renderItem={({item, index}) => (
               <TouchableOpacity
-                onPress={() => setSelectItem(item.text)}
+                onPress={() => {
+                  setSelectItem(item.plan_name), setAddToExerciseData(item);
+                }}
                 style={[
                   CssStyle.flexData,
                   {
                     marginBottom: responsiveHeight(1.9),
                     borderWidth: 1,
                     borderColor:
-                      selectItem == item.text
+                      selectItem == item.plan_name
                         ? AppColors.buttonText
                         : '#00000022',
                     borderRadius: 12,
                     backgroundColor:
-                      selectItem == item.text ? '#0A1F58' : '#626377',
+                      selectItem == item.plan_name ? '#0A1F58' : '#626377',
                     paddingHorizontal: responsiveWidth(3),
                     paddingVertical: responsiveHeight(1.5),
                   },
@@ -213,7 +286,7 @@ const AllPlan = ({navigation, route}) => {
           <CustomButton
             onPress={() =>
               selectItem
-                ? setOpenModel(true)
+                ? AddToExercise()
                 : ToastAndroid.show(
                     'Please select one option',
                     ToastAndroid.SHORT,
@@ -284,7 +357,7 @@ const AllPlan = ({navigation, route}) => {
                 <CustomButton
                   buttonText={'Go Back'}
                   onPress={() => {
-                    setOpenModel(false), navigation.navigate('WorkoutExercise');
+                    setOpenModel(false), navigation.navigate('WorkoutDetail');
                   }}
                   buttonColor={'transparent'}
                   mode="outlined"

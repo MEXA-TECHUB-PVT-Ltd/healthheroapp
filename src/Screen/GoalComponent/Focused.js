@@ -4,6 +4,7 @@ import {
   Platform,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -21,8 +22,12 @@ import Contact from '../../Helping/FocusedData';
 import CustomButton from '../../component/CustomButton';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
+import {PostReview} from '../../services/WorkoutPlan';
+import {useSelector} from 'react-redux';
 
-const Focused = ({navigation}) => {
+const Focused = ({navigation, route}) => {
+  const {item} = route.params ? route.params : '';
+  console.log(item, 'fjsldfj');
   const gender = [
     {item: 'Too Easy', id: 1},
     {item: 'A Little Easy', id: 2},
@@ -32,6 +37,27 @@ const Focused = ({navigation}) => {
   ];
   const [data, setData] = useState([]);
   const [openModel, setOpenModel] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [review, setReview] = useState('');
+  const id = useSelector(data => data.id);
+  console.log(id, review, item);
+  const TakeReview = async () => {
+    setLoading(true);
+    try {
+      const result = await PostReview(id, item, review);
+      console.log(result, 'workout plan');
+      if (result.status == true) {
+        setOpenModel(true);
+        setLoading(false);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -50,7 +76,7 @@ const Focused = ({navigation}) => {
         </View>
         <View
           style={{
-            flex: 1,
+            flex: 0.8,
             paddingTop: responsiveHeight(2),
             // alignItems: 'center',
           }}>
@@ -77,7 +103,7 @@ const Focused = ({navigation}) => {
             exercise. Please take a moment to share your thoughts
           </Text>
         </View>
-        <View style={{flex: 2}}>
+        <View style={{flex: 1.8}}>
           {/* {gender.map((item, index) => (
             <ItemData key={index} index={index} item={item} />
           ))} */}
@@ -88,19 +114,45 @@ const Focused = ({navigation}) => {
             renderItem={({item, index}) => {
               return (
                 <View key={index} style={{}}>
-                  <Contact
-                    contact={item}
-                    setAddedItem={setData}
-                    addedItem={data}
-                  />
+                  <TouchableOpacity
+                    style={[
+                      styles.buttonGender,
+                      {
+                        backgroundColor:
+                          review !== item.item ? '#626377' : '#0A1F58',
+                        borderColor:
+                          review !== item.item
+                            ? '#626377'
+                            : AppColors.buttonText,
+                        borderWidth: 1,
+                        width: responsiveWidth(84),
+                      },
+                    ]}
+                    onPress={() => {
+                      setReview(item.item);
+                    }}>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontWeight: '500',
+                        fontFamily: 'Interstate-regular',
+                      }}>
+                      {item.item}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               );
             }}
           />
         </View>
-        <View style={{flex: 0.299}}>
+        <View style={{flex: 0.26}}>
           <CustomButton
-            onPress={() => setOpenModel(true)}
+            loading={loading}
+            onPress={() =>
+              review
+                ? TakeReview()
+                : ToastAndroid.show('Please add review', ToastAndroid.SHORT)
+            }
             styleText={{textTransform: 'none'}}
             paddingVertical={5}
             buttonText={'Submit'}
