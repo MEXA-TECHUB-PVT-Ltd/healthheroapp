@@ -23,6 +23,14 @@ import Discover from '../Screen/DashboardComponent/Discover';
 import {AppColors} from '../Helping/AppColor';
 import Gender from '../Auth/Gender';
 import WorkoutExercise from '../Screen/GoalComponent/WorkoutExercise';
+import GetExercise from '../Screen/GoalComponent/GetExercise';
+import WorkoutDetail from '../Screen/GoalComponent/WorkoutDetail';
+import Focused from '../Screen/GoalComponent/Focused';
+import ExerciseDetail from '../Screen/GoalComponent/ExerciseDetail';
+import AllPlan from '../Screen/GoalComponent/Plan/AllPlan';
+import CreatePlan from '../Screen/GoalComponent/Plan/CreatePlan';
+import StartExercise from '../Screen/GoalComponent/StartExercise';
+import RestTime from '../Screen/GoalComponent/RestTime';
 
 export const BottomTab = () => {
   const Bottom = createBottomTabNavigator();
@@ -171,6 +179,14 @@ export const UserNavigation = () => {
       <Stack.Screen name="Discover" component={Discover} />
       <Stack.Screen name="Gender" component={Gender} />
       <Stack.Screen name="WorkoutExercise" component={WorkoutExercise} />
+      <Stack.Screen name="GetExercise" component={GetExercise} />
+      <Stack.Screen name="WorkoutDetail" component={WorkoutDetail} />
+      <Stack.Screen name="Focused" component={Focused} />
+      <Stack.Screen name="ExerciseDetail" component={ExerciseDetail} />
+      <Stack.Screen name="AllPlan" component={AllPlan} />
+      <Stack.Screen name="CreatePlan" component={CreatePlan} />
+      <Stack.Screen name="StartExercise" component={StartExercise} />
+      <Stack.Screen name="RestTime" component={RestTime} />
     </Stack.Navigator>
   );
 };

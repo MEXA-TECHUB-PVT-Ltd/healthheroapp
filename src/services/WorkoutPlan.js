@@ -93,7 +93,75 @@ export const GetSearchData = async name => {
     return error;
   }
 };
-
+export const GetWorkoutById = async name => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      //   body: new URLSearchParams({
+      //     email: email,
+      //     password: password,
+      //   }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlWorkout}workoutPlansByCategory_id?category_id=${name}&page=1&limit=2
+        `,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+export const GetWorkoutPlanById = async name => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      //   body: new URLSearchParams({
+      //     email: email,
+      //     password: password,
+      //   }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlWorkout}getWorkoutPlanById?workout_plan_id=${name}
+        `,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+export const GetWorkoutPlanAll = async () => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      //   body: new URLSearchParams({
+      //     email: email,
+      //     password: password,
+      //   }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlWorkout}getAllWorkoutPlans?page=1&limit=20
+        `,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
 
 // ------------- workout plan exercise------------------
 
@@ -119,4 +187,4 @@ export const ExerciseOfTheDay = async name => {
   } catch (error) {
     return error;
   }
-}
+};

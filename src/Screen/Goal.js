@@ -30,7 +30,7 @@ const Goal = ({navigation}) => {
     setLoading(true);
     try {
       const result = await ExerciseOfTheDay();
-      console.log(result);
+      // console.log(result);
       if (result.status == true) {
         setExerciseData(result.result);
         setLoading(false);

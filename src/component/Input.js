@@ -28,6 +28,7 @@ const Input = ({
   bgColor,
   fontSize,
   marginVertical,
+  borderRadius,
 }) => {
   const [showIcon, setShowIcon] = useState(true);
   return (
@@ -41,7 +42,7 @@ const Input = ({
         placeholder={placeholder}
         value={value}
         outlineStyle={{
-          borderRadius: responsiveHeight(20),
+          borderRadius: borderRadius ? borderRadius : responsiveHeight(20),
           borderColor: '#00000001',
         }}
         mode="outlined"
