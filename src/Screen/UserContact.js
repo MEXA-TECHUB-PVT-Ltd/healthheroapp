@@ -47,12 +47,12 @@ const UserContact = ({navigation}) => {
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
       text: 'Training rest',
-      nav: '',
+      nav: 'TrainingRest',
     },
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
       text: 'Count Down time',
-      nav: '',
+      nav: 'CountDownTime',
     },
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
@@ -67,29 +67,31 @@ const UserContact = ({navigation}) => {
       </Text>
       <View style={[{}]}>
         {workOut.map((item, index) => (
-          <TouchableOpacity
-            onPress={() => {
-              item.text == 'Restart progress'
-                ? setOpenRestartModel(true)
-                : navigation.navigate(item.nav);
-            }}
-            key={index}>
-            <View style={[CssStyle.flexJustify, {}]}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontFamily: 'Interstate-regular',
-                  fontSize: 14,
-                  letterSpacing: 0.8,
-                }}>
-                {item.text}
-              </Text>
-              {item.icon}
-            </View>
+          <>
+            <TouchableOpacity
+              onPress={() => {
+                item.text == 'Restart progress'
+                  ? setOpenRestartModel(true)
+                  : navigation.navigate(item.nav);
+              }}
+              key={index}>
+              <View style={[CssStyle.flexJustify, {}]}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontFamily: 'Interstate-regular',
+                    fontSize: 14,
+                    letterSpacing: 0.8,
+                  }}>
+                  {item.text}
+                </Text>
+                {item.icon}
+              </View>
+            </TouchableOpacity>
             {index !== workOut.length - 1 && (
               <Line style={{marginVertical: responsiveHeight(2)}} />
             )}
-          </TouchableOpacity>
+          </>
         ))}
       </View>
     </>
@@ -98,22 +100,22 @@ const UserContact = ({navigation}) => {
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
       text: 'Update Password',
-      nav: 'Reminder',
+      nav: 'UpdatePassword',
     },
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
       text: 'Go Premium',
-      nav: 'Imperial',
+      nav: 'GetPremium',
     },
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
       text: 'Workout Reminder',
-      nav: 'Language',
+      nav: 'WorkoutReminder',
     },
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
       text: 'Metric & Imperial units',
-      nav: 'Language',
+      nav: '',
     },
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
@@ -145,7 +147,7 @@ const UserContact = ({navigation}) => {
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
       text: 'Privacy policy',
-      nav: '',
+      nav: 'PrivacyPolicy',
     },
   ];
   const GeneralSettings = () => (
@@ -153,40 +155,42 @@ const UserContact = ({navigation}) => {
       <Text style={CssStyle.settingText}>General Settings</Text>
       <View style={[{}]}>
         {generalSetting.map((item, index) => (
-          <TouchableOpacity
-            disabled={item.text == 'Keep the screen on' ? true : false}
-            onPress={() => {
-              navigation.navigate(item.nav);
-            }}
-            key={index}>
-            <View style={CssStyle.flexJustify}>
-              {/* <View style={[CssStyle.flexData, {}]}> */}
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 14,
-                  letterSpacing: 0.8,
-                }}>
-                {item.text}
-              </Text>
-              {/* </View> */}
-              {item.text == 'Keep the screen on' ? (
-                <Switch
-                  style={{marginLeft: responsiveWidth(1)}}
-                  trackColor={{false: '#D8D8D880', true: '#006FFF40'}}
-                  thumbColor={isEnabled ? AppColors.buttonText : '#D8D8D8'}
-                  ios_backgroundColor="#3e3e3e"
-                  onValueChange={toggleSwitch}
-                  value={isEnabled}
-                />
-              ) : (
-                item.icon
-              )}
-            </View>
+          <>
+            <TouchableOpacity
+              disabled={item.text == 'Keep the screen on' ? true : false}
+              onPress={() => {
+                navigation.navigate(item.nav);
+              }}
+              key={index}>
+              <View style={CssStyle.flexJustify}>
+                {/* <View style={[CssStyle.flexData, {}]}> */}
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 14,
+                    letterSpacing: 0.8,
+                  }}>
+                  {item.text}
+                </Text>
+                {/* </View> */}
+                {item.text == 'Keep the screen on' ? (
+                  <Switch
+                    style={{marginLeft: responsiveWidth(1)}}
+                    trackColor={{false: '#D8D8D880', true: '#006FFF40'}}
+                    thumbColor={isEnabled ? AppColors.buttonText : '#D8D8D8'}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitch}
+                    value={isEnabled}
+                  />
+                ) : (
+                  item.icon
+                )}
+              </View>
+            </TouchableOpacity>
             {index !== generalSetting.length - 1 && (
               <Line style={{marginVertical: responsiveHeight(2)}} />
             )}
-          </TouchableOpacity>
+          </>
         ))}
       </View>
     </>
@@ -196,28 +200,30 @@ const UserContact = ({navigation}) => {
       <Text style={CssStyle.settingText}>Support Us </Text>
       <View style={[{flex: 1, marginBottom: responsiveHeight(3)}]}>
         {SupportUs.map((item, index) => (
-          <TouchableOpacity
-            onPress={() => {
-              item.text == 'Privacy policy'
-                ? navigation.navigate('PrivacyPolicy')
-                : {};
-            }}
-            key={index}>
-            <View style={[CssStyle.flexJustify, {}]}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 14,
-                  letterSpacing: 0.8,
-                }}>
-                {item.text}
-              </Text>
-              {item.icon}
-            </View>
+          <>
+            <TouchableOpacity
+              onPress={() => {
+                item.text == 'Privacy policy'
+                  ? navigation.navigate('PrivacyPolicy')
+                  : {};
+              }}
+              key={index}>
+              <View style={[CssStyle.flexJustify, {}]}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 14,
+                    letterSpacing: 0.8,
+                  }}>
+                  {item.text}
+                </Text>
+                {item.icon}
+              </View>
+            </TouchableOpacity>
             {index !== SupportUs.length - 1 && (
               <Line style={{marginVertical: responsiveHeight(2)}} />
             )}
-          </TouchableOpacity>
+          </>
         ))}
       </View>
     </>

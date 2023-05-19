@@ -33,6 +33,15 @@ import CreatePlan from '../Screen/GoalComponent/Plan/CreatePlan';
 import StartExercise from '../Screen/GoalComponent/StartExercise';
 import RestTime from '../Screen/GoalComponent/RestTime';
 import QuitExercise from '../Screen/GoalComponent/QuitExercise';
+import CountDownTime from '../Screen/UserProfile/CountDownTime';
+import Faq from '../Screen/UserProfile/Faq';
+import GetPremium from '../Screen/UserProfile/GetPremium';
+import PrivacyPolicy from '../Screen/UserProfile/PrivacyPolicy';
+import SetReminder from '../Screen/UserProfile/SetReminder';
+import TrainingRest from '../Screen/UserProfile/TrainingRest';
+import UpdatePassword from '../Screen/UserProfile/UpdatePassword';
+import WorkoutReminder from '../Screen/UserProfile/WorkoutReminder';
+import AboutFreeTrial from '../Screen/UserProfile/AboutFreeTrial';
 
 export const BottomTab = () => {
   const Bottom = createBottomTabNavigator();
@@ -190,6 +199,15 @@ export const UserNavigation = () => {
       <Stack.Screen name="StartExercise" component={StartExercise} />
       <Stack.Screen name="RestTime" component={RestTime} />
       <Stack.Screen name="QuitExercise" component={QuitExercise} />
+      <Stack.Screen name="CountDownTime" component={CountDownTime} />
+      <Stack.Screen name="Faq" component={Faq} />
+      <Stack.Screen name="GetPremium" component={GetPremium} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+      <Stack.Screen name="SetReminder" component={SetReminder} />
+      <Stack.Screen name="TrainingRest" component={TrainingRest} />
+      <Stack.Screen name="UpdatePassword" component={UpdatePassword} />
+      <Stack.Screen name="WorkoutReminder" component={WorkoutReminder} />
+      <Stack.Screen name="AboutFreeTrial" component={AboutFreeTrial} />
     </Stack.Navigator>
   );
 };

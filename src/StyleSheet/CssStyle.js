@@ -40,7 +40,7 @@ export default CssStyle = StyleSheet.create({
     elevation: 4,
   },
   successBox: {
-    width: width - 70,
+    width: responsiveWidth(70),
     height: Platform.OS == 'ios' ? height / 3 - 24 : height / 3 - 10,
     backgroundColor: 'white',
     borderRadius: 20,
@@ -54,14 +54,14 @@ export default CssStyle = StyleSheet.create({
     alignItems: 'center',
   },
   dataReset: {
-    paddingVertical: 44,
+    paddingVertical: 30,
     color: 'black',
-    letterSpacing: 0.7,
-    fontSize: 13.5,
+    // letterSpacing: 0.7,
+    fontSize: 16,
   },
   headerText: {
     paddingTop: 30,
-    color: AppColors.buttonText,
+    color: 'black',
     fontSize: 20,
     fontWeight: 'bold',
   },
@@ -85,5 +85,16 @@ export default CssStyle = StyleSheet.create({
     width: responsiveWidth(60),
     marginVertical: responsiveHeight(1.8),
     marginLeft: responsiveWidth(2.8),
+  },
+  textInsideSettingComponent: {
+    color: 'white',
+    fontFamily: 'Interstate-bold',
+    fontSize: 41,
+  },
+  textInfoSetting: {
+    color: 'white',
+    fontSize: 14,
+    marginVertical: responsiveHeight(2),
+    marginLeft: responsiveWidth(1),
   },
 });
