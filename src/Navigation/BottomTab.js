@@ -8,9 +8,8 @@ import Heart from '../assets/Health-Hero/Group722.png';
 import WinnerLogo from '../assets/Health-Hero/Icon.png';
 import TextLogo from '../assets/Health-Hero/Iconfeather-file-text.png';
 import Contact from '../assets/Icon4.png';
-import Goal from '../Screen/Goal';
 import HeartProfile from '../Screen/HeartProfile';
-import Winner from '../Screen/Winner';
+import Winner from '../Screen/Nutrition';
 import UserContact from '../Screen/UserContact';
 import {createStackNavigator} from '@react-navigation/stack';
 import Search from '../Screen/DashboardComponent/Search';
@@ -20,9 +19,8 @@ import Intermediate from '../Screen/DashboardComponent/Intermediate';
 import WorkoutPlan from '../Screen/DashboardComponent/WorkoutPlan';
 import Exercise from '../Screen/DashboardComponent/Exercise';
 import AuthNavigation from './AuthNavigation';
-import Discover from '../Screen/DashboardComponent/Discover';
 import {AppColors} from '../Helping/AppColor';
-import Gender from '../Auth/Gender';
+import Gender from '../Auth/AboutProfileData/Gender';
 import WorkoutExercise from '../Screen/GoalComponent/WorkoutExercise';
 import GetExercise from '../Screen/GoalComponent/GetExercise';
 import WorkoutDetail from '../Screen/GoalComponent/WorkoutDetail';
@@ -43,6 +41,25 @@ import UpdatePassword from '../Screen/UserProfile/UpdatePassword';
 import WorkoutReminder from '../Screen/UserProfile/WorkoutReminder';
 import AboutFreeTrial from '../Screen/UserProfile/AboutFreeTrial';
 import GenderProfile from '../Screen/UserProfile/GenderProfile';
+import MetricUnits from '../Screen/UserProfile/MetricUnits';
+import Discover from '../Screen/Discover';
+import Nutrition from '../Screen/Nutrition';
+import FocusedAreaProfile from '../Auth/AboutProfileData/FocusedAreaProfile';
+import CurrentWeight from '../Auth/AboutProfileData/CurrentWeight';
+import CurrentHeight from '../Auth/AboutProfileData/CurrentHeight';
+import StartNow from '../Screen/DashboardComponent/StartNow';
+import SevenFourWorkout from '../Screen/DashboardComponent/SevenFourWorkout';
+import SelectPlan from '../Screen/Nutrition/SelectPlan';
+import NutritionHeight from '../Screen/Nutrition/NutritionHeight';
+import NutritionWeight from '../Screen/Nutrition/NutritionWeight';
+import NutritionTargeted from '../Screen/Nutrition/NutritionTargeted';
+import ActiveAge from '../Screen/Nutrition/ActiveAge';
+import NutritionGender from '../Screen/Nutrition/NutritionGender';
+import WeekGoal from '../Screen/Nutrition/WeekGoal';
+import SetCalories from '../Screen/Nutrition/SetCalories';
+import SelectFood from '../Screen/Nutrition/Food/SelectFood';
+import EnterFood from '../Screen/Nutrition/Food/EnterFood';
+import TypeOfTracker from '../Screen/Nutrition/TypeOfTracker';
 
 export const BottomTab = () => {
   const Bottom = createBottomTabNavigator();
@@ -99,7 +116,7 @@ export const BottomTab = () => {
           ),
         }}
         name="Dashboard1"
-        component={Goal}
+        component={Discover}
       />
       <Bottom.Screen
         options={{
@@ -145,7 +162,7 @@ export const BottomTab = () => {
           ),
         }}
         name="Dashboard3"
-        component={Winner}
+        component={Nutrition}
       />
       <Bottom.Screen
         options={{
@@ -188,7 +205,6 @@ export const UserNavigation = () => {
       <Stack.Screen name="WorkoutPlan" component={WorkoutPlan} />
       <Stack.Screen name="Exercise" component={Exercise} />
       <Stack.Screen name="Auth" component={AuthNavigation} />
-      <Stack.Screen name="Discover" component={Discover} />
       <Stack.Screen name="Gender" component={Gender} />
       <Stack.Screen name="WorkoutExercise" component={WorkoutExercise} />
       <Stack.Screen name="GetExercise" component={GetExercise} />
@@ -210,6 +226,23 @@ export const UserNavigation = () => {
       <Stack.Screen name="WorkoutReminder" component={WorkoutReminder} />
       <Stack.Screen name="AboutFreeTrial" component={AboutFreeTrial} />
       <Stack.Screen name="GenderProfile" component={GenderProfile} />
+      <Stack.Screen name="MetricUnits" component={MetricUnits} />
+      <Stack.Screen name="FocusedAreaProfile" component={FocusedAreaProfile} />
+      <Stack.Screen name="CurrentWeight" component={CurrentWeight} />
+      <Stack.Screen name="CurrentHeight" component={CurrentHeight} />
+      <Stack.Screen name="StartNow" component={StartNow} />
+      <Stack.Screen name="SevenFourWorkout" component={SevenFourWorkout} />
+      <Stack.Screen name="SelectPlan" component={SelectPlan} />
+      <Stack.Screen name="NutritionHeight" component={NutritionHeight} />
+      <Stack.Screen name="NutritionWeight" component={NutritionWeight} />
+      <Stack.Screen name="NutritionTargeted" component={NutritionTargeted} />
+      <Stack.Screen name="NutritionGender" component={NutritionGender} />
+      <Stack.Screen name="ActiveAge" component={ActiveAge} />
+      <Stack.Screen name="WeekGoal" component={WeekGoal} />
+      <Stack.Screen name="SetCalories" component={SetCalories} />
+      <Stack.Screen name="SelectFood" component={SelectFood} />
+      <Stack.Screen name="EnterFood" component={EnterFood} />
+      <Stack.Screen name="TypeOfTracker" component={TypeOfTracker} />
     </Stack.Navigator>
   );
 };

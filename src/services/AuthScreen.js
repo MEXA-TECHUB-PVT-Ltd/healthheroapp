@@ -20,6 +20,7 @@ export const LoginApi = async (email, password) => {
   }
 };
 export const SignUpApi = async (email, password) => {
+  console.log(email, password);
   try {
     const requestOptions = {
       method: 'POST',

@@ -52,7 +52,7 @@ const UpdatePassword = ({navigation, route}) => {
   const ChangePassword = async () => {
     setLoading(true);
     try {
-      const result = await UpdatePasswordApi(item, newPassword);
+      const result = await UpdatePasswordApi(item.email, newPassword);
       console.log(result);
       if (result.status == true) {
         setLoading(false);

@@ -49,7 +49,8 @@ const GenderProfile = ({navigation, route}) => {
       );
       console.log(result);
       if (result.status == true) {
-        setOpenUserSuccessfully(false);
+        setOpenUserSuccessfully(true);
+        setLoadingUser(false);
       } else {
         console.error(result.message);
         setLoadingUser(false);

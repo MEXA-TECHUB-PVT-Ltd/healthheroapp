@@ -54,8 +54,6 @@ const WorkoutReminder = ({navigation, route}) => {
   const [dataItem, setDataItem] = useState([
     {item: 1},
     {item: 2},
-    {item: 1},
-    {item: 2},
   ]);
   const dayDataActive = [{day: 'M'}, {day: 'W'}, {day: 'Th'}, {day: 'F'}];
 

@@ -18,7 +18,7 @@ import {GetWorkoutById} from '../../services/WorkoutPlan';
 
 const WorkoutExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
+  console.log(item, 'asfs');
   const [loading, setLoading] = useState(false);
   const [workoutData, setWorkoutData] = useState([]);
   const WorkoutPlan = async () => {
@@ -77,48 +77,51 @@ const WorkoutExercise = ({navigation, route}) => {
             data={workoutData}
             numColumns={2}
             showsVerticalScrollIndicator={false}
-            renderItem={({item, index}) => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('WorkoutDetail', {item: item})
-                }
-                style={{
-                  // width: responsiveWidth(50),
-                  marginBottom: responsiveHeight(2),
-                  marginRight: responsiveWidth(7),
-                }}>
-                <Image
-                  borderRadius={responsiveWidth(2)}
-                  source={require('../../assets/Rectangle32.png')}
+            renderItem={({item, index}) => {
+              console.log(item);
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('WorkoutDetail', {item: item})
+                  }
                   style={{
-                    width: responsiveWidth(40),
-                    height: responsiveHeight(18),
-                  }}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 13,
-                    fontFamily: 'Interstate-regular',
-                    alignSelf: 'center',
-                    marginVertical: responsiveHeight(0.6),
-                    paddingTop: responsiveHeight(1),
+                    // width: responsiveWidth(50),
+                    marginBottom: responsiveHeight(2),
+                    marginRight: responsiveWidth(7),
                   }}>
-                  Yoga exercise
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 12,
-                    fontFamily: 'Interstate-regular',
-                    opacity: 0.5,
-                    alignSelf: 'center',
-                  }}>
-                  21 min | 400 k
-                </Text>
-              </TouchableOpacity>
-            )}
+                  <Image
+                    borderRadius={responsiveWidth(2)}
+                    source={require('../../assets/Rectangle32.png')}
+                    style={{
+                      width: responsiveWidth(40),
+                      height: responsiveHeight(18),
+                    }}
+                    resizeMode="contain"
+                  />
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 13,
+                      fontFamily: 'Interstate-regular',
+                      alignSelf: 'center',
+                      marginVertical: responsiveHeight(0.6),
+                      paddingTop: responsiveHeight(1),
+                    }}>
+                    Yoga exercise
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 12,
+                      fontFamily: 'Interstate-regular',
+                      opacity: 0.5,
+                      alignSelf: 'center',
+                    }}>
+                    21 min | 400 k
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
           />
         </View>
       </View>

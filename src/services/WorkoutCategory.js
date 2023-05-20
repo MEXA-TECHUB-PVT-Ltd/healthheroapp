@@ -13,7 +13,7 @@ export const GetAllCategories = async name => {
       },
     };
     const response = await fetch(
-      `${BaseUrlCategory}getAllcategories?page=1&limit=9
+      `${BaseUrlCategory}getAllcategories?page=1&limit=20
           `,
       requestOptions,
     );

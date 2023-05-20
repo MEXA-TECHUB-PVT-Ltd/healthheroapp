@@ -22,3 +22,27 @@ export const TakeCountDownApi = async (id, time) => {
     return error;
   }
 };
+
+export const GetCountDownApi = async id => {
+  console.log(id);
+  try {
+    const requestOptions = {
+      method: 'GET',
+      // body: JSON.stringify({
+      //   user_id: id,
+      //   time: time,
+      // }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlCountDown}getCountDownTimeOfUser?user_id=${id}`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};

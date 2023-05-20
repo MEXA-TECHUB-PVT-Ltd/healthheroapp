@@ -7,7 +7,7 @@ import SignUp from '../Auth/SignUp';
 import ForgotPassword from '../Auth/ForgotPassword';
 import Verification from '../Auth/Verification';
 import ResetPassword from '../Auth/ResetPassword';
-import { BottomTab, UserNavigation } from './BottomTab';
+import { UserNavigation } from './BottomTab';
 
 const AuthNavigation = () => {
   const AuthStack = createStackNavigator();

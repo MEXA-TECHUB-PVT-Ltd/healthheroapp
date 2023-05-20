@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   responsiveFontSize,
@@ -21,11 +21,35 @@ import {AppColors} from '../../Helping/AppColor';
 import Logo from '../../assets/Icon3';
 import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
+import {GetCountDownApi} from '../../services/CountDownApi';
+import {useSelector} from 'react-redux';
 const StartExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
   // console.log(item);
   const countdownRef = useRef();
-
+  const [loading, setLoading] = useState(false);
+  const [countDownData, setCountDownData] = useState('');
+  const id = useSelector(data => data.id);
+  const GetCategory = async () => {
+    setLoading(true);
+    try {
+      const result = await GetCountDownApi(id);
+      console.log(result);
+      if (result.status == true) {
+        setCountDownData(result.result);
+        setLoading(false);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GetCategory();
+  }, []);
   return (
     <ImageBackground
       style={{
@@ -67,7 +91,7 @@ const StartExercise = ({navigation, route}) => {
                 ref={countdownRef}
                 style={styles.timer}
                 textStyle={styles.watchTime}
-                initialSeconds={15}
+                initialSeconds={countDownData?.time ? countDownData?.time : 15}
                 onTimes={e => {
                   //   setDataNumber(e);
                 }}
@@ -180,9 +204,7 @@ const StartExercise = ({navigation, route}) => {
           </View>
           <View style={{alignItems: 'center', marginTop: responsiveHeight(4)}}>
             <CustomButton
-              onPress={() =>
-                navigation.navigate('GetExercise', {item: item})
-              }
+              onPress={() => navigation.navigate('GetExercise', {item: item})}
               activeOpacity={1}
               buttonColor={AppColors.buttonText}
               paddingVertical={2}
