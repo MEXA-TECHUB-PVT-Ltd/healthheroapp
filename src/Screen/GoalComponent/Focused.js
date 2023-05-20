@@ -35,7 +35,6 @@ const Focused = ({navigation, route}) => {
     {item: 'A little Hard', id: 4},
     {item: 'Too Hard', id: 5},
   ];
-  const [data, setData] = useState([]);
   const [openModel, setOpenModel] = useState(false);
   const [loading, setLoading] = useState(false);
   const [review, setReview] = useState('');

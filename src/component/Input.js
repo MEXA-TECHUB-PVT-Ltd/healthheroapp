@@ -52,7 +52,7 @@ const Input = ({
           style,
           {
             backgroundColor: bgColor ? bgColor : '#232441',
-            marginVertical: marginVertical ? marginVertical : 7,
+            marginVertical: marginVertical ? marginVertical : 5,
             paddingVertical: paddingVertical ? paddingVertical : 0,
             fontWeight: fontWeight ? fontWeight : '500',
             height: height ? height : responsiveHeight(6),
