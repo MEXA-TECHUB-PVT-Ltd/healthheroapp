@@ -146,3 +146,85 @@ export const UpdateProfileApi = async (
     return error;
   }
 };
+
+export const GetPremiumApi = async id => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      // body: JSON.stringify({
+      //   user_id: id,
+      //   user_name: name,
+      //   device_id: deviceId,
+      //   gender: gender,
+      //   focusedAreas: focusedArea,
+      //   height: height,
+      //   weight: weight,
+      //   weight_unit: weightUnit,
+      //   height_unit: heightUnit,
+      // }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrl}user/getUserSubscribedDetails?user_id=${id}`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+export const GetUserDetailApi = async id => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      // body: JSON.stringify({
+      //   user_id: id,
+      //   user_name: name,
+      //   device_id: deviceId,
+      //   gender: gender,
+      //   focusedAreas: focusedArea,
+      //   height: height,
+      //   weight: weight,
+      //   weight_unit: weightUnit,
+      //   height_unit: heightUnit,
+      // }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrl}user/view_user_profile?user_id=${id}`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const UpdatePasswordApi = async (id, password) => {
+  try {
+    const requestOptions = {
+      method: 'PUT',
+      body: JSON.stringify({
+        email: id,
+        password: password,
+      }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrl}user/updatePassword`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};

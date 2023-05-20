@@ -318,18 +318,6 @@ const Gender = ({navigation, route}) => {
               color={AppColors.buttonText}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{}}
-            onPress={() => navigation.navigate('main')}>
-            <Text
-              style={{
-                // fontFamily: 'Interstate-regular',
-                color: AppColors.buttonText,
-                letterSpacing: 0.4,
-              }}>
-              Skip intro
-            </Text>
-          </TouchableOpacity>
         </View>
         <SwiperFlatList
           ref={flatNode}

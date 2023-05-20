@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   responsiveHeight,
@@ -23,32 +23,62 @@ import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 import {TakeCountDownApi} from '../../services/CountDownApi';
 import Input from '../../component/Input';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {UpdatePasswordApi} from '../../services/AuthScreen';
 
 const UpdatePassword = ({navigation, route}) => {
+  const {item} = route.params ? route.params : '';
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(13);
   const id = useSelector(data => data.id);
-  const ChangePassword = async () => {
-    // setLoading(true);
-    // try {
-    //   const result = await TakeCountDownApi(id, time);
-    //   console.log(result);
-    //   if (result.status == true) {
-    //     setLoading(false);
-    setOpenRestartModel(true);
-    //   } else {
-    //     console.error(result.message);
-    //     setLoading(false);
-    //   }
-    // } catch (error) {
-    //   setLoading;
-    //   console.log(error);
-    // }
-  };
+  const [oldPassword, setOldPassword] = useState('');
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [data, setData] = useState('');
+  const [emailValidError, setEmailValidError] = useState('');
+  const handleValidEmail = val => {
+    let reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,12}$/;
+
+    if (val.length === 0) {
+      setEmailValidError('Password not valid');
+    } else if (reg.test(val) === false) {
+      setEmailValidError('Enter valid  password');
+    } else if (reg.test(val) === true) {
+      setEmailValidError('');
+    }
+  };
+  const ChangePassword = async () => {
+    setLoading(true);
+    try {
+      const result = await UpdatePasswordApi(item, newPassword);
+      console.log(result);
+      if (result.status == true) {
+        setLoading(false);
+        setOpenRestartModel(true);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading;
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GetUserName();
+  }, []);
+  const GetUserName = async () => {
+    const result = await AsyncStorage.getItem('userPassword');
+    setOldPassword(result);
+    console.log(result);
+  };
+  useEffect(() => {
+    setTimeout(() => {
+      setData('');
+    }, 2500);
+  }, [data]);
   return (
     <LinearGradient
       colors={['#0A1F58', '#0A1637']}
@@ -106,17 +136,79 @@ const UpdatePassword = ({navigation, route}) => {
             offIcon={'eye-off-outline'}
             enableIcon={true}
           />
+          {data == 'oldPassword' ? (
+            <Text
+              style={{
+                color: 'red',
+                fontSize: 12,
+                marginLeft: responsiveWidth(5),
+              }}>
+              Old password is wrong
+            </Text>
+          ) : data == 'AddField' ? (
+            <Text
+              style={{
+                color: 'red',
+                fontSize: 12,
+                marginLeft: responsiveWidth(5),
+              }}>
+              Fill the fields
+            </Text>
+          ) : (
+            data == 'oldNewMatch' && (
+              <Text
+                style={{
+                  color: 'red',
+                  fontSize: 12,
+                  marginLeft: responsiveWidth(5),
+                }}>
+                New password and old password is matching
+              </Text>
+            )
+          )}
           <Input
             bgColor={'#ffffff60'}
             placeholder={'New Password'}
             noIcon={true}
             fontSize={16}
             value={newPassword}
-            onChangeText={e => setNewPassword(e)}
+            onChangeText={e => {
+              setNewPassword(e);
+            }}
             rightIcon="eye-outline"
             offIcon={'eye-off-outline'}
             enableIcon={true}
           />
+          {data == 'NewPassword' ? (
+            <Text
+              style={{
+                color: 'red',
+                fontSize: 12,
+                marginLeft: responsiveWidth(5),
+              }}>
+              new password not match
+            </Text>
+          ) : data == 'AddField' ? (
+            <Text
+              style={{
+                color: 'red',
+                fontSize: 12,
+                marginLeft: responsiveWidth(5),
+              }}>
+              Fill the fields
+            </Text>
+          ) : (
+            data == 'oldNewMatch' && (
+              <Text
+                style={{
+                  color: 'red',
+                  fontSize: 12,
+                  marginLeft: responsiveWidth(5),
+                }}>
+                New password and old password is matching
+              </Text>
+            )
+          )}
           <Input
             bgColor={'#ffffff60'}
             placeholder={'Confirm Password'}
@@ -128,11 +220,43 @@ const UpdatePassword = ({navigation, route}) => {
             offIcon={'eye-off-outline'}
             enableIcon={true}
           />
+          {data == 'NewPassword' ? (
+            <Text
+              style={{
+                color: 'red',
+                fontSize: 12,
+                marginLeft: responsiveWidth(5),
+              }}>
+              new password not match
+            </Text>
+          ) : (
+            data == 'AddField' && (
+              <Text
+                style={{
+                  color: 'red',
+                  fontSize: 12,
+                  marginLeft: responsiveWidth(5),
+                }}>
+                Fill the fields
+              </Text>
+            )
+          )}
         </View>
         <View style={{alignItems: 'center', paddingTop: responsiveHeight(5)}}>
           <CustomButton
+            loading={loading}
             onPress={() => {
-              ChangePassword();
+              !password && !newPassword && !confirmPassword
+                ? setData('AddField')
+                : oldPassword !== password
+                ? setData('oldPassword')
+                : newPassword !== confirmPassword
+                ? setData('NewPassword')
+                : password == newPassword
+                ? setData('oldNewMatch')
+                : emailValidError
+                ? setData('NewAuthentic')
+                : ChangePassword();
             }}
             activeOpacity={1}
             buttonColor={AppColors.buttonText}
@@ -202,7 +326,7 @@ const UpdatePassword = ({navigation, route}) => {
                   <CustomButton
                     buttonText={'Go Back'}
                     onPress={() => {
-                      navigation.goBack();
+                      navigation.goBack(), setOpenRestartModel(false);
                     }}
                     buttonColor={'transparent'}
                     mode="outlined"

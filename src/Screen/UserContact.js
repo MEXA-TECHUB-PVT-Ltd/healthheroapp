@@ -20,29 +20,37 @@ import {
 } from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Loader from '../component/Loader';
 import {Line} from '../component/Line';
 import CustomButton from '../component/CustomButton';
 import {RestartProgressAPI} from '../services/WorkoutPlan';
 import {useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Input from '../component/Input';
+import {GetUserDetailApi, UpdateProfileApi} from '../services/AuthScreen';
+import Loader from '../component/Loader';
+import Lottie from 'lottie-react-native';
+import assets from '../assets';
+
 const UserContact = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-  const [changeGender, setChangeGender] = useState(false);
-  const [traningText, setTraningText] = useState(false);
-  const [restartProcess, setRestartProcess] = useState(false);
-  const genderData = [{item: 'male'}, {item: 'female'}];
   const [openModel, setOpenModel] = useState(false);
-  // const [isEnabled, setIsEnabled] = useState(false);
-  // const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [username, setUsername] = useState('');
+  const [openModelUserName, setOpenModelUsername] = useState(false);
+  const [data, setData] = useState('');
+  const [openUserSuccessfully, setOpenUserSuccessfully] = useState(false);
+  const [userDetailData, setUserDetailData] = useState('');
+  const [loadingUser, setLoadingUser] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
+  const id = useSelector(data => data.id);
 
   const workOut = [
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
       text: 'Gender',
-      nav: '',
+      nav: 'GenderProfile',
     },
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
@@ -72,7 +80,7 @@ const UserContact = ({navigation}) => {
               onPress={() => {
                 item.text == 'Restart progress'
                   ? setOpenRestartModel(true)
-                  : navigation.navigate(item.nav);
+                  : navigation.navigate(item.nav, {item: userDetailData});
               }}
               key={index}>
               <View style={[CssStyle.flexJustify, {}]}>
@@ -159,7 +167,7 @@ const UserContact = ({navigation}) => {
             <TouchableOpacity
               disabled={item.text == 'Keep the screen on' ? true : false}
               onPress={() => {
-                navigation.navigate(item.nav);
+                navigation.navigate(item.nav, {item: userDetailData?.email});
               }}
               key={index}>
               <View style={CssStyle.flexJustify}>
@@ -228,7 +236,12 @@ const UserContact = ({navigation}) => {
       </View>
     </>
   );
-  const id = useSelector(data => data.id);
+  const LogOut = async () => {
+    await AsyncStorage.removeItem('userID');
+    await AsyncStorage.removeItem('userPassword');
+    navigation.navigate('Auth', {screen: 'Login'});
+    setOpenModel(false);
+  };
   const RestartProgress = async () => {
     setLoading(true);
     try {
@@ -246,27 +259,78 @@ const UserContact = ({navigation}) => {
       console.log(error);
     }
   };
-  return (
+  const GetUserDetail = async () => {
+    setLoadingUser(true);
+    try {
+      const result = await GetUserDetailApi(id);
+      console.log(result);
+      if (result.status == true) {
+        setLoadingUser(false);
+        setUserDetailData(result.result);
+      } else {
+        console.error(result.message);
+        setLoadingUser(false);
+      }
+    } catch (error) {
+      setLoadingUser(false);
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GetUserDetail();
+  }, []);
+  const UpdateUserName = async () => {
+    setLoadingUpdate(true);
+    try {
+      const result = await UpdateProfileApi(
+        id,
+        username,
+        userDetailData.device_id,
+        userDetailData.gender,
+        userDetailData.focused_areas,
+        userDetailData.height,
+        userDetailData.weight,
+        userDetailData.weight_unit,
+        userDetailData.height_unit,
+      );
+      console.log(result);
+      if (result.status == true) {
+        setLoadingUpdate(false);
+        setOpenModelUsername(false);
+        setOpenUserSuccessfully(true);
+        setUsername('');
+      } else {
+        console.error(result.message);
+        setLoadingUpdate(false);
+      }
+    } catch (error) {
+      setLoadingUpdate(false);
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    setTimeout(() => {
+      setData('');
+    }, 2500);
+  }, [data]);
+  return loadingUser ? (
+    <Loader />
+  ) : (
     <ScrollView
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
       <View
         style={{
           alignItems: 'center',
           backgroundColor: AppColors.buttonText,
-          borderBottomLeftRadius: responsiveWidth(5),
-          borderBottomEndRadius: responsiveWidth(5),
-          paddingVertical: responsiveHeight(1),
+          paddingTop: responsiveHeight(5.5),
         }}>
-        <Text style={[styles.signInText]}>Profile</Text>
-      </View>
-      <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
-        <View
-          style={{alignItems: 'center', marginVertical: responsiveHeight(5.4)}}>
+        <Text style={[styles.signInText]}>My Profile</Text>
+        <View style={{alignItems: 'center', marginBottom: responsiveHeight(2)}}>
           <View
             style={{
               width: responsiveWidth(21),
               height: responsiveHeight(10),
-              backgroundColor: AppColors.buttonText,
+              backgroundColor: 'white',
               borderRadius: responsiveWidth(3),
               justifyContent: 'center',
               alignItems: 'center',
@@ -275,9 +339,9 @@ const UserContact = ({navigation}) => {
               style={{
                 fontFamily: 'Interstate-bold',
                 fontSize: 34,
-                color: 'white',
+                color: AppColors.buttonText,
               }}>
-              JF
+              {userDetailData?.user_name?.slice(0, 2)}
             </Text>
           </View>
           <View style={[CssStyle.flexData, {marginTop: responsiveHeight(2.2)}]}>
@@ -287,13 +351,15 @@ const UserContact = ({navigation}) => {
                 fontSize: 24,
                 color: 'white',
               }}>
-              Juana Franco
+              {userDetailData?.user_name}
             </Text>
-            <Image
-              style={{width: 14, height: 14, marginLeft: responsiveWidth(2)}}
-              resizeMode="contain"
-              source={require('../assets/Health-Hero/Iconfeather-edit-3.png')}
-            />
+            <TouchableOpacity onPress={() => setOpenModelUsername(true)}>
+              <Image
+                style={{width: 14, height: 14, marginLeft: responsiveWidth(2)}}
+                resizeMode="contain"
+                source={require('../assets/Health-Hero/Iconfeather-edit-3.png')}
+              />
+            </TouchableOpacity>
           </View>
           <Text
             style={{
@@ -302,9 +368,32 @@ const UserContact = ({navigation}) => {
               color: 'white',
               marginVertical: responsiveHeight(1),
             }}>
-            juanafrance@gmail.com
+            {userDetailData?.email}
           </Text>
         </View>
+      </View>
+      <View
+        style={{
+          paddingHorizontal: responsiveWidth(5),
+          flex: 1,
+          marginTop: responsiveHeight(2),
+        }}>
+        <TouchableOpacity
+          onPress={() => {}}
+          style={{marginVertical: responsiveHeight(2)}}>
+          <View style={[CssStyle.flexJustify, {}]}>
+            <Text
+              style={{
+                color: 'white',
+                fontFamily: 'Interstate-regular',
+                fontSize: 14,
+                letterSpacing: 0.8,
+              }}>
+              My Plan
+            </Text>
+            <Icon name="chevron-forward-outline" size={25} color="white" />
+          </View>
+        </TouchableOpacity>
         <WorkOutSection />
         <GeneralSettings />
         <SupportUsComponent />
@@ -388,8 +477,7 @@ const UserContact = ({navigation}) => {
                   <CustomButton
                     buttonText={'Logout'}
                     onPress={() => {
-                      setOpenModel(false),
-                        navigation.navigate('Auth', {screen: 'Login'});
+                      LogOut();
                     }}
                     // buttonColor={'transparent'}
                     // mode="outlined"
@@ -486,6 +574,152 @@ const UserContact = ({navigation}) => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={openModelUserName}
+        onRequestClose={() => setOpenModelUsername(false)}>
+        <TouchableWithoutFeedback
+          style={{flex: 1}}
+          onPress={() => setOpenModelUsername(false)}>
+          <View style={{flex: 1, backgroundColor: '#00000090'}}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+              }}>
+              <View
+                style={{
+                  backgroundColor: AppColors.blueColor,
+                  alignItems: 'center',
+                  borderTopEndRadius: responsiveHeight(3),
+                  borderTopLeftRadius: responsiveHeight(3),
+                  paddingVertical: responsiveHeight(4.8),
+                }}>
+                <Text style={[styles.signInText]}>Enter Username</Text>
+                <Input
+                  bgColor={'#ffffff60'}
+                  placeholder={'Username'}
+                  noIcon={true}
+                  value={username}
+                  onChangeText={e => {
+                    setUsername(e);
+                  }}
+                  fontSize={16}
+                  style={{
+                    marginTop: responsiveHeight(2),
+                    width: responsiveWidth(88),
+                  }}
+                />
+                {data == 'username' && (
+                  <Text
+                    style={{
+                      color: AppColors.buttonText,
+                      fontWeight: '500',
+                    }}>
+                    Enter username
+                  </Text>
+                )}
+                <CustomButton
+                  loading={loadingUpdate}
+                  buttonText={'Update'}
+                  onPress={() => {
+                    !username ? setData('username') : UpdateUserName();
+                  }}
+                  buttonColor={'transparent'}
+                  mode="outlined"
+                  fontWeight={'500'}
+                  borderColor={'white'}
+                  style={{
+                    marginTop: responsiveHeight(3.7),
+                    width: responsiveWidth(48),
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={openUserSuccessfully}
+        onRequestClose={() => setOpenUserSuccessfully(false)}>
+        <TouchableWithoutFeedback
+          style={{flex: 1}}
+          onPress={() => setOpenUserSuccessfully(false)}>
+          <View style={{flex: 1, backgroundColor: '#00000090'}}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+              }}>
+              <View
+                style={{
+                  backgroundColor: AppColors.blueColor,
+                  borderTopEndRadius: responsiveHeight(3),
+                  borderTopLeftRadius: responsiveHeight(3),
+                  paddingVertical: responsiveHeight(3.8),
+                  paddingHorizontal: responsiveWidth(6),
+                  alignItems: 'center',
+                }}>
+                <View
+                  // activeOpacity={1}
+                  style={{
+                    // height: wp(28),
+                    width: 125,
+                    // backgroundColor: 'red',
+                    aspectRatio: 1,
+                    alignSelf: 'center',
+                  }}>
+                  <Lottie
+                    source={assets.loader}
+                    autoPlay
+                    loop={true}
+                    resizeMode="cover"
+                    speed={1}
+                    // style={{width}}
+                    colorFilter={[{color: 'red'}]}
+                  />
+                </View>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 23,
+                    fontFamily: 'Interstate-regular',
+                    width: responsiveWidth(75),
+                    textAlign: 'center',
+                    lineHeight: responsiveHeight(4),
+                    marginTop: responsiveHeight(2),
+                    textTransform: 'capitalize',
+                  }}>
+                  Password Updated Successfully
+                </Text>
+
+                <View style={[{alignItems: 'center'}]}>
+                  <CustomButton
+                    buttonText={'Go Back'}
+                    onPress={() => {
+                      setOpenUserSuccessfully(false),
+                        GetUserDetail(),
+                        setOpenModelUsername(false);
+                    }}
+                    buttonColor={'transparent'}
+                    mode="outlined"
+                    fontWeight={'500'}
+                    borderColor={'white'}
+                    style={{
+                      marginTop: responsiveHeight(3.7),
+                      width: responsiveWidth(50),
+                      marginBottom: responsiveHeight(1),
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </ScrollView>
   );
 };
@@ -495,9 +729,9 @@ export default UserContact;
 const styles = StyleSheet.create({
   signInText: {
     color: 'white',
-    fontFamily: 'Interstate-bold',
-    fontSize: 35,
-    lineHeight: responsiveHeight(5),
+    fontFamily: 'Interstate-regular',
+    fontSize: 18,
     opacity: 0.9,
+    marginBottom: responsiveHeight(3.6),
   },
 });

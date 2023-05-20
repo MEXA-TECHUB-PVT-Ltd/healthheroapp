@@ -42,6 +42,7 @@ import TrainingRest from '../Screen/UserProfile/TrainingRest';
 import UpdatePassword from '../Screen/UserProfile/UpdatePassword';
 import WorkoutReminder from '../Screen/UserProfile/WorkoutReminder';
 import AboutFreeTrial from '../Screen/UserProfile/AboutFreeTrial';
+import GenderProfile from '../Screen/UserProfile/GenderProfile';
 
 export const BottomTab = () => {
   const Bottom = createBottomTabNavigator();
@@ -208,6 +209,7 @@ export const UserNavigation = () => {
       <Stack.Screen name="UpdatePassword" component={UpdatePassword} />
       <Stack.Screen name="WorkoutReminder" component={WorkoutReminder} />
       <Stack.Screen name="AboutFreeTrial" component={AboutFreeTrial} />
+      <Stack.Screen name="GenderProfile" component={GenderProfile} />
     </Stack.Navigator>
   );
 };

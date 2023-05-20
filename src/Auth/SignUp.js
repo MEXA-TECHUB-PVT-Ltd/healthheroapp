@@ -44,6 +44,7 @@ const SignUp = ({navigation}) => {
         setLoading(false);
         await AsyncStorage.setItem('userID', `${result.result.user_id}`);
         // await AsyncStorage.setItem('userName', result.result.);
+        await AsyncStorage.setItem('userPassword', password);
         dispatch(Add(result.result.user_id));
         setEmail('');
         setPassword('');
