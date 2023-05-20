@@ -13,7 +13,7 @@ export const GetPlanApi = async id => {
       },
     };
     const response = await fetch(
-      `${BaseUrlPlan}getAllUserPlans?user_id=${id}&page=1&limit=4
+      `${BaseUrlPlan}getAllUserPlans?user_id=${id}&page=1&limit=20
           `,
       requestOptions,
     );
@@ -79,3 +79,4 @@ export const AddExercise = async (id, exercise, planId) => {
     return error;
   }
 };
+

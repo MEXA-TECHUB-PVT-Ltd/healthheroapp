@@ -12,7 +12,7 @@ export const GetRestTimeApi = async id => {
       //   created_at:dateTime
       // }).toString(),
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
     };
     const response = await fetch(

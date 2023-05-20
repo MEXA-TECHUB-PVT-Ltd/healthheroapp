@@ -23,12 +23,14 @@ import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
 import {useSelector} from 'react-redux';
 import {GetRestTimeApi} from '../../services/RestApi';
+import Loader from '../../component/Loader';
 
 const RestTime = ({navigation}) => {
   const countdownRef = useRef();
 
   const data = useSelector(data => data.id);
   const [loading, setLoading] = useState(false);
+  const [restTimeData, setRestTimeData] = useState('');
   const GetPlan = async () => {
     setLoading(true);
     try {
@@ -36,6 +38,7 @@ const RestTime = ({navigation}) => {
       console.log(result);
       if (result.status == true) {
         setLoading(false);
+        setRestTimeData(result);
       } else {
         console.error(result.message);
         setLoading(false);
@@ -50,7 +53,9 @@ const RestTime = ({navigation}) => {
   }, [data]);
   const [sec, setSec] = useState(0);
   const [dataNumber, setDataNumber] = useState('');
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <ImageBackground
       style={{
         flex: 1,
@@ -90,7 +95,7 @@ const RestTime = ({navigation}) => {
                 ref={countdownRef}
                 style={styles.timer}
                 textStyle={styles.watchTime}
-                initialSeconds={sec + 15}
+                initialSeconds={restTimeData?.time}
                 onTimes={e => {
                   setDataNumber(e);
                 }}

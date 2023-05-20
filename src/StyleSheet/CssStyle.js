@@ -67,7 +67,7 @@ export default CssStyle = StyleSheet.create({
   },
   settingText: {
     color: AppColors.buttonText,
-    fontSize: 16,
+    fontSize: 18,
     marginVertical: responsiveHeight(3),
     fontFamily: 'Interstate-regular',
   },

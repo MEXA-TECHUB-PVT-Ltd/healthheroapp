@@ -38,6 +38,7 @@ const Login = ({navigation}) => {
       const result = await LoginApi(email, password);
       console.log(result);
       if (result.status == true) {
+        await AsyncStorage.setItem('userPassword', password);
         await AsyncStorage.setItem('userID', `${result.result.user_id}`);
         dispatch(Add(result.result.user_id));
         setLoading(false);

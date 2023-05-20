@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   responsiveHeight,
@@ -23,19 +23,22 @@ import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 import {TakeCountDownApi} from '../../services/CountDownApi';
 import {CustomModelCenter} from '../../component/CustomModel';
+import {GetPremiumApi} from '../../services/AuthScreen';
+import Loader from '../../component/Loader';
 
 const GetPremium = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(13);
   const id = useSelector(data => data.id);
+  const [premiumData, setPremiumData] = useState('');
   const AddCountDown = async () => {
     setLoading(true);
     try {
-      const result = await TakeCountDownApi(id, time);
+      const result = await GetPremiumApi(id);
       console.log(result);
       if (result.status == true) {
         setLoading(false);
-        setOpenRestartModel(true);
+        setPremiumData(true);
       } else {
         console.error(result.message);
         setLoading(false);
@@ -45,6 +48,9 @@ const GetPremium = ({navigation, route}) => {
       console.log(error);
     }
   };
+  useEffect(() => {
+    AddCountDown();
+  }, []);
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const premiumQuality = [
     {item: 'Monthly', id: '$80', month: 'mon'},
@@ -52,7 +58,9 @@ const GetPremium = ({navigation, route}) => {
   ];
   const [review, setReview] = useState('Monthly');
   const [openModel, setOpenModel] = useState(false);
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <LinearGradient
       colors={['#0A1F58', '#0A1637']}
       start={{x: 0, y: 0}}
