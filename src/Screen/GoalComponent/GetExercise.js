@@ -60,7 +60,7 @@ const GetExercise = ({navigation, route}) => {
           paddingTop: responsiveHeight(5),
         }}>
         <Text style={[styles.signInText]}>
-          {completedModel ? 'Yoga' : `${item.workout_title}`}
+          {completedModel ? 'Yoga' : `${item?.workout_title}`}
         </Text>
         <View
           style={[
@@ -78,10 +78,10 @@ const GetExercise = ({navigation, route}) => {
             16 <Text style={{color: 'white'}}>moves</Text>
           </Text>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-bold'}}>
-            {item.level_of_workout}
+            {item?.level_of_workout}
           </Text>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            {completedModel ? '25' : `${item.time.slice(0, 5)}`}{' '}
+            {completedModel ? '25' : `${item?.time.slice(0, 5)}`}{' '}
             <Text style={{color: 'white'}}>sec</Text>
           </Text>
         </View>
@@ -109,7 +109,7 @@ const GetExercise = ({navigation, route}) => {
             />
           </TouchableOpacity>
           <ProgressCircle
-            percent={item.time.slice(0, 2) * 60}
+            percent={item?.time.slice(0, 2) * 60}
             radius={52}
             borderWidth={4}
             // outerCircleStyle={{backgroundColor: 'yellow', aspectRatio: 1,}}
@@ -169,7 +169,7 @@ const GetExercise = ({navigation, route}) => {
             }}>
             <CustomButton
               onPress={() =>
-                navigation.navigate('Focused', {item: item.workout_plan_id})
+                navigation.navigate('Focused', {item: item?.workout_plan_id})
               }
               activeOpacity={1}
               buttonColor={AppColors.buttonText}

@@ -4,6 +4,7 @@ import {
   Image,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -30,11 +31,18 @@ const ActiveAge = ({navigation, route}) => {
   const weightUnitData = [{text: 'cm'}, {text: 'in'}];
   const [weightData, setWeightData] = useState(null);
   const flatNode = useRef();
-  const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [weightValue, setWeightValue] = useState(null);
   const [heightValue, setHeightValue] = useState(null);
   console.log(weightValue);
+  const [activeIndex, setActiveIndex] = useState('');
+  const activeAgeData = [
+    {item: 'sedentary'},
+    {item: 'light'},
+    {item: 'moderate'},
+    {item: 'active'},
+    {item: 'extreme'},
+  ];
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -65,19 +73,19 @@ const ActiveAge = ({navigation, route}) => {
             width: responsiveWidth(100),
             paddingHorizontal: responsiveWidth(6),
           }}>
-          <View style={{flex: 0.5, marginTop: responsiveHeight(6.7)}}>
+          <View style={{flex: 0.31, marginTop: responsiveHeight(5.9)}}>
             <Text
               style={{
                 color: 'white',
                 fontSize: responsiveFontSize(4.7),
-                marginBottom: responsiveHeight(2),
+                // marginBottom: responsiveHeight(2),
                 fontFamily: 'Interstate-bold',
                 marginLeft: responsiveWidth(1),
                 width: responsiveWidth(90),
                 lineHeight: responsiveHeight(6),
                 textTransform: 'capitalize',
               }}>
-              How active are you
+              How active are you?
             </Text>
             <Text
               style={{
@@ -90,13 +98,41 @@ const ActiveAge = ({navigation, route}) => {
                 fontWeight: '400',
                 opacity: 0.77,
               }}>
-              Track your progress by entering your current weight, allowing us
-              to monitor your achievements and help you stay on track towards
-              your fitness goals
+              Understanding your activity level will help us tailor your fitness
+              journey more effectively.
             </Text>
           </View>
           <View>
-           
+            <View
+              style={[
+                CssStyle.flexJustify,
+                {width: responsiveWidth(90), flexWrap: 'wrap'},
+              ]}>
+              {activeAgeData.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={{
+                    paddingHorizontal: responsiveWidth(4.8),
+                    backgroundColor:
+                      item.item == activeIndex
+                        ? AppColors.buttonText
+                        : '#FF510040',
+                    paddingVertical: responsiveHeight(1),
+                    borderRadius: responsiveWidth(4),
+                    marginBottom: responsiveHeight(2),
+                  }}
+                  onPress={() => setActiveIndex(item.item)}>
+                  <Text
+                    style={{
+                      color: item.item == activeIndex ? 'white' : '#ffffffa1',
+                      fontFamily: 'Interstate-regular',
+                      fontSize: 13,
+                    }}>
+                    {item.item}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
         </View>
         <View
@@ -105,14 +141,16 @@ const ActiveAge = ({navigation, route}) => {
           }}>
           <View
             style={{
-              bottom: responsiveHeight(11.7),
+              bottom: responsiveHeight(10),
               left: responsiveWidth(11),
               position: 'absolute',
             }}>
             <CustomButton
               loading={loading}
               onPress={() => {
-                navigation.navigate('WeekGoal');
+                activeIndex
+                  ? navigation.navigate('WeekGoal', {item: {item, activeIndex}})
+                  : ToastAndroid.show('Please select one', ToastAndroid.SHORT);
               }}
               activeOpacity={1}
               style={{width: responsiveWidth(78)}}

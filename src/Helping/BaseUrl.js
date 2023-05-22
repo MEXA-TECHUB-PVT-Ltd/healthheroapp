@@ -7,3 +7,6 @@ export const BaseUrlCountDown= 'https://staging-healthhero-be.mtechub.com/countd
 export const BaseUrlPrivacy= 'https://staging-healthhero-be.mtechub.com/privacy_policy/';
 export const BaseUrlReminder= 'https://staging-healthhero-be.mtechub.com/reminder/';
 export const BaseUrlSevenFOur= 'https://staging-healthhero-be.mtechub.com/seven_by_four/';
+export const BaseUrlDietPlan= 'https://staging-healthhero-be.mtechub.com/diet_plan/';
+export const BaseUrlFood= 'https://staging-healthhero-be.mtechub.com/food/';
+export const BaseUrlWaterTracker= 'https://staging-healthhero-be.mtechub.com/water_tracking/';

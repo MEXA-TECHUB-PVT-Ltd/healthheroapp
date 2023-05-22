@@ -240,6 +240,7 @@ const UserContact = ({navigation}) => {
   const LogOut = async () => {
     await AsyncStorage.removeItem('userID');
     await AsyncStorage.removeItem('userPassword');
+    await AsyncStorage.removeItem('DietPlanId');
     navigation.navigate('Auth', {screen: 'Login'});
     setOpenModel(false);
   };
