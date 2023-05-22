@@ -18,6 +18,7 @@ import {AppColors} from '../../Helping/AppColor';
 import CustomButton from '../../component/CustomButton';
 import {GetSevenById} from '../../services/SevenFour';
 import Logo from '../../assets/Icon3';
+import Clock from '../../assets/Icon3';
 
 const SevenFourWorkout = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -165,7 +166,7 @@ const SevenFourWorkout = ({navigation, route}) => {
                       CssStyle.flexData,
                       {marginVertical: responsiveHeight(1)},
                     ]}>
-                    <Logo width={16} height={16} />
+                    <Clock width={16} height={16} />
                     <Text
                       style={{
                         color: 'white',
@@ -173,7 +174,7 @@ const SevenFourWorkout = ({navigation, route}) => {
                         fontSize: 12,
                         marginLeft: responsiveWidth(2),
                       }}>
-                      400 kcal
+                      45 sec
                     </Text>
                   </View>
                 </View>

@@ -21,23 +21,12 @@ import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
 import {useSelector} from 'react-redux';
 
-const SelectPlan = ({navigation, route}) => {
-  const {item} = route.params ? route.params : '';
-  const [loading, setLoading] = useState(false);
-  const [time, setTime] = useState(13);
-  const id = useSelector(data => data.id);
-  const [oldPassword, setOldPassword] = useState('');
-  const [openRestartModel, setOpenRestartModel] = useState(false);
-  const [password, setPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [data, setData] = useState('');
-  const [emailValidError, setEmailValidError] = useState('');
+const SelectPlan = ({navigation}) => {
 
   const gender = [
-    {item: 'Maintain Weight', id: 1},
-    {item: 'Loose Weight', id: 2},
-    {item: 'Gain Weight', id: 3},
+    {item: 'balance', id: 1},
+    {item: 'mildWeightLoss', id: 2},
+    {item: 'mildWeightGain', id: 3},
   ];
   const [review, setReview] = useState('');
 
@@ -47,7 +36,7 @@ const SelectPlan = ({navigation, route}) => {
       start={{x: 0, y: 0}}
       end={{x: 0, y: 0.4}}
       style={{
-        paddingHorizontal: responsiveWidth(6),
+        paddingHorizontal: responsiveWidth(5),
         flex: 1,
         paddingTop: responsiveHeight(3),
         backgroundColor: '#0A1F58',
@@ -62,7 +51,7 @@ const SelectPlan = ({navigation, route}) => {
           color={AppColors.buttonText}
         />
       </TouchableOpacity>
-      <View style={{marginTop: responsiveHeight(6), flex: 0.5}}>
+      <View style={{marginTop: responsiveHeight(4), flex: 0.4}}>
         <Text style={[CssStyle.textInsideSettingComponent, {fontSize: 41}]}>
           Select Plan Type
         </Text>
@@ -72,6 +61,8 @@ const SelectPlan = ({navigation, route}) => {
             {
               lineHeight: responsiveHeight(3),
               paddingTop: responsiveHeight(1),
+              fontSize: 13,
+              letterSpacing: 0.4,
             },
           ]}>
           To help you reach your fitness goals, we offer a variety of workout
@@ -121,10 +112,9 @@ const SelectPlan = ({navigation, route}) => {
           flex: 0.3,
         }}>
         <CustomButton
-          loading={loading}
           onPress={() =>
             review
-              ? navigation.navigate('NutritionGender')
+              ? navigation.navigate('NutritionGender', {planType: review})
               : ToastAndroid.show('Please Select One', ToastAndroid.SHORT)
           }
           activeOpacity={1}
