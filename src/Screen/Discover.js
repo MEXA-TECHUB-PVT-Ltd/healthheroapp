@@ -21,7 +21,7 @@ import Loader from '../component/Loader';
 import {ExerciseOfTheDay} from '../services/WorkoutPlan';
 import {GetAllCategories} from '../services/WorkoutCategory';
 
-const Goal = ({navigation}) => {
+const Discover = ({navigation}) => {
   const advance = [{item: 1}, {item: 2}, {item: 3}];
   const [exerciseData, setExerciseData] = useState('');
   const [loading, setLoading] = useState(false);
@@ -64,6 +64,7 @@ const Goal = ({navigation}) => {
     ExerciseDay();
     GetCategory();
   }, []);
+  console.log(exerciseData);
   return loading ? (
     <Loader />
   ) : (
@@ -194,6 +195,9 @@ const Goal = ({navigation}) => {
               </Text>
             </View>
             <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('WorkoutExercise', {item: exerciseData})
+              }
               style={{
                 borderRadius: responsiveWidth(2),
                 backgroundColor: '#ffffffd1',
@@ -292,7 +296,7 @@ const Goal = ({navigation}) => {
   );
 };
 
-export default Goal;
+export default Discover;
 
 const styles = StyleSheet.create({
   signInText: {

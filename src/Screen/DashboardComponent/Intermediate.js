@@ -35,23 +35,23 @@ const Intermediate = ({navigation, route}) => {
     {item: 3},
   ];
   const [searchAdd, setSearchAdd] = useState('');
-  const [intermediate, setIntermediate] = useState([]);
-  const BeginnerApi = async () => {
-    try {
-      const result = await GetIntermediate();
-      // console.log(result);
-      if (result.status == true) {
-        setIntermediate(result.result);
-      } else {
-        console.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    BeginnerApi();
-  }, []);
+  // const [intermediate, setIntermediate] = useState([]);
+  // const BeginnerApi = async () => {
+  //   try {
+  //     const result = await GetIntermediate();
+  //     // console.log(result);
+  //     if (result.status == true) {
+  //       setIntermediate(result.result);
+  //     } else {
+  //       console.error(result.message);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   BeginnerApi();
+  // }, []);
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -113,52 +113,62 @@ const Intermediate = ({navigation, route}) => {
           )}
         </View>
 
-        <View style={{marginTop: responsiveHeight(4)}}>
-          <FlatList
-            data={item?.itemData}
-            numColumns={2}
-            showsVerticalScrollIndicator={false}
-            renderItem={({item, inde}) => (
-              <View
-                style={{
-                  // width: responsiveWidth(50),
-                  marginBottom: responsiveHeight(2),
-                  marginRight: responsiveWidth(7),
-                }}>
-                <Image
-                  borderRadius={responsiveWidth(2)}
-                  source={require('../../assets/Rectangle32.png')}
+        {item?.itemData?.length > 0 ? (
+          <View style={{marginTop: responsiveHeight(4)}}>
+            <FlatList
+              data={item?.itemData}
+              numColumns={2}
+              showsVerticalScrollIndicator={false}
+              renderItem={({item, inde}) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('ExerciseDetail', {item: item})
+                  }
                   style={{
-                    width: responsiveWidth(40),
-                    height: responsiveHeight(18),
-                  }}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 13,
-                    fontFamily: 'Interstate-regular',
-                    alignSelf: 'center',
-                    marginVertical: responsiveHeight(0.6),
-                    paddingTop: responsiveHeight(1),
+                    // width: responsiveWidth(50),
+                    marginBottom: responsiveHeight(2),
+                    marginRight: responsiveWidth(7),
                   }}>
-                  Yoga exercise
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 12,
-                    fontFamily: 'Interstate-regular',
-                    opacity: 0.5,
-                    alignSelf: 'center',
-                  }}>
-                  21 min | 400 k
-                </Text>
-              </View>
-            )}
-          />
-        </View>
+                  <Image
+                    borderRadius={responsiveWidth(2)}
+                    source={require('../../assets/Rectangle32.png')}
+                    style={{
+                      width: responsiveWidth(40),
+                      height: responsiveHeight(18),
+                    }}
+                    resizeMode="contain"
+                  />
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 13,
+                      fontFamily: 'Interstate-regular',
+                      alignSelf: 'center',
+                      marginVertical: responsiveHeight(0.6),
+                      paddingTop: responsiveHeight(1),
+                    }}>
+                    {item.workout_title}
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 12,
+                      fontFamily: 'Interstate-regular',
+                      opacity: 0.5,
+                      alignSelf: 'center',
+                    }}>
+                    21 min | 400 k
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        ) : (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{color: 'white', fontSize: 20}}>Not Available</Text>
+          </View>
+        )}
       </View>
     </View>
   );

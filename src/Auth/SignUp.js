@@ -282,7 +282,7 @@ const SignUp = ({navigation}) => {
                   buttonText={'Continue'}
                   onPress={() => {
                     username.length > 2
-                      ? navigation.navigate('UserNavigation', {
+                      ? (navigation.navigate('UserNavigation', {
                           screen: 'Gender',
                           params: {
                             item: {
@@ -290,7 +290,7 @@ const SignUp = ({navigation}) => {
                               itemName: username,
                             },
                           },
-                        })
+                        }),setUsername(''))
                       : setData('username');
                   }}
                   buttonColor={'transparent'}

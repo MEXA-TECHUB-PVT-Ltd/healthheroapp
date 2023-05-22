@@ -67,7 +67,7 @@ const Focused = ({navigation, route}) => {
             buttonColor="transparent"
             colorText={'#FF6700'}
             borderColor="transparent"
-            onPress={() => navigation.navigate('DashboardHome')}
+            onPress={() => navigation.navigate('WorkoutExercise')}
             mode="outlined"
             style={{marginRight: responsiveWidth(-3)}}
             styleText={{letterSpacing: 0.4}}

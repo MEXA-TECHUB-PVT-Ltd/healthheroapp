@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="430" height="331" viewBox="0 0 430 331">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_72" data-name="Rectangle 72" width="430" height="331" fill="#ff5100"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="0.348" y1="0.072" x2="0.348" y2="0.928" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.331" y1="0.093" x2="0.331" y2="0.907" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-3" x1="0.501" y1="0.995" x2="0.501" y2="0.005" xlink:href="#linear-gradient"/>
+    <clipPath id="clip-path-2">
+      <rect id="Mask" width="90" height="88" rx="10" transform="translate(0 -0.125)" fill="#d8d8d8"/>
+    </clipPath>
+  </defs>
+  <g id="Mask_Group_7" data-name="Mask Group 7" clip-path="url(#clip-path)">
+    <rect id="Rectangle_71" data-name="Rectangle 71" width="430" height="331" fill="#ff5100"/>
+    <g id="bg_pattern" data-name="bg pattern" transform="translate(-127.263 -66.118)">
+      <path id="Ellipse_52_Stroke_" data-name="Ellipse 52 (Stroke)" d="M111.429,32.979c-43.831,0-79.363,36.544-79.363,81.622s35.532,81.622,79.363,81.622,79.363-36.544,79.363-81.622S155.26,32.979,111.429,32.979ZM0,114.6C0,51.309,49.889,0,111.429,0S222.859,51.309,222.859,114.6,172.97,229.2,111.429,229.2,0,177.893,0,114.6Z" transform="translate(0 452.13) rotate(-90)" opacity="0.26" fill="url(#linear-gradient)"/>
+      <path id="Ellipse_52_Stroke_2" data-name="Ellipse 52 (Stroke)" d="M88.218,32.066c-30.508,0-55.239,24.047-55.239,53.711s24.732,53.711,55.239,53.711,55.239-24.047,55.239-53.711S118.726,32.066,88.218,32.066ZM0,85.776C0,38.4,39.5,0,88.218,0s88.218,38.4,88.218,85.776-39.5,85.776-88.218,85.776S0,133.15,0,85.776Z" transform="translate(398.827)" opacity="0.25" fill="url(#linear-gradient-2)"/>
+      <path id="Ellipse_53_Stroke_" data-name="Ellipse 53 (Stroke)" d="M42.087,85.745C19.286,85.745.8,66.735.8,43.285S19.286.824,42.087.824s41.285,19.01,41.285,42.46S64.888,85.745,42.087,85.745ZM0,43.285C0,67.19,18.843,86.569,42.087,86.569S84.173,67.19,84.173,43.285,65.33,0,42.087,0,0,19.379,0,43.285Z" transform="translate(530.33 43.69) rotate(90)" opacity="0.2" fill="url(#linear-gradient-3)"/>
+    </g>
+  </g>
+</svg>

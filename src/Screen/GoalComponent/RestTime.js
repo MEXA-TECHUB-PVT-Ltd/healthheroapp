@@ -51,8 +51,11 @@ const RestTime = ({navigation}) => {
   useEffect(() => {
     GetPlan();
   }, [data]);
-  const [sec, setSec] = useState(0);
+  const [sec, setSec] = useState(restTimeData?.time ? restTimeData.time : 20);
   const [dataNumber, setDataNumber] = useState('');
+  useEffect(() => {
+    countdownRef.current.start();
+  }, []);
   return loading ? (
     <Loader />
   ) : (
@@ -82,7 +85,7 @@ const RestTime = ({navigation}) => {
         </TouchableOpacity>
         <View style={{alignItems: 'center', flex: 1}}>
           <ProgressCircle
-            percent={30 * 3.34}
+            percent={dataNumber * 3.34}
             radius={50}
             borderWidth={4}
             // outerCircleStyle={{backgroundColor: 'yellow', aspectRatio: 1,}}
@@ -95,7 +98,7 @@ const RestTime = ({navigation}) => {
                 ref={countdownRef}
                 style={styles.timer}
                 textStyle={styles.watchTime}
-                initialSeconds={restTimeData?.time}
+                initialSeconds={sec}
                 onTimes={e => {
                   setDataNumber(e);
                 }}

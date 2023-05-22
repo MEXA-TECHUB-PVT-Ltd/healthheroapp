@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  ImageBackground,
   Modal,
   ScrollView,
   StyleSheet,
@@ -123,7 +124,7 @@ const UserContact = ({navigation}) => {
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
       text: 'Metric & Imperial units',
-      nav: '',
+      nav: 'MetricUnits',
     },
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
@@ -167,7 +168,7 @@ const UserContact = ({navigation}) => {
             <TouchableOpacity
               disabled={item.text == 'Keep the screen on' ? true : false}
               onPress={() => {
-                navigation.navigate(item.nav, {item: userDetailData?.email});
+                navigation.navigate(item.nav, {item: userDetailData});
               }}
               key={index}>
               <View style={CssStyle.flexJustify}>
@@ -318,10 +319,12 @@ const UserContact = ({navigation}) => {
   ) : (
     <ScrollView
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
-      <View
+      <ImageBackground
+        // resizeMode="contain"
+        source={require('../assets/backgroundProfile.png')}
         style={{
           alignItems: 'center',
-          backgroundColor: AppColors.buttonText,
+          // backgroundColor: AppColors.buttonText,
           paddingTop: responsiveHeight(5.5),
         }}>
         <Text style={[styles.signInText]}>My Profile</Text>
@@ -371,7 +374,7 @@ const UserContact = ({navigation}) => {
             {userDetailData?.email}
           </Text>
         </View>
-      </View>
+      </ImageBackground>
       <View
         style={{
           paddingHorizontal: responsiveWidth(5),

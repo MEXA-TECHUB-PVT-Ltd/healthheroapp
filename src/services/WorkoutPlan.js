@@ -13,7 +13,7 @@ export const GetBeginner = async () => {
       },
     };
     const response = await fetch(
-      `${BaseUrlWorkout}get_for_beginners?page=1&limit=1
+      `${BaseUrlWorkout}get_for_beginners?page=1&limit=20
         `,
       requestOptions,
     );
@@ -36,7 +36,7 @@ export const GetAdvance = async () => {
       },
     };
     const response = await fetch(
-      `${BaseUrlWorkout}get_for_advance?page=1&limit=1
+      `${BaseUrlWorkout}get_for_advance?page=1&limit=20
         `,
       requestOptions,
     );
@@ -59,7 +59,7 @@ export const GetIntermediate = async () => {
       },
     };
     const response = await fetch(
-      `${BaseUrlWorkout}get_for_intermediate?page=1&limit=1
+      `${BaseUrlWorkout}get_for_intermediate?page=1&limit=20
         `,
       requestOptions,
     );
@@ -106,7 +106,7 @@ export const GetWorkoutById = async name => {
       },
     };
     const response = await fetch(
-      `${BaseUrlWorkout}workoutPlansByCategory_id?category_id=${name}&page=1&limit=2
+      `${BaseUrlWorkout}workoutPlansByCategory_id?category_id=${name}&page=1&limit=20
         `,
       requestOptions,
     );
@@ -250,7 +250,7 @@ export const GetExerciseID = async () => {
       },
     };
     const response = await fetch(
-      `${BaseUrl}workout_plan_exersises/getAllExersises?page=1&limit=3`,
+      `${BaseUrl}workout_plan_exersises/getAllExersises?page=1&limit=20`,
       requestOptions,
     );
     const result = await response.json();

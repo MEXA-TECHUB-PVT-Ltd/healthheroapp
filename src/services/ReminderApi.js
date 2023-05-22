@@ -37,7 +37,7 @@ export const GetReminder = async (id) => {
       },
     };
     const response = await fetch(
-      `${BaseUrlReminder}getAllUserReminders?user_id=${id}&page=1&limit=4`,
+      `${BaseUrlReminder}getAllUserReminders?user_id=${id}&page=1&limit=20`,
       requestOptions,
     );
     const result = await response.json();
