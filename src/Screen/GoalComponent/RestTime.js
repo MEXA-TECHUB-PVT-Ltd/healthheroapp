@@ -24,6 +24,7 @@ import CustomButton from '../../component/CustomButton';
 import {useSelector} from 'react-redux';
 import {GetRestTimeApi} from '../../services/RestApi';
 import Loader from '../../component/Loader';
+import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 
 const RestTime = ({navigation}) => {
   const countdownRef = useRef();
@@ -48,13 +49,13 @@ const RestTime = ({navigation}) => {
       console.log(error);
     }
   };
-  useEffect(() => {
-    GetPlan();
-  }, [data]);
+  // useEffect(() => {
+  //   GetPlan();
+  // }, [data]);
   const [sec, setSec] = useState(restTimeData?.time ? restTimeData.time : 20);
   const [dataNumber, setDataNumber] = useState('');
   useEffect(() => {
-    countdownRef.current.start();
+    // countdownRef.current.start();
   }, []);
   return loading ? (
     <Loader />
@@ -84,12 +85,10 @@ const RestTime = ({navigation}) => {
           <Icon name="chevron-back-outline" size={25} color={'white'} />
         </TouchableOpacity>
         <View style={{alignItems: 'center', flex: 1}}>
-          <ProgressCircle
+          {/* <ProgressCircle
             percent={dataNumber * 3.34}
             radius={50}
             borderWidth={4}
-            // outerCircleStyle={{backgroundColor: 'yellow', aspectRatio: 1,}}
-            // outerCircleStyle
             color={'#FF7B27'}
             shadowColor="#C6C6C6"
             bgColor={AppColors.blueColor}>
@@ -103,17 +102,22 @@ const RestTime = ({navigation}) => {
                   setDataNumber(e);
                 }}
                 onPause={e => {}}
-                onEnd={
-                  e => {}
-                  //   e == 0
-                  // ? navigation.navigate('Completed')
-                  // : console.log(e, 'end')
-                }
+                onEnd={e => {}}
               />
             </View>
-            {/* } */}
-            {/* </Text> */}
-          </ProgressCircle>
+          </ProgressCircle> */}
+          <CountdownCircleTimer
+            isPlaying
+            duration={sec}
+            size={120}
+            strokeWidth={8}
+            colors={['#FF5100', '#FF5100', '#FF5100']}>
+            {({remainingTime}) => (
+              <Text style={{color: 'white', fontSize: 22}}>
+                {remainingTime}
+              </Text>
+            )}
+          </CountdownCircleTimer>
           <Text
             style={[
               styles.signInText,

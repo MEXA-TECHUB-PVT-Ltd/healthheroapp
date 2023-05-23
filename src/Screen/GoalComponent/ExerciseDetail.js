@@ -10,6 +10,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import CustomButton from '../../component/CustomButton';
 import SwiperFlatList from 'react-native-swiper-flatlist';
+import {BaseUrl} from '../../Helping/BaseUrl';
 
 const ExerciseDetail = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -22,6 +23,7 @@ const ExerciseDetail = ({navigation, route}) => {
     <View style={CssStyle.flexData}>
       {data.map((item, index) => (
         <View
+          key={index}
           style={{
             width: index == activeIndex ? 29 : 7,
             height: 7,
@@ -66,7 +68,9 @@ const ExerciseDetail = ({navigation, route}) => {
             <View style={{width: responsiveWidth(100)}}>
               <Text
                 style={[styles.signInText, {marginTop: responsiveHeight(3)}]}>
-                Puss Press
+                {item.exersise_details
+                  ? item.exersise_details?.title
+                  : item.title}
               </Text>
               <Text
                 style={[styles.signInText, {fontFamily: 'Interstate-regular'}]}>
@@ -98,7 +102,7 @@ const ExerciseDetail = ({navigation, route}) => {
               </View>
               <Image
                 //   resizeMode="contain"
-                source={require('../../assets/Rectangle33.png')}
+                source={{uri: `${BaseUrl}` + item.animation}}
                 borderRadius={responsiveWidth(3)}
                 style={{
                   width: responsiveWidth(90),
@@ -116,12 +120,7 @@ const ExerciseDetail = ({navigation, route}) => {
                   lineHeight: responsiveHeight(2.6),
                   width: responsiveWidth(90),
                 }}>
-                Start in a standing position, then quickly drop into a push-up
-                position. From there, jump your feet forward and stand up,
-                reaching your arms overhead. Repeat for several reps.Start in a
-                standing position, then quickly drop into a push-up position.
-                From there, jump your feet forward and stand up, reaching your
-                arms overhead. Repeat for several reps
+                {item.description}
               </Text>
               <Text style={[styles.signInText, {fontSize: 16}]}>
                 Focused Area

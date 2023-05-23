@@ -44,8 +44,8 @@ const TypeOfTracker = ({navigation, route}) => {
   const [measureModel, setMeasureModel] = useState(false);
 
   const genderCollectionData = [
-    {text: 'glass', image: require('../../assets/maleGender.png')},
-    {text: 'bottle', image: require('../../assets/FemaleGender.png')},
+    {text: 'glass', image: require('../../assets/glass-of-water.png')},
+    {text: 'bottle', image: require('../../assets/water.png')},
   ];
 
   const AddTracker = async () => {

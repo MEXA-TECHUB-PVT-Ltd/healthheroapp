@@ -8,7 +8,7 @@ import Heart from '../assets/Health-Hero/Group722.png';
 import WinnerLogo from '../assets/Health-Hero/Icon.png';
 import TextLogo from '../assets/Health-Hero/Iconfeather-file-text.png';
 import Contact from '../assets/Icon4.png';
-import HeartProfile from '../Screen/HeartProfile';
+import HeartProfile from '../Screen/Report';
 import Winner from '../Screen/Nutrition';
 import UserContact from '../Screen/UserContact';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -60,6 +60,7 @@ import SetCalories from '../Screen/Nutrition/SetCalories';
 import SelectFood from '../Screen/Nutrition/Food/SelectFood';
 import EnterFood from '../Screen/Nutrition/Food/EnterFood';
 import TypeOfTracker from '../Screen/Nutrition/TypeOfTracker';
+import Report from '../Screen/Report';
 
 export const BottomTab = () => {
   const Bottom = createBottomTabNavigator();
@@ -138,8 +139,8 @@ export const BottomTab = () => {
             <View style={{borderBottomColor: 'yellow', borderBottomWidth: 2}} />
           ),
         }}
-        name="Dashboard2"
-        component={HeartProfile}
+        name="Report"
+        component={Report}
       />
       <Bottom.Screen
         options={{
@@ -184,7 +185,7 @@ export const BottomTab = () => {
             <View style={{borderBottomColor: 'yellow', borderBottomWidth: 2}} />
           ),
         }}
-        name="Dashboard4"
+        name="Profile"
         component={UserContact}
       />
     </Bottom.Navigator>
