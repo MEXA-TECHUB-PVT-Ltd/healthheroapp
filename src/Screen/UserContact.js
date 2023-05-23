@@ -382,8 +382,8 @@ const UserContact = ({navigation}) => {
           flex: 1,
           marginTop: responsiveHeight(2),
         }}>
-        <TouchableOpacity
-          onPress={() => {}}
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('AllPlan')}
           style={{marginVertical: responsiveHeight(2)}}>
           <View style={[CssStyle.flexJustify, {}]}>
             <Text

@@ -31,37 +31,63 @@ import Input from '../../component/Input';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 import {useSelector} from 'react-redux';
-import {AddDietPlan} from '../../services/DietPlan';
+import {AddDietPlan, UpdateDietPlanApi} from '../../services/DietPlan';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SetCalories = ({navigation, route}) => {
-  const {item} = route.params ? route.params : '';
-  const [weightData, setWeightData] = useState('');
+  const {item, updateData} = route.params ? route.params : '';
+  const [weightData, setWeightData] = useState(
+    updateData ? updateData.diet_budget : '',
+  );
   const [loading, setLoading] = useState(false);
   const [successfully, setSuccessfully] = useState(false);
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const id = useSelector(data => data.id);
-
   const MakePlan = async () => {
     setOpenRestartModel(true);
+    // setSuccessfully(true);
     try {
-      const result = await AddDietPlan(
-        id,
-        item.item.item.heightValue,
-        item.item.item.item.item.weightValue,
-        item.item.item.item.weightTargeted,
-        item.item.item.item.item.item.age,
-        item.item.item.item.item.item.addData,
-        weightData,
-        item.item.activeIndex,
-        item.item.item.item.item.item.planType,
-        new Date().toLocaleDateString(),
-      );
+      const result = updateData
+        ? await UpdateDietPlanApi(
+            updateData?.diet_plan_id,
+            id,
+            item.item.item.heightValue,
+            item.item.item.item.item.weightValue,
+            item.item.item.item.weightTargeted,
+            item.item.item.item.item.item.age,
+            item.item.item.item.item.item.addData,
+            weightData,
+            item.item.activeIndex,
+            item.item.item.item.item.item.planType.review,
+            new Date().toLocaleDateString(),
+          )
+        : await AddDietPlan(
+            id,
+            item.item.item.heightValue,
+            item.item.item.item.item.weightValue,
+            item.item.item.item.weightTargeted,
+            item.item.item.item.item.item.age,
+            item.item.item.item.item.item.addData,
+            weightData,
+            item.item.activeIndex,
+            item.item.item.item.item.item.planType.review,
+            new Date().toLocaleDateString(),
+          );
       console.log(result);
       if (result.status == true) {
         setWeightData('');
-        await AsyncStorage.setItem('DietPlanId', `${result.result.addedRecord.diet_plan_id}`);
-        setOpenRestartModel(false);
+        {
+          updateData
+            ? await AsyncStorage.setItem(
+                'DietPlanId',
+                `${result.result.updated_record.diet_plan_id}`,
+              )
+            : await AsyncStorage.setItem(
+                'DietPlanId',
+                `${result.result.addedRecord.diet_plan_id}`,
+              );
+        }
+        // setOpenRestartModel(false);
         setSuccessfully(true);
       } else {
         setOpenRestartModel(false);
@@ -190,140 +216,126 @@ const SetCalories = ({navigation, route}) => {
                 paddingHorizontal: responsiveWidth(6),
                 alignItems: 'center',
               }}>
-              <View
-                // activeOpacity={1}
-                style={{
-                  // height: wp(28),
-                  width: 110,
-                  // backgroundColor: 'red',
-                  aspectRatio: 1,
-                  alignSelf: 'center',
-                }}>
-                <Lottie
-                  source={assets.loaderCreating}
-                  autoPlay
-                  loop={true}
-                  resizeMode="cover"
-                  speed={1}
-                  colorFilter={[{color: 'red'}]}
-                />
-              </View>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 23,
-                  fontFamily: 'Interstate-regular',
-                  width: responsiveWidth(90),
-                  textAlign: 'center',
-                  lineHeight: responsiveHeight(4),
-                  marginTop: responsiveHeight(4),
-                  textTransform: 'capitalize',
-                }}>
-                Creating your plan
-              </Text>
-
-              {/* <View
-                  style={[
-                    {alignItems: 'center', paddingBottom: responsiveHeight(2)},
-                  ]}>
-                  <CustomButton
-                    buttonText={'Go Back'}
-                    onPress={() => {
-                      navigation.goBack();
-                    }}
-                    buttonColor={'transparent'}
-                    mode="outlined"
-                    fontWeight={'500'}
-                    borderColor={'white'}
+              {!successfully ? (
+                <>
+                  <View
+                    // activeOpacity={1}
                     style={{
-                      marginTop: responsiveHeight(3.7),
-                      width: responsiveWidth(44),
-                    }}
-                  />
-                </View> */}
+                      // height: wp(28),
+                      width: 110,
+                      // backgroundColor: 'red',
+                      aspectRatio: 1,
+                      alignSelf: 'center',
+                    }}>
+                    <Lottie
+                      source={assets.loaderCreating}
+                      autoPlay
+                      loop={true}
+                      resizeMode="cover"
+                      speed={1}
+                      colorFilter={[{color: 'red'}]}
+                    />
+                  </View>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 23,
+                      fontFamily: 'Interstate-regular',
+                      width: responsiveWidth(90),
+                      textAlign: 'center',
+                      lineHeight: responsiveHeight(4),
+                      marginTop: responsiveHeight(4),
+                      textTransform: 'capitalize',
+                    }}>
+                    Creating your plan
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <View
+                    // activeOpacity={1}
+                    style={{
+                      // height: wp(28),
+                      width: 110,
+                      // backgroundColor: 'red',
+                      aspectRatio: 1,
+                      alignSelf: 'center',
+                    }}>
+                    <Lottie
+                      source={assets.loader}
+                      autoPlay
+                      loop={true}
+                      resizeMode="cover"
+                      speed={1}
+                      colorFilter={[{color: 'red'}]}
+                    />
+                  </View>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 23,
+                      fontFamily: 'Interstate-regular',
+                      width: responsiveWidth(90),
+                      textAlign: 'center',
+                      lineHeight: responsiveHeight(4),
+                      marginTop: responsiveHeight(4),
+                      textTransform: 'capitalize',
+                    }}>
+                    Nutrition & Diet plan added successfully
+                  </Text>
+                  <View
+                    style={[
+                      {
+                        alignItems: 'center',
+                        paddingBottom: responsiveHeight(2),
+                      },
+                    ]}>
+                    <CustomButton
+                      buttonText={'Go to Plan'}
+                      onPress={() => {
+                        navigation.navigate('main'),
+                          setSuccessfully(false),
+                          setOpenRestartModel(false);
+                      }}
+                      buttonColor={'transparent'}
+                      mode="outlined"
+                      fontWeight={'500'}
+                      borderColor={'white'}
+                      style={{
+                        marginTop: responsiveHeight(3.7),
+                        width: responsiveWidth(44),
+                      }}
+                    />
+                  </View>
+                </>
+              )}
             </View>
           </View>
         </View>
       </Modal>
-      <Modal
+      {/* <Modal
         animationType="slide"
         transparent={true}
         visible={successfully}
         onRequestClose={() => setSuccessfully(false)}>
-        <TouchableWithoutFeedback
-          style={{flex: 1}}
-          onPress={() => setSuccessfully(false)}>
-          <View style={{flex: 1, backgroundColor: '#00000090'}}>
+        <View style={{flex: 1, backgroundColor: '#00000090'}}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}>
             <View
               style={{
-                flex: 1,
-                justifyContent: 'flex-end',
-              }}>
-              <View
-                style={{
-                  backgroundColor: AppColors.blueColor,
-                  borderTopEndRadius: responsiveHeight(3),
-                  borderTopLeftRadius: responsiveHeight(3),
-                  paddingVertical: responsiveHeight(2.5),
-                  paddingHorizontal: responsiveWidth(6),
-                  alignItems: 'center',
-                }}>
-                <View
-                  // activeOpacity={1}
-                  style={{
-                    // height: wp(28),
-                    width: 110,
-                    // backgroundColor: 'red',
-                    aspectRatio: 1,
-                    alignSelf: 'center',
-                  }}>
-                  <Lottie
-                    source={assets.loader}
-                    autoPlay
-                    loop={true}
-                    resizeMode="cover"
-                    speed={1}
-                    colorFilter={[{color: 'red'}]}
-                  />
-                </View>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 23,
-                    fontFamily: 'Interstate-regular',
-                    width: responsiveWidth(90),
-                    textAlign: 'center',
-                    lineHeight: responsiveHeight(4),
-                    marginTop: responsiveHeight(4),
-                    textTransform: 'capitalize',
-                  }}>
-                  Nutrition & Diet plan added successfully
-                </Text>
-
-                <View
-                  style={[
-                    {alignItems: 'center', paddingBottom: responsiveHeight(2)},
-                  ]}>
-                  <CustomButton
-                    buttonText={'Go to Plan'}
-                    onPress={() => {
-                      navigation.navigate('main');
-                    }}
-                    buttonColor={'transparent'}
-                    mode="outlined"
-                    fontWeight={'500'}
-                    borderColor={'white'}
-                    style={{
-                      marginTop: responsiveHeight(3.7),
-                      width: responsiveWidth(44),
-                    }}
-                  />
-                </View>
-              </View>
-            </View>
+                backgroundColor: AppColors.blueColor,
+                borderTopEndRadius: responsiveHeight(3),
+                borderTopLeftRadius: responsiveHeight(3),
+                paddingVertical: responsiveHeight(2.5),
+                paddingHorizontal: responsiveWidth(6),
+                alignItems: 'center',
+              }}></View>
           </View>
-        </TouchableWithoutFeedback>
-      </Modal>
+        </View>
+      </Modal> */}
     </View>
   );
 };

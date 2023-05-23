@@ -25,40 +25,45 @@ import {Line} from '../../component/Line';
 
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
-import {AddWaterApi} from '../../services/WaterTrackerApi';
+import {AddWaterApi, UpdateWaterApi} from '../../services/WaterTrackerApi';
+
 const TypeOfTracker = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
+  console.log(item);
   const [loading, setLoading] = useState(false);
-  const [time, setTime] = useState(13);
+  const [time, setTime] = useState(12);
   const id = useSelector(data => data.id);
-  const [oldPassword, setOldPassword] = useState('');
   const [openRestartModel, setOpenRestartModel] = useState(false);
-  const [password, setPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [data, setData] = useState('');
-  const [emailValidError, setEmailValidError] = useState('');
   const [addData, setAddData] = useState('glass');
   const [typeDate, setType] = useState('');
   const measureType = [{item: 'ml'}, {item: 'fl'}, {item: 'oz'}];
   const [measureModel, setMeasureModel] = useState(false);
 
+  console.log(addData);
   const genderCollectionData = [
     {text: 'glass', image: require('../../assets/glass-of-water.png')},
     {text: 'bottle', image: require('../../assets/water.png')},
   ];
-
+  // console.log(item);
   const AddTracker = async () => {
     setLoading(true);
     try {
-      const result = await AddWaterApi(
+      const result = await UpdateWaterApi(
+        3000625,
         id,
         addData,
         typeDate,
         time,
         new Date().toLocaleDateString(),
       );
-      // console.log(result);
+      // : await AddWaterApi(
+      //     id,
+      //     addData,
+      //     typeDate,
+      //     time,
+      //     new Date().toLocaleDateString(),
+      //   );
+      console.log(result);
       if (result.status == true) {
         // setBeginner(result.result);
         setLoading(false);
@@ -221,7 +226,7 @@ const TypeOfTracker = ({navigation, route}) => {
               alignItems: 'center',
               justifyContent: 'center',
             }}
-            onPress={() => (time == 180 ? {} : setTime(time + 2))}>
+            onPress={() => (time == 32 ? {} : setTime(time + 1))}>
             <Icon
               name="chevron-forward-outline"
               size={29}

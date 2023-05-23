@@ -26,7 +26,7 @@ import {RulerPicker} from 'react-native-ruler-picker';
 import Ruler from '../../Helping/Ruler';
 
 const ActiveAge = ({navigation, route}) => {
-  const {item} = route.params ? route.params : '';
+  const {item, updateData} = route.params ? route.params : '';
   console.log(item);
   const weightUnitData = [{text: 'cm'}, {text: 'in'}];
   const [weightData, setWeightData] = useState(null);
@@ -35,7 +35,9 @@ const ActiveAge = ({navigation, route}) => {
   const [weightValue, setWeightValue] = useState(null);
   const [heightValue, setHeightValue] = useState(null);
   console.log(weightValue);
-  const [activeIndex, setActiveIndex] = useState('');
+  const [activeIndex, setActiveIndex] = useState(
+    updateData ? updateData.activity_status : '',
+  );
   const activeAgeData = [
     {item: 'sedentary'},
     {item: 'light'},
@@ -149,7 +151,10 @@ const ActiveAge = ({navigation, route}) => {
               loading={loading}
               onPress={() => {
                 activeIndex
-                  ? navigation.navigate('WeekGoal', {item: {item, activeIndex}})
+                  ? navigation.navigate('WeekGoal', {
+                      item: {item, activeIndex},
+                      updateData,
+                    })
                   : ToastAndroid.show('Please select one', ToastAndroid.SHORT);
               }}
               activeOpacity={1}

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CssStyle from '../StyleSheet/CssStyle';
 import {AppColors} from '../Helping/AppColor';
 import {
@@ -19,6 +19,9 @@ import Logo from '../assets/Icon3';
 import Timer from '../assets/bodyBuilding';
 import {BarChart} from 'react-native-chart-kit';
 import {Calendar} from 'react-native-calendars';
+import {GetHistoryApi} from '../services/DietPlan';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useSelector} from 'react-redux';
 
 const Report = ({navigation}) => {
   const Card = [
@@ -59,7 +62,40 @@ const Report = ({navigation}) => {
     barPercentage: 0.8,
     useShadowColorFromDataset: false, // optional
   };
+  const [dietId, setDietId] = useState('');
+  const id = useSelector(data => data.id);
+  const GetDietIdAsync = async () => {
+    try {
+      const result = await AsyncStorage.getItem('DietPlanId');
+      if (result) {
+        setDietId(result);
+        GetHistoryData(id, result);
+      } else {
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const [historyDataDate, setHistoryDataDate] = useState([]);
+
+  const GetHistoryData = async (id, dietId) => {
+    try {
+      const result = await GetHistoryApi(id, dietId);
+      console.log(result, 'get the history');
+      if (result.status == false) {
+        setHistoryDataDate(result.result);
+      } else {
+        // navigation.navigate('SelectPlan');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GetDietIdAsync();
+  }, []);
   const [selected, setSelected] = useState('');
+
   return (
     <ScrollView
       showsHorizontalScrollIndicator={false}
@@ -81,6 +117,7 @@ const Report = ({navigation}) => {
           ]}>
           {ButtonData.map((item, index) => (
             <View
+              key={index}
               style={{alignItems: 'center', marginRight: responsiveWidth(4)}}>
               <TouchableOpacity
                 style={{
@@ -367,28 +404,41 @@ const Report = ({navigation}) => {
                 backgroundColor: '#626377',
                 borderRadius: responsiveWidth(2),
               }}
-
-              theme={{
-                backgroundColor: 'yellow',
-                calendarBackground: 'yellow',
-                textSectionTitleColor: '#b6c1cd',
-                selectedDayBackgroundColor: '#00adf5',
-                selectedDayTextColor: 'yellow',
-                todayTextColor: '#00adf5',
-                dayTextColor: '#2d4150',
-                textDisabledColor: '#d9e',
-                // monthTextColor: 'white',
-                // indicatorColor: 'white',
-                arrowStyle: {backgroundColor: 'white'},
-              }}
-
               markedDates={{
-                [selected]: {
+                '2023-05-18': {
                   selected: true,
-                  disableTouchEvent: true,
-                  selectedDotColor: 'white',
+                  marked: true,
+                  selectedColor: 'white',
+                },
+                '2023-05-20': {marked: true},
+                '2023-05-24': {
+                  selected: true,
+                  marked: true,
+                  selectedColor: 'white',
+                  color: '#FF6700',
                 },
               }}
+              theme={{
+                backgroundColor: '#626377',
+                calendarBackground: '#626377',
+                textSectionTitleColor: '#b6c1cd',
+                selectedDayBackgroundColor: 'white',
+                selectedDayTextColor: '#FF6700',
+                todayTextColor: 'white',
+                dayTextColor: 'white',
+                textDisabledColor: 'white',
+                monthTextColor: 'white',
+                indicatorColor: 'white',
+                todayBackgroundColor: AppColors.buttonText,
+                arrowStyle: {backgroundColor: 'white'},
+              }}
+              // markedDates={{
+              //   [selected]: {
+              //     selected: true,
+              //     disableTouchEvent: true,
+              //     selectedDotColor: 'white',
+              //   },
+              // }}
             />
             <View
               style={[

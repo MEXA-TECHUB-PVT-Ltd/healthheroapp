@@ -29,6 +29,8 @@ import {
 } from '../services/WorkoutPlan';
 import {GetSevenFourApi} from '../services/SevenFour';
 import {BaseUrl} from '../Helping/BaseUrl';
+import {GetUserDetailApi} from '../services/AuthScreen';
+import {useSelector} from 'react-redux';
 
 const Dashboard = ({navigation}) => {
   const dataGym = [
@@ -49,6 +51,7 @@ const Dashboard = ({navigation}) => {
       return () => backHandler.remove();
     }, []),
   );
+  const [userDetailData, setUserDetailData] = useState('');
   const [loading, setLoading] = useState(false);
   const BeginnerApi = async () => {
     setLoading(true);
@@ -67,6 +70,26 @@ const Dashboard = ({navigation}) => {
       console.log(error);
     }
   };
+  const id = useSelector(data => data.id);
+  const GetUserDetail = async () => {
+    setLoading(true);
+    try {
+      const result = await GetUserDetailApi(id);
+      if (result.status == true) {
+        setLoading(false);
+        setUserDetailData(result.result);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GetUserDetail();
+  }, []);
   const [sevenFourData, setSevenFourData] = useState('');
   const GetSevenByFour = async () => {
     setLoading(true);
@@ -145,7 +168,7 @@ const Dashboard = ({navigation}) => {
                 fontFamily: 'Interstate-bold',
                 fontSize: 22,
               }}>
-              Hi, Dominic
+              Hi, {userDetailData.user_name}
             </Text>
             <Text
               style={{
@@ -339,7 +362,6 @@ const Dashboard = ({navigation}) => {
               horizontal={true}
               showsHorizontalScrollIndicator={false}
               renderItem={({item, index}) => {
-                console.log(item, 'beginner data');
                 return (
                   <TouchableOpacity
                     onPress={() =>
@@ -436,7 +458,6 @@ const Dashboard = ({navigation}) => {
               horizontal={true}
               showsHorizontalScrollIndicator={false}
               renderItem={({item, index}) => {
-                console.log(item.image);
                 return (
                   <TouchableOpacity
                     onPress={() =>

@@ -23,22 +23,14 @@ import {useSelector} from 'react-redux';
 
 const SelectFood = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
+  console.log(item, 'select food');
   const [loading, setLoading] = useState(false);
-  const [time, setTime] = useState(13);
   const id = useSelector(data => data.id);
-  const [oldPassword, setOldPassword] = useState('');
-  const [openRestartModel, setOpenRestartModel] = useState(false);
-  const [password, setPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [data, setData] = useState('');
-  const [emailValidError, setEmailValidError] = useState('');
-
   const gender = [
-    {item: 'Breakfast', id: 1},
-    {item: 'Snack', id: 2},
-    {item: 'Lucnh', id: 3},
-    {item: 'Dinner', id: 4},
+    {item: 'break_fast', id: 1},
+    {item: 'snacks', id: 2},
+    {item: 'lunch', id: 3},
+    {item: 'dinner', id: 4},
   ];
   const [review, setReview] = useState('');
 
@@ -106,6 +98,7 @@ const SelectFood = ({navigation, route}) => {
                       color: 'white',
                       fontFamily: 'Interstate-regular',
                       fontSize: 16,
+                      textTransform: 'capitalize',
                     }}>
                     {item.item}
                   </Text>
@@ -125,7 +118,7 @@ const SelectFood = ({navigation, route}) => {
           loading={loading}
           onPress={() =>
             review
-              ? navigation.navigate('EnterFood')
+              ? navigation.navigate('EnterFood', {item: {review, item}})
               : ToastAndroid.show('Please Select One', ToastAndroid.SHORT)
           }
           activeOpacity={1}

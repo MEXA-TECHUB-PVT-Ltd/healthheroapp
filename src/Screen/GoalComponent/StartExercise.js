@@ -27,35 +27,40 @@ import {GetCountDownApi} from '../../services/CountDownApi';
 import {useSelector} from 'react-redux';
 import {BaseUrl} from '../../Helping/BaseUrl';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
+import Loader from '../../component/Loader';
 
 const StartExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
+  console.log(item, 'start exercise');
   const countdownRef = useRef();
   const [loading, setLoading] = useState(false);
-  const [countDownData, setCountDownData] = useState('');
+  const [countDownData, setCountDownData] = useState(0);
+  const [dataCount, setDataCount] = useState(12);
   const id = useSelector(data => data.id);
-  const GetCategory = async () => {
-    setLoading(true);
-    try {
-      const result = await GetCountDownApi(id);
-      console.log(result);
-      if (result.status == true) {
-        setCountDownData(result.result);
-        setLoading(false);
-      } else {
-        console.error(result.message);
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-    }
-  };
+  // const GetCategory = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const result = await GetCountDownApi(id);
+  //     console.log(result);
+  //     if (result.status == true) {
+  //       setDataCount(result.result.time);
+  //       setLoading(false);
+  //     } else {
+  //       console.error(result.message);
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.log(error);
+  //   }
+  // };
+
   useEffect(() => {
-    GetCategory();
+    // GetCategory();
   }, []);
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <ImageBackground
       style={{
         flex: 1,
@@ -112,10 +117,13 @@ const StartExercise = ({navigation, route}) => {
           </ProgressCircle> */}
           <CountdownCircleTimer
             isPlaying
-            duration={15}
+            duration={dataCount}
             size={120}
             strokeWidth={8}
-            onComplete={() => navigation.navigate('GetExercise', {item: item})}
+            onComplete={data => {
+               navigation.navigate('GetExercise', {item: item.item}),
+              setDataCount(0);
+            }}
             colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
             {({remainingTime}) => (
               <Text style={{color: 'white', fontSize: 22}}>
@@ -149,13 +157,13 @@ const StartExercise = ({navigation, route}) => {
             <View style={{width: responsiveWidth(29)}}>
               <Image
                 source={{
-                  uri: item?.exercises
-                    ? `${BaseUrl}` + item?.exercises[0].animation
-                    : item?.exersise_details
-                    ? `${BaseUrl}` + item?.exersise_details?.animation
-                    : item?.animation
-                    ? `${BaseUrl}` + item.animation
-                    : `${BaseUrl}` + item?.image,
+                  uri: item?.item?.exercises
+                    ? `${BaseUrl}` + item?.item?.exercises[0].animation
+                    : item?.item?.exersise_details
+                    ? `${BaseUrl}` + item?.item?.exersise_details?.animation
+                    : item?.item?.animation
+                    ? `${BaseUrl}` + item?.item.animation
+                    : `${BaseUrl}` + item?.item?.image,
                 }}
                 resizeMode="contain"
                 style={{
@@ -173,13 +181,13 @@ const StartExercise = ({navigation, route}) => {
                   fontFamily: 'Interstate-regular',
                   opacity: 0.8,
                 }}>
-                {item?.exercises
-                  ? item?.exercises[0].title
-                  : item?.exersise_details
-                  ? item?.exersise_details?.title
-                  : item?.title
-                  ? item?.title
-                  : item?.workout_title}
+                {item?.item?.exercises
+                  ? item?.item?.exercises[0].title
+                  : item?.item?.exersise_details
+                  ? item?.item?.exersise_details?.title
+                  : item?.item?.title
+                  ? item?.item?.title
+                  : item?.item?.workout_title}
               </Text>
               <Text
                 style={{
@@ -191,11 +199,11 @@ const StartExercise = ({navigation, route}) => {
                   lineHeight: responsiveHeight(2),
                   height: responsiveHeight(2.7),
                 }}>
-                {item?.exercises
-                  ? item?.exercises[0].description
-                  : item?.exersise_details
-                  ? item?.exersise_details?.description
-                  : item?.description}
+                {item?.item?.exercises
+                  ? item?.item?.exercises[0].description
+                  : item?.item?.exersise_details
+                  ? item?.item?.exersise_details?.description
+                  : item?.item?.description}
               </Text>
               <View
                 style={[CssStyle.flexJustify, {width: responsiveWidth(50)}]}>
@@ -213,7 +221,7 @@ const StartExercise = ({navigation, route}) => {
                       marginLeft: responsiveWidth(2),
                       opacity: 0.5,
                     }}>
-                    {item.calories_burnt ? item.calories_burnt : 0} kcal
+                    {item?.item?.calories_burnt ? item?.item?.calories_burnt : 0} kcal
                   </Text>
                 </View>
                 <View
@@ -230,10 +238,10 @@ const StartExercise = ({navigation, route}) => {
                       marginLeft: responsiveWidth(2),
                       opacity: 0.5,
                     }}>
-                    {item?.time
-                      ? item?.exersise_details
-                        ? item?.exersise_details?.time?.slice(0, 2)
-                        : item?.time?.slice(0, 2)
+                    {item?.item?.time
+                      ? item?.item?.exersise_details
+                        ? item?.item?.exersise_details?.time?.slice(0, 2)
+                        : item?.item?.time?.slice(0, 2)
                       : '0 sec'}
                   </Text>
                 </View>
@@ -242,7 +250,7 @@ const StartExercise = ({navigation, route}) => {
           </View>
           <View style={{alignItems: 'center', marginTop: responsiveHeight(4)}}>
             <CustomButton
-              onPress={() => navigation.navigate('GetExercise', {item: item})}
+              onPress={() => navigation.navigate('GetExercise', {item: item.item})}
               activeOpacity={1}
               buttonColor={AppColors.buttonText}
               paddingVertical={2}
