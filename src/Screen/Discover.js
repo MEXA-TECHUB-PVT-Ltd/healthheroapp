@@ -20,6 +20,7 @@ import Logo from '../assets/Icon3';
 import Loader from '../component/Loader';
 import {ExerciseOfTheDay} from '../services/WorkoutPlan';
 import {GetAllCategories} from '../services/WorkoutCategory';
+import {BaseUrl} from '../Helping/BaseUrl';
 
 const Discover = ({navigation}) => {
   const advance = [{item: 1}, {item: 2}, {item: 3}];
@@ -120,7 +121,7 @@ const Discover = ({navigation}) => {
           <View style={{position: 'relative', width: responsiveWidth(50)}}>
             <Image
               resizeMode="contain"
-              source={require('../assets/imageFlip.png')}
+              source={{uri: `${BaseUrl}` + exerciseData.animation}}
               style={{
                 width: responsiveHeight(30),
                 height: responsiveHeight(34.5),

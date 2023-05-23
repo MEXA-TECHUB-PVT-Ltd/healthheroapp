@@ -139,7 +139,7 @@ export const GetWorkoutPlanById = async name => {
     return error;
   }
 };
-export const GetWorkoutPlanAll = async () => {
+export const GetWorkoutPlanAll = async (id) => {
   try {
     const requestOptions = {
       method: 'GET',
@@ -152,7 +152,7 @@ export const GetWorkoutPlanAll = async () => {
       },
     };
     const response = await fetch(
-      `${BaseUrlWorkout}getAllWorkoutPlans?page=1&limit=20
+      `${BaseUrlWorkout}getWorkoutPlanById?workout_plan_id=${id}
         `,
       requestOptions,
     );

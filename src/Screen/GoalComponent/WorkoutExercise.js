@@ -15,6 +15,7 @@ import {
 import {AppColors} from '../../Helping/AppColor';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {GetWorkoutById} from '../../services/WorkoutPlan';
+import {BaseUrl} from '../../Helping/BaseUrl';
 
 const WorkoutExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -82,7 +83,9 @@ const WorkoutExercise = ({navigation, route}) => {
               return (
                 <TouchableOpacity
                   onPress={() =>
-                    navigation.navigate('WorkoutDetail', {item: item})
+                    navigation.navigate('WorkoutDetail', {
+                      item: item.workout_plan_id,
+                    })
                   }
                   style={{
                     // width: responsiveWidth(50),
@@ -91,12 +94,12 @@ const WorkoutExercise = ({navigation, route}) => {
                   }}>
                   <Image
                     borderRadius={responsiveWidth(2)}
-                    source={require('../../assets/Rectangle32.png')}
+                    source={{uri: `${BaseUrl}` + item.image}}
                     style={{
                       width: responsiveWidth(40),
                       height: responsiveHeight(18),
                     }}
-                    resizeMode="contain"
+                    // resizeMode="contain"
                   />
                   <Text
                     style={{
@@ -107,7 +110,7 @@ const WorkoutExercise = ({navigation, route}) => {
                       marginVertical: responsiveHeight(0.6),
                       paddingTop: responsiveHeight(1),
                     }}>
-                    Yoga exercise
+                    {item.workout_title}
                   </Text>
                   <Text
                     style={{
@@ -117,7 +120,8 @@ const WorkoutExercise = ({navigation, route}) => {
                       opacity: 0.5,
                       alignSelf: 'center',
                     }}>
-                    21 min | 400 k
+                    {item.time ? item.time?.slice(0, 2) : '15'} min |{' '}
+                    {item.calories_burnt} k
                   </Text>
                 </TouchableOpacity>
               );

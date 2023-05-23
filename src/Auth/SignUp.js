@@ -237,75 +237,72 @@ const SignUp = ({navigation}) => {
         transparent={true}
         visible={openModel}
         onRequestClose={() => setOpenModel(false)}>
-        <TouchableWithoutFeedback
-          style={{flex: 1}}
-          onPress={() => setOpenModel(false)}>
-          <View style={{flex: 1, backgroundColor: '#00000090'}}>
+        <View style={{flex: 1, backgroundColor: '#00000090'}}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}>
             <View
               style={{
-                flex: 1,
-                justifyContent: 'flex-end',
+                backgroundColor: AppColors.blueColor,
+                alignItems: 'center',
+                borderTopEndRadius: responsiveHeight(3),
+                borderTopLeftRadius: responsiveHeight(3),
+                paddingVertical: responsiveHeight(4.8),
               }}>
-              <View
+              <Text style={[styles.signInText]}>Enter Username</Text>
+              <Input
+                bgColor={'#ffffff60'}
+                placeholder={'Username'}
+                noIcon={true}
+                value={username}
+                onChangeText={e => {
+                  setUsername(e);
+                }}
+                fontSize={16}
                 style={{
-                  backgroundColor: AppColors.blueColor,
-                  alignItems: 'center',
-                  borderTopEndRadius: responsiveHeight(3),
-                  borderTopLeftRadius: responsiveHeight(3),
-                  paddingVertical: responsiveHeight(4.8),
-                }}>
-                <Text style={[styles.signInText]}>Enter Username</Text>
-                <Input
-                  bgColor={'#ffffff60'}
-                  placeholder={'Username'}
-                  noIcon={true}
-                  value={username}
-                  onChangeText={e => {
-                    setUsername(e);
-                  }}
-                  fontSize={16}
+                  marginTop: responsiveHeight(2),
+                  width: responsiveWidth(88),
+                }}
+              />
+              {data == 'username' && (
+                <Text
                   style={{
-                    marginTop: responsiveHeight(2),
-                    width: responsiveWidth(88),
-                  }}
-                />
-                {data == 'username' && (
-                  <Text
-                    style={{
-                      color: AppColors.buttonText,
-                      fontWeight: '500',
-                    }}>
-                    Enter username
-                  </Text>
-                )}
-                <CustomButton
-                  buttonText={'Continue'}
-                  onPress={() => {
-                    username.length > 2
-                      ? (navigation.navigate('UserNavigation', {
-                          screen: 'Gender',
-                          params: {
-                            item: {
-                              itemResult: resultData,
-                              itemName: username,
-                            },
+                    color: AppColors.buttonText,
+                    fontWeight: '500',
+                  }}>
+                  Enter username
+                </Text>
+              )}
+              <CustomButton
+                buttonText={'Continue'}
+                onPress={() => {
+                  username.length > 2
+                    ? (navigation.navigate('UserNavigation', {
+                        screen: 'Gender',
+                        params: {
+                          item: {
+                            itemResult: resultData,
+                            itemName: username,
                           },
-                        }),setUsername(''))
-                      : setData('username');
-                  }}
-                  buttonColor={'transparent'}
-                  mode="outlined"
-                  fontWeight={'500'}
-                  borderColor={'white'}
-                  style={{
-                    marginTop: responsiveHeight(3.7),
-                    width: responsiveWidth(48),
-                  }}
-                />
-              </View>
+                        },
+                      }),
+                      setUsername(''))
+                    : setData('username');
+                }}
+                buttonColor={'transparent'}
+                mode="outlined"
+                fontWeight={'500'}
+                borderColor={'white'}
+                style={{
+                  marginTop: responsiveHeight(3.7),
+                  width: responsiveWidth(48),
+                }}
+              />
             </View>
           </View>
-        </TouchableWithoutFeedback>
+        </View>
       </Modal>
     </ImageBackground>
   );

@@ -20,7 +20,11 @@ import Loader from '../component/Loader';
 import {GetDietPlanApi} from '../services/DietPlan';
 import {useSelector} from 'react-redux';
 import {GetFoodApi} from '../services/FoodApi';
-import { GetWaterApi } from '../services/WaterTrackerApi';
+import {GetWaterApi} from '../services/WaterTrackerApi';
+import Glass from '../assets/redGlas';
+import FillGlass from '../assets/glass-of-water';
+import {Calendar} from 'react-native-calendars';
+import {BarChart} from 'react-native-chart-kit';
 
 const Nutrition = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -34,6 +38,24 @@ const Nutrition = ({navigation, route}) => {
     {desc: 'Burnt', number: 23},
     {desc: 'Eaten', number: 345},
   ];
+  const data = {
+    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+    datasets: [
+      {
+        data: [4, 1, 3, 8],
+      },
+    ],
+  };
+  const chartConfig = {
+    backgroundGradientFrom: '#626377',
+    backgroundGradientTo: '#626377',
+    fillShadowGradient: AppColors.buttonText,
+    fillShadowGradientOpacity: 1, // THIS
+    color: (opacity = 1) => `${AppColors.buttonText}`,
+    strokeWidth: 0, // optional, default 3
+    barPercentage: 1,
+    useShadowColorFromDataset: false, // optional
+  };
   const glassDay = [
     {number: 1},
     {number: 2},
@@ -115,14 +137,14 @@ const Nutrition = ({navigation, route}) => {
     }
   };
 
-  useEffect(() => {
-    GetFoodRecord();
-    GetWaterTracking();
-  }, []);
+  // useEffect(() => {
+  //   GetFoodRecord();
+  //   GetWaterTracking();
+  // }, []);
 
-  useEffect(() => {
-    GetDietId();
-  }, [dietId]);
+  // useEffect(() => {
+  //   GetDietId();
+  // }, [dietId]);
 
   return loading ? (
     <Loader />
@@ -253,7 +275,7 @@ const Nutrition = ({navigation, route}) => {
                 <Octicons name="diff-added" size={23} color={'white'} />
               </TouchableOpacity>
             </View>
-            {foodData.map((item, index) => (
+            {foodData?.map((item, index) => (
               <TouchableOpacity
                 key={index}
                 onPress={() => {}}
@@ -306,25 +328,71 @@ const Nutrition = ({navigation, route}) => {
                   ]}>
                   08 Glass
                 </Text>
-                <View style={[CssStyle.flexJustify, {}]}></View>
+                <View
+                  style={[
+                    CssStyle.flexJustify,
+                    {paddingVertical: responsiveHeight(1)},
+                  ]}>
+                  {glassDay.map((item, index) =>
+                    index == 3 ? (
+                      <Glass width={40} height={40} />
+                    ) : (
+                      <FillGlass width={40} height={40} />
+                    ),
+                  )}
+                  {/* <FillGlass width={30} height={30} /> */}
+                </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {}} style={styles.dailyButton}>
               <View style={{}}>
                 <Text style={styles.dailyText}>Weekly Report</Text>
-                <View style={[CssStyle.flexJustify, {}]}>
-                  <Text style={styles.foodType}>
-                    Yogurt with Berries and banana
-                  </Text>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontWeight: '500',
-                      fontFamily: 'Interstate-regular',
-                    }}>
-                    250 Kcal
-                  </Text>
-                </View>
+                <BarChart
+                  data={data}
+                  width={responsiveWidth(88)}
+                  height={responsiveHeight(40)}
+                  showBarTops={false}
+                  yAxisInterval={0}
+                  yLabelsOffset={0}
+                  yAxisLabel={0}
+                  withInnerLines={false}
+                  chartConfig={chartConfig}
+                  style={{
+                    borderRadius: responsiveWidth(2),
+                    marginLeft: responsiveWidth(-3),
+                  }}
+                  // verticalLabelRotation={1}
+                />
+                {/* <Calendar
+              onDayPress={day => {
+                // setSelected(day.dateString);
+              }}
+              style={{
+                backgroundColor: '#626377',
+                borderRadius: responsiveWidth(2),
+              }}
+              // theme={{
+              //   backgroundColor: 'yellow',
+              //   calendarBackground: 'yellow',
+              //   textSectionTitleColor: '#b6c1cd',
+              //   selectedDayBackgroundColor: '#00adf5',
+              //   selectedDayTextColor: 'yellow',
+              //   todayTextColor: '#00adf5',
+              //   dayTextColor: '#2d4150',
+              //   textDisabledColor: '#d9e',
+              //   // monthTextColor: 'white',
+              //   // indicatorColor: 'white',
+              //   arrowStyle: {backgroundColor: 'white'},
+              // }}
+
+              markedDates={{
+                // [selected]: {
+                //   selected: true,
+                //   disableTouchEvent: true,
+                //   selectedDotColor: 'white',
+                // },
+              }}
+            /> */}
               </View>
             </TouchableOpacity>
           </>

@@ -16,42 +16,12 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import Input from '../../component/Input';
 import {GetIntermediate} from '../../services/WorkoutPlan';
+import {BaseUrl} from '../../Helping/BaseUrl';
 
 const Intermediate = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
-  const dataFLex = [
-    {item: 1},
-    {item: 2},
-    {item: 3},
-    {item: 1},
-    {item: 2},
-    {item: 3},
-    {item: 1},
-    {item: 2},
-    {item: 3},
-    {item: 1},
-    {item: 2},
-    {item: 3},
-  ];
+  // console.log(item);
   const [searchAdd, setSearchAdd] = useState('');
-  // const [intermediate, setIntermediate] = useState([]);
-  // const BeginnerApi = async () => {
-  //   try {
-  //     const result = await GetIntermediate();
-  //     // console.log(result);
-  //     if (result.status == true) {
-  //       setIntermediate(result.result);
-  //     } else {
-  //       console.error(result.message);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   BeginnerApi();
-  // }, []);
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -119,10 +89,10 @@ const Intermediate = ({navigation, route}) => {
               data={item?.itemData}
               numColumns={2}
               showsVerticalScrollIndicator={false}
-              renderItem={({item, inde}) => (
+              renderItem={({item, index}) => (
                 <TouchableOpacity
                   onPress={() =>
-                    navigation.navigate('ExerciseDetail', {item: item})
+                    navigation.navigate('WorkoutDetail', {item: item.workout_plan_id})
                   }
                   style={{
                     // width: responsiveWidth(50),
@@ -131,12 +101,12 @@ const Intermediate = ({navigation, route}) => {
                   }}>
                   <Image
                     borderRadius={responsiveWidth(2)}
-                    source={require('../../assets/Rectangle32.png')}
+                    source={{uri: `${BaseUrl}` + item.image}}
                     style={{
                       width: responsiveWidth(40),
                       height: responsiveHeight(18),
                     }}
-                    resizeMode="contain"
+                    // resizeMode="contain"
                   />
                   <Text
                     style={{
@@ -157,7 +127,7 @@ const Intermediate = ({navigation, route}) => {
                       opacity: 0.5,
                       alignSelf: 'center',
                     }}>
-                    21 min | 400 k
+                    {item.time?.slice(0, 2)} min | {item.calories_burnt} k
                   </Text>
                 </TouchableOpacity>
               )}

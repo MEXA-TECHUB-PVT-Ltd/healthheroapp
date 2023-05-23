@@ -22,10 +22,12 @@ import {Countdown} from 'react-native-element-timer';
 import ProgressCircle from 'react-native-progress-circle';
 import Logo from '../../assets/Icon3';
 import CustomButton from '../../component/CustomButton';
+import {BaseUrl} from '../../Helping/BaseUrl';
+import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 
 const GetExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
+  console.log(item, 'get exercise');
   const countdownRef = useRef();
   const [completedModel, setCompletedModel] = useState(false);
   const [openModel, setOpenModel] = useState(false);
@@ -35,11 +37,11 @@ const GetExercise = ({navigation, route}) => {
       <ImageBackground
         // resizeMode="contain"
         style={{width: responsiveWidth(100), height: responsiveHeight(40)}}
-        source={
-          completedModel
-            ? require('../../assets/Rectangle33.png')
-            : require('../../assets/Rectangle32.png')
-        }>
+        source={{
+          uri: item?.image
+            ? `${BaseUrl}` + item?.image
+            : `${BaseUrl}` + item?.exersise_details?.image,
+        }}>
         <TouchableOpacity
           style={{
             paddingLeft: responsiveWidth(5),
@@ -60,7 +62,15 @@ const GetExercise = ({navigation, route}) => {
           paddingTop: responsiveHeight(5),
         }}>
         <Text style={[styles.signInText]}>
-          {completedModel ? 'Yoga' : `${item?.workout_title}`}
+          {completedModel
+            ? 'Yoga'
+            : `${
+                item?.exersise_details
+                  ? item?.exersise_details.title
+                  : item?.title
+                  ? item?.title
+                  : item?.workout_title
+              }`}
         </Text>
         <View
           style={[
@@ -75,13 +85,18 @@ const GetExercise = ({navigation, route}) => {
             },
           ]}>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            16 <Text style={{color: 'white'}}>moves</Text>
+            {item.workout_plan_exersises
+              ? item.workout_plan_exersises?.length
+              : 0}{' '}
+            <Text style={{color: 'white'}}>moves</Text>
           </Text>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-bold'}}>
             {item?.level_of_workout}
           </Text>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            {completedModel ? '25' : `${item?.time.slice(0, 5)}`}{' '}
+            {completedModel
+              ? '25'
+              : `${item?.time ? item?.time?.slice(0, 2) : '0'}`}{' '}
             <Text style={{color: 'white'}}>sec</Text>
           </Text>
         </View>
@@ -108,17 +123,14 @@ const GetExercise = ({navigation, route}) => {
               color={AppColors.buttonText}
             />
           </TouchableOpacity>
-          <ProgressCircle
-            percent={item?.time.slice(0, 2) * 60}
+          {/* <ProgressCircle
+            percent={item?.time?.slice(0, 2) * 60}
             radius={52}
             borderWidth={4}
-            // outerCircleStyle={{backgroundColor: 'yellow', aspectRatio: 1,}}
-            // outerCircleStyle
             color={'#FF7B27'}
             shadowColor="#C6C6C6"
             bgColor={AppColors.blueColor}>
             <View style={CssStyle.flexData}>
-              {/* <Text style={styles.watchTime}></Text> */}
               <Countdown
                 ref={countdownRef}
                 style={styles.timer}
@@ -130,15 +142,23 @@ const GetExercise = ({navigation, route}) => {
                 onPause={e => {}}
                 onEnd={
                   e => {}
-                  //   e == 0
-                  // ? navigation.navigate('Completed')
-                  // : console.log(e, 'end')
                 }
               />
             </View>
-            {/* } */}
-            {/* </Text> */}
-          </ProgressCircle>
+          </ProgressCircle> */}
+          <CountdownCircleTimer
+            isPlaying
+            duration={30}
+            size={120}
+            strokeWidth={8}
+            onComplete={() => setCompletedModel(true)}
+            colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
+            {({remainingTime}) => (
+              <Text style={{color: 'white', fontSize: 22}}>
+                {remainingTime}
+              </Text>
+            )}
+          </CountdownCircleTimer>
           {completedModel ? (
             <Text style={{marginLeft: responsiveWidth(9)}}></Text>
           ) : (
@@ -181,7 +201,7 @@ const GetExercise = ({navigation, route}) => {
             />
           </View>
         ) : (
-          <View style={{marginTop: responsiveHeight(6)}}>
+          <View style={{marginTop: responsiveHeight(6), flex: 1}}>
             <Text
               style={{
                 color: 'white',
@@ -191,79 +211,105 @@ const GetExercise = ({navigation, route}) => {
               }}>
               Next Exercise
             </Text>
-            <View
-              style={[CssStyle.flexData, {marginBottom: responsiveHeight(2)}]}>
-              <View style={{width: responsiveWidth(29)}}>
-                <Image
-                  source={require('../../assets/Rectangle33.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: 99,
-                    height: 90,
-                    //   marginRight: responsiveWidth(2),
-                  }}
-                />
-              </View>
-              <View style={{width: responsiveWidth(53)}}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 15,
-                    fontFamily: 'Interstate-regular',
-                    opacity: 0.8,
-                  }}>
-                  Yoga Exercise
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 11,
-                    fontFamily: 'Interstate-regular',
-                    marginVertical: responsiveHeight(0.7),
-                    opacity: 0.5,
-                    lineHeight: responsiveHeight(2),
-                  }}>
-                  Lorem ipsum dolor sit emet , consectetur amet elitr dolor sit,
-                  emit as
-                </Text>
+            <View style={{flex: 1}}>
+              {item.workout_plan_exersises ? (
                 <View
-                  style={[CssStyle.flexJustify, {width: responsiveWidth(45)}]}>
-                  <View
-                    style={[
-                      CssStyle.flexData,
-                      {marginVertical: responsiveHeight(0.6)},
-                    ]}>
-                    <Logo width={16} height={16} />
-                    <Text
+                  style={[
+                    CssStyle.flexData,
+                    {marginBottom: responsiveHeight(2)},
+                  ]}>
+                  <View style={{width: responsiveWidth(29)}}>
+                    <Image
+                      source={require('../../assets/Rectangle33.png')}
+                      resizeMode="contain"
                       style={{
-                        color: 'white',
-                        fontFamily: 'Interstate-regular',
-                        fontSize: 12,
-                        marginLeft: responsiveWidth(2),
-                        opacity: 0.5,
-                      }}>
-                      400 kcal
-                    </Text>
+                        width: 99,
+                        height: 90,
+                        //   marginRight: responsiveWidth(2),
+                      }}
+                    />
                   </View>
-                  <View
-                    style={[
-                      CssStyle.flexData,
-                      {marginVertical: responsiveHeight(1)},
-                    ]}>
-                    <Logo width={16} height={16} />
+                  <View style={{width: responsiveWidth(53)}}>
                     <Text
                       style={{
                         color: 'white',
+                        fontSize: 15,
                         fontFamily: 'Interstate-regular',
-                        fontSize: 12,
-                        marginLeft: responsiveWidth(2),
-                        opacity: 0.5,
+                        opacity: 0.8,
                       }}>
-                      45 min
+                      Yoga Exercise
                     </Text>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 11,
+                        fontFamily: 'Interstate-regular',
+                        marginVertical: responsiveHeight(0.7),
+                        opacity: 0.5,
+                        lineHeight: responsiveHeight(2),
+                      }}>
+                      Lorem ipsum dolor sit emet , consectetur amet elitr dolor
+                      sit, emit as
+                    </Text>
+                    <View
+                      style={[
+                        CssStyle.flexJustify,
+                        {width: responsiveWidth(45)},
+                      ]}>
+                      <View
+                        style={[
+                          CssStyle.flexData,
+                          {marginVertical: responsiveHeight(0.6)},
+                        ]}>
+                        <Logo width={16} height={16} />
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontFamily: 'Interstate-regular',
+                            fontSize: 12,
+                            marginLeft: responsiveWidth(2),
+                            opacity: 0.5,
+                          }}>
+                          400 kcal
+                        </Text>
+                      </View>
+                      <View
+                        style={[
+                          CssStyle.flexData,
+                          {marginVertical: responsiveHeight(1)},
+                        ]}>
+                        <Logo width={16} height={16} />
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontFamily: 'Interstate-regular',
+                            fontSize: 12,
+                            marginLeft: responsiveWidth(2),
+                            opacity: 0.5,
+                          }}>
+                          45 min
+                        </Text>
+                      </View>
+                    </View>
                   </View>
                 </View>
-              </View>
+              ) : (
+                <View
+                  style={{
+                    alignItems: 'center',
+                    paddingVertical: responsiveHeight(2),
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 17,
+                      fontFamily: 'Interstate-regular',
+                      paddingBottom: responsiveHeight(5),
+                    }}>
+                    No Next Exercise
+                  </Text>
+                </View>
+              )}
             </View>
           </View>
         )}
@@ -291,30 +337,19 @@ const GetExercise = ({navigation, route}) => {
                   paddingTop: responsiveHeight(4),
                   paddingBottom: responsiveHeight(5),
                 }}>
-                <ProgressCircle
-                  percent={30 * 3.34}
-                  radius={50}
-                  borderWidth={4}
-                  // outerCircleStyle={{backgroundColor: 'yellow', aspectRatio: 1,}}
-                  // outerCircleStyle
-                  color={'#FF7B27'}
-                  shadowColor="#C6C6C6"
-                  bgColor={AppColors.blueColor}>
-                  <View style={CssStyle.flexData}>
-                    {/* <Text style={styles.watchTime}></Text> */}
-                    <Countdown
-                      ref={countdownRef}
-                      style={styles.timer}
-                      textStyle={styles.watchTime}
-                      initialSeconds={completedModel ? 6 : 30}
-                      onTimes={e => {}}
-                      onPause={e => {}}
-                      onEnd={e => {}}
-                    />
-                  </View>
-                  {/* } */}
-                  {/* </Text> */}
-                </ProgressCircle>
+                <CountdownCircleTimer
+                  isPlaying
+                  duration={10}
+                  size={110}
+                  strokeWidth={8}
+                  onComplete={() => setOpenModel(false)}
+                  colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
+                  {({remainingTime}) => (
+                    <Text style={{color: 'white', fontSize: 22}}>
+                      {remainingTime}
+                    </Text>
+                  )}
+                </CountdownCircleTimer>
                 <View
                   style={[
                     CssStyle.flexJustify,
@@ -322,7 +357,8 @@ const GetExercise = ({navigation, route}) => {
                   ]}>
                   <CustomButton
                     onPress={() => {
-                      navigation.navigate('QuitExercise'), setOpenModel(false);
+                      navigation.navigate('QuitExercise', {item: item}),
+                        setOpenModel(false);
                     }}
                     activeOpacity={1}
                     buttonColor={'transparent'}

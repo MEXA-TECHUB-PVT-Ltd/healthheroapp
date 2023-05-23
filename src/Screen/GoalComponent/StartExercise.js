@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   ImageBackground,
   KeyboardAvoidingView,
@@ -19,13 +20,17 @@ import {Countdown} from 'react-native-element-timer';
 import ProgressCircle from 'react-native-progress-circle';
 import {AppColors} from '../../Helping/AppColor';
 import Logo from '../../assets/Icon3';
+import Timer from '../../assets/Icon';
 import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
 import {GetCountDownApi} from '../../services/CountDownApi';
 import {useSelector} from 'react-redux';
+import {BaseUrl} from '../../Helping/BaseUrl';
+import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
+
 const StartExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  // console.log(item);
+  console.log(item);
   const countdownRef = useRef();
   const [loading, setLoading] = useState(false);
   const [countDownData, setCountDownData] = useState('');
@@ -76,7 +81,7 @@ const StartExercise = ({navigation, route}) => {
           <Icon name="chevron-back-outline" size={25} color={'white'} />
         </TouchableOpacity>
         <View style={{alignItems: 'center', flex: 1}}>
-          <ProgressCircle
+          {/* <ProgressCircle
             percent={30 * 3.34}
             radius={50}
             borderWidth={4}
@@ -104,9 +109,20 @@ const StartExercise = ({navigation, route}) => {
                 }
               />
             </View>
-            {/* } */}
-            {/* </Text> */}
-          </ProgressCircle>
+          </ProgressCircle> */}
+          <CountdownCircleTimer
+            isPlaying
+            duration={15}
+            size={120}
+            strokeWidth={8}
+            onComplete={() => navigation.navigate('GetExercise', {item: item})}
+            colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
+            {({remainingTime}) => (
+              <Text style={{color: 'white', fontSize: 22}}>
+                {remainingTime}
+              </Text>
+            )}
+          </CountdownCircleTimer>
           <Text
             style={[
               styles.signInText,
@@ -132,7 +148,15 @@ const StartExercise = ({navigation, route}) => {
             style={[CssStyle.flexData, {marginBottom: responsiveHeight(2)}]}>
             <View style={{width: responsiveWidth(29)}}>
               <Image
-                source={require('../../assets/Rectangle33.png')}
+                source={{
+                  uri: item?.exercises
+                    ? `${BaseUrl}` + item?.exercises[0].animation
+                    : item?.exersise_details
+                    ? `${BaseUrl}` + item?.exersise_details?.animation
+                    : item?.animation
+                    ? `${BaseUrl}` + item.animation
+                    : `${BaseUrl}` + item?.image,
+                }}
                 resizeMode="contain"
                 style={{
                   width: 99,
@@ -149,7 +173,13 @@ const StartExercise = ({navigation, route}) => {
                   fontFamily: 'Interstate-regular',
                   opacity: 0.8,
                 }}>
-                Yoga Exercise
+                {item?.exercises
+                  ? item?.exercises[0].title
+                  : item?.exersise_details
+                  ? item?.exersise_details?.title
+                  : item?.title
+                  ? item?.title
+                  : item?.workout_title}
               </Text>
               <Text
                 style={{
@@ -159,12 +189,16 @@ const StartExercise = ({navigation, route}) => {
                   marginVertical: responsiveHeight(0.7),
                   opacity: 0.5,
                   lineHeight: responsiveHeight(2),
+                  height: responsiveHeight(2.7),
                 }}>
-                Lorem ipsum dolor sit emet , consectetur amet elitr dolor sit,
-                emit as
+                {item?.exercises
+                  ? item?.exercises[0].description
+                  : item?.exersise_details
+                  ? item?.exersise_details?.description
+                  : item?.description}
               </Text>
               <View
-                style={[CssStyle.flexJustify, {width: responsiveWidth(45)}]}>
+                style={[CssStyle.flexJustify, {width: responsiveWidth(50)}]}>
                 <View
                   style={[
                     CssStyle.flexData,
@@ -179,7 +213,7 @@ const StartExercise = ({navigation, route}) => {
                       marginLeft: responsiveWidth(2),
                       opacity: 0.5,
                     }}>
-                    400 kcal
+                    {item.calories_burnt ? item.calories_burnt : 0} kcal
                   </Text>
                 </View>
                 <View
@@ -187,7 +221,7 @@ const StartExercise = ({navigation, route}) => {
                     CssStyle.flexData,
                     {marginVertical: responsiveHeight(1)},
                   ]}>
-                  <Logo width={16} height={16} />
+                  <Timer width={16} height={16} />
                   <Text
                     style={{
                       color: 'white',
@@ -196,7 +230,11 @@ const StartExercise = ({navigation, route}) => {
                       marginLeft: responsiveWidth(2),
                       opacity: 0.5,
                     }}>
-                    45 min
+                    {item?.time
+                      ? item?.exersise_details
+                        ? item?.exersise_details?.time?.slice(0, 2)
+                        : item?.time?.slice(0, 2)
+                      : '0 sec'}
                   </Text>
                 </View>
               </View>

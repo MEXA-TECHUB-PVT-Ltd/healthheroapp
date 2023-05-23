@@ -28,6 +28,7 @@ import {
   GetIntermediate,
 } from '../services/WorkoutPlan';
 import {GetSevenFourApi} from '../services/SevenFour';
+import {BaseUrl} from '../Helping/BaseUrl';
 
 const Dashboard = ({navigation}) => {
   const dataGym = [
@@ -53,7 +54,7 @@ const Dashboard = ({navigation}) => {
     setLoading(true);
     try {
       const result = await GetBeginner();
-      // console.log(result);
+      // console.log(result, 'beginner');
       if (result.status == true) {
         setBeginner(result.result);
         setLoading(false);
@@ -71,7 +72,7 @@ const Dashboard = ({navigation}) => {
     setLoading(true);
     try {
       const result = await GetSevenFourApi();
-      console.log(result);
+      // console.log(result);
       if (result.status == true) {
         setSevenFourData(result.result.array_agg);
         setLoading(false);
@@ -84,7 +85,6 @@ const Dashboard = ({navigation}) => {
       console.log(error);
     }
   };
-  console.log(sevenFourData);
   const AdvanceApi = async () => {
     try {
       const result = await GetAdvance();
@@ -203,119 +203,110 @@ const Dashboard = ({navigation}) => {
           </Text>
           <Icon name={'search'} size={19} color="white" />
         </TouchableOpacity>
-        <FlatList
-          data={sevenFourData}
-          horizontal={true}
-          pagingEnabled={true}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => {
-            console.log(item);
-            return (
-              <View
-                style={[
-                  CssStyle.flexData,
-                  {
-                    backgroundColor: '#FF5100',
-                    borderRadius: responsiveWidth(3),
-                    paddingHorizontal: responsiveWidth(3),
-                    paddingVertical: responsiveHeight(2),
-                    marginTop: responsiveHeight(1.8),
-                    width: responsiveWidth(90),
-                    height: responsiveHeight(36),
-                  },
-                ]}>
-                <View style={{width: responsiveWidth(40)}}>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontFamily: 'Interstate-bold',
-                      fontSize: 46,
-                    }}>
-                    7 X 4
-                  </Text>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontFamily: 'Interstate-bold',
-                      fontSize: 27,
-                    }}>
-                    Challenge
-                  </Text>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontFamily: 'Interstate-regular',
-                      width: responsiveWidth(30),
-                      lineHeight: responsiveHeight(2.5),
-                    }}>
-                    {item.name}
-                  </Text>
-                  <View
-                    style={[
-                      CssStyle.flexData,
-                      {marginVertical: responsiveHeight(1)},
-                    ]}>
-                    <Logo width={16} height={16} />
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontFamily: 'Interstate-regular',
-                        fontSize: 12,
-                        marginLeft: responsiveWidth(2),
-                      }}>
-                      400 kcal
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      CssStyle.flexData,
-                      {
-                        overflow: 'visible',
-                      },
-                    ]}>
-                    <Logo width={16} height={16} />
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontFamily: 'Interstate-regular',
-                        marginLeft: responsiveWidth(2),
-                        fontSize: 12,
-                      }}>
-                      45 min
-                    </Text>
-                  </View>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('StartNow', {item: item})
-                    }
-                    style={{
-                      borderRadius: responsiveWidth(2),
-                      backgroundColor: 'white',
-                      alignItems: 'center',
-                      paddingVertical: responsiveHeight(1),
-                      width: responsiveWidth(25),
-                      marginTop: responsiveHeight(1.4),
-                    }}>
-                    <Text style={{color: '#FF5100'}}>Start Now</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={{}}>
-                  <Image
-                    resizeMode="cover"
-                    source={require('../assets/Image7.png')}
-                    style={{
-                      width: responsiveHeight(29.4),
-                      height: responsiveHeight(37.4),
-                      position: 'absolute',
-                      bottom: responsiveHeight(-18.6),
-                      left: responsiveWidth(-10),
-                    }}
-                  />
-                </View>
-              </View>
-            );
-          }}
-        />
+        <View
+          style={[
+            CssStyle.flexData,
+            {
+              backgroundColor: '#FF5100',
+              borderRadius: responsiveWidth(3),
+              paddingHorizontal: responsiveWidth(3),
+              paddingVertical: responsiveHeight(2),
+              marginTop: responsiveHeight(1.8),
+              width: responsiveWidth(90),
+              height: responsiveHeight(36),
+            },
+          ]}>
+          <View style={{width: responsiveWidth(40)}}>
+            <Text
+              style={{
+                color: 'white',
+                fontFamily: 'Interstate-bold',
+                fontSize: 46,
+              }}>
+              7 X 4
+            </Text>
+            <Text
+              style={{
+                color: 'white',
+                fontFamily: 'Interstate-bold',
+                fontSize: 27,
+              }}>
+              Challenge
+            </Text>
+            <Text
+              style={{
+                color: 'white',
+                fontFamily: 'Interstate-regular',
+                width: responsiveWidth(30),
+                lineHeight: responsiveHeight(2.5),
+              }}>
+              {sevenFourData[0]?.name}
+            </Text>
+            <View
+              style={[
+                CssStyle.flexData,
+                {marginVertical: responsiveHeight(1)},
+              ]}>
+              <Logo width={16} height={16} />
+              <Text
+                style={{
+                  color: 'white',
+                  fontFamily: 'Interstate-regular',
+                  fontSize: 12,
+                  marginLeft: responsiveWidth(2),
+                }}>
+                400 kcal
+              </Text>
+            </View>
+            <View
+              style={[
+                CssStyle.flexData,
+                {
+                  overflow: 'visible',
+                },
+              ]}>
+              <Logo width={16} height={16} />
+              <Text
+                style={{
+                  color: 'white',
+                  fontFamily: 'Interstate-regular',
+                  marginLeft: responsiveWidth(2),
+                  fontSize: 12,
+                }}>
+                45 min
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('StartNow', {item: sevenFourData[0]})
+              }
+              style={{
+                borderRadius: responsiveWidth(2),
+                backgroundColor: 'white',
+                alignItems: 'center',
+                paddingVertical: responsiveHeight(1),
+                width: responsiveWidth(25),
+                marginTop: responsiveHeight(1.4),
+              }}>
+              <Text style={{color: '#FF5100'}}>Start Now</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{}}>
+            <Image
+              resizeMode="cover"
+              source={{
+                uri: `${BaseUrl}` + sevenFourData[0]?.image,
+              }}
+              style={{
+                width: responsiveHeight(29.4),
+                height: responsiveHeight(37.4),
+                position: 'absolute',
+                bottom: responsiveHeight(-18.6),
+                left: responsiveWidth(-10),
+              }}
+            />
+          </View>
+        </View>
         <View
           style={[CssStyle.flexJustify, {marginVertical: responsiveHeight(2)}]}>
           <Text
@@ -342,48 +333,74 @@ const Dashboard = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <View style={{marginRight: responsiveWidth(-5)}}>
-          <FlatList
-            data={beginner}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item, index}) => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('WorkoutDetail', {
-                    item: item.workout_plan_id,
-                  })
-                }
-                style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
-                <Image
-                  borderRadius={responsiveWidth(2)}
-                  source={require('../assets/second.png')}
-                  style={{
-                    width: responsiveWidth(34),
-                    height: responsiveHeight(15),
-                  }}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 13,
-                    fontFamily: 'Interstate-regular',
-                    marginTop: responsiveWidth(1),
-                  }}>
-                  {item.workout_title}
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 12,
-                    fontFamily: 'Interstate-regular',
-                  }}>
-                  21 min | 400 k
-                </Text>
-              </TouchableOpacity>
-            )}
-          />
+          {beginner.length > 0 ? (
+            <FlatList
+              data={beginner}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({item, index}) => {
+                console.log(item, 'beginner data');
+                return (
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('WorkoutDetail', {
+                        item: item.workout_plan_id,
+                      })
+                    }
+                    style={{
+                      marginRight: responsiveWidth(5),
+                      alignItems: 'center',
+                    }}>
+                    <Image
+                      borderRadius={responsiveWidth(2)}
+                      source={{
+                        uri: `${BaseUrl}` + item.image,
+                      }}
+                      style={{
+                        width: responsiveWidth(34),
+                        height: responsiveHeight(15),
+                      }}
+                      // resizeMode="contain"
+                    />
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 13,
+                        fontFamily: 'Interstate-regular',
+                        marginTop: responsiveWidth(1),
+                      }}>
+                      {item.workout_title}
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 12,
+                        fontFamily: 'Interstate-regular',
+                      }}>
+                      21 min | {item.calories_burnt} k
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          ) : (
+            <View
+              style={{
+                alignItems: 'center',
+                marginVertical: responsiveHeight(1),
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Interstate-regular',
+                  fontSize: 17,
+                  color: 'white',
+                }}>
+                No Workout plan created.
+              </Text>
+            </View>
+          )}
         </View>
+
         <View
           style={[CssStyle.flexJustify, {marginVertical: responsiveHeight(2)}]}>
           <Text
@@ -413,47 +430,70 @@ const Dashboard = ({navigation}) => {
           style={{
             marginRight: responsiveWidth(-5),
           }}>
-          <FlatList
-            data={intermediate}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item, index}) => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('WorkoutDetail', {
-                    item: item.workout_plan_id,
-                  })
-                }
-                style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
-                <Image
-                  borderRadius={responsiveWidth(2)}
-                  source={require('../assets/second.png')}
-                  style={{
-                    width: responsiveWidth(34),
-                    height: responsiveHeight(15),
-                  }}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 13,
-                    fontFamily: 'Interstate-regular',
-                    marginTop: responsiveHeight(1),
-                  }}>
-                  {item.workout_title}
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 12,
-                    fontFamily: 'Interstate-regular',
-                  }}>
-                  21 min | 400 k
-                </Text>
-              </TouchableOpacity>
-            )}
-          />
+          {intermediate.length > 0 ? (
+            <FlatList
+              data={intermediate}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({item, index}) => {
+                console.log(item.image);
+                return (
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('WorkoutDetail', {
+                        item: item.workout_plan_id,
+                      })
+                    }
+                    style={{
+                      marginRight: responsiveWidth(5),
+                      alignItems: 'center',
+                    }}>
+                    <Image
+                      borderRadius={responsiveWidth(2)}
+                      source={{uri: `${BaseUrl}` + item.image}}
+                      style={{
+                        width: responsiveWidth(34),
+                        height: responsiveHeight(15),
+                      }}
+                      resizeMode="contain"
+                    />
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 13,
+                        fontFamily: 'Interstate-regular',
+                        marginTop: responsiveHeight(1),
+                      }}>
+                      {item.workout_title}
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 12,
+                        fontFamily: 'Interstate-regular',
+                      }}>
+                      21 min | 400 k
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          ) : (
+            <View
+              style={{
+                alignItems: 'center',
+                marginVertical: responsiveHeight(1),
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Interstate-regular',
+                  fontSize: 17,
+                  color: 'white',
+                }}>
+                No Workout plan created.
+              </Text>
+            </View>
+          )}
         </View>
         <View
           style={[CssStyle.flexJustify, {marginVertical: responsiveHeight(2)}]}>
@@ -484,47 +524,67 @@ const Dashboard = ({navigation}) => {
           style={{
             marginRight: responsiveWidth(-5),
           }}>
-          <FlatList
-            data={advance}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item, index}) => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('WorkoutDetail', {
-                    item: item.workout_plan_id,
-                  })
-                }
-                style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
-                <Image
-                  borderRadius={responsiveWidth(2)}
-                  source={require('../assets/second.png')}
+          {advance.length > 0 ? (
+            <FlatList
+              data={advance}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({item, index}) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('WorkoutDetail', {
+                      item: item.workout_plan_id,
+                    })
+                  }
                   style={{
-                    width: responsiveWidth(34),
-                    height: responsiveHeight(15),
-                  }}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 13,
-                    fontFamily: 'Interstate-regular',
-                    marginTop: responsiveHeight(1),
+                    marginRight: responsiveWidth(5),
+                    alignItems: 'center',
                   }}>
-                  {item.workout_title}
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 12,
-                    fontFamily: 'Interstate-regular',
-                  }}>
-                  21 min | 400 k
-                </Text>
-              </TouchableOpacity>
-            )}
-          />
+                  <Image
+                    borderRadius={responsiveWidth(2)}
+                    source={{uri: `${BaseUrl}` + item.image}}
+                    style={{
+                      width: responsiveWidth(34),
+                      height: responsiveHeight(15),
+                    }}
+                    resizeMode="contain"
+                  />
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 13,
+                      fontFamily: 'Interstate-regular',
+                      marginTop: responsiveHeight(1),
+                    }}>
+                    {item.workout_title}
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 12,
+                      fontFamily: 'Interstate-regular',
+                    }}>
+                    {item.time?.slice(0, 2)} min | {item.calories_burnt} k
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          ) : (
+            <View
+              style={{
+                alignItems: 'center',
+                marginVertical: responsiveHeight(1),
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Interstate-regular',
+                  fontSize: 17,
+                  color: 'white',
+                }}>
+                No Workout plan created.
+              </Text>
+            </View>
+          )}
         </View>
         <View
           style={{marginVertical: responsiveHeight(2), alignItems: 'center'}}>
@@ -534,7 +594,7 @@ const Dashboard = ({navigation}) => {
             style={{width: responsiveWidth(70)}}
             buttonColor={'transparent'}
             colorText="white"
-            onPress={() => navigation.navigate('Discover')}
+            onPress={() => {}}
             borderColor={'#FF5100'}
           />
         </View>

@@ -18,41 +18,34 @@ import {AppColors} from '../../Helping/AppColor';
 import CustomButton from '../../component/CustomButton';
 import {GetSevenById} from '../../services/SevenFour';
 import Logo from '../../assets/Icon3';
-import Clock from '../../assets/Icon3';
+import Clock from '../../assets/Icon';
+import {BaseUrl} from '../../Helping/BaseUrl';
 
 const SevenFourWorkout = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
-  const dataFlatList = [
-    {time: '00:35', number: 1},
-    {time: '00:25', number: 2},
-    {time: '00:59', number: 3},
-    {time: '00:59', number: 4},
-    {time: '00:59', number: 5},
-  ];
-  const [indexNumber, setIndex] = useState('');
+  console.log(item, 'param');
   const [sevenByFourData, setSevenByFourData] = useState('');
-  const GetSeven = async () => {
-    try {
-      const result = await GetSevenById(item.seven_by_four_challenge_id);
-      console.log(result);
-      if (result.status == true) {
-        setSevenByFourData(result.result);
-      } else {
-        console.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    GetSeven();
-  }, []);
+  // const GetSeven = async () => {
+  //   try {
+  //     const result = await GetSevenById(item.seven_by_four_challenge_id);
+  //     console.log(result);
+  //     if (result.status == true) {
+  //       setSevenByFourData(result.result);
+  //     } else {
+  //       console.error(result.message);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   GetSeven();
+  // }, []);
   return (
     <View style={CssStyle.mainContainer}>
       <ImageBackground
         style={{width: responsiveWidth(100), height: responsiveHeight(30)}}
-        source={require('../../assets/Rectangle32.png')}>
+        source={{uri: `${BaseUrl}` + item.image}}>
         <View
           style={[
             CssStyle.flexJustify,
@@ -76,6 +69,7 @@ const SevenFourWorkout = ({navigation, route}) => {
           borderTopLeftRadius: responsiveWidth(5),
           marginTop: responsiveHeight(-3),
           paddingBottom: responsiveHeight(3),
+          flex: 1,
         }}>
         <Text
           style={{
@@ -84,7 +78,7 @@ const SevenFourWorkout = ({navigation, route}) => {
             fontFamily: 'Interstate-bold',
             fontSize: 19,
           }}>
-          Day 1
+          Day {item.day}
         </Text>
         <View
           style={[
@@ -99,7 +93,7 @@ const SevenFourWorkout = ({navigation, route}) => {
             },
           ]}>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            16 {'  '}
+            {item?.exercises?.length} {'  '}
             <Text style={{color: 'white'}}>workouts</Text>
           </Text>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
@@ -108,79 +102,84 @@ const SevenFourWorkout = ({navigation, route}) => {
           </Text>
         </View>
         <FlatList
-          data={dataFlatList}
-          renderItem={({item, index}) => (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ExerciseDetail', {item: item})
-              }
-              style={[
-                CssStyle.flexData,
-                {
-                  // width: responsiveWidth(50),
-                  marginBottom: responsiveHeight(2),
-                  marginRight: responsiveWidth(7),
-                },
-              ]}>
-              <Image
-                borderRadius={responsiveWidth(2)}
-                source={require('../../assets/Rectangle32.png')}
-                style={{
-                  width: responsiveWidth(19),
-                  height: responsiveHeight(9),
-                  marginRight: responsiveWidth(4),
-                }}
-                resizeMode="contain"
-              />
-              <View>
-                <Text
+          data={item.exercises}
+          renderItem={({item, index}) => {
+            return (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('ExerciseDetail', {item: item})
+                }
+                style={[
+                  CssStyle.flexData,
+                  {
+                    // width: responsiveWidth(50),
+                    marginBottom: responsiveHeight(2),
+                    marginRight: responsiveWidth(7),
+                  },
+                ]}>
+                <Image
+                  borderRadius={responsiveWidth(2)}
+                  source={{uri: `${BaseUrl}` + item.video_link}}
                   style={{
-                    color: 'white',
-                    fontSize: 13,
-                    fontFamily: 'Interstate-regular',
-                    marginVertical: responsiveHeight(0.6),
-                    paddingTop: responsiveHeight(1),
-                  }}>
-                  Yoga Exercise
-                </Text>
-                <View
-                  style={[CssStyle.flexJustify, {width: responsiveWidth(40)}]}>
+                    width: responsiveWidth(19),
+                    height: responsiveHeight(9),
+                    marginRight: responsiveWidth(4),
+                  }}
+                  resizeMode="contain"
+                />
+                <View>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 13,
+                      fontFamily: 'Interstate-regular',
+                      marginVertical: responsiveHeight(0.6),
+                      paddingTop: responsiveHeight(1),
+                    }}>
+                    {item.title}
+                  </Text>
                   <View
                     style={[
-                      CssStyle.flexData,
-                      {marginVertical: responsiveHeight(1)},
+                      CssStyle.flexJustify,
+                      {width: responsiveWidth(40)},
                     ]}>
-                    <Logo width={16} height={16} />
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontFamily: 'Interstate-regular',
-                        fontSize: 12,
-                        marginLeft: responsiveWidth(2),
-                      }}>
-                      400 kcal
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      CssStyle.flexData,
-                      {marginVertical: responsiveHeight(1)},
-                    ]}>
-                    <Clock width={16} height={16} />
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontFamily: 'Interstate-regular',
-                        fontSize: 12,
-                        marginLeft: responsiveWidth(2),
-                      }}>
-                      45 sec
-                    </Text>
+                    <View
+                      style={[
+                        CssStyle.flexData,
+                        {marginVertical: responsiveHeight(1)},
+                      ]}>
+                      <Logo width={16} height={16} />
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontFamily: 'Interstate-regular',
+                          fontSize: 12,
+                          marginLeft: responsiveWidth(2),
+                        }}>
+                        400 kcal
+                      </Text>
+                    </View>
+                    <View
+                      style={[
+                        CssStyle.flexData,
+                        {marginVertical: responsiveHeight(1)},
+                      ]}>
+                      <Clock width={16} height={16} />
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontFamily: 'Interstate-regular',
+                          fontSize: 12,
+                          marginLeft: responsiveWidth(2),
+                        }}>
+                        45 sec
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          )}
+              </TouchableOpacity>
+            );
+          }}
         />
         <View
           style={{
@@ -190,7 +189,7 @@ const SevenFourWorkout = ({navigation, route}) => {
             left: responsiveWidth(5),
           }}>
           <CustomButton
-            onPress={() => navigation.navigate('StartExercise')}
+            onPress={() => navigation.navigate('StartExercise', {item: item})}
             buttonText={'Get Started'}
             fontWeight="500"
             style={{}}

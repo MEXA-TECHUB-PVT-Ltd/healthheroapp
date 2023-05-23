@@ -18,7 +18,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {AppColors} from '../../Helping/AppColor';
 import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
-import {TakeTrainingRest} from '../../services/RestApi';
 import {useSelector} from 'react-redux';
 import {UpdateProfileApi} from '../../services/AuthScreen';
 import Lottie from 'lottie-react-native';
@@ -30,38 +29,48 @@ const MetricUnits = ({navigation, route}) => {
   const id = useSelector(data => data.id);
   const [loadingUser, setLoadingUser] = useState(false);
   const [openRestartModel, setOpenRestartModel] = useState(false);
-  const UpdateUserName = async () => {
+
+  const [openModel, setOpenModel] = useState(false);
+  const [data, setData] = useState('');
+  const [weightUnitData, setWeightUnit] = useState(
+    item ? item?.weight_unit : 'kg',
+  );
+  const [heightUni, setHeightUnit] = useState(
+    item?.height_unit ? item?.height_unit : 'ft',
+  );
+  const heightUnit = [{item: 'ft'}, {item: 'in'}];
+  const weightUnit = [{item: 'kg'}, {item: 'gm'}];
+  const UpdateMetric = async () => {
     setLoadingUser(true);
     try {
       const result = await UpdateProfileApi(
         id,
         item.user_name,
         item.device_id,
-        addData,
+        item.gender,
         item.focused_areas,
         item.height,
         item.weight,
-        item.weight_unit,
-        item.height_unit,
+        weightUnitData,
+        heightUni,
       );
       console.log(result);
       if (result.status == true) {
-        setOpenUserSuccessfully(true);
+        setOpenModel(false);
+        setOpenRestartModel(true);
         setLoadingUser(false);
       } else {
+        setOpenModel(false);
         console.error(result.message);
         setLoadingUser(false);
       }
     } catch (error) {
+      setOpenModel(false);
       setLoadingUser(false);
       console.log(error);
     }
   };
-  const [openModel, setOpenModel] = useState(false);
-  const [data, setData] = useState('');
-  const [addItem, setAddItemHeight] = useState('cm');
-  const buttonData = [{item: 'cm'}, {item: 'in'}];
-  const buttonDataWeight = [{item: 'kg'}, {item: 'lbs'}];
+  console.log(heightUni, weightUnitData);
   return (
     <LinearGradient
       colors={['#0A1F58', '#0A1637']}
@@ -126,8 +135,9 @@ const MetricUnits = ({navigation, route}) => {
               paddingVertical: responsiveHeight(0.5),
               fontSize: 23,
               fontFamily: 'Interstate-bold',
+              textTransform: 'uppercase',
             }}>
-            cm
+            {heightUni ? heightUni : 'cm'}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -153,8 +163,9 @@ const MetricUnits = ({navigation, route}) => {
               paddingVertical: responsiveHeight(0.5),
               fontSize: 23,
               fontFamily: 'Interstate-bold',
+              textTransform: 'uppercase',
             }}>
-            kg
+            {weightUnitData ? weightUnitData : 'kg'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -198,18 +209,18 @@ const MetricUnits = ({navigation, route}) => {
                     {marginVertical: responsiveHeight(6)},
                   ]}>
                   {data == 'Height'
-                    ? buttonData.map((item, index) => (
+                    ? heightUnit.map((item, index) => (
                         <CustomButton
                           buttonText={item.item}
                           onPress={() => {
-                            setAddItemHeight(item.item);
+                            setHeightUnit(item.item);
                           }}
                           buttonColor={
-                            addItem == item.item ? '' : 'transparent'
+                            heightUni == item.item ? '' : 'transparent'
                           }
-                          mode={addItem == item.item ? '' : 'outlined'}
+                          mode={heightUni == item.item ? '' : 'outlined'}
                           fontWeight={'500'}
-                          borderColor={addItem == item.item ? '' : 'white'}
+                          borderColor={heightUni == item.item ? '' : 'white'}
                           styleText={{textTransform: 'uppercase'}}
                           style={{
                             width: responsiveWidth(41),
@@ -217,18 +228,20 @@ const MetricUnits = ({navigation, route}) => {
                           }}
                         />
                       ))
-                    : buttonDataWeight.map((item, index) => (
+                    : weightUnit.map((item, index) => (
                         <CustomButton
                           buttonText={item.item}
                           onPress={() => {
-                            setAddItemHeight(item.item);
+                            setWeightUnit(item.item);
                           }}
                           buttonColor={
-                            addItem == item.item ? '' : 'transparent'
+                            weightUnitData == item.item ? '' : 'transparent'
                           }
-                          mode={addItem == item.item ? '' : 'outlined'}
+                          mode={weightUnitData == item.item ? '' : 'outlined'}
                           fontWeight={'500'}
-                          borderColor={addItem == item.item ? '' : 'white'}
+                          borderColor={
+                            weightUnitData == item.item ? '' : 'white'
+                          }
                           styleText={{textTransform: 'uppercase'}}
                           style={{
                             width: responsiveWidth(41),
@@ -242,7 +255,7 @@ const MetricUnits = ({navigation, route}) => {
                   <CustomButton
                     buttonText={'Save Changes'}
                     onPress={() => {
-                      setOpenModel(false);
+                      UpdateMetric();
                     }}
                     buttonColor={'transparent'}
                     mode="outlined"
@@ -305,13 +318,13 @@ const MetricUnits = ({navigation, route}) => {
                     color: 'white',
                     fontSize: 23,
                     fontFamily: 'Interstate-regular',
-                    width: responsiveWidth(75),
+                    width: responsiveWidth(80),
                     textAlign: 'center',
                     lineHeight: responsiveHeight(4),
                     marginTop: responsiveHeight(2),
                     textTransform: 'capitalize',
                   }}>
-                  Password Updated Successfully
+                  Changes saved successfully
                 </Text>
                 <View style={[{alignItems: 'center'}]}>
                   <CustomButton
