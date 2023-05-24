@@ -24,42 +24,60 @@ import {Line} from '../../../component/Line';
 
 import Lottie from 'lottie-react-native';
 import assets from '../../../assets';
-import { AddFoodUserApi } from '../../../services/FoodApi';
+import {AddFoodUserApi} from '../../../services/DietPlan';
+import {GetFoodApi} from '../../../services/FoodApi';
+import Moment from 'react-moment';
 
 const EnterFood = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
+  console.log(item);
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(1);
   const id = useSelector(data => data.id);
-  const [oldPassword, setOldPassword] = useState('');
   const [openRestartModel, setOpenRestartModel] = useState(false);
-  const [password, setPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [data, setData] = useState('');
-  const [emailValidError, setEmailValidError] = useState('');
-
-  const gender = [
-    {item: 'Breakfast', id: 1},
-    {item: 'Snack', id: 2},
-    {item: 'Lucnh', id: 3},
-    {item: 'Dinner', id: 4},
-  ];
-  const [review, setReview] = useState('');
   const foodType = [{item: 'Scoops'}, {item: 'Grams'}, {item: 'oz'}];
-  const [typeDate, setType] = useState('');
+  const [typeDate, setType] = useState('Beef');
   const [typeDateFood, setTypeFood] = useState('');
-  
-  const measureType = [{item: 'Food 1'}, {item: 'Food 2'}, {item: 'Food 3'}];
+  // const measureType = [{item: 'Food 1'}, {item: 'Food 2'}, {item: 'Food 3'}];
   const [measureModel, setMeasureModel] = useState(false);
   const [foodModel, setFoodModel] = useState(false);
-  const AddFood=async()=>{
+  const [getFoodData, setGetFoodData] = useState('');
+  const [typeFoodId, setTypeFoodId] = useState('');
+  const GetFood = async () => {
+    try {
+      const result = await GetFoodApi();
+      console.log(result, 'get the food');
+      if (result.status == true) {
+        setGetFoodData(result.result);
+      } else {
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GetFood();
+  }, []);
+
+  const [dateData, setDateData] = useState(new Date().toLocaleDateString());
+  // console.log(dateData.replace(/['/']/g, '-'));
+  // console.log(typeFoodId, 'hello sir', typeDateFood, typeDate);
+  const AddFood = async () => {
     setLoading(true);
     try {
-      const result = await AddFoodUserApi();
+      const result = await AddFoodUserApi(
+        id,
+        item?.item?.dietId,
+        item?.review,
+        typeFoodId,
+        time,
+        typeDateFood,
+        '2023-05-23',
+      );
       console.log(result, 'this is the');
       if (result) {
         setLoading(false);
+        setOpenRestartModel(true);
       } else {
         setLoading(false);
         // navigation.navigate('SelectPlan');
@@ -67,7 +85,8 @@ const EnterFood = ({navigation, route}) => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
+
   return (
     <LinearGradient
       colors={['#0A1F58', '#0A1637']}
@@ -148,26 +167,54 @@ const EnterFood = ({navigation, route}) => {
         </View>
         {measureModel ? (
           <View style={[CssStyle.shadow, styles.modelOpenData]}>
-            {measureType.map((item, index) => (
-              <>
-                <TouchableOpacity
-                  onPress={() => {
-                    setType(item.item), setMeasureModel(false);
-                  }}
-                  style={{
-                    paddingVertical: responsiveHeight(1.5),
-                  }}>
-                  <Text
-                    style={{
-                      color: AppColors.textColor,
-                      marginLeft: responsiveWidth(3),
-                    }}>
-                    {item.item}
-                  </Text>
-                </TouchableOpacity>
-                <Line />
-              </>
-            ))}
+            {/* {getFoodData?.map((item, index) => (
+              
+            ))} */}
+            <FlatList
+              data={getFoodData}
+              renderItem={({item, index}) => {
+                console.log(item);
+                return (
+                  <>
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        setType(item.food_name),
+                          setTypeFoodId(item.food_id),
+                          setMeasureModel(false);
+                      }}
+                      style={{
+                        paddingVertical: responsiveHeight(1.5),
+                      }}>
+                      <Text
+                        style={{
+                          color: AppColors.textColor,
+                          marginLeft: responsiveWidth(3),
+                        }}>
+                        {item.food_name}
+                      </Text>
+                    </TouchableOpacity>
+                    <Line />
+                  </>
+                );
+              }}
+            />
+            <TouchableOpacity
+              onPress={() => {}}
+              style={{
+                backgroundColor: '#00000020',
+                paddingVertical: responsiveHeight(1),
+                alignItems: 'center',
+                // paddingHorizontal: responsiveWidth(4),
+              }}>
+              <Text
+                style={{
+                  color: AppColors.textColor,
+                  marginLeft: responsiveWidth(3),
+                }}>
+                Add Food
+              </Text>
+            </TouchableOpacity>
           </View>
         ) : null}
         {foodModel ? (
@@ -182,6 +229,7 @@ const EnterFood = ({navigation, route}) => {
             {foodType.map((item, index) => (
               <>
                 <TouchableOpacity
+                  key={index}
                   onPress={() => {
                     setTypeFood(item.item), setFoodModel(false);
                   }}
@@ -272,7 +320,14 @@ const EnterFood = ({navigation, route}) => {
         }}>
         <CustomButton
           loading={loading}
-          onPress={() => setOpenRestartModel(true)}
+          onPress={() =>
+            typeDate && typeDateFood
+              ? AddFood()
+              : ToastAndroid.show(
+                  'Please fill the required data',
+                  ToastAndroid.SHORT,
+                )
+          }
           activeOpacity={1}
           buttonColor={AppColors.buttonText}
           style={{width: responsiveWidth(78)}}

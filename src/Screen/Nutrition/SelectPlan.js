@@ -21,14 +21,16 @@ import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
 import {useSelector} from 'react-redux';
 
-const SelectPlan = ({navigation}) => {
+const SelectPlan = ({navigation, route}) => {
+  const {item} = route.params ? route.params : '';
+  console.log(item);
 
   const gender = [
     {item: 'balance', id: 1},
     {item: 'mildWeightLoss', id: 2},
     {item: 'mildWeightGain', id: 3},
   ];
-  const [review, setReview] = useState('');
+  const [review, setReview] = useState(item ? item?.purpose : '');
 
   return (
     <LinearGradient
@@ -114,7 +116,10 @@ const SelectPlan = ({navigation}) => {
         <CustomButton
           onPress={() =>
             review
-              ? navigation.navigate('NutritionGender', {planType: review})
+              ? navigation.navigate('NutritionGender', {
+                  planType: {review},
+                  updateData: item,
+                })
               : ToastAndroid.show('Please Select One', ToastAndroid.SHORT)
           }
           activeOpacity={1}

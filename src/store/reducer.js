@@ -8,10 +8,10 @@ const mainReducer = (state = initialState, action) => {
       return {
         id: action.id,
       };
-    case 'EXERCISE':
-      return {
-        exerciseId: action.id,
-      };
+    // case 'EXERCISE':
+    //   return {
+    //     exerciseId: action.id,
+    //   };
 
     default:
       break;

@@ -27,7 +27,7 @@ import Ruler from '../../Helping/Ruler';
 import Input from '../../component/Input';
 
 const WeekGoal = ({navigation, route}) => {
-  const {item} = route.params ? route.params : '';
+  const {item, updateData} = route.params ? route.params : '';
   console.log(item);
   const weightUnitData = [{text: 'cm'}, {text: 'in'}];
   const [weightData, setWeightData] = useState(null);
@@ -176,6 +176,7 @@ const WeekGoal = ({navigation, route}) => {
                 activeIndex
                   ? navigation.navigate('SetCalories', {
                       item: {item, activeIndex},
+                      updateData,
                     })
                   : ToastAndroid.show(
                       'Please enter the weekly goal',

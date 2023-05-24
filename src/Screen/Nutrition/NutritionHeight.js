@@ -26,12 +26,15 @@ import {RulerPicker} from 'react-native-ruler-picker';
 import Ruler from '../../Helping/Ruler';
 
 const NutritionHeight = ({navigation, route}) => {
-  const {item} = route.params ? route.params : '';
-  console.log(item);
+  const {item, updateData} = route.params ? route.params : '';
+  console.log(updateData);
   const weightUnitData = [{text: 'cm'}, {text: 'in'}];
   const [weightData, setWeightData] = useState(null);
   const [heightValue, setHeightValue] = useState();
-  console.log(heightValue);
+  const [activeIndex, setActiveIndex] = useState(
+    updateData ? updateData.height : 55,
+  );
+  // console.log(heightValue);
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -110,7 +113,7 @@ const NutritionHeight = ({navigation, route}) => {
               max={110}
               step={1}
               fractionDigits={0}
-              initialValue={70}
+              initialValue={activeIndex}
               gapBetweenSteps={5}
               indicatorColor="#FF5100"
               longStepColor="#FF5100"
@@ -148,6 +151,7 @@ const NutritionHeight = ({navigation, route}) => {
                 heightValue
                   ? navigation.navigate('ActiveAge', {
                       item: {item, heightValue},
+                      updateData,
                     })
                   : ToastAndroid.show(
                       'Please select the current height',

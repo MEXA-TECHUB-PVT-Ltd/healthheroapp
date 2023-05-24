@@ -63,9 +63,13 @@ const GetExercise = ({navigation, route}) => {
         }}>
         <Text style={[styles.signInText]}>
           {completedModel
-            ? 'Yoga'
+            ? item.exercises
+              ? item.exercises[1]?.title
+              : item.title
             : `${
-                item?.exersise_details
+                item?.exercises
+                  ? item?.exercises[0]?.title
+                  : item?.exersise_details
                   ? item?.exersise_details.title
                   : item?.title
                   ? item?.title
@@ -212,7 +216,89 @@ const GetExercise = ({navigation, route}) => {
               Next Exercise
             </Text>
             <View style={{flex: 1}}>
-              {item.workout_plan_exersises ? (
+              {item.exercises ? (
+                <View
+                  style={[
+                    CssStyle.flexData,
+                    {marginBottom: responsiveHeight(2)},
+                  ]}>
+                  <View style={{width: responsiveWidth(29)}}>
+                    <Image
+                      source={{
+                        uri: `${BaseUrl}` + item.exercises[0]?.animation,
+                      }}
+                      resizeMode="contain"
+                      style={{
+                        width: 99,
+                        height: 90,
+                        //   marginRight: responsiveWidth(2),
+                      }}
+                    />
+                  </View>
+                  <View style={{width: responsiveWidth(53)}}>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 15,
+                        fontFamily: 'Interstate-regular',
+                        opacity: 0.8,
+                      }}>
+                      {item.exercises[1].title}
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 11,
+                        fontFamily: 'Interstate-regular',
+                        marginVertical: responsiveHeight(0.7),
+                        opacity: 0.5,
+                        lineHeight: responsiveHeight(2),
+                      }}>
+                      {item.exercises[0].description}
+                    </Text>
+                    <View
+                      style={[
+                        CssStyle.flexJustify,
+                        {width: responsiveWidth(45)},
+                      ]}>
+                      <View
+                        style={[
+                          CssStyle.flexData,
+                          {marginVertical: responsiveHeight(0.6)},
+                        ]}>
+                        <Logo width={16} height={16} />
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontFamily: 'Interstate-regular',
+                            fontSize: 12,
+                            marginLeft: responsiveWidth(2),
+                            opacity: 0.5,
+                          }}>
+                          400 kcal
+                        </Text>
+                      </View>
+                      <View
+                        style={[
+                          CssStyle.flexData,
+                          {marginVertical: responsiveHeight(1)},
+                        ]}>
+                        <Logo width={16} height={16} />
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontFamily: 'Interstate-regular',
+                            fontSize: 12,
+                            marginLeft: responsiveWidth(2),
+                            opacity: 0.5,
+                          }}>
+                          45 min
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              ) : item.workout_plan_exersises ? (
                 <View
                   style={[
                     CssStyle.flexData,

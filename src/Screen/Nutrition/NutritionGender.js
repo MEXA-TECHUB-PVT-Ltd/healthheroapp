@@ -28,22 +28,12 @@ import Ruler from '../../Helping/Ruler';
 import Input from '../../component/Input';
 
 const NutritionGender = ({navigation, route}) => {
-  const {planType} = route.params ? route.params : '';
-  console.log(planType, 'hello');
-  const [addData, setAddData] = useState('male');
-  // console.log(item);
-  // console.log(
-  //   item.itemResult.user_id,
-  //   item.itemName,
-  //   addData,
-  //   focusedArea,
-  //   weightData,
-  //   heightData,
-  //   heightValue,
-  //   weightValue,
-  //   'dummy',
-  // );
-  const [age, setAge] = useState('');
+  const {planType, updateData} = route.params ? route.params : '';
+  // console.log(planType,updateData.age, 'hello');
+  const [addData, setAddData] = useState(
+    updateData ? updateData?.gender : 'male',
+  );
+  const [age, setAge] = useState(updateData ? updateData?.age : '');
   const genderCollectionData = [
     {text: 'male', image: require('../../assets/maleGender.png')},
     {text: 'female', image: require('../../assets/FemaleGender.png')},
@@ -185,7 +175,8 @@ const NutritionGender = ({navigation, route}) => {
                 noIcon={true}
                 value={age}
                 onChangeText={e => setAge(e)}
-                fontSize={16} keyboardType='numeric'
+                fontSize={16}
+                keyboardType="numeric"
                 style={{marginTop: responsiveHeight(3)}}
               />
             </View>
@@ -201,6 +192,7 @@ const NutritionGender = ({navigation, route}) => {
                 addData && age
                   ? navigation.navigate('NutritionWeight', {
                       item: {planType, age, addData},
+                      updateData,
                     })
                   : ToastAndroid.show(
                       'Please select age and select gender',

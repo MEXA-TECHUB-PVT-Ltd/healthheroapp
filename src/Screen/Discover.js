@@ -120,14 +120,17 @@ const Discover = ({navigation}) => {
           ]}>
           <View style={{position: 'relative', width: responsiveWidth(50)}}>
             <Image
-              resizeMode="contain"
-              source={{uri: `${BaseUrl}` + exerciseData.animation}}
+              borderRadius={responsiveWidth(2)}
+              // resizeMode="contain"
+              source={{
+                uri: `${BaseUrl}` + exerciseData.animation,
+              }}
               style={{
-                width: responsiveHeight(30),
-                height: responsiveHeight(34.5),
+                width: responsiveHeight(25),
+                height: responsiveHeight(29.5),
                 position: 'absolute',
-                bottom: responsiveHeight(-16.8),
-                left: responsiveWidth(-8),
+                bottom: responsiveHeight(-15),
+                // left: responsiveWidth(-8),
               }}
             />
           </View>
@@ -256,40 +259,46 @@ const Discover = ({navigation}) => {
             data={category}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            renderItem={({item, index}) => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('WorkoutExercise', {item: item})
-                }
-                style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
-                <Image
-                  borderRadius={responsiveWidth(2)}
-                  source={require('../assets/Rectangle33.png')}
+            renderItem={({item, index}) => {
+              console.log(item,'sfsf');
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('WorkoutExercise', {item: item})
+                  }
                   style={{
-                    width: responsiveWidth(34),
-                    height: responsiveHeight(15),
-                  }}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 13,
-                    fontFamily: 'Interstate-regular',
-                    marginTop: responsiveHeight(1),
+                    marginRight: responsiveWidth(5),
+                    alignItems: 'center',
                   }}>
-                  {item.category_name}
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 12,
-                    fontFamily: 'Interstate-regular',
-                  }}>
-                  21 min | 400 k
-                </Text>
-              </TouchableOpacity>
-            )}
+                  <Image
+                    borderRadius={responsiveWidth(2)}
+                    source={{uri: `${BaseUrl}` + item.animation}}
+                    style={{
+                      width: responsiveWidth(34),
+                      height: responsiveHeight(15),
+                    }}
+                    resizeMode="contain"
+                  />
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 13,
+                      fontFamily: 'Interstate-regular',
+                      marginTop: responsiveHeight(1),
+                    }}>
+                    {item.category_name}
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 12,
+                      fontFamily: 'Interstate-regular',
+                    }}>
+                    21 min | 400 k
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
           />
         </View>
       </View>

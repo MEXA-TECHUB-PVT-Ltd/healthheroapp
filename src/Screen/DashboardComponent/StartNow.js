@@ -17,21 +17,27 @@ import {AppColors} from '../../Helping/AppColor';
 import CustomButton from '../../component/CustomButton';
 import {GetSevenById} from '../../services/SevenFour';
 import {BaseUrl} from '../../Helping/BaseUrl';
+import Loader from '../../component/Loader';
 
 const StartNow = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
   // console.log(item);
   const [sevenByFourData, setSevenByFourData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const GetSeven = async () => {
+    setLoading(true);
     try {
       const result = await GetSevenById(item?.seven_by_four_challenge_id);
       // console.log(result.result, 'hello sir');
       if (result.status == true) {
+        setLoading(false);
         setSevenByFourData(result.result[0].weeks);
       } else {
+        setLoading(false);
         console.error(result.message);
       }
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -47,7 +53,16 @@ const StartNow = ({navigation, route}) => {
     {item: 6},
     {item: 7},
   ];
-  return (
+  console.log(
+    28 -
+      (sevenByFourData[0]?.week_days?.length +
+        sevenByFourData[1]?.week_days?.length +
+        sevenByFourData[2]?.week_days?.length +
+        sevenByFourData[3]?.week_days?.length),
+  );
+  return loading ? (
+    <Loader />
+  ) : (
     <View style={CssStyle.mainContainer}>
       <ImageBackground
         style={{width: responsiveWidth(100), height: responsiveHeight(30)}}
@@ -95,50 +110,21 @@ const StartNow = ({navigation, route}) => {
               fontFamily: 'Interstate-regular',
               fontSize: 12,
             }}>
-            {/* {sevenByFourData[0]?.week_days.length +
-              sevenByFourData[1]?.week_days.length +
-              sevenByFourData[2]?.week_days.length +
-              sevenByFourData[3]?.week_days.length -
-              28}{' '} */}
             {sevenByFourData[3]?.week_days
               ? 28 -
-                (sevenByFourData[0]?.week_days == null
-                  ? null
-                  : sevenByFourData[0]?.week_days?.length +
-                      sevenByFourData[1]?.week_days ==
-                    null
-                  ? null
-                  : sevenByFourData[1]?.week_days?.length +
-                      sevenByFourData[2]?.week_days ==
-                    null
-                  ? null
-                  : sevenByFourData[2]?.week_days?.length +
-                      sevenByFourData[3]?.week_days ==
-                    null
-                  ? null
-                  : sevenByFourData[3]?.week_days?.length)
+                (sevenByFourData[0]?.week_days?.length +
+                  sevenByFourData[1]?.week_days?.length +
+                  sevenByFourData[2]?.week_days?.length +
+                  sevenByFourData[3]?.week_days?.length)
               : sevenByFourData[2]?.week_days
               ? 28 -
-                (sevenByFourData[0]?.week_days == null
-                  ? null
-                  : sevenByFourData[0]?.week_days?.length +
-                      sevenByFourData[1]?.week_days ==
-                    null
-                  ? null
-                  : sevenByFourData[1]?.week_days?.length +
-                      sevenByFourData[2]?.week_days ==
-                    null
-                  ? null
-                  : sevenByFourData[2]?.week_days?.length)
+                (sevenByFourData[0]?.week_days?.length +
+                  sevenByFourData[1]?.week_days?.length +
+                  sevenByFourData[2]?.week_days?.length)
               : sevenByFourData[1]?.week_days
               ? 28 -
-                (sevenByFourData[0]?.week_days == null
-                  ? null
-                  : sevenByFourData[0]?.week_days?.length +
-                      sevenByFourData[1]?.week_days ==
-                    null
-                  ? null
-                  : sevenByFourData[1]?.week_days?.length)
+                (sevenByFourData[0]?.week_days?.length +
+                  sevenByFourData[1]?.week_days?.length)
               : sevenByFourData[0]?.week_days
               ? 28 - sevenByFourData[0]?.week_days?.length
               : null}{' '}
@@ -153,46 +139,21 @@ const StartNow = ({navigation, route}) => {
             }}>
             {sevenByFourData[3]?.week_days
               ? 28 -
-                (sevenByFourData[0]?.week_days == null
-                  ? null
-                  : sevenByFourData[0]?.week_days.length +
-                      sevenByFourData[1]?.week_days ==
-                    null
-                  ? null
-                  : sevenByFourData[1]?.week_days.length +
-                      sevenByFourData[2]?.week_days ==
-                    null
-                  ? null
-                  : sevenByFourData[2]?.week_days.length +
-                      sevenByFourData[3]?.week_days ==
-                    null
-                  ? null
-                  : sevenByFourData[3]?.week_days.length) *
-                  3.57151
+                (sevenByFourData[0]?.week_days?.length +
+                  sevenByFourData[1]?.week_days?.length +
+                  sevenByFourData[2]?.week_days?.length +
+                  sevenByFourData[3]?.week_days?.length)
               : sevenByFourData[2]?.week_days
               ? 28 -
-                (sevenByFourData[0]?.week_days == null
-                  ? null
-                  : sevenByFourData[0]?.week_days.length +
-                      sevenByFourData[1]?.week_days ==
-                    null
-                  ? null
-                  : sevenByFourData[1]?.week_days.length +
-                      sevenByFourData[2]?.week_days ==
-                    null
-                  ? null
-                  : sevenByFourData[2]?.week_days.length) *
-                  3.57151
+                (sevenByFourData[0]?.week_days?.length +
+                  sevenByFourData[1]?.week_days?.length +
+                  sevenByFourData[2]?.week_days?.length)
               : sevenByFourData[1]?.week_days
               ? 28 -
-                (sevenByFourData[0]?.week_days == null
-                  ? null
-                  : sevenByFourData[0]?.week_days.length +
-                      sevenByFourData[1]?.week_days ==
-                    null
-                  ? null
-                  : sevenByFourData[1]?.week_days.length) *
-                  3.57151
+                (sevenByFourData[0]?.week_days?.length +
+                  sevenByFourData[1]?.week_days?.length)
+              : sevenByFourData[0]?.week_days
+              ? 28 - sevenByFourData[0]?.week_days?.length * 3.57151
               : sevenByFourData[0]?.week_days
               ? 28 - sevenByFourData[0]?.week_days == null
                 ? null
@@ -218,11 +179,10 @@ const StartNow = ({navigation, route}) => {
             }}
           />
         </View>
-        <View style={{flex: 1, paddingBottom: responsiveHeight(0)}}>
+        <View style={{flex: 1, paddingBottom: responsiveHeight(7)}}>
           <FlatList
             data={sevenByFourData}
             renderItem={({item, index}) => {
-              console.log(item);
               return (
                 <View
                   style={{
@@ -329,7 +289,7 @@ const StartNow = ({navigation, route}) => {
         <View
           style={{
             position: 'absolute',
-            top: responsiveHeight(60),
+            top: responsiveHeight(64),
             width: responsiveWidth(90),
             left: responsiveWidth(5),
           }}>

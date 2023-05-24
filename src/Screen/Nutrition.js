@@ -1,4 +1,5 @@
 import {
+  FlatList,
   Image,
   ScrollView,
   StyleSheet,
@@ -17,23 +18,25 @@ import CssStyle from '../StyleSheet/CssStyle';
 import Octicons from 'react-native-vector-icons/Octicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../component/Loader';
-import {GetDietPlanApi} from '../services/DietPlan';
+import {GetDietPlanApi, GetFoodApi} from '../services/DietPlan';
 import {useSelector} from 'react-redux';
-import {GetFoodApi} from '../services/FoodApi';
-import {GetWaterApi} from '../services/WaterTrackerApi';
+
+import {
+  GetWaterApi,
+  GetWaterRecordApi,
+  GetWeeklyWaterApi,
+} from '../services/WaterTrackerApi';
 import Glass from '../assets/redGlas';
+import Bottle from '../assets/water';
 import FillGlass from '../assets/glass-of-water';
 import {Calendar} from 'react-native-calendars';
 import {BarChart} from 'react-native-chart-kit';
+import WaterTracking from '../Helping/WaterTracking';
 
 const Nutrition = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
   // console.log(item);
-  const Card = [
-    {desc: 'Burnt', number: 1520},
-    {desc: 'Eaten', number: 500},
-    {desc: 'Remaining', number: 112},
-  ];
+
   const dailyFoodRecord = [
     {desc: 'Burnt', number: 23},
     {desc: 'Eaten', number: 345},
@@ -42,19 +45,41 @@ const Nutrition = ({navigation, route}) => {
     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
     datasets: [
       {
-        data: [4, 1, 3, 8],
+        data: [20, 40, 60, 80],
       },
     ],
   };
   const chartConfig = {
     backgroundGradientFrom: '#626377',
     backgroundGradientTo: '#626377',
-    fillShadowGradient: AppColors.buttonText,
-    fillShadowGradientOpacity: 1, // THIS
-    color: (opacity = 1) => `${AppColors.buttonText}`,
-    strokeWidth: 0, // optional, default 3
-    barPercentage: 1,
-    useShadowColorFromDataset: false, // optional
+    barPercentage: 0.7,
+    height: 5000,
+    fillShadowGradient: `rgba(1, 122, 205, 1)`,
+    fillShadowGradientOpacity: 1,
+    decimalPlaces: 0, // optional, defaults to 2dp
+    color: (opacity = 1) => `rgba(1, 122, 205, 1)`,
+    labelColor: (opacity = 1) => `white`,
+
+    style: {
+      borderRadius: 16,
+      fontFamily: 'Interstate-regular',
+    },
+    propsForBackgroundLines: {
+      strokeWidth: 1,
+      stroke: '#e3e3e3',
+      strokeDasharray: '0',
+    },
+    propsForLabels: {
+      fontFamily: 'Interstate-regular',
+    },
+    // backgroundGradientFrom: '#626377',
+    // backgroundGradientTo: '#626377',
+    // fillShadowGradient: AppColors.buttonText,
+    // fillShadowGradientOpacity: 1, // THIS
+    // color: (opacity = 1) => `white`,
+    // strokeWidth: 0, // optional, default 3
+    // barPercentage: 0.8,
+    // useShadowColorFromDataset: false,prop
   };
   const glassDay = [
     {number: 1},
@@ -65,19 +90,92 @@ const Nutrition = ({navigation, route}) => {
     {number: 6},
     {number: 7},
     {number: 8},
+    {number: 9},
+    {number: 10},
   ];
   const id = useSelector(data => data.id);
   const [loading, setLoading] = useState(false);
   const [dietId, setDietId] = useState('');
 
+  useEffect(() => {
+    var mount = true;
+    const listener = navigation.addListener('focus', async () => {
+      if (mount) {
+        setLoading(true);
+        try {
+          const result = await AsyncStorage.getItem('DietPlanId');
+          // console.log(result, 'diet id');
+          if (result) {
+            setDietId(result);
+            // setLoading(false);
+            GetDietPlan();
+          } else {
+            setLoading(false);
+            navigation.navigate('SelectPlan');
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+    return () => {
+      listener;
+      mount = false;
+    };
+  }, []);
+  // useEffect(() => {
+  //   var mount = true;
+  //   const listener = navigation.addListener('focus', async () => {
+  //     setLoading(true);
+  //     try {
+  //       const result = await GetFoodApi(3000407, 3000417);
+  //       // console.log(result, 'Food record');
+  //       if (result) {
+  //         // setLoading(false);
+  //         setFoodData(result.result);
+  //       } else {
+  //         // setLoading(false);
+  //         // navigation.navigate('SelectPlan');
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   });
+  //   return () => {
+  //     listener;
+  //     mount = false;
+  //   };
+  // }, []);
+  useEffect(() => {
+    var mount = true;
+    const listener = navigation.addListener('focus', async () => {
+      setLoading(true);
+      try {
+        const result = await GetWaterApi(id);
+        console.log(result, 'get water api');
+        if (result) {
+          setWaterData(result.result);
+        } else {
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    return () => {
+      listener;
+      mount = false;
+    };
+  }, []);
   const GetDietId = async () => {
     setLoading(true);
     try {
       const result = await AsyncStorage.getItem('DietPlanId');
-      console.log(result, 'diet id');
+      // console.log(result, 'diet id');
       if (result) {
         setDietId(result);
-        setLoading(false);
+        // setLoading(false);
+        GetDietPlan();
+        // GetFoodRecord(id, result);
       } else {
         setLoading(false);
         navigation.navigate('SelectPlan');
@@ -86,14 +184,14 @@ const Nutrition = ({navigation, route}) => {
       console.log(error);
     }
   };
-
   const GetDietPlan = async () => {
     setLoading(true);
     try {
-      const result = await GetDietPlanApi(3000302, id);
+      const result = await GetDietPlanApi(dietId, id);
       // console.log(result, 'this is the');
       if (result) {
         setLoading(false);
+        setDietPlanData(result.result);
       } else {
         setLoading(false);
         // navigation.navigate('SelectPlan');
@@ -102,17 +200,24 @@ const Nutrition = ({navigation, route}) => {
       console.log(error);
     }
   };
+  const [dietPlanData, setDietPlanData] = useState('');
+  const Card = [
+    {desc: 'Protein', number: dietPlanData?.macros?.protein},
+    {desc: 'Sugar', number: dietPlanData?.macros?.sugar},
+    {desc: 'carb', number: dietPlanData?.macros?.carb},
+  ];
   const [waterData, setWaterData] = useState('');
   const GetWaterTracking = async () => {
     setLoading(true);
     try {
       const result = await GetWaterApi(id);
-      console.log(result, 'this is the');
+      console.log(result, 'get water api');
       if (result) {
-        setLoading(false);
+        // setLoading(false);
         setWaterData(result.result);
+        // GetWeeklyReport(result.result.water_tracker_id, id);
       } else {
-        setLoading(false);
+        // setLoading(false);
         // navigation.navigate('SelectPlan');
       }
     } catch (error) {
@@ -123,13 +228,31 @@ const Nutrition = ({navigation, route}) => {
   const GetFoodRecord = async () => {
     setLoading(true);
     try {
-      const result = await GetFoodApi();
-      // console.log(result, '');
+      const result = await GetFoodApi(id, dietId);
+      // const result = await GetFoodApi(3000407, 3000417);
+      // console.log(result, 'Food record');
       if (result) {
-        setLoading(false);
-        setFoodData(result.result);
+        // setLoading(false);
+        setFoodData(result.result.foodIntakesToday);
       } else {
-        setLoading(false);
+        // setLoading(false);
+        // navigation.navigate('SelectPlan');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const [weeklyWaterData, setWeeklyWaterData] = useState('');
+  const GetWeeklyReport = async (waterId, id) => {
+    setLoading(true);
+    try {
+      const result = await GetWeeklyWaterApi(waterId, id);
+      // console.log(result, 'get weekly water api');
+      if (result) {
+        // setLoading(false);
+        setWeeklyWaterData(result.result);
+      } else {
+        // setLoading(false);
         // navigation.navigate('SelectPlan');
       }
     } catch (error) {
@@ -137,19 +260,42 @@ const Nutrition = ({navigation, route}) => {
     }
   };
 
-  // useEffect(() => {
-  //   GetFoodRecord();
-  //   GetWaterTracking();
-  // }, []);
+  useEffect(() => {
+    GetFoodRecord();
+    GetWaterTracking();
+  }, [id]);
 
-  // useEffect(() => {
-  //   GetDietId();
-  // }, [dietId]);
+  const AddDailyRecord = async () => {
+    console.log('clicked');
+    try {
+      const result = await GetWaterRecordApi(
+        id,
+        waterData.water_tracker_id,
+        waterData?.quantity,
+        new Date().toLocaleDateString().replace(/['/']/g, '-'),
+      );
+      console.log(result, 'daily record');
+      if (result) {
+        // setLoading(false);
+        setWeeklyWaterData(result.result);
+      } else {
+        // setLoading(false);
+        console.log('record error');
+        // navigation.navigate('SelectPlan');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GetDietId();
+  }, [dietId]);
 
   return loading ? (
     <Loader />
   ) : (
     <ScrollView
+      scrollEnabled={true}
       showsVerticalScrollIndicator={false}
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
       <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
@@ -174,7 +320,13 @@ const Nutrition = ({navigation, route}) => {
             </Text>
             <TouchableOpacity
               style={{marginRight: responsiveWidth(2)}}
-              onPress={() => navigation.navigate('SelectPlan')}>
+              onPress={() =>
+                dietId
+                  ? navigation.navigate('SelectPlan', {
+                      item: dietPlanData?.fetched_record,
+                    })
+                  : navigation.navigate('SelectPlan')
+              }>
               <Image
                 resizeMode="contain"
                 style={{width: 19, height: 19}}
@@ -201,7 +353,8 @@ const Nutrition = ({navigation, route}) => {
                   fontFamily: 'Interstate-regular',
                   fontSize: 27,
                 }}>
-                7400 <Text style={{fontSize: 12}}>Kcal</Text>
+                {dietPlanData ? dietPlanData?.calories_needed_per_day : '2000'}{' '}
+                <Text style={{fontSize: 12}}>Kcal</Text>
               </Text>
               <View
                 style={{
@@ -271,7 +424,9 @@ const Nutrition = ({navigation, route}) => {
               </Text>
               <TouchableOpacity
                 style={{marginRight: responsiveWidth(2)}}
-                onPress={() => navigation.navigate('SelectFood')}>
+                onPress={() =>
+                  navigation.navigate('SelectFood', {item: {foodData, dietId}})
+                }>
                 <Octicons name="diff-added" size={23} color={'white'} />
               </TouchableOpacity>
             </View>
@@ -281,7 +436,9 @@ const Nutrition = ({navigation, route}) => {
                 onPress={() => {}}
                 style={styles.dailyButton}>
                 <View style={{}}>
-                  <Text style={styles.dailyText}>{item.food_name}</Text>
+                  <Text style={styles.dailyText}>
+                    {item.food_details.food_name}
+                  </Text>
                   <View style={[CssStyle.flexJustify, {}]}>
                     <Text style={styles.foodType}>
                       Yogurt with Berries and banana
@@ -291,12 +448,42 @@ const Nutrition = ({navigation, route}) => {
                         color: 'white',
                         fontFamily: 'Interstate-regular',
                       }}>
-                      {item.energy_calories} Kcal
+                      {item.food_details.energy_calories} Kcal
                     </Text>
                   </View>
                 </View>
               </TouchableOpacity>
             ))}
+            {/* <FlatList
+              data={foodData}
+              renderItem={({item, index}) => {
+                // console.log(item);
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {}}
+                    style={styles.dailyButton}>
+                    <View style={{}}>
+                      <Text style={styles.dailyText}>
+                        {item.food_details.food_name}
+                      </Text>
+                      <View style={[CssStyle.flexJustify, {}]}>
+                        <Text style={styles.foodType}>
+                          Yogurt with Berries and banana
+                        </Text>
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontFamily: 'Interstate-regular',
+                          }}>
+                          {item.food_details.energy_calories} Kcal
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                );
+              }}
+            /> */}
             <View
               style={[
                 CssStyle.flexJustify,
@@ -315,11 +502,13 @@ const Nutrition = ({navigation, route}) => {
               </Text>
               <TouchableOpacity
                 style={{marginRight: responsiveWidth(2)}}
-                onPress={() => navigation.navigate('TypeOfTracker')}>
+                onPress={() =>
+                  navigation.navigate('TypeOfTracker', {item: waterData})
+                }>
                 <Octicons name="diff-added" size={23} color={'white'} />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => {}} style={styles.dailyButton}>
+            <View style={styles.dailyButton}>
               <View style={{}}>
                 <Text
                   style={[
@@ -331,70 +520,131 @@ const Nutrition = ({navigation, route}) => {
                 <View
                   style={[
                     CssStyle.flexJustify,
-                    {paddingVertical: responsiveHeight(1)},
+                    {paddingVertical: responsiveHeight(1.7)},
                   ]}>
-                  {glassDay.map((item, index) =>
-                    index == 3 ? (
-                      <Glass width={40} height={40} />
-                    ) : (
-                      <FillGlass width={40} height={40} />
-                    ),
-                  )}
+                  {glassDay.map((item, index) => (
+                    <TouchableOpacity
+                      onPress={() =>
+                        AddDailyRecord(
+                          id,
+                          waterData?.water_tracker_id,
+                          index,
+                          new Date()
+                            .toLocaleDateString()
+                            .replace(/['/']/g, '-'),
+                        )
+                      }>
+                      <WaterTracking index={index} waterData={waterData} />
+                    </TouchableOpacity>
+                  ))}
+                  {/* <FillGlass width={30} height={30} /> */}
+                </View>
+                <View
+                  style={[
+                    CssStyle.flexJustify,
+                    {paddingVertical: responsiveHeight(1.7)},
+                  ]}>
+                  {glassDay.map((item, index) => (
+                    <TouchableOpacity
+                      onPress={() =>
+                        AddDailyRecord(
+                          id,
+                          waterData?.water_tracker_id,
+                          index,
+                          new Date()
+                            .toLocaleDateString()
+                            .replace(/['/']/g, '-'),
+                        )
+                      }>
+                      <WaterTracking index={index} waterData={waterData} />
+                    </TouchableOpacity>
+                  ))}
+                  {/* <FillGlass width={30} height={30} /> */}
+                </View>
+                <View
+                  style={[
+                    CssStyle.flexJustify,
+                    {paddingVertical: responsiveHeight(1.7)},
+                  ]}>
+                  {glassDay.map((item, index) => (
+                    <TouchableOpacity
+                      onPress={() =>
+                        AddDailyRecord(
+                          id,
+                          waterData?.water_tracker_id,
+                          index,
+                          new Date()
+                            .toLocaleDateString()
+                            .replace(/['/']/g, '-'),
+                        )
+                      }>
+                      <WaterTracking index={index} waterData={waterData} />
+                    </TouchableOpacity>
+                  ))}
+                  {/* <FillGlass width={30} height={30} /> */}
+                </View>
+                <View
+                  style={[
+                    CssStyle.flexJustify,
+                    {paddingVertical: responsiveHeight(1.7)},
+                  ]}>
+                  {glassDay.map((item, index) => (
+                    <TouchableOpacity
+                      onPress={() =>
+                        AddDailyRecord(
+                          id,
+                          waterData?.water_tracker_id,
+                          index,
+                          new Date()
+                            .toLocaleDateString()
+                            .replace(/['/']/g, '-'),
+                        )
+                      }>
+                      <WaterTracking index={index} waterData={waterData} />
+                    </TouchableOpacity>
+                  ))}
                   {/* <FillGlass width={30} height={30} /> */}
                 </View>
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {}} style={styles.dailyButton}>
-              <View style={{}}>
-                <Text style={styles.dailyText}>Weekly Report</Text>
+            </View>
+            <View
+              style={[styles.dailyButton, {marginBottom: responsiveHeight(6)}]}>
+              <Text
+                style={[styles.dailyText, {marginBottom: responsiveHeight(1)}]}>
+                Weekly Report
+              </Text>
+              {weeklyWaterData ? (
                 <BarChart
                   data={data}
                   width={responsiveWidth(88)}
-                  height={responsiveHeight(40)}
+                  height={responsiveHeight(28)}
                   showBarTops={false}
-                  yAxisInterval={0}
-                  yLabelsOffset={0}
-                  yAxisLabel={0}
                   withInnerLines={false}
                   chartConfig={chartConfig}
                   style={{
                     borderRadius: responsiveWidth(2),
-                    marginLeft: responsiveWidth(-3),
+                    marginLeft: responsiveHeight(-1.7),
                   }}
-                  // verticalLabelRotation={1}
                 />
-                {/* <Calendar
-              onDayPress={day => {
-                // setSelected(day.dateString);
-              }}
-              style={{
-                backgroundColor: '#626377',
-                borderRadius: responsiveWidth(2),
-              }}
-              // theme={{
-              //   backgroundColor: 'yellow',
-              //   calendarBackground: 'yellow',
-              //   textSectionTitleColor: '#b6c1cd',
-              //   selectedDayBackgroundColor: '#00adf5',
-              //   selectedDayTextColor: 'yellow',
-              //   todayTextColor: '#00adf5',
-              //   dayTextColor: '#2d4150',
-              //   textDisabledColor: '#d9e',
-              //   // monthTextColor: 'white',
-              //   // indicatorColor: 'white',
-              //   arrowStyle: {backgroundColor: 'white'},
-              // }}
-
-              markedDates={{
-                // [selected]: {
-                //   selected: true,
-                //   disableTouchEvent: true,
-                //   selectedDotColor: 'white',
-                // },
-              }}
-            /> */}
-              </View>
-            </TouchableOpacity>
+              ) : (
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    height: responsiveHeight(28),
+                    justifyContent: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 19,
+                      fontFamily: 'Interstate-regular',
+                    }}>
+                    No Weekly Report Available
+                  </Text>
+                </View>
+              )}
+            </View>
           </>
         ) : (
           <View

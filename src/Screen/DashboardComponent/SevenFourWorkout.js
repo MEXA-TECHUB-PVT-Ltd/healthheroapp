@@ -20,11 +20,37 @@ import {GetSevenById} from '../../services/SevenFour';
 import Logo from '../../assets/Icon3';
 import Clock from '../../assets/Icon';
 import {BaseUrl} from '../../Helping/BaseUrl';
+import {useSelector} from 'react-redux';
+import {GetCountDownApi} from '../../services/CountDownApi';
 
 const SevenFourWorkout = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item, 'param');
+  console.log(item.exercises, 'param');
   const [sevenByFourData, setSevenByFourData] = useState('');
+  const id = useSelector(data => data.id);
+  const [loading, setLoading] = useState(false);
+  
+  const GetCategory = async () => {
+    setLoading(true);
+    try {
+      const result = await GetCountDownApi(id);
+      console.log(result);
+      if (result.status == true) {
+        setSevenByFourData(result.result.time);
+        setLoading(false);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    GetCategory();
+  }, []);
   // const GetSeven = async () => {
   //   try {
   //     const result = await GetSevenById(item.seven_by_four_challenge_id);
@@ -97,7 +123,8 @@ const SevenFourWorkout = ({navigation, route}) => {
             <Text style={{color: 'white'}}>workouts</Text>
           </Text>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            20{'   '}
+            {item?.exercises ? item?.exercises[0]?.time : 20}
+            {'   '}
             <Text style={{color: 'white'}}>minutes</Text>
           </Text>
         </View>
@@ -189,7 +216,11 @@ const SevenFourWorkout = ({navigation, route}) => {
             left: responsiveWidth(5),
           }}>
           <CustomButton
-            onPress={() => navigation.navigate('StartExercise', {item: item})}
+            onPress={() =>
+              navigation.navigate('StartExercise', {
+                item: {item, sevenByFourData},
+              })
+            }
             buttonText={'Get Started'}
             fontWeight="500"
             style={{}}
