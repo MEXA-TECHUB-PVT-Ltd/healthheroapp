@@ -1,18 +1,25 @@
 const initialState = {
-  id: 0,
-  exerciseId: 0,
+  id: null,
+  exerciseId: null,
+  dietPlanId: null,
+  workoutPlanId: null,
+  waterTrackerId: null,
+  userPassword: null,
 };
 const mainReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'Addition':
-      return {
-        id: action.id,
-      };
-    // case 'EXERCISE':
-    //   return {
-    //     exerciseId: action.id,
-    //   };
-
+      return {...state, id: action.id};
+    case 'ExerciseId':
+      return {...state, exerciseId: action.ExId};
+    case 'DietPlanId':
+      return {...state, dietPlanId: action.ExId};
+    case 'WorkoutPlanId':
+      return {...state, workoutPlanId: action.ExId};
+    case 'WaterTrackerId':
+      return {...state, waterTrackerId: action.ExId};
+    case 'UserPassword':
+      return {...state, userPassword: action.ExId};
     default:
       break;
   }

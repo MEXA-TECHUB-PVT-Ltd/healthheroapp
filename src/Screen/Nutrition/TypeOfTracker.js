@@ -20,52 +20,46 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {AppColors} from '../../Helping/AppColor';
 import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Line} from '../../component/Line';
 
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 import {AddWaterApi, UpdateWaterApi} from '../../services/WaterTrackerApi';
+import {Water_Id} from '../../store/action';
 
-const TypeOfTracker = ({navigation, route}) => {
-  const {item} = route.params ? route.params : '';
-  console.log(item);
+const TypeOfTracker = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(12);
-  const id = useSelector(data => data.id);
+  const id = useSelector(data => data);
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const [addData, setAddData] = useState('glass');
   const [typeDate, setType] = useState('');
   const measureType = [{item: 'ml'}, {item: 'fl'}, {item: 'oz'}];
   const [measureModel, setMeasureModel] = useState(false);
 
-  console.log(addData);
   const genderCollectionData = [
     {text: 'glass', image: require('../../assets/glass-of-water.png')},
     {text: 'bottle', image: require('../../assets/water.png')},
   ];
   // console.log(item);
+  const dispatch = useDispatch();
   const AddTracker = async () => {
     setLoading(true);
     try {
-      const result = await UpdateWaterApi(
-        3000625,
-        id,
-        addData,
-        typeDate,
-        time,
-        new Date().toLocaleDateString(),
-      );
-      // : await AddWaterApi(
-      //     id,
-      //     addData,
-      //     typeDate,
-      //     time,
-      //     new Date().toLocaleDateString(),
-      //   );
+      const result = id.waterTrackerId
+        ? await UpdateWaterApi(
+            id.waterTrackerId,
+            id.id,
+            addData,
+            typeDate,
+            time,
+            '2023-05-24',
+          )
+        : await AddWaterApi(id.id, addData, typeDate, time, '2023-05-24');
       console.log(result);
       if (result.status == true) {
-        // setBeginner(result.result);
+        dispatch(Water_Id(result.result.water_tracker_id));
         setLoading(false);
         setOpenRestartModel(true);
       } else {
@@ -260,6 +254,7 @@ const TypeOfTracker = ({navigation, route}) => {
             {measureType.map((item, index) => (
               <>
                 <TouchableOpacity
+                  key={index}
                   onPress={() => {
                     setType(item.item), setMeasureModel(false);
                   }}

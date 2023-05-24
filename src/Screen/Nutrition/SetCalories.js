@@ -30,9 +30,10 @@ import Input from '../../component/Input';
 
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {AddDietPlan, UpdateDietPlanApi} from '../../services/DietPlan';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Diet_Id} from '../../store/action';
 
 const SetCalories = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
@@ -43,6 +44,7 @@ const SetCalories = ({navigation, route}) => {
   const [successfully, setSuccessfully] = useState(false);
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const id = useSelector(data => data.id);
+  const dispatch = useDispatch();
   const MakePlan = async () => {
     setOpenRestartModel(true);
     // setSuccessfully(true);
@@ -73,7 +75,6 @@ const SetCalories = ({navigation, route}) => {
             item.item.item.item.item.item.planType.review,
             new Date().toLocaleDateString(),
           );
-      console.log(result);
       if (result.status == true) {
         setWeightData('');
         {
@@ -87,6 +88,9 @@ const SetCalories = ({navigation, route}) => {
                 `${result.result.addedRecord.diet_plan_id}`,
               );
         }
+        updateData
+          ? dispatch(Diet_Id(`${result.result.updated_record.diet_plan_id}`))
+          : dispatch(Diet_Id(`${result.result.addedRecord.diet_plan_id}`));
         // setOpenRestartModel(false);
         setSuccessfully(true);
       } else {

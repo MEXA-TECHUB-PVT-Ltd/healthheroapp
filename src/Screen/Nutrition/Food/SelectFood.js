@@ -21,9 +21,7 @@ import CssStyle from '../../../StyleSheet/CssStyle';
 import CustomButton from '../../../component/CustomButton';
 import {useSelector} from 'react-redux';
 
-const SelectFood = ({navigation, route}) => {
-  const {item} = route.params ? route.params : '';
-  console.log(item, 'select food');
+const SelectFood = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const id = useSelector(data => data.id);
   const gender = [
@@ -118,7 +116,7 @@ const SelectFood = ({navigation, route}) => {
           loading={loading}
           onPress={() =>
             review
-              ? navigation.navigate('EnterFood', {item: {review, item}})
+              ? navigation.navigate('EnterFood', {item: review})
               : ToastAndroid.show('Please Select One', ToastAndroid.SHORT)
           }
           activeOpacity={1}

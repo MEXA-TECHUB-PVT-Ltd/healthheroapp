@@ -18,19 +18,20 @@ import {AppColors} from '../../Helping/AppColor';
 import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
 import {TakeTrainingRest} from '../../services/RestApi';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 import {TakeCountDownApi} from '../../services/CountDownApi';
 import Input from '../../component/Input';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {UpdatePasswordApi} from '../../services/AuthScreen';
+import {User_password} from '../../store/action';
 
 const UpdatePassword = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(13);
-  const id = useSelector(data => data.id);
+  const id = useSelector(data => data);
   const [oldPassword, setOldPassword] = useState('');
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const [password, setPassword] = useState('');
@@ -49,12 +50,15 @@ const UpdatePassword = ({navigation, route}) => {
       setEmailValidError('');
     }
   };
+  const dispatch = useDispatch();
   const ChangePassword = async () => {
     setLoading(true);
     try {
       const result = await UpdatePasswordApi(item.email, newPassword);
       console.log(result);
       if (result.status == true) {
+        await AsyncStorage.setItem('userPassword', `${newPassword}`);
+        dispatch(User_password(newPassword));
         setLoading(false);
         setOpenRestartModel(true);
       } else {
@@ -66,14 +70,14 @@ const UpdatePassword = ({navigation, route}) => {
       console.log(error);
     }
   };
-  useEffect(() => {
-    GetUserName();
-  }, []);
-  const GetUserName = async () => {
-    const result = await AsyncStorage.getItem('userPassword');
-    setOldPassword(result);
-    console.log(result);
-  };
+  // useEffect(() => {
+  //   GetUserName();
+  // }, []);
+  // const GetUserName = async () => {
+  //   const result = await AsyncStorage.getItem('userPassword');
+  //   setOldPassword(result);
+  //   console.log(result);
+  // };
   useEffect(() => {
     setTimeout(() => {
       setData('');
@@ -248,7 +252,7 @@ const UpdatePassword = ({navigation, route}) => {
             onPress={() => {
               !password && !newPassword && !confirmPassword
                 ? setData('AddField')
-                : oldPassword !== password
+                : id.userPassword !== password
                 ? setData('oldPassword')
                 : newPassword !== confirmPassword
                 ? setData('NewPassword')

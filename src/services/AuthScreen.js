@@ -19,6 +19,28 @@ export const LoginApi = async (email, password) => {
     return error;
   }
 };
+export const PostFeedBackApi = async (id, feedback) => {
+  try {
+    const requestOptions = {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: id,
+        feedback: feedback,
+      }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrl}feedback/createFeedack`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
 export const SignUpApi = async (email, password) => {
   console.log(email, password);
   try {

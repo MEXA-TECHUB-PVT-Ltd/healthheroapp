@@ -7,6 +7,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -95,7 +96,7 @@ const Dashboard = ({navigation}) => {
     setLoading(true);
     try {
       const result = await GetSevenFourApi();
-      // console.log(result);
+      console.log(result, 'seven by four');
       if (result.status == true) {
         setSevenFourData(result.result.array_agg);
         setLoading(false);
@@ -263,7 +264,7 @@ const Dashboard = ({navigation}) => {
                 width: responsiveWidth(30),
                 lineHeight: responsiveHeight(2.5),
               }}>
-              {sevenFourData[0]?.name}
+              {sevenFourData ? sevenFourData[0]?.name : 'No Exercise'}
             </Text>
             <View
               style={[
@@ -301,7 +302,12 @@ const Dashboard = ({navigation}) => {
             </View>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('StartNow', {item: sevenFourData[0]})
+                sevenFourData
+                  ? navigation.navigate('StartNow', {item: sevenFourData})
+                  : ToastAndroid.show(
+                      'No exercise available',
+                      ToastAndroid.SHORT,
+                    )
               }
               style={{
                 borderRadius: responsiveWidth(2),
@@ -317,14 +323,18 @@ const Dashboard = ({navigation}) => {
           <View style={{}}>
             <Image
               resizeMode="cover"
-              source={{
-                uri: `${BaseUrl}` + sevenFourData[0]?.image,
-              }}
+              source={
+                sevenFourData
+                  ? {
+                      uri: `${BaseUrl}` + sevenFourData[0]?.image,
+                    }
+                  : require('../assets/Image7.png')
+              }
               style={{
                 width: responsiveHeight(29.4),
                 height: responsiveHeight(37.4),
                 position: 'absolute',
-                bottom: responsiveHeight(-18.6),
+                bottom: responsiveHeight(-17.93),
                 left: responsiveWidth(-10),
               }}
             />

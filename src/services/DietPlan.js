@@ -209,7 +209,6 @@ export const GetHistoryApi = async (id, dietId) => {
 };
 
 export const GetFoodApi = async (userId, planId) => {
-  console.log(userId, planId,'get food');
   try {
     const requestOptions = {
       method: 'GET',

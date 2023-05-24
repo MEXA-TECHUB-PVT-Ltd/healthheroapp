@@ -24,15 +24,30 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
 
 const Report = ({navigation}) => {
+  const [historyDataDate, setHistoryDataDate] = useState([]);
+
   const Card = [
-    {desc: '7400', iconName: 'Kcal', number: 23},
-    {desc: '3509', iconName: 'Minutes', number: 345},
-    {desc: '35', iconName: 'Workout', number: 60},
-  ];
-  const WeightData = [
-    {heading: 'Current', text: 48.0},
-    {heading: 'Heaviest', text: 44.0},
-    {heading: 'Lightest', text: 24.0},
+    {
+      desc: 'Protein',
+      number:
+        historyDataDate?.macrosTaken?.protein != '0'
+          ? historyDataDate?.macrosTaken?.protein
+          : '0',
+    },
+    {
+      desc: 'Sugar',
+      number:
+        historyDataDate?.macrosTaken?.fats != '0'
+          ? historyDataDate?.macrosTaken?.fats
+          : '0',
+    },
+    {
+      desc: 'carb',
+      number:
+        historyDataDate?.macrosTaken?.carbs != '0'
+          ? historyDataDate?.macrosTaken?.carbs
+          : 0,
+    },
   ];
   const colorWeight = [
     {color: '#00DCFF', number: 14},
@@ -63,24 +78,11 @@ const Report = ({navigation}) => {
     useShadowColorFromDataset: false, // optional
   };
   const [dietId, setDietId] = useState('');
-  const id = useSelector(data => data.id);
-  const GetDietIdAsync = async () => {
-    try {
-      const result = await AsyncStorage.getItem('DietPlanId');
-      if (result) {
-        setDietId(result);
-        GetHistoryData(id, result);
-      } else {
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const [historyDataDate, setHistoryDataDate] = useState([]);
+  const id = useSelector(data => data);
 
-  const GetHistoryData = async (id, dietId) => {
+  const GetHistoryData = async () => {
     try {
-      const result = await GetHistoryApi(id, dietId);
+      const result = await GetHistoryApi(id.id, id.dietPlanId);
       console.log(result, 'get the history');
       if (result.status == false) {
         setHistoryDataDate(result.result);
@@ -92,7 +94,7 @@ const Report = ({navigation}) => {
     }
   };
   useEffect(() => {
-    GetDietIdAsync();
+    GetHistoryData();
   }, []);
   const [selected, setSelected] = useState('');
 
@@ -177,7 +179,7 @@ const Report = ({navigation}) => {
                       marginVertical: responsiveHeight(0.8),
                       letterSpacing: 0.4,
                     }}>
-                    {item.desc}
+                    {item.number}
                   </Text>
                   <Text
                     style={{
@@ -185,7 +187,7 @@ const Report = ({navigation}) => {
                       fontSize: 11,
                       fontFamily: 'Interstate-regular',
                     }}>
-                    {item.iconName}
+                    {item.desc}
                   </Text>
                 </View>
               ))}

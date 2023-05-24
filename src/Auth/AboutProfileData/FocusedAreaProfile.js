@@ -42,14 +42,14 @@ const FocusedAreaProfile = ({navigation, route}) => {
     try {
       const result = await UpdateProfileApi(
         id,
-        item?.itemName,
+        item?.item?.itemName,
         item?.item?.itemResult.device_id,
         item.addData,
         [focusedData],
         heightValue,
         weightValue,
       );
-      console.log(result);
+      console.log(result,'data');
       if (result.status == true) {
         setLoading(false);
         navigation.navigate('main');

@@ -31,7 +31,7 @@ import Loader from '../../component/Loader';
 
 const StartExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item, 'start exercise');
+  // console.log(item, 'start exercise');
   const countdownRef = useRef();
   const [loading, setLoading] = useState(false);
   const [countDownData, setCountDownData] = useState(0);
@@ -121,8 +121,8 @@ const StartExercise = ({navigation, route}) => {
             size={120}
             strokeWidth={8}
             onComplete={data => {
-               navigation.navigate('GetExercise', {item: item.item}),
-              setDataCount(0);
+              navigation.navigate('GetExercise', {item: item.item}),
+                setDataCount(0);
             }}
             colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
             {({remainingTime}) => (
@@ -161,6 +161,8 @@ const StartExercise = ({navigation, route}) => {
                     ? `${BaseUrl}` + item?.item?.exercises[0].animation
                     : item?.item?.exersise_details
                     ? `${BaseUrl}` + item?.item?.exersise_details?.animation
+                    : item?.exersise_details
+                    ? `${BaseUrl}` + item?.exersise_details?.animation
                     : item?.item?.animation
                     ? `${BaseUrl}` + item?.item.animation
                     : `${BaseUrl}` + item?.item?.image,
@@ -185,6 +187,8 @@ const StartExercise = ({navigation, route}) => {
                   ? item?.item?.exercises[0].title
                   : item?.item?.exersise_details
                   ? item?.item?.exersise_details?.title
+                  : item?.exersise_details
+                  ? item?.exersise_details?.title
                   : item?.item?.title
                   ? item?.item?.title
                   : item?.item?.workout_title}
@@ -203,6 +207,8 @@ const StartExercise = ({navigation, route}) => {
                   ? item?.item?.exercises[0].description
                   : item?.item?.exersise_details
                   ? item?.item?.exersise_details?.description
+                  : item?.exersise_details
+                  ? item?.exersise_details?.description
                   : item?.item?.description}
               </Text>
               <View
@@ -221,7 +227,10 @@ const StartExercise = ({navigation, route}) => {
                       marginLeft: responsiveWidth(2),
                       opacity: 0.5,
                     }}>
-                    {item?.item?.calories_burnt ? item?.item?.calories_burnt : 0} kcal
+                    {item?.item?.calories_burnt
+                      ? item?.item?.calories_burnt
+                      : 0}{' '}
+                    kcal
                   </Text>
                 </View>
                 <View
@@ -250,7 +259,9 @@ const StartExercise = ({navigation, route}) => {
           </View>
           <View style={{alignItems: 'center', marginTop: responsiveHeight(4)}}>
             <CustomButton
-              onPress={() => navigation.navigate('GetExercise', {item: item.item})}
+              onPress={() =>
+                navigation.navigate('GetExercise', {item: item})
+              }
               activeOpacity={1}
               buttonColor={AppColors.buttonText}
               paddingVertical={2}

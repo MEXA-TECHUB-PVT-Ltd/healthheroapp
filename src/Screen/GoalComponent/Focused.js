@@ -27,7 +27,7 @@ import {useSelector} from 'react-redux';
 
 const Focused = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item, 'fjsldfj');
+  // console.log(item, 'fjsldfj');
   const gender = [
     {item: 'Too Easy', id: 1},
     {item: 'A Little Easy', id: 2},
