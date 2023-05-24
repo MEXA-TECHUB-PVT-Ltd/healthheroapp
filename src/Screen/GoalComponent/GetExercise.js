@@ -27,7 +27,7 @@ import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 
 const GetExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item, 'get exercise');
+  // console.log(item, 'get exercise');
   const countdownRef = useRef();
   const [completedModel, setCompletedModel] = useState(false);
   const [openModel, setOpenModel] = useState(false);
@@ -63,9 +63,9 @@ const GetExercise = ({navigation, route}) => {
         }}>
         <Text style={[styles.signInText]}>
           {completedModel
-            ? item.exercises
-              ? item.exercises[1]?.title
-              : item.title
+            ? item?.exercises
+              ? item?.exercises[1]?.title
+              : item?.title
             : `${
                 item?.exercises
                   ? item?.exercises[0]?.title
@@ -89,8 +89,8 @@ const GetExercise = ({navigation, route}) => {
             },
           ]}>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            {item.workout_plan_exersises
-              ? item.workout_plan_exersises?.length
+            {item?.workout_plan_exersises
+              ? item?.workout_plan_exersises?.length
               : 0}{' '}
             <Text style={{color: 'white'}}>moves</Text>
           </Text>
@@ -152,7 +152,7 @@ const GetExercise = ({navigation, route}) => {
           </ProgressCircle> */}
           <CountdownCircleTimer
             isPlaying
-            duration={30}
+            duration={22}
             size={120}
             strokeWidth={8}
             onComplete={() => setCompletedModel(true)}
@@ -216,7 +216,7 @@ const GetExercise = ({navigation, route}) => {
               Next Exercise
             </Text>
             <View style={{flex: 1}}>
-              {item.exercises ? (
+              {item?.exercises ? (
                 <View
                   style={[
                     CssStyle.flexData,
@@ -225,7 +225,7 @@ const GetExercise = ({navigation, route}) => {
                   <View style={{width: responsiveWidth(29)}}>
                     <Image
                       source={{
-                        uri: `${BaseUrl}` + item.exercises[0]?.animation,
+                        uri: `${BaseUrl}` + item?.exercises[0]?.animation,
                       }}
                       resizeMode="contain"
                       style={{
@@ -243,7 +243,7 @@ const GetExercise = ({navigation, route}) => {
                         fontFamily: 'Interstate-regular',
                         opacity: 0.8,
                       }}>
-                      {item.exercises[1].title}
+                      {item?.exercises[1].title}
                     </Text>
                     <Text
                       style={{
@@ -254,7 +254,7 @@ const GetExercise = ({navigation, route}) => {
                         opacity: 0.5,
                         lineHeight: responsiveHeight(2),
                       }}>
-                      {item.exercises[0].description}
+                      {item?.exercises[0].description}
                     </Text>
                     <View
                       style={[
@@ -298,7 +298,7 @@ const GetExercise = ({navigation, route}) => {
                     </View>
                   </View>
                 </View>
-              ) : item.workout_plan_exersises ? (
+              ) : item?.workout_plan_exersises ? (
                 <View
                   style={[
                     CssStyle.flexData,

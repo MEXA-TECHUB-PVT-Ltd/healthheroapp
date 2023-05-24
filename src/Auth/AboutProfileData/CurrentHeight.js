@@ -28,7 +28,7 @@ import {useSelector} from 'react-redux';
 
 const CurrentHeight = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
+  console.log(item.item.item.item);
   const [addData, setAddData] = useState('male');
   const [focusedArea, setFocusedArea] = useState('Arms');
   const [dataArray, setDataArray] = useState([]);

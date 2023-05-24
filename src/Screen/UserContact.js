@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Switch,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -27,7 +28,11 @@ import {RestartProgressAPI} from '../services/WorkoutPlan';
 import {useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Input from '../component/Input';
-import {GetUserDetailApi, UpdateProfileApi} from '../services/AuthScreen';
+import {
+  GetUserDetailApi,
+  PostFeedBackApi,
+  UpdateProfileApi,
+} from '../services/AuthScreen';
 import Loader from '../component/Loader';
 import Lottie from 'lottie-react-native';
 import assets from '../assets';
@@ -45,6 +50,7 @@ const UserContact = ({navigation}) => {
   const [userDetailData, setUserDetailData] = useState('');
   const [loadingUser, setLoadingUser] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
+  const [postFeedBack, setPostFeedBack] = useState(false);
   const id = useSelector(data => data.id);
 
   const workOut = [
@@ -212,9 +218,11 @@ const UserContact = ({navigation}) => {
           <>
             <TouchableOpacity
               onPress={() => {
-                item.text == 'Privacy policy'
-                  ? navigation.navigate('PrivacyPolicy')
-                  : {};
+                item.text == 'Feedback'
+                  ? setPostFeedBack(true)
+                  : item.text == 'Share with friends'
+                  ? Share.open('')
+                  : navigation.navigate('PrivacyPolicy');
               }}
               key={index}>
               <View style={[CssStyle.flexJustify, {}]}>
@@ -237,10 +245,12 @@ const UserContact = ({navigation}) => {
       </View>
     </>
   );
+  const [feedBack, setFeedBack] = useState('');
   const LogOut = async () => {
     await AsyncStorage.removeItem('userID');
     await AsyncStorage.removeItem('userPassword');
     await AsyncStorage.removeItem('DietPlanId');
+    await AsyncStorage.removeItem('WaterTrackerId');
     navigation.navigate('Auth', {screen: 'Login'});
     setOpenModel(false);
   };
@@ -307,6 +317,24 @@ const UserContact = ({navigation}) => {
       }
     } catch (error) {
       setLoadingUpdate(false);
+      console.log(error);
+    }
+  };
+  const [loadingFeedback, setLoadingFeedback] = useState(false);
+  const ShareFeedBack = async () => {
+    setLoadingFeedback(true);
+    try {
+      const result = await PostFeedBackApi(id, feedBack);
+      console.log(result, 'feedback');
+      if (result.status == true) {
+        setLoadingFeedback(false);
+        setPostFeedBack(false);
+      } else {
+        console.error(result.message);
+        setLoadingFeedback(false);
+      }
+    } catch (error) {
+      setLoadingFeedback(false);
       console.log(error);
     }
   };
@@ -382,7 +410,7 @@ const UserContact = ({navigation}) => {
           flex: 1,
           marginTop: responsiveHeight(2),
         }}>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => navigation.navigate('AllPlan')}
           style={{marginVertical: responsiveHeight(2)}}>
           <View style={[CssStyle.flexJustify, {}]}>
@@ -715,6 +743,74 @@ const UserContact = ({navigation}) => {
                     style={{
                       marginTop: responsiveHeight(3.7),
                       width: responsiveWidth(50),
+                      marginBottom: responsiveHeight(1),
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={postFeedBack}
+        onRequestClose={() => setPostFeedBack(false)}>
+        <TouchableWithoutFeedback
+          style={{flex: 1}}
+          onPress={() => setPostFeedBack(false)}>
+          <View style={{flex: 1, backgroundColor: '#00000090'}}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+              }}>
+              <View
+                style={{
+                  backgroundColor: AppColors.blueColor,
+                  borderTopEndRadius: responsiveHeight(3),
+                  borderTopLeftRadius: responsiveHeight(3),
+                  paddingVertical: responsiveHeight(3.8),
+                  paddingHorizontal: responsiveWidth(3),
+                  alignItems: 'center',
+                  // width: responsiveWidth(80),
+                }}>
+                <Input
+                  bgColor={'#ffffff60'}
+                  placeholder={'Give Feedback'}
+                  noIcon={true}
+                  value={feedBack}
+                  onChangeText={e => setFeedBack(e)}
+                  fontSize={16}
+                  multiline={true}
+                  height={responsiveHeight(18)}
+                  borderRadius={responsiveWidth(6)}
+                  style={{
+                    textAlignVertical: 'top',
+                    width: responsiveWidth(88),
+                  }}
+                />
+
+                <View style={[{alignItems: 'center'}]}>
+                  <CustomButton
+                    loading={loadingFeedback}
+                    buttonText={'Post Feedback'}
+                    onPress={() => {
+                      feedBack
+                        ? ShareFeedBack()
+                        : ToastAndroid.show(
+                            'Please fill the field',
+                            ToastAndroid.SHORT,
+                          );
+                    }}
+                    // buttonColor={'transparent'}
+                    // mode="outlined"
+                    fontWeight={'500'}
+                    // borderColor={'white'}
+                    style={{
+                      marginTop: responsiveHeight(3.7),
+                      width: responsiveWidth(70),
                       marginBottom: responsiveHeight(1),
                     }}
                   />

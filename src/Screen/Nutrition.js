@@ -19,7 +19,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../component/Loader';
 import {GetDietPlanApi, GetFoodApi} from '../services/DietPlan';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {
   GetWaterApi,
@@ -32,17 +32,25 @@ import FillGlass from '../assets/glass-of-water';
 import {Calendar} from 'react-native-calendars';
 import {BarChart} from 'react-native-chart-kit';
 import WaterTracking from '../Helping/WaterTracking';
+import {Diet_Id, Water_Id} from '../store/action';
+import moment from 'moment';
 
 const Nutrition = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
   // console.log(item);
+  const dispatch = useDispatch();
+  const id = useSelector(data => data);
+  // const dataitem = useSelector(data => console.log(data));
+  const [loading, setLoading] = useState(false);
+  const [dietId, setDietId] = useState('');
+  const [foodData, setFoodData] = useState([]);
 
   const dailyFoodRecord = [
     {desc: 'Burnt', number: 23},
     {desc: 'Eaten', number: 345},
   ];
   const data = {
-    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+    labels: ['Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat', 'Sun'],
     datasets: [
       {
         data: [20, 40, 60, 80],
@@ -93,29 +101,21 @@ const Nutrition = ({navigation, route}) => {
     {number: 9},
     {number: 10},
   ];
-  const id = useSelector(data => data.id);
-  const [loading, setLoading] = useState(false);
-  const [dietId, setDietId] = useState('');
-
   useEffect(() => {
     var mount = true;
     const listener = navigation.addListener('focus', async () => {
-      if (mount) {
-        setLoading(true);
-        try {
-          const result = await AsyncStorage.getItem('DietPlanId');
-          // console.log(result, 'diet id');
-          if (result) {
-            setDietId(result);
-            // setLoading(false);
-            GetDietPlan();
-          } else {
-            setLoading(false);
-            navigation.navigate('SelectPlan');
-          }
-        } catch (error) {
-          console.log(error);
+      try {
+        const result = await GetFoodApi(id.id, id.dietPlanId);
+        // console.log(result, 'Food record');
+        if (result) {
+          // setLoading(false);
+          setFoodData(result.result.foodIntakesToday);
+        } else {
+          setLoading(false);
+          // navigation.navigate('SelectPlan');
         }
+      } catch (error) {
+        console.log(error);
       }
     });
     return () => {
@@ -123,36 +123,30 @@ const Nutrition = ({navigation, route}) => {
       mount = false;
     };
   }, []);
-  // useEffect(() => {
-  //   var mount = true;
-  //   const listener = navigation.addListener('focus', async () => {
-  //     setLoading(true);
-  //     try {
-  //       const result = await GetFoodApi(3000407, 3000417);
-  //       // console.log(result, 'Food record');
-  //       if (result) {
-  //         // setLoading(false);
-  //         setFoodData(result.result);
-  //       } else {
-  //         // setLoading(false);
-  //         // navigation.navigate('SelectPlan');
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   });
-  //   return () => {
-  //     listener;
-  //     mount = false;
-  //   };
-  // }, []);
   useEffect(() => {
     var mount = true;
     const listener = navigation.addListener('focus', async () => {
-      setLoading(true);
       try {
-        const result = await GetWaterApi(id);
-        console.log(result, 'get water api');
+        const result = await GetDietPlanApi(id.dietPlanId, id.id);
+        if (result) {
+          setDietPlanData(result.result);
+        } else {
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    return () => {
+      listener;
+      mount = false;
+    };
+  }, []);
+  useEffect(() => {
+    var mount = true;
+    const listener = navigation.addListener('focus', async () => {
+      try {
+        const result = await GetWaterApi(id.id);
+        // console.log(result, 'get water api');
         if (result) {
           setWaterData(result.result);
         } else {
@@ -166,34 +160,20 @@ const Nutrition = ({navigation, route}) => {
       mount = false;
     };
   }, []);
-  const GetDietId = async () => {
-    setLoading(true);
-    try {
-      const result = await AsyncStorage.getItem('DietPlanId');
-      // console.log(result, 'diet id');
-      if (result) {
-        setDietId(result);
-        // setLoading(false);
-        GetDietPlan();
-        // GetFoodRecord(id, result);
-      } else {
-        setLoading(false);
-        navigation.navigate('SelectPlan');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
+  useEffect(() => {
+    id.dietPlanId ? GetDietPlan() : navigation.navigate('SelectPlan');
+  }, []);
   const GetDietPlan = async () => {
     setLoading(true);
     try {
-      const result = await GetDietPlanApi(dietId, id);
+      const result = await GetDietPlanApi(id.dietPlanId, id.id);
       // console.log(result, 'this is the');
       if (result) {
-        setLoading(false);
+        // setLoading(false);
         setDietPlanData(result.result);
       } else {
-        setLoading(false);
+        // setLoading(false);
         // navigation.navigate('SelectPlan');
       }
     } catch (error) {
@@ -210,32 +190,34 @@ const Nutrition = ({navigation, route}) => {
   const GetWaterTracking = async () => {
     setLoading(true);
     try {
-      const result = await GetWaterApi(id);
-      console.log(result, 'get water api');
-      if (result) {
-        // setLoading(false);
+      const result = await GetWaterApi(id.id);
+      // console.log(result, 'get water api');
+      if (result.status == true) {
+        dispatch(Water_Id(result.result.water_tracker_id));
+        await AsyncStorage.setItem(
+          'WaterTrackerId',
+          `${result.result.water_tracker_id}`,
+        );
+        setLoading(false);
         setWaterData(result.result);
         // GetWeeklyReport(result.result.water_tracker_id, id);
       } else {
-        // setLoading(false);
+        setLoading(false);
         // navigation.navigate('SelectPlan');
       }
     } catch (error) {
       console.log(error);
     }
   };
-  const [foodData, setFoodData] = useState([]);
   const GetFoodRecord = async () => {
-    setLoading(true);
     try {
-      const result = await GetFoodApi(id, dietId);
-      // const result = await GetFoodApi(3000407, 3000417);
-      // console.log(result, 'Food record');
+      const result = await GetFoodApi(id.id, id.dietPlanId);
+      console.log(result, 'Food record');
       if (result) {
-        // setLoading(false);
-        setFoodData(result.result.foodIntakesToday);
+        setLoading(false);
+        setFoodData(result.result?.foodIntakesToday);
       } else {
-        // setLoading(false);
+        setLoading(false);
         // navigation.navigate('SelectPlan');
       }
     } catch (error) {
@@ -243,13 +225,13 @@ const Nutrition = ({navigation, route}) => {
     }
   };
   const [weeklyWaterData, setWeeklyWaterData] = useState('');
-  const GetWeeklyReport = async (waterId, id) => {
-    setLoading(true);
+  const GetWeeklyReport = async () => {
+    // setLoading(true);
     try {
-      const result = await GetWeeklyWaterApi(waterId, id);
-      // console.log(result, 'get weekly water api');
+      const result = await GetWeeklyWaterApi(id.waterTrackerId, id.id);
+      console.log(result.result[0], 'get weekly report');
       if (result) {
-        // setLoading(false);
+        setLoading(false);
         setWeeklyWaterData(result.result);
       } else {
         // setLoading(false);
@@ -263,16 +245,17 @@ const Nutrition = ({navigation, route}) => {
   useEffect(() => {
     GetFoodRecord();
     GetWaterTracking();
-  }, [id]);
+    id.waterTrackerId ? GetWeeklyReport() : {};
+  }, []);
 
   const AddDailyRecord = async () => {
-    console.log('clicked');
+    // console.log('clicked');
     try {
       const result = await GetWaterRecordApi(
-        id,
-        waterData.water_tracker_id,
+        id.id,
+        id.waterTrackerId,
         waterData?.quantity,
-        new Date().toLocaleDateString().replace(/['/']/g, '-'),
+        '2023-05-23',
       );
       console.log(result, 'daily record');
       if (result) {
@@ -287,9 +270,6 @@ const Nutrition = ({navigation, route}) => {
       console.log(error);
     }
   };
-  useEffect(() => {
-    GetDietId();
-  }, [dietId]);
 
   return loading ? (
     <Loader />
@@ -335,7 +315,7 @@ const Nutrition = ({navigation, route}) => {
             </TouchableOpacity>
           </View>
         </View>
-        {!item ? (
+        {id.dietPlanId ? (
           <>
             <View
               style={[
@@ -424,9 +404,7 @@ const Nutrition = ({navigation, route}) => {
               </Text>
               <TouchableOpacity
                 style={{marginRight: responsiveWidth(2)}}
-                onPress={() =>
-                  navigation.navigate('SelectFood', {item: {foodData, dietId}})
-                }>
+                onPress={() => navigation.navigate('SelectFood')}>
                 <Octicons name="diff-added" size={23} color={'white'} />
               </TouchableOpacity>
             </View>
@@ -502,9 +480,7 @@ const Nutrition = ({navigation, route}) => {
               </Text>
               <TouchableOpacity
                 style={{marginRight: responsiveWidth(2)}}
-                onPress={() =>
-                  navigation.navigate('TypeOfTracker', {item: waterData})
-                }>
+                onPress={() => navigation.navigate('TypeOfTracker')}>
                 <Octicons name="diff-added" size={23} color={'white'} />
               </TouchableOpacity>
             </View>
@@ -517,94 +493,113 @@ const Nutrition = ({navigation, route}) => {
                   ]}>
                   08 Glass
                 </Text>
-                <View
-                  style={[
-                    CssStyle.flexJustify,
-                    {paddingVertical: responsiveHeight(1.7)},
-                  ]}>
-                  {glassDay.map((item, index) => (
-                    <TouchableOpacity
-                      onPress={() =>
-                        AddDailyRecord(
-                          id,
-                          waterData?.water_tracker_id,
-                          index,
-                          new Date()
-                            .toLocaleDateString()
-                            .replace(/['/']/g, '-'),
-                        )
-                      }>
-                      <WaterTracking index={index} waterData={waterData} />
-                    </TouchableOpacity>
-                  ))}
-                  {/* <FillGlass width={30} height={30} /> */}
-                </View>
-                <View
-                  style={[
-                    CssStyle.flexJustify,
-                    {paddingVertical: responsiveHeight(1.7)},
-                  ]}>
-                  {glassDay.map((item, index) => (
-                    <TouchableOpacity
-                      onPress={() =>
-                        AddDailyRecord(
-                          id,
-                          waterData?.water_tracker_id,
-                          index,
-                          new Date()
-                            .toLocaleDateString()
-                            .replace(/['/']/g, '-'),
-                        )
-                      }>
-                      <WaterTracking index={index} waterData={waterData} />
-                    </TouchableOpacity>
-                  ))}
-                  {/* <FillGlass width={30} height={30} /> */}
-                </View>
-                <View
-                  style={[
-                    CssStyle.flexJustify,
-                    {paddingVertical: responsiveHeight(1.7)},
-                  ]}>
-                  {glassDay.map((item, index) => (
-                    <TouchableOpacity
-                      onPress={() =>
-                        AddDailyRecord(
-                          id,
-                          waterData?.water_tracker_id,
-                          index,
-                          new Date()
-                            .toLocaleDateString()
-                            .replace(/['/']/g, '-'),
-                        )
-                      }>
-                      <WaterTracking index={index} waterData={waterData} />
-                    </TouchableOpacity>
-                  ))}
-                  {/* <FillGlass width={30} height={30} /> */}
-                </View>
-                <View
-                  style={[
-                    CssStyle.flexJustify,
-                    {paddingVertical: responsiveHeight(1.7)},
-                  ]}>
-                  {glassDay.map((item, index) => (
-                    <TouchableOpacity
-                      onPress={() =>
-                        AddDailyRecord(
-                          id,
-                          waterData?.water_tracker_id,
-                          index,
-                          new Date()
-                            .toLocaleDateString()
-                            .replace(/['/']/g, '-'),
-                        )
-                      }>
-                      <WaterTracking index={index} waterData={waterData} />
-                    </TouchableOpacity>
-                  ))}
-                  {/* <FillGlass width={30} height={30} /> */}
-                </View>
+                {id.waterTrackerId ? (
+                  <>
+                    <View
+                      style={[
+                        CssStyle.flexJustify,
+                        {paddingVertical: responsiveHeight(1.7)},
+                      ]}>
+                      {glassDay.map((item, index) => (
+                        <WaterTracking
+                          key={index}
+                          onPress={() =>
+                            AddDailyRecord(
+                              id.id,
+                              id.water_tracker_id,
+                              index,
+                              '2023-05-24',
+                            )
+                          }
+                          index={index}
+                          waterData={waterData}
+                        />
+                      ))}
+                      {/* <FillGlass width={30} height={30} /> */}
+                    </View>
+                    <View
+                      style={[
+                        CssStyle.flexJustify,
+                        {paddingVertical: responsiveHeight(1.7)},
+                      ]}>
+                      {glassDay.map((item, index) => (
+                        <WaterTracking
+                          key={index}
+                          onPress={() =>
+                            AddDailyRecord(
+                              id.id,
+                              id.water_tracker_id,
+                              index,
+                              '2023-05-24',
+                            )
+                          }
+                          index={index}
+                          waterData={waterData}
+                        />
+                      ))}
+                      {/* <FillGlass width={30} height={30} /> */}
+                    </View>
+                    <View
+                      style={[
+                        CssStyle.flexJustify,
+                        {paddingVertical: responsiveHeight(1.7)},
+                      ]}>
+                      {glassDay.map((item, index) => (
+                        <WaterTracking
+                          key={index}
+                          onPress={() =>
+                            AddDailyRecord(
+                              id.id,
+                              id.water_tracker_id,
+                              index,
+                              '2023-05-24',
+                            )
+                          }
+                          index={index}
+                          waterData={waterData}
+                        />
+                      ))}
+                      {/* <FillGlass width={30} height={30} /> */}
+                    </View>
+                    <View
+                      style={[
+                        CssStyle.flexJustify,
+                        {paddingVertical: responsiveHeight(1.7)},
+                      ]}>
+                      {glassDay.map((item, index) => (
+                        <WaterTracking
+                          key={index}
+                          onPress={() =>
+                            AddDailyRecord(
+                              id.id,
+                              id.water_tracker_id,
+                              index,
+                              '2023-05-24',
+                            )
+                          }
+                          index={index}
+                          waterData={waterData}
+                        />
+                      ))}
+                    </View>
+                  </>
+                ) : (
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: responsiveHeight(24),
+                    }}>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontFamily: 'Interstate-regular',
+                        fontSize: 20,
+                      }}>
+                      No Water Data Available
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
             <View
@@ -613,7 +608,7 @@ const Nutrition = ({navigation, route}) => {
                 style={[styles.dailyText, {marginBottom: responsiveHeight(1)}]}>
                 Weekly Report
               </Text>
-              {weeklyWaterData ? (
+              {id.waterTrackerId ? (
                 <BarChart
                   data={data}
                   width={responsiveWidth(88)}

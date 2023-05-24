@@ -33,7 +33,7 @@ const EnterFood = ({navigation, route}) => {
   console.log(item);
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(1);
-  const id = useSelector(data => data.id);
+  const id = useSelector(data => data);
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const foodType = [{item: 'Scoops'}, {item: 'Grams'}, {item: 'oz'}];
   const [typeDate, setType] = useState('Beef');
@@ -66,10 +66,11 @@ const EnterFood = ({navigation, route}) => {
     setLoading(true);
     try {
       const result = await AddFoodUserApi(
-        id,
-        item?.item?.dietId,
-        item?.review,
-        typeFoodId,
+        id.id,
+        id.dietPlanId,
+        item,
+        3000109,
+        // typeFoodId,
         time,
         typeDateFood,
         '2023-05-23',

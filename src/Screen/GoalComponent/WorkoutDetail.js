@@ -161,7 +161,7 @@ const WorkoutDetail = ({navigation, route}) => {
                   <View style={{width: responsiveWidth(27)}}>
                     <Image
                       source={{
-                        uri: `${BaseUrl}` + item.exersise_details.animation,
+                        uri: `${BaseUrl}` + item?.exersise_details?.animation,
                       }}
                       resizeMode="contain"
                       style={{
@@ -179,7 +179,7 @@ const WorkoutDetail = ({navigation, route}) => {
                         fontFamily: 'Interstate-regular',
                         //   opacity: 0.8,
                       }}>
-                      {item.exersise_details.title}
+                      {item?.exersise_details?.title}
                     </Text>
                     <View
                       style={[
@@ -199,7 +199,7 @@ const WorkoutDetail = ({navigation, route}) => {
                             marginLeft: responsiveWidth(2),
                             opacity: 0.8,
                           }}>
-                          {item.calories_burnt} kcal
+                          {item?.calories_burnt} kcal
                         </Text>
                       </View>
                       <View style={[CssStyle.flexData]}>
@@ -212,7 +212,7 @@ const WorkoutDetail = ({navigation, route}) => {
                             marginLeft: responsiveWidth(2),
                             opacity: 0.8,
                           }}>
-                          {item.time.slice(0, 5)} min
+                          {item?.time?.slice(0, 5)} min
                         </Text>
                       </View>
                     </View>

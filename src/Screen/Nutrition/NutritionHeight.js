@@ -29,12 +29,11 @@ const NutritionHeight = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
   console.log(updateData);
   const weightUnitData = [{text: 'cm'}, {text: 'in'}];
-  const [weightData, setWeightData] = useState(null);
+  const [weightData, setWeightData] = useState('in');
   const [heightValue, setHeightValue] = useState();
   const [activeIndex, setActiveIndex] = useState(
     updateData ? updateData.height : 55,
   );
-  // console.log(heightValue);
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>

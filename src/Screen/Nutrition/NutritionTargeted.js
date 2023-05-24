@@ -29,7 +29,7 @@ const NutritionTargeted = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
   console.log(item);
   const weightUnitData = [{text: 'gm'}, {text: 'kg'}];
-  const [weightData, setWeightData] = useState(null);
+  const [weightData, setWeightData] = useState('gm');
   const flatNode = useRef();
   const [activeIndex, setActiveIndex] = useState(
     updateData ? updateData?.targetted_weight : 36,

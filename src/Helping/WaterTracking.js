@@ -5,13 +5,11 @@ import Glass from '../assets/redGlas';
 import Bottle from '../assets/water';
 import FillGlass from '../assets/glass-of-water';
 
-const WaterTracking = ({index, waterData, clicked}) => {
+const WaterTracking = ({index, waterData, clicked,onPress}) => {
   const [data, setData] = useState(false);
   return (
     <TouchableOpacity
-      onPress={() => {
-        setData(!data);
-      }}>
+      onPress={onPress}>
       {/* {index == waterData?.quantity || data ? ( */}
       {data ? (
         <Glass width={30} height={30} />

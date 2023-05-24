@@ -111,6 +111,7 @@ const RestTime = ({navigation}) => {
             duration={sec}
             size={120}
             strokeWidth={8}
+            onComplete={() => navigation.goBack()}
             colors={['#FF5100', '#FF5100', '#FF5100']}>
             {({remainingTime}) => (
               <Text style={{color: 'white', fontSize: 22}}>
