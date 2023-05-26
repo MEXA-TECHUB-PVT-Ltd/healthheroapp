@@ -3,6 +3,7 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
   Modal,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -95,33 +96,40 @@ const SignUp = ({navigation}) => {
   return (
     <ImageBackground
       style={{flex: 1}}
-      resizeMode="cover"
+      // resizeMode="cover"
       source={require('../assets/signUp.png')}>
       <LinearGradient
         colors={['#0B183C00', '#0B183Ce1']}
         start={{x: 1, y: 0.1}}
         end={{x: 1, y: 0.5}}
         style={{
-          paddingHorizontal: responsiveWidth(5),
+          // paddingHorizontal: responsiveWidth(5),
           flex: 1,
         }}>
-        <KeyboardAvoidingView behavior="position">
-          <Image
-            source={Logo}
-            resizeMode="contain"
-            style={{
-              width: responsiveWidth(21),
-              height: responsiveHeight(15),
-              marginTop: responsiveHeight(20),
-              marginBottom: responsiveHeight(1),
-              marginLeft: responsiveWidth(1),
-            }}
-          />
-          <Text style={CssStyle.signInText}>Create Account</Text>
-          <Text style={CssStyle.signInInfo}>
-            train and live the new experience of exercising at home
-          </Text>
-          {/* <Input
+        <ScrollView
+          keyboardShouldPersistTaps={true}
+          showsVerticalScrollIndicator={false}>
+          <KeyboardAvoidingView
+            style={{paddingHorizontal: responsiveWidth(5)}}
+            behavior="position">
+            <Image
+              source={Logo}
+              resizeMode="contain"
+              style={{
+                width: responsiveWidth(21),
+                height: responsiveHeight(15),
+                marginTop: responsiveHeight(23),
+                marginBottom: responsiveHeight(1),
+                marginLeft: responsiveWidth(1),
+              }}
+            />
+            <Text style={[CssStyle.signInText, {fontSize: 33}]}>
+              Create Account
+            </Text>
+            <Text style={CssStyle.signInInfo}>
+              train and live the new experience of exercising at home
+            </Text>
+            {/* <Input
             bgColor={'#ffffff60'}
             placeholder={'Username'}
             noIcon={true}
@@ -132,105 +140,108 @@ const SignUp = ({navigation}) => {
             fontSize={16}
             style={{marginTop: responsiveHeight(1)}}
           /> */}
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            value={email}
-            onChangeText={e => {
-              setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(6)}}
-          />
-          {data == 'emailFormat' ? (
-            <Text style={{color: 'red'}}>Enter the valid email address</Text>
-          ) : data == 'email' ? (
-            <Text style={{color: 'red'}}>Enter the email</Text>
-          ) : data == 'Error' ? (
-            <Text style={{color: 'red'}}>
-              Email is invalid or already have an account
-            </Text>
-          ) : (
-            data == 'Fill' && (
-              <Text style={{color: 'red', fontWeight: '500'}}>
-                Fill the fields
+            <Input
+              bgColor={'#ffffff60'}
+              placeholder={'Email'}
+              noIcon={true}
+              value={email}
+              onChangeText={e => {
+                setEmail(e), handleValidEmail(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(6)}}
+            />
+            {data == 'emailFormat' ? (
+              <Text style={{color: 'red'}}>Enter the valid email address</Text>
+            ) : data == 'email' ? (
+              <Text style={{color: 'red'}}>Enter the email</Text>
+            ) : data == 'Error' ? (
+              <Text style={{color: 'red'}}>
+                Email is invalid or already have an account
               </Text>
-            )
-          )}
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Password'}
-            noIcon={true}
-            fontSize={16}
-            value={password}
-            onChangeText={e => {
-              setPassword(e), handleValidPassword(e);
-            }}
-            rightIcon="eye-outline"
-            offIcon={'eye-off-outline'}
-            enableIcon={true}
-          />
-          {data == 'passwordLength' ? (
-            <Text style={{color: 'red', marginLeft: responsiveWidth(4)}}>
-              Password must be contain one Uppercase alphabet and atleast 6
-              character
-            </Text>
-          ) : data == 'password' ? (
-            <Text style={{color: 'red', marginLeft: responsiveWidth(4)}}>
-              Enter the password
-            </Text>
-          ) : (
-            data == 'Fill' && (
-              <Text
-                style={{
-                  color: 'red',
-                  marginLeft: responsiveWidth(-2),
-                  fontWeight: '500',
-                }}>
-                Fill the fields
+            ) : (
+              data == 'Fill' && (
+                <Text style={{color: 'red', fontWeight: '500'}}>
+                  Fill the fields
+                </Text>
+              )
+            )}
+            <Input
+              bgColor={'#ffffff60'}
+              placeholder={'Password'}
+              noIcon={true}
+              fontSize={16}
+              value={password}
+              onChangeText={e => {
+                setPassword(e), handleValidPassword(e);
+              }}
+              rightIcon="eye-outline"
+              offIcon={'eye-off-outline'}
+              enableIcon={true}
+            />
+            {data == 'passwordLength' ? (
+              <Text style={{color: 'red', marginLeft: responsiveWidth(4)}}>
+                Password must be contain one Uppercase alphabet and atleast 6
+                character
               </Text>
-            )
-          )}
-          <View style={{height: responsiveHeight(2)}} />
-        </KeyboardAvoidingView>
-        <View
-          style={{
-            paddingHorizontal: responsiveWidth(12),
-            marginHorizontal: responsiveWidth(-5),
-            marginTop: responsiveHeight(1),
-            paddingTop: responsiveHeight(3),
-            backgroundColor: AppColors.blueColor,
-            flex: 1,
-          }}>
-          <CustomButton
-            loading={loading}
-            buttonText={'Signup'}
-            onPress={() =>
-              !email && !password
-                ? setData('Fill')
-                : !email
-                ? setData('email')
-                : !password
-                ? setData('password')
-                : emailValidError
-                ? setData('emailFormat')
-                : passwordValidError
-                ? setData('passwordLength')
-                : SignUp()
-            }
-            style={{}}
-          />
-          <CustomButton
-            buttonText={'Login'}
-            onPress={() => navigation.navigate('Login')}
-            buttonColor={'transparent'}
-            mode="outlined"
-            fontWeight={'500'}
-            borderColor={'white'}
-            style={{marginTop: responsiveHeight(2.7)}}
-          />
-        </View>
+            ) : data == 'password' ? (
+              <Text style={{color: 'red', marginLeft: responsiveWidth(4)}}>
+                Enter the password
+              </Text>
+            ) : (
+              data == 'Fill' && (
+                <Text
+                  style={{
+                    color: 'red',
+                    marginLeft: responsiveWidth(-2),
+                    fontWeight: '500',
+                  }}>
+                  Fill the fields
+                </Text>
+              )
+            )}
+            <View style={{height: responsiveHeight(2)}} />
+          </KeyboardAvoidingView>
+          <View
+            style={{
+              paddingHorizontal: responsiveWidth(12),
+              marginHorizontal: responsiveWidth(-5),
+              marginTop: responsiveHeight(1),
+              paddingTop: responsiveHeight(3),
+              backgroundColor: AppColors.blueColor,
+              paddingBottom: responsiveHeight(6),
+              // flex: 1,
+            }}>
+            <CustomButton
+              loading={loading}
+              buttonText={'Signup'}
+              onPress={() =>
+                !email && !password
+                  ? setData('Fill')
+                  : !email
+                  ? setData('email')
+                  : !password
+                  ? setData('password')
+                  : emailValidError
+                  ? setData('emailFormat')
+                  : passwordValidError
+                  ? setData('passwordLength')
+                  : SignUp()
+              }
+              style={{}}
+            />
+            <CustomButton
+              buttonText={'Login'}
+              onPress={() => navigation.navigate('Login')}
+              buttonColor={'transparent'}
+              mode="outlined"
+              fontWeight={'500'}
+              styleText={{width: responsiveWidth(100)}}
+              borderColor={'white'}
+              style={{marginTop: responsiveHeight(2.7)}}
+            />
+          </View>
+        </ScrollView>
       </LinearGradient>
       <Modal
         animationType="slide"

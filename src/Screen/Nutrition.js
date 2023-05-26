@@ -53,7 +53,7 @@ const Nutrition = ({navigation, route}) => {
     labels: ['Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat', 'Sun'],
     datasets: [
       {
-        data: [20, 40, 60, 80],
+        data: [0, 2, 4, 6, 8],
       },
     ],
   };
@@ -126,13 +126,17 @@ const Nutrition = ({navigation, route}) => {
   useEffect(() => {
     var mount = true;
     const listener = navigation.addListener('focus', async () => {
+      setLoading(true);
       try {
         const result = await GetDietPlanApi(id.dietPlanId, id.id);
         if (result) {
           setDietPlanData(result.result);
+          setLoading(false);
         } else {
+          setLoading(false);
         }
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     });
@@ -140,7 +144,7 @@ const Nutrition = ({navigation, route}) => {
       listener;
       mount = false;
     };
-  }, []);
+  }, [id.dietPlanId]);
   useEffect(() => {
     var mount = true;
     const listener = navigation.addListener('focus', async () => {
@@ -163,7 +167,9 @@ const Nutrition = ({navigation, route}) => {
 
   useEffect(() => {
     id.dietPlanId ? GetDietPlan() : navigation.navigate('SelectPlan');
-  }, []);
+  }, [id.dietPlanId]);
+
+  const [dietPlanData, setDietPlanData] = useState('');
   const GetDietPlan = async () => {
     setLoading(true);
     try {
@@ -180,7 +186,6 @@ const Nutrition = ({navigation, route}) => {
       console.log(error);
     }
   };
-  const [dietPlanData, setDietPlanData] = useState('');
   const Card = [
     {desc: 'Protein', number: dietPlanData?.macros?.protein},
     {desc: 'Sugar', number: dietPlanData?.macros?.sugar},
@@ -212,7 +217,7 @@ const Nutrition = ({navigation, route}) => {
   const GetFoodRecord = async () => {
     try {
       const result = await GetFoodApi(id.id, id.dietPlanId);
-      console.log(result, 'Food record');
+      // console.log(result, 'Food record');
       if (result) {
         setLoading(false);
         setFoodData(result.result?.foodIntakesToday);
@@ -229,7 +234,7 @@ const Nutrition = ({navigation, route}) => {
     // setLoading(true);
     try {
       const result = await GetWeeklyWaterApi(id.waterTrackerId, id.id);
-      console.log(result.result[0], 'get weekly report');
+      // console.log(result.result[0], 'get weekly report');
       if (result) {
         setLoading(false);
         setWeeklyWaterData(result.result);
@@ -255,9 +260,9 @@ const Nutrition = ({navigation, route}) => {
         id.id,
         id.waterTrackerId,
         waterData?.quantity,
-        '2023-05-23',
+        moment(new Date()).format('YYYY-MM-DD'),
       );
-      console.log(result, 'daily record');
+      // console.log(result, 'daily record');
       if (result) {
         // setLoading(false);
         setWeeklyWaterData(result.result);
@@ -301,7 +306,7 @@ const Nutrition = ({navigation, route}) => {
             <TouchableOpacity
               style={{marginRight: responsiveWidth(2)}}
               onPress={() =>
-                dietId
+                id.dietPlanId
                   ? navigation.navigate('SelectPlan', {
                       item: dietPlanData?.fetched_record,
                     })
@@ -508,7 +513,7 @@ const Nutrition = ({navigation, route}) => {
                               id.id,
                               id.water_tracker_id,
                               index,
-                              '2023-05-24',
+                              moment(new Date()).format('YYYY-MM-DD'),
                             )
                           }
                           index={index}
@@ -530,7 +535,7 @@ const Nutrition = ({navigation, route}) => {
                               id.id,
                               id.water_tracker_id,
                               index,
-                              '2023-05-24',
+                              moment(new Date()).format('YYYY-MM-DD'),
                             )
                           }
                           index={index}
@@ -552,7 +557,7 @@ const Nutrition = ({navigation, route}) => {
                               id.id,
                               id.water_tracker_id,
                               index,
-                              '2023-05-24',
+                              moment(new Date()).format('YYYY-MM-DD'),
                             )
                           }
                           index={index}
@@ -574,7 +579,7 @@ const Nutrition = ({navigation, route}) => {
                               id.id,
                               id.water_tracker_id,
                               index,
-                              '2023-05-24',
+                              moment(new Date()).format('YYYY-MM-DD'),
                             )
                           }
                           index={index}
@@ -651,7 +656,7 @@ const Nutrition = ({navigation, route}) => {
                 marginTop: responsiveHeight(37),
               },
             ]}>
-            <Text style={{color: 'white'}}>Glass stick</Text>
+            {/* <Text style={{color: 'white'}}>No</Text> */}
             <Text
               style={{
                 color: 'white',

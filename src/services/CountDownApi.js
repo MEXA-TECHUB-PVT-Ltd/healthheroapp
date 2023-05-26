@@ -24,7 +24,6 @@ export const TakeCountDownApi = async (id, time) => {
 };
 
 export const GetCountDownApi = async id => {
-  console.log(id);
   try {
     const requestOptions = {
       method: 'GET',

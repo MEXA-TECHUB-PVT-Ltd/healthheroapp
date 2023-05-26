@@ -250,17 +250,28 @@ const UpdatePassword = ({navigation, route}) => {
           <CustomButton
             loading={loading}
             onPress={() => {
-              !password && !newPassword && !confirmPassword
-                ? setData('AddField')
-                : id.userPassword !== password
-                ? setData('oldPassword')
-                : newPassword !== confirmPassword
-                ? setData('NewPassword')
-                : password == newPassword
-                ? setData('oldNewMatch')
+              password && newPassword && confirmPassword
+                ? id.userPassword == password
+                : newPassword == confirmPassword
+                ? password == newPassword
                 : emailValidError
                 ? setData('NewAuthentic')
+                : setData('oldNewMatch')
+                ? setData('oldPassword')
+                : setData('AddField')
+                ? setData('NewPassword')
                 : ChangePassword();
+              //  !password && !newPassword && !confirmPassword
+              // ? setData('AddField')
+              // : id.userPassword !== password
+              // ? setData('oldPassword')
+              // : newPassword !== confirmPassword
+              // ? setData('NewPassword')
+              // : password == newPassword
+              // ? setData('oldNewMatch')
+              // : emailValidError
+              // ? setData('NewAuthentic')
+              // : ChangePassword();
             }}
             activeOpacity={1}
             buttonColor={AppColors.buttonText}

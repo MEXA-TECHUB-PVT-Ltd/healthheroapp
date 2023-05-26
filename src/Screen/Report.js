@@ -22,10 +22,14 @@ import {Calendar} from 'react-native-calendars';
 import {GetHistoryApi} from '../services/DietPlan';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
+import {GetWeeklyReport} from '../services/WorkoutPlan';
+import {GetUserDetailApi} from '../services/AuthScreen';
+import moment from 'moment';
+import Loader from '../component/Loader';
 
 const Report = ({navigation}) => {
   const [historyDataDate, setHistoryDataDate] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const Card = [
     {
       desc: 'Protein',
@@ -77,13 +81,56 @@ const Report = ({navigation}) => {
     barPercentage: 0.8,
     useShadowColorFromDataset: false, // optional
   };
-  const [dietId, setDietId] = useState('');
   const id = useSelector(data => data);
+  useEffect(() => {
+    getWeightHeight();
+  }, []);
+  const [getUserDetail, setGetUserDetail] = useState('');
+  useEffect(() => {
+    var mount = true;
+    const listener = navigation.addListener('focus', async () => {
+      setLoading(true);
+      try {
+        const result = await GetUserDetailApi(id.id);
+        console.log(result, 'get user detail');
+        if (result) {
+          setLoading(false);
+          setGetUserDetail(result.result);
+        } else {
+          // navigation.navigate('SelectPlan');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    return () => {
+      listener;
+      mount = false;
+    };
+  }, [id.id]);
+  const getWeightHeight = async () => {
+    try {
+      const result = await GetUserDetailApi(id.id);
+      // console.log(result, 'get user detail');
+      if (result.status == false) {
+        setLoading(false);
+        setGetUserDetail(result.result);
+      } else {
+        // navigation.navigate('SelectPlan');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  console.log(
+    getUserDetail.weight /
+      ((getUserDetail.height / 3.28) * (getUserDetail.height / 3.28)),
+  );
 
   const GetHistoryData = async () => {
     try {
-      const result = await GetHistoryApi(id.id, id.dietPlanId);
-      console.log(result, 'get the history');
+      const result = await GetWeeklyReport(id.id);
+      // console.log(result, 'get the history');
       if (result.status == false) {
         setHistoryDataDate(result.result);
       } else {
@@ -93,12 +140,17 @@ const Report = ({navigation}) => {
       console.log(error);
     }
   };
+  const heightValue = getUserDetail?.height / 3.281;
+  const totalHeight = heightValue * heightValue;
+  console.log(totalHeight, 'hello');
   useEffect(() => {
     GetHistoryData();
   }, []);
   const [selected, setSelected] = useState('');
-
-  return (
+  // console.log(getUserDetail.height / 3.21);
+  return loading ? (
+    <Loader />
+  ) : (
     <ScrollView
       showsHorizontalScrollIndicator={false}
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -216,7 +268,9 @@ const Report = ({navigation}) => {
                     </Text>
                     <TouchableOpacity
                       style={{}}
-                      onPress={() => navigation.navigate('SelectPlan')}>
+                      onPress={() =>
+                        navigation.navigate('NutritionHeight', {item: 'Update'})
+                      }>
                       <Image
                         resizeMode="contain"
                         style={{width: 13, height: 13}}
@@ -236,7 +290,7 @@ const Report = ({navigation}) => {
                       marginTop: responsiveHeight(3),
                     },
                   ]}>
-                  153 cm
+                  {getUserDetail?.height} {getUserDetail?.height_unit}
                 </Text>
                 <Text
                   style={[
@@ -277,7 +331,9 @@ const Report = ({navigation}) => {
                   </Text>
                   <TouchableOpacity
                     style={{}}
-                    onPress={() => navigation.navigate('SelectPlan')}>
+                    onPress={() =>
+                      navigation.navigate('NutritionWeight', {item: 'Update'})
+                    }>
                     <Image
                       resizeMode="contain"
                       style={{width: 13, height: 13}}
@@ -291,7 +347,7 @@ const Report = ({navigation}) => {
                   styles.dailyText,
                   {marginVertical: responsiveHeight(2)},
                 ]}>
-                61 kg
+                {getUserDetail?.weight} {getUserDetail?.weight_unit}
               </Text>
 
               <View style={{marginHorizontal: responsiveWidth(-3)}}>
@@ -324,29 +380,52 @@ const Report = ({navigation}) => {
                     BMI Calculator
                   </Text>
                 </View>
-                <Text
-                  style={[
-                    styles.dailyText,
-                    {
-                      fontSize: 18,
-                      fontFamily: 'Interstate-bold',
-                      alignSelf: 'center',
-                      marginBottom: responsiveHeight(1),
-                      marginTop: responsiveHeight(3),
-                    },
-                  ]}>
-                  25.39
-                </Text>
-                <Text
-                  style={[
-                    styles.dailyText,
-                    {
-                      fontSize: 12,
-                      alignSelf: 'center',
-                    },
-                  ]}>
-                  Weight 61kg | Height 153cm
-                </Text>
+                {getUserDetail?.weight && getUserDetail?.height ? (
+                  <>
+                    <Text
+                      style={[
+                        styles.dailyText,
+                        {
+                          fontSize: 18,
+                          fontFamily: 'Interstate-bold',
+                          alignSelf: 'center',
+                          marginBottom: responsiveHeight(1),
+                          marginTop: responsiveHeight(3),
+                        },
+                      ]}>
+                      {getUserDetail && totalHeight
+                        ? getUserDetail.weight / totalHeight
+                        : 'no data'}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.dailyText,
+                        {
+                          fontSize: 12,
+                          alignSelf: 'center',
+                        },
+                      ]}>
+                      Weight {getUserDetail?.weight}
+                      {getUserDetail?.weight_unit} | Height{' '}
+                      {getUserDetail?.height}
+                      {getUserDetail?.height_unit}
+                    </Text>
+                  </>
+                ) : (
+                  <Text
+                    style={[
+                      styles.dailyText,
+                      {
+                        fontSize: 18,
+                        fontFamily: 'Interstate-bold',
+                        alignSelf: 'center',
+                        marginBottom: responsiveHeight(1),
+                        marginTop: responsiveHeight(3),
+                      },
+                    ]}>
+                    No height and weight available
+                  </Text>
+                )}
               </View>
             </View>
 
@@ -432,7 +511,7 @@ const Report = ({navigation}) => {
                 monthTextColor: 'white',
                 indicatorColor: 'white',
                 todayBackgroundColor: AppColors.buttonText,
-                arrowStyle: {backgroundColor: 'white'},
+                arrowStyle: {backgroundColor: '#626377'},
               }}
               // markedDates={{
               //   [selected]: {

@@ -38,12 +38,11 @@ const Focused = ({navigation, route}) => {
   const [openModel, setOpenModel] = useState(false);
   const [loading, setLoading] = useState(false);
   const [review, setReview] = useState('');
-  const id = useSelector(data => data.id);
-  console.log(id, review, item);
+  const id = useSelector(data => data);
   const TakeReview = async () => {
     setLoading(true);
     try {
-      const result = await PostReview(id, item, review);
+      const result = await PostReview(id.id, id.workoutPlanId, review);
       console.log(result, 'workout plan');
       if (result.status == true) {
         setOpenModel(true);

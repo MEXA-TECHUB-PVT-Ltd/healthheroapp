@@ -27,6 +27,7 @@ import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 import {AddWaterApi, UpdateWaterApi} from '../../services/WaterTrackerApi';
 import {Water_Id} from '../../store/action';
+import moment from 'moment';
 
 const TypeOfTracker = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -54,9 +55,15 @@ const TypeOfTracker = ({navigation}) => {
             addData,
             typeDate,
             time,
-            '2023-05-24',
+            moment(new Date()).format('YYYY-MM-DD'),
           )
-        : await AddWaterApi(id.id, addData, typeDate, time, '2023-05-24');
+        : await AddWaterApi(
+            id.id,
+            addData,
+            typeDate,
+            time,
+            moment(new Date()).format('YYYY-MM-DD'),
+          );
       console.log(result);
       if (result.status == true) {
         dispatch(Water_Id(result.result.water_tracker_id));

@@ -15,10 +15,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Countdown} from 'react-native-element-timer';
-import ProgressCircle from 'react-native-progress-circle';
-import {AppColors} from '../../Helping/AppColor';
-import Logo from '../../assets/Icon3';
+import Logo from '../../assets/Icon';
 import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
 import {useSelector} from 'react-redux';
@@ -26,20 +23,26 @@ import {GetRestTimeApi} from '../../services/RestApi';
 import Loader from '../../component/Loader';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 
-const RestTime = ({navigation}) => {
+const RestTime = ({navigation, route}) => {
+  const {item} = route.params ? route.params : '';
+  console.log(item);
   const countdownRef = useRef();
 
-  const data = useSelector(data => data.id);
+  const data = useSelector(data => data);
   const [loading, setLoading] = useState(false);
+  const [dataTakeFromRedux, setDataTakeFromRedux] = useState(
+    data.workoutPlanData,
+  );
+  const [sec, setSec] = useState(12);
   const [restTimeData, setRestTimeData] = useState('');
   const GetPlan = async () => {
     setLoading(true);
     try {
-      const result = await GetRestTimeApi(data);
-      console.log(result);
+      const result = await GetRestTimeApi(data.id);
+      // console.log(result);
       if (result.status == true) {
         setLoading(false);
-        setRestTimeData(result);
+        setSec(parseInt(result.result.time));
       } else {
         console.error(result.message);
         setLoading(false);
@@ -49,11 +52,9 @@ const RestTime = ({navigation}) => {
       console.log(error);
     }
   };
-  // useEffect(() => {
-  //   GetPlan();
-  // }, [data]);
-  const [sec, setSec] = useState(restTimeData?.time ? restTimeData.time : 20);
-  const [dataNumber, setDataNumber] = useState('');
+  useEffect(() => {
+    GetPlan();
+  }, [data]);
   useEffect(() => {
     // countdownRef.current.start();
   }, []);
@@ -111,7 +112,9 @@ const RestTime = ({navigation}) => {
             duration={sec}
             size={120}
             strokeWidth={8}
-            onComplete={() => navigation.goBack()}
+            onComplete={() =>
+              navigation.navigate('GetExercise', {item: Math.random()})
+            }
             colors={['#FF5100', '#FF5100', '#FF5100']}>
             {({remainingTime}) => (
               <Text style={{color: 'white', fontSize: 22}}>
@@ -140,81 +143,87 @@ const RestTime = ({navigation}) => {
             }}>
             Next Exercise
           </Text>
-          <View
-            style={[CssStyle.flexData, {marginBottom: responsiveHeight(2)}]}>
-            <View style={{width: responsiveWidth(31)}}>
-              <Image
-                source={require('../../assets/Rectangle33.png')}
-                // resizeMode="contain"
-                style={{
-                  width: 110,
-                  height: 85,
-                  //   marginRight: responsiveWidth(2),
-                }}
-                borderRadius={responsiveWidth(2)}
-              />
-            </View>
-            <View style={{width: responsiveWidth(53)}}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 15,
-                  fontFamily: 'Interstate-regular',
-                  opacity: 0.8,
-                }}>
-                Yoga Exercise
-              </Text>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 11,
-                  fontFamily: 'Interstate-regular',
-                  marginVertical: responsiveHeight(0.7),
-                  opacity: 0.5,
-                  lineHeight: responsiveHeight(2),
-                }}>
-                Lorem ipsum dolor sit emet , consectetur amet elitr dolor sit,
-                emit as
-              </Text>
-              <View
-                style={[CssStyle.flexJustify, {width: responsiveWidth(45)}]}>
+          {dataTakeFromRedux.workout_plan_exersises[item + 1] ? (
+            <View
+              style={[CssStyle.flexData, {marginBottom: responsiveHeight(2)}]}>
+              <View style={{width: responsiveWidth(34)}}>
+                <Image
+                  source={require('../../assets/Rectangle33.png')}
+                  // resizeMode="contain"
+                  style={{
+                    width: 110,
+                    height: 85,
+                    //   marginRight: responsiveWidth(2),
+                  }}
+                  borderRadius={responsiveWidth(2)}
+                />
+              </View>
+              <View style={{width: responsiveWidth(49)}}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 15,
+                    fontFamily: 'Interstate-regular',
+                    opacity: 0.8,
+                  }}>
+                  {
+                    dataTakeFromRedux.workout_plan_exersises[item + 1]
+                      .exersise_details.title
+                  }
+                </Text>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 11,
+                    fontFamily: 'Interstate-regular',
+                    marginVertical: responsiveHeight(0.7),
+                    opacity: 0.5,
+                    lineHeight: responsiveHeight(2),
+                  }}>
+                  {
+                    dataTakeFromRedux.workout_plan_exersises[item + 1]
+                      .exersise_details.description
+                  }
+                </Text>
                 <View
-                  style={[
-                    CssStyle.flexData,
-                    {marginVertical: responsiveHeight(0.6)},
-                  ]}>
-                  <Logo width={16} height={16} />
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontFamily: 'Interstate-regular',
-                      fontSize: 12,
-                      marginLeft: responsiveWidth(2),
-                      opacity: 0.5,
-                    }}>
-                    400 kcal
-                  </Text>
-                </View>
-                <View
-                  style={[
-                    CssStyle.flexData,
-                    {marginVertical: responsiveHeight(1)},
-                  ]}>
-                  <Logo width={16} height={16} />
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontFamily: 'Interstate-regular',
-                      fontSize: 12,
-                      marginLeft: responsiveWidth(2),
-                      opacity: 0.5,
-                    }}>
-                    45 min
-                  </Text>
+                  style={[CssStyle.flexJustify, {width: responsiveWidth(45)}]}>
+                  <View
+                    style={[
+                      CssStyle.flexData,
+                      {marginVertical: responsiveHeight(1)},
+                    ]}>
+                    <Logo width={16} height={16} />
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontFamily: 'Interstate-regular',
+                        fontSize: 12,
+                        marginLeft: responsiveWidth(2),
+                        opacity: 0.5,
+                      }}>
+                      {dataTakeFromRedux.workout_plan_exersises[item + 1].reps}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
+          ) : (
+            <View
+              style={{
+                alignItems: 'center',
+                paddingVertical: responsiveHeight(2),
+              }}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 17,
+                  fontFamily: 'Interstate-regular',
+                  paddingBottom: responsiveHeight(5),
+                }}>
+                No Next Exercise
+              </Text>
+            </View>
+          )}
           <View style={{alignItems: 'center', marginTop: responsiveHeight(7)}}>
             <View style={[CssStyle.flexJustify, {width: responsiveWidth(80)}]}>
               <CustomButton
@@ -234,7 +243,7 @@ const RestTime = ({navigation}) => {
               />
               <CustomButton
                 onPress={() => {
-                  navigation.goBack(), countdownRef.current.stop();
+                  navigation.navigate('GetExercise', {item: 'RestTime'});
                 }}
                 buttonText={'Skip'}
                 style={{width: responsiveWidth(38)}}

@@ -21,7 +21,7 @@ import Loader from '../../component/Loader';
 
 const StartNow = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  // console.log(item);
+  console.log(item);
   const [sevenByFourData, setSevenByFourData] = useState([]);
   const [loading, setLoading] = useState(false);
   const GetSeven = async () => {
@@ -53,13 +53,13 @@ const StartNow = ({navigation, route}) => {
     {item: 6},
     {item: 7},
   ];
-  console.log(
-    28 -
-      (sevenByFourData[0]?.week_days?.length +
-        sevenByFourData[1]?.week_days?.length +
-        sevenByFourData[2]?.week_days?.length +
-        sevenByFourData[3]?.week_days?.length),
-  );
+  // console.log(
+  //   28 -
+  //     (sevenByFourData[0]?.week_days?.length +
+  //       sevenByFourData[1]?.week_days?.length +
+  //       sevenByFourData[2]?.week_days?.length +
+  //       sevenByFourData[3]?.week_days?.length),
+  // );
   return loading ? (
     <Loader />
   ) : (
@@ -182,6 +182,7 @@ const StartNow = ({navigation, route}) => {
         <View style={{flex: 1, paddingBottom: responsiveHeight(7)}}>
           <FlatList
             data={sevenByFourData}
+            keyExtractor={item => item.week_no}
             renderItem={({item, index}) => {
               return (
                 <View

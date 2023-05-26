@@ -68,7 +68,6 @@ const AllPlan = ({navigation, route}) => {
       if (result.status == true) {
         setExerciseId(result.result);
         setLoading(false);
-        // dispatch(ExerCise(result.result[0].exersise_id));
       } else {
         console.error(result.message);
         setLoading(false);
@@ -160,61 +159,66 @@ const AllPlan = ({navigation, route}) => {
         <View style={{marginTop: responsiveHeight(6)}}>
           <FlatList
             data={planData}
-            renderItem={({item, index}) => (
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectItem(item.plan_name), setAddToExerciseData(item);
-                }}
-                style={[
-                  CssStyle.flexData,
-                  {
-                    marginBottom: responsiveHeight(1.9),
-                    borderWidth: 1,
-                    borderColor:
-                      selectItem == item.plan_name
-                        ? AppColors.buttonText
-                        : '#00000022',
-                    borderRadius: 12,
-                    backgroundColor:
-                      selectItem == item.plan_name ? '#0A1F58' : '#626377',
-                    paddingHorizontal: responsiveWidth(3),
-                    paddingVertical: responsiveHeight(1.5),
-                  },
-                ]}>
-                <View style={{width: responsiveWidth(28)}}>
-                  <Image
-                    source={require('../../../assets/Rectangle33.png')}
-                    resizeMode="contain"
-                    style={{
-                      width: 99,
-                      height: 90,
-                      //   marginRight: responsiveWidth(2),
-                    }}
-                  />
-                </View>
-                <View style={{width: responsiveWidth(57)}}>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 15,
-                      fontFamily: 'Interstate-regular',
-                      opacity: 1,
-                    }}>
-                    {item.plan_name.slice(0, 29)}
-                  </Text>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 11,
-                      fontFamily: 'Interstate-regular',
-                      marginTop: responsiveHeight(0.7),
-                      opacity: 0.8,
-                      lineHeight: responsiveHeight(2),
-                      letterSpacing: 0.4,
-                    }}>
-                    {item.description.slice(0, 39)}
-                  </Text>
-                  <View
+            renderItem={({item, index}) => {
+              console.log(item,'plan id');
+              return (
+                <TouchableOpacity activeOpacity={0.8}
+                  onPress={() => {
+                    navigation.navigate('WorkoutDetail', {
+                      item: item.workout_plan_id,
+                    });
+                  }}
+                  style={[
+                    CssStyle.flexData,
+                    {
+                      marginBottom: responsiveHeight(1.9),
+                      borderWidth: 1,
+                      borderColor:
+                        selectItem == item.plan_name
+                          ? AppColors.buttonText
+                          : '#00000022',
+                      borderRadius: 12,
+                      backgroundColor:
+                        selectItem == item.plan_name ? '#0A1F58' : '#626377',
+                      paddingHorizontal: responsiveWidth(3),
+                      paddingVertical: responsiveHeight(1.5),
+                    },
+                  ]}>
+                  <View style={{width: responsiveWidth(30)}}>
+                    <Image
+                      borderRadius={responsiveWidth(2)}
+                      source={require('../../../assets/planImage.jpg')}
+                      resizeMode="contain"
+                      style={{
+                        width: 90,
+                        height: 65,
+                        //   marginRight: responsiveWidth(2),
+                      }}
+                    />
+                  </View>
+                  <View style={{width: responsiveWidth(57)}}>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 15,
+                        fontFamily: 'Interstate-regular',
+                        opacity: 1,
+                      }}>
+                      {item.plan_name.slice(0, 29)}
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 11,
+                        fontFamily: 'Interstate-regular',
+                        marginTop: responsiveHeight(1),
+                        opacity: 0.8,
+                        lineHeight: responsiveHeight(2),
+                        letterSpacing: 0.4,
+                      }}>
+                      {item.description.slice(0, 39)}
+                    </Text>
+                    {/* <View
                     style={{
                       borderBottomColor: 'white',
                       borderBottomWidth: 1,
@@ -271,13 +275,14 @@ const AllPlan = ({navigation, route}) => {
                       }}>
                       Beginner
                     </Text>
+                  </View> */}
                   </View>
-                </View>
-              </TouchableOpacity>
-            )}
+                </TouchableOpacity>
+              );
+            }}
           />
         </View>
-        <View
+        {/* <View
           style={{
             position: 'absolute',
             top: responsiveHeight(90),
@@ -298,7 +303,7 @@ const AllPlan = ({navigation, route}) => {
             style={{width: responsiveWidth(80)}}
             buttonText={'Add Exercise'}
           />
-        </View>
+        </View> */}
       </View>
       <Modal
         animationType="slide"

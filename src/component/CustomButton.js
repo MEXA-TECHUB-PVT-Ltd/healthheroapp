@@ -27,6 +27,7 @@ const CustomButton = ({
   heightButton,
   loading,
   marginLeft,
+  width,
 }) => {
   return (
     <Button

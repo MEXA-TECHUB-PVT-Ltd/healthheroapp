@@ -24,12 +24,13 @@ import {
 } from '../../services/WorkoutPlan';
 import Logo from '../../assets/Icon3';
 import {HelpingComponent} from '../../Helping/HelpingComponent';
+import {BaseUrl} from '../../Helping/BaseUrl';
 
 const Search = ({navigation}) => {
   const buttonMap = [
     {text: 'Beginner', nav: 'Beginner'},
-    {text: 'Advance', nav: 'Advance'},
     {text: 'Intermediate', nav: 'Intermediate'},
+    {text: 'Advance', nav: 'Advance'},
   ];
   const workoutPlan = [
     {text: 'Lorem ipsum', nav: 'WorkoutPlan'},
@@ -133,7 +134,7 @@ const Search = ({navigation}) => {
   return (
     <View style={[CssStyle.mainContainer, {backgroundColor: '#0B183C'}]}>
       <StatusBar hidden={true} />
-      <View style={{paddingHorizontal: responsiveWidth(5)}}>
+      <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
         <View
           style={[
             {
@@ -280,212 +281,12 @@ const Search = ({navigation}) => {
               }}>
               Beginner
             </Text>
-            <View style={{marginTop: responsiveHeight(1)}}>
-              <FlatList
-                data={beginner}
-                showsVerticalScrollIndicator={false}
-                renderItem={({item, inde}) => (
-                  <View
-                    style={[
-                      CssStyle.flexData,
-                      {marginBottom: responsiveHeight(2)},
-                    ]}>
-                    <View style={{width: responsiveWidth(39)}}>
-                      <Image
-                        source={require('../../assets/Rectangle32.png')}
-                        resizeMode="contain"
-                        style={{
-                          width: 130,
-                          height: 130,
-                          marginRight: responsiveWidth(2),
-                        }}
-                      />
-                    </View>
-                    <View style={{width: responsiveWidth(47)}}>
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 15,
-                          fontFamily: 'Interstate-regular',
-                          opacity: 0.8,
-                        }}>
-                        Yoga Exercise
-                      </Text>
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 11,
-                          fontFamily: 'Interstate-regular',
-                          marginVertical: responsiveHeight(0.7),
-                          opacity: 0.5,
-                        }}>
-                        Lorem ipsum dolor sit emet , consectetur amet elitr
-                        dolor sit emet , consectetur amet elitr dolor sit emet ,
-                        consectetur amet elitr
-                      </Text>
-                      <View
-                        style={[
-                          CssStyle.flexJustify,
-                          {width: responsiveWidth(45)},
-                        ]}>
-                        <View
-                          style={[
-                            CssStyle.flexData,
-                            {marginVertical: responsiveHeight(0.6)},
-                          ]}>
-                          <Logo width={16} height={16} />
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'Interstate-regular',
-                              fontSize: 12,
-                              marginLeft: responsiveWidth(2),
-                              opacity: 0.5,
-                            }}>
-                            400 kcal
-                          </Text>
-                        </View>
-                        <View
-                          style={[
-                            CssStyle.flexData,
-                            {marginVertical: responsiveHeight(1)},
-                          ]}>
-                          <Logo width={16} height={16} />
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'Interstate-regular',
-                              fontSize: 12,
-                              marginLeft: responsiveWidth(2),
-                              opacity: 0.5,
-                            }}>
-                            45 min
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                )}
-              />
-            </View>
-          </>
-        ) : status == 'Advance' ? (
-          <>
-            <Text
-              style={{
-                fontFamily: 'Interstate-bold',
-                color: 'white',
-                fontSize: 35,
-                marginVertical: responsiveHeight(2),
-              }}>
-              Advance
-            </Text>
-            <View style={{marginTop: responsiveHeight(1)}}>
-              <FlatList
-                data={beginner}
-                showsVerticalScrollIndicator={false}
-                renderItem={({item, inde}) => (
-                  <View
-                    style={[
-                      CssStyle.flexData,
-                      {marginBottom: responsiveHeight(2)},
-                    ]}>
-                    <View style={{width: responsiveWidth(39)}}>
-                      <Image
-                        source={require('../../assets/Rectangle32.png')}
-                        resizeMode="contain"
-                        style={{
-                          width: 130,
-                          height: 130,
-                          marginRight: responsiveWidth(2),
-                        }}
-                      />
-                    </View>
-                    <View style={{width: responsiveWidth(47)}}>
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 15,
-                          fontFamily: 'Interstate-regular',
-                          opacity: 0.8,
-                        }}>
-                        Yoga Exercise
-                      </Text>
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 11,
-                          fontFamily: 'Interstate-regular',
-                          marginVertical: responsiveHeight(0.7),
-                          opacity: 0.5,
-                        }}>
-                        Lorem ipsum dolor sit emet , consectetur amet elitr
-                        dolor sit emet , consectetur amet elitr dolor sit emet ,
-                        consectetur amet elitr
-                      </Text>
-                      <View
-                        style={[
-                          CssStyle.flexJustify,
-                          {width: responsiveWidth(45)},
-                        ]}>
-                        <View
-                          style={[
-                            CssStyle.flexData,
-                            {marginVertical: responsiveHeight(0.6)},
-                          ]}>
-                          <Logo width={16} height={16} />
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'Interstate-regular',
-                              fontSize: 12,
-                              marginLeft: responsiveWidth(2),
-                              opacity: 0.5,
-                            }}>
-                            400 kcal
-                          </Text>
-                        </View>
-                        <View
-                          style={[
-                            CssStyle.flexData,
-                            {marginVertical: responsiveHeight(1)},
-                          ]}>
-                          <Logo width={16} height={16} />
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontFamily: 'Interstate-regular',
-                              fontSize: 12,
-                              marginLeft: responsiveWidth(2),
-                              opacity: 0.5,
-                            }}>
-                            45 min
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                )}
-              />
-            </View>
-          </>
-        ) : (
-          status == 'Intermediate' && (
-            <>
-              <Text
-                style={{
-                  fontFamily: 'Interstate-bold',
-                  color: 'white',
-                  fontSize: 35,
-                  marginVertical: responsiveHeight(2),
-                }}>
-                Intermediate
-              </Text>
-              <View style={{marginTop: responsiveHeight(1)}}>
+            <View style={{marginTop: responsiveHeight(1), flex: 1}}>
+              {beginner.length > 0 ? (
                 <FlatList
                   data={beginner}
                   showsVerticalScrollIndicator={false}
-                  renderItem={({item, inde}) => (
+                  renderItem={({item, index}) => (
                     <View
                       style={[
                         CssStyle.flexData,
@@ -510,7 +311,7 @@ const Search = ({navigation}) => {
                             fontFamily: 'Interstate-regular',
                             opacity: 0.8,
                           }}>
-                          Yoga Exercise
+                          Yoga Workout plan
                         </Text>
                         <Text
                           style={{
@@ -568,11 +369,267 @@ const Search = ({navigation}) => {
                     </View>
                   )}
                 />
+              ) : (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: 'Interstate-regular',
+                      fontSize: 17,
+                    }}>
+                    No Workout plan available
+                  </Text>
+                </View>
+              )}
+            </View>
+          </>
+        ) : status == 'Advance' ? (
+          <>
+            <Text
+              style={{
+                fontFamily: 'Interstate-bold',
+                color: 'white',
+                fontSize: 35,
+                marginVertical: responsiveHeight(2),
+              }}>
+              Advance
+            </Text>
+            <View style={{marginTop: responsiveHeight(1)}}>
+              {advance.length > 0 ? (
+                <FlatList
+                  data={advance}
+                  showsVerticalScrollIndicator={false}
+                  renderItem={({item, index}) => {
+                    console.log(item);
+                    return (
+                      <View
+                        style={[
+                          CssStyle.flexData,
+                          {marginBottom: responsiveHeight(2)},
+                        ]}>
+                        <View style={{width: responsiveWidth(39)}}>
+                          <Image
+                            source={{uri: `${BaseUrl}` + item.image}}
+                            resizeMode="contain"
+                            style={{
+                              width: 130,
+                              height: 130,
+                              marginRight: responsiveWidth(2),
+                            }}
+                          />
+                        </View>
+                        <View style={{width: responsiveWidth(47)}}>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontSize: 15,
+                              fontFamily: 'Interstate-regular',
+                              opacity: 0.8,
+                            }}>
+                            {item.workout_title}
+                          </Text>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontSize: 11,
+                              fontFamily: 'Interstate-regular',
+                              marginVertical: responsiveHeight(0.7),
+                              opacity: 0.5,
+                            }}>
+                            Lorem ipsum dolor sit emet , consectetur amet elitr
+                            dolor sit emet , consectetur amet elitr dolor sit
+                            emet , consectetur amet elitr
+                          </Text>
+                          <View
+                            style={[
+                              CssStyle.flexJustify,
+                              {width: responsiveWidth(45)},
+                            ]}>
+                            <View
+                              style={[
+                                CssStyle.flexData,
+                                {marginVertical: responsiveHeight(0.6)},
+                              ]}>
+                              <Logo width={16} height={16} />
+                              <Text
+                                style={{
+                                  color: 'white',
+                                  fontFamily: 'Interstate-regular',
+                                  fontSize: 12,
+                                  marginLeft: responsiveWidth(2),
+                                  opacity: 0.5,
+                                }}>
+                                {item.calories_burnt} kcal
+                              </Text>
+                            </View>
+                            <View
+                              style={[
+                                CssStyle.flexData,
+                                {marginVertical: responsiveHeight(1)},
+                              ]}>
+                              <Logo width={16} height={16} />
+                              <Text
+                                style={{
+                                  color: 'white',
+                                  fontFamily: 'Interstate-regular',
+                                  fontSize: 12,
+                                  marginLeft: responsiveWidth(2),
+                                  opacity: 0.5,
+                                }}>
+                                {item.time.slice(0,3)}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                    );
+                  }}
+                />
+              ) : (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: 'Interstate-regular',
+                      fontSize: 17,
+                    }}>
+                    No Workout plan available
+                  </Text>
+                </View>
+              )}
+            </View>
+          </>
+        ) : (
+          status == 'Intermediate' && (
+            <>
+              <Text
+                style={{
+                  fontFamily: 'Interstate-bold',
+                  color: 'white',
+                  fontSize: 35,
+                  marginVertical: responsiveHeight(2),
+                }}>
+                Intermediate
+              </Text>
+              <View style={{marginTop: responsiveHeight(1), flex: 1}}>
+                {intermediate.length > 0 ? (
+                  <FlatList
+                    data={intermediate}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({item, index}) => (
+                      <View
+                        style={[
+                          CssStyle.flexData,
+                          {marginBottom: responsiveHeight(2)},
+                        ]}>
+                        <View style={{width: responsiveWidth(39)}}>
+                          <Image
+                            source={require('../../assets/Rectangle32.png')}
+                            resizeMode="contain"
+                            style={{
+                              width: 130,
+                              height: 130,
+                              marginRight: responsiveWidth(2),
+                            }}
+                          />
+                        </View>
+                        <View style={{width: responsiveWidth(47)}}>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontSize: 15,
+                              fontFamily: 'Interstate-regular',
+                              opacity: 0.8,
+                            }}>
+                            Yoga Workout plan
+                          </Text>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontSize: 11,
+                              fontFamily: 'Interstate-regular',
+                              marginVertical: responsiveHeight(0.7),
+                              opacity: 0.5,
+                            }}>
+                            Lorem ipsum dolor sit emet , consectetur amet elitr
+                            dolor sit emet , consectetur amet elitr dolor sit
+                            emet , consectetur amet elitr
+                          </Text>
+                          <View
+                            style={[
+                              CssStyle.flexJustify,
+                              {width: responsiveWidth(45)},
+                            ]}>
+                            <View
+                              style={[
+                                CssStyle.flexData,
+                                {marginVertical: responsiveHeight(0.6)},
+                              ]}>
+                              <Logo width={16} height={16} />
+                              <Text
+                                style={{
+                                  color: 'white',
+                                  fontFamily: 'Interstate-regular',
+                                  fontSize: 12,
+                                  marginLeft: responsiveWidth(2),
+                                  opacity: 0.5,
+                                }}>
+                                400 kcal
+                              </Text>
+                            </View>
+                            <View
+                              style={[
+                                CssStyle.flexData,
+                                {marginVertical: responsiveHeight(1)},
+                              ]}>
+                              <Logo width={16} height={16} />
+                              <Text
+                                style={{
+                                  color: 'white',
+                                  fontFamily: 'Interstate-regular',
+                                  fontSize: 12,
+                                  marginLeft: responsiveWidth(2),
+                                  opacity: 0.5,
+                                }}>
+                                45 min
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                    )}
+                  />
+                ) : (
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontFamily: 'Interstate-regular',
+                        fontSize: 17,
+                      }}>
+                      No Workout plan available
+                    </Text>
+                  </View>
+                )}
               </View>
             </>
           )
         )}
-
         {status ? null : (
           <View style={{marginTop: responsiveHeight(3)}}>
             <Text
@@ -585,9 +642,9 @@ const Search = ({navigation}) => {
               Workout Plans
             </Text>
             <View style={[CssStyle.flexData, {flexWrap: 'wrap'}]}>
-              {dataArray.map((item, index) => (
+              {/* {dataArray.map((item, index) => (
                 <HelpingComponent item={item} index={index} key={index} />
-              ))}
+              ))} */}
             </View>
           </View>
         )}

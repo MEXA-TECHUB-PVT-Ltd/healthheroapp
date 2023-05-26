@@ -24,22 +24,33 @@ import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 import {TakeCountDownApi} from '../../services/CountDownApi';
 import Octicons from 'react-native-vector-icons/Octicons';
-import DayOfCount from '../../Helping/DayOfCount';
 import {CreateReminder} from '../../services/ReminderApi';
+import moment from 'moment';
+import {DayOfCount} from '../../Helping/DayOfCount';
+import DatePicker from 'react-native-date-picker';
 
 const SetReminder = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
-  const [time, setTime] = useState(new Date().toLocaleTimeString());
   const id = useSelector(data => data.id);
+  const [date, setDate] = useState(false);
+  const [takeTime, setTakeTime] = useState('');
+  const [getReminderId, setGetReminderId] = useState('');
+  const [apiTime, setApiTime] = useState(new Date().toTimeString());
 
-  const AddCountDown = async () => {
+  const CreateReminderInProfile = async () => {
     setLoading(true);
     try {
-      const result = await CreateReminder(id, time, [1, 2, 3]);
+      const result = await CreateReminder(
+        id,
+        apiTime?.slice(0, 8),
+        selectItem.map(item => item.id + 1),
+      );
       console.log(result);
       if (result.status == true) {
         setLoading(false);
         setOpenRestartModel(true);
+        setGetReminderId(result.result);
+        setSelectItem([]);
       } else {
         console.error(result.message);
         setLoading(false);
@@ -48,6 +59,9 @@ const SetReminder = ({navigation, route}) => {
       setLoading;
       console.log(error);
     }
+    // const result = selectItem.map(item => item);
+    // console.log(result);
+    // console.log(id, apiTime?.slice(0, 8), [1, 2, 3]);
   };
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const [dataItem, setDataItem] = useState([
@@ -60,11 +74,16 @@ const SetReminder = ({navigation, route}) => {
     {item: 1},
     {item: 2},
   ]);
-  const dayDataActive = [{day: 'M'}, {day: 'W'}, {day: 'Th'}, {day: 'F'}];
-
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-
+  const dayDataActive = [
+    {day: 'M'},
+    {day: 'T'},
+    {day: 'W'},
+    {day: 'Th'},
+    {day: 'F'},
+    {day: 'Sa'},
+    {day: 'S'},
+  ];
+  const [selectItem, setSelectItem] = useState([]);
   return (
     <LinearGradient
       colors={['#0A1F58', '#0A1637']}
@@ -93,7 +112,7 @@ const SetReminder = ({navigation, route}) => {
           <Octicons name="diff-added" size={23} color={'white'} />
         </TouchableOpacity>
       </View>
-      <View style={{flex: 0.3, marginTop: responsiveHeight(5)}}>
+      <View style={{flex: 0.32, marginTop: responsiveHeight(5)}}>
         <Text style={[CssStyle.textInsideSettingComponent, {fontSize: 39}]}>
           Set Reminder
         </Text>
@@ -103,13 +122,64 @@ const SetReminder = ({navigation, route}) => {
           got you covered.
         </Text>
       </View>
-      <View style={{flex: 1}}>
-        <DayOfCount />
+      <View>
+        {/* <CustomButton buttonText={'Pick time'} onPress={() => setDate(true)} /> */}
+        <TouchableOpacity
+          onPress={() => setDate(true)}
+          style={[
+            {
+              marginBottom: responsiveHeight(2.9),
+              borderRadius: 8,
+              paddingHorizontal: responsiveWidth(5),
+              paddingVertical: responsiveHeight(2),
+              marginTop: responsiveHeight(3),
+              backgroundColor: '#62637790',
+              alignItems: 'center',
+            },
+          ]}>
+          <Text
+            style={{
+              fontSize: 18,
+              color: 'white',
+            }}>
+            {/* {moment(takeTime).format('hh:mm:ss a')} */}
+            {takeTime
+              ? moment(takeTime).format('hh:mm:ss a')
+              : new Date().toLocaleTimeString()}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={{flex: 0.7}}>
+        <View
+          style={[
+            {
+              marginBottom: responsiveHeight(2.9),
+              borderRadius: 8,
+              paddingHorizontal: responsiveWidth(5),
+              paddingVertical: responsiveHeight(2),
+              marginTop: responsiveHeight(0.8),
+              backgroundColor: '#62637790',
+            },
+          ]}>
+          <View
+            style={[CssStyle.flexJustify, {paddingTop: responsiveHeight(1.9)}]}>
+            {dayDataActive.map((item, index) => (
+              <DayOfCount
+                key={index}
+                selectItem={selectItem}
+                setSelectItem={setSelectItem}
+                item={item}
+                index={index}
+              />
+            ))}
+          </View>
+        </View>
+
         <View style={[{alignItems: 'center'}]}>
           <CustomButton
             buttonText={'Set Reminder'}
             onPress={() => {
-              AddCountDown();
+              CreateReminderInProfile();
             }}
             fontWeight={'500'}
             borderColor={'white'}
@@ -121,6 +191,19 @@ const SetReminder = ({navigation, route}) => {
           />
         </View>
       </View>
+      <DatePicker
+        modal
+        open={date}
+        date={new Date()}
+        mode="time"
+        onCancel={() => setDate(false)}
+        onConfirm={date => {
+          console.log(date.toTimeString(), 'hellos');
+          setTakeTime(date);
+          setDate(false);
+          setApiTime(date.toTimeString());
+        }}
+      />
       <Modal
         animationType="slide"
         transparent={true}
@@ -166,7 +249,7 @@ const SetReminder = ({navigation, route}) => {
                 <Text
                   style={{
                     color: 'white',
-                    fontSize: 23,
+                    fontSize: 21,
                     fontFamily: 'Interstate-regular',
                     width: responsiveWidth(75),
                     textAlign: 'center',
@@ -174,14 +257,17 @@ const SetReminder = ({navigation, route}) => {
                     marginTop: responsiveHeight(4),
                     textTransform: 'capitalize',
                   }}>
-                  Time Set Successfully
+                  Workout Reminder Set Successfully
                 </Text>
 
                 <View style={[{alignItems: 'center'}]}>
                   <CustomButton
                     buttonText={'Go Back'}
                     onPress={() => {
-                      navigation.goBack();
+                      navigation.navigate('WorkoutReminder', {
+                        item: getReminderId.reminder_id,
+                      }),
+                        setOpenRestartModel(false);
                     }}
                     buttonColor={'transparent'}
                     mode="outlined"

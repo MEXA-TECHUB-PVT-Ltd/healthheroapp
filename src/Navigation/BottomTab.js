@@ -61,6 +61,7 @@ import SelectFood from '../Screen/Nutrition/Food/SelectFood';
 import EnterFood from '../Screen/Nutrition/Food/EnterFood';
 import TypeOfTracker from '../Screen/Nutrition/TypeOfTracker';
 import Report from '../Screen/Report';
+import CreateFood from '../Screen/Nutrition/Food/CreateFood';
 
 export const BottomTab = () => {
   const Bottom = createBottomTabNavigator();
@@ -232,6 +233,7 @@ export const UserNavigation = () => {
       <Stack.Screen name="CurrentWeight" component={CurrentWeight} />
       <Stack.Screen name="CurrentHeight" component={CurrentHeight} />
       <Stack.Screen name="StartNow" component={StartNow} />
+      <Stack.Screen name="CreateFood" component={CreateFood} />
       <Stack.Screen name="SevenFourWorkout" component={SevenFourWorkout} />
       <Stack.Screen name="SelectPlan" component={SelectPlan} />
       <Stack.Screen name="NutritionHeight" component={NutritionHeight} />
