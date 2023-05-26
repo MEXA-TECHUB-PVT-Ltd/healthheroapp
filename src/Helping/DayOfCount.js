@@ -7,61 +7,97 @@ import {
 } from 'react-native-responsive-dimensions';
 import {AppColors} from './AppColor';
 
-const DayOfCount = () => {
-  const dayDataActive = [
-    {day: 'S'},
-    {day: 'M'},
-    {day: 'W'},
-    {day: 'Th'},
-    {day: 'F'},
-    {day: 'S '},
-  ];
-  const [selectItem, setSelectItem] = useState('');
+export const DayOfCount = ({item, index, selectItem, setSelectItem}) => {
+  const arrayData = selectItem.map((item, index) => item.item);
+
+  const addItem = (num, id) => {
+    selectItem.push({
+      item: num,
+      id: id,
+    });
+    setSelect([...selectItem]);
+  };
+  const deleteItem = id => {
+    const result = selectItem?.filter((item, index) => {
+      return item.item !== id;
+    });
+    setSelectItem([...result]);
+  };
+  const [select, setSelect] = useState(false);
   return (
-    <View
-      style={[
-        // CssStyle.flexJustify,
-        {
-          marginBottom: responsiveHeight(2.9),
-          borderRadius: 8,
-          paddingHorizontal: responsiveWidth(5),
-          paddingVertical: responsiveHeight(2),
-          marginTop: responsiveHeight(0.8),
-          backgroundColor: '#62637790',
-        },
-      ]}>
-      <Text
-        style={{
-          fontSize: 12,
-          color: 'white',
-          marginBottom: responsiveHeight(2),
-        }}>
-        Every {selectItem}
-      </Text>
-      <View style={CssStyle.flexJustify}>
-        {dayDataActive.map((item, index) => (
-          <TouchableOpacity
-            onPress={() => setSelectItem(item.day)}
-            style={{
-              width: 40,
-              height: 40,
-              borderWidth: 1,
-              borderColor:
-                item.day == selectItem ? AppColors.buttonText : 'transparent',
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: responsiveHeight(20),
-            }}>
-            <Text style={{fontSize: 21, color: 'white'}} key={index}>
-              {item.day}
-            </Text>
-          </TouchableOpacity>
-        ))}
+    <>
+      <View style={{position: 'absolute', top: responsiveHeight(-0.9)}}>
+        <Text
+          style={{
+            fontSize: 13,
+            color: 'white',
+            marginBottom: responsiveHeight(2),
+            letterSpacing: 0.9,
+          }}>
+          Every{' '}
+          {selectItem.map((item, index) => (
+            <Text key={index}>{item.item} ,</Text>
+          ))}
+        </Text>
       </View>
-    </View>
+      {!select ? (
+        <TouchableOpacity
+          onPress={() => {
+            setSelect(true);
+            addItem(item.day, index);
+          }}
+          style={{
+            width: 40,
+            height: 40,
+            borderWidth: 1,
+            borderColor: select ? AppColors.buttonText : 'transparent',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: responsiveHeight(20),
+          }}>
+          <Text style={{fontSize: 21, color: 'white'}} key={index}>
+            {item.day}
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          onPress={() => {
+            setSelect(false);
+            deleteItem(item.day);
+          }}
+          style={{
+            width: 40,
+            height: 40,
+            borderWidth: 1,
+            borderColor: select ? AppColors.buttonText : 'transparent',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: responsiveHeight(20),
+          }}>
+          <Text style={{fontSize: 21, color: 'white'}} key={index}>
+            {item.day}
+          </Text>
+        </TouchableOpacity>
+      )}
+    </>
   );
 };
 
-export default DayOfCount;
-
 const styles = StyleSheet.create({});
+
+export const HeadingText = () => {
+  return (
+    <Text
+      style={{
+        fontSize: 12,
+        color: 'white',
+        marginBottom: responsiveHeight(2),
+      }}>
+      Every{' '}
+      {selectItem.map((item, index) => {
+        console.log(item, 'select item');
+        return <Text style={{color: 'white'}}>{item.item},</Text>;
+      })}
+    </Text>
+  );
+};

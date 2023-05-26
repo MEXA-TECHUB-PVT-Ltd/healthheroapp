@@ -33,7 +33,7 @@ const NutritionGender = ({navigation, route}) => {
   const [addData, setAddData] = useState(
     updateData ? updateData?.gender : 'male',
   );
-  const [age, setAge] = useState(updateData ? updateData?.age : '');
+  const [age, setAge] = useState(updateData ? `${updateData?.age}` : '');
   const genderCollectionData = [
     {text: 'male', image: require('../../assets/maleGender.png')},
     {text: 'female', image: require('../../assets/FemaleGender.png')},
@@ -101,7 +101,8 @@ const NutritionGender = ({navigation, route}) => {
             <View
               style={[CssStyle.flexJustify, {marginTop: responsiveHeight(6)}]}>
               {genderCollectionData.map((item, index) => (
-                <TouchableOpacity
+                <TouchableOpacity 
+                activeOpacity={0.8}
                   key={index}
                   onPress={() => setAddData(item.text)}
                   style={{

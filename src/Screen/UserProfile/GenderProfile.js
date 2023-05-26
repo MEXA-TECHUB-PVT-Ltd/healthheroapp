@@ -29,9 +29,10 @@ const GenderProfile = ({navigation, route}) => {
     {text: 'male', image: require('../../assets/maleGender.png')},
     {text: 'female', image: require('../../assets/FemaleGender.png')},
   ];
+  console.log(item);
   const id = useSelector(data => data.id);
   const [openUserSuccessfully, setOpenUserSuccessfully] = useState(false);
-  const [addData, setAddData] = useState('male');
+  const [addData, setAddData] = useState(item?.gender ? item?.gender : 'male');
   const [loadingUser, setLoadingUser] = useState(false);
   const UpdateUserName = async () => {
     setLoadingUser(true);
@@ -122,6 +123,7 @@ const GenderProfile = ({navigation, route}) => {
           <View style={[CssStyle.flexJustify, {}]}>
             {genderCollectionData.map((item, index) => (
               <TouchableOpacity
+                activeOpacity={0.8}
                 key={index}
                 onPress={() => setAddData(item.text)}
                 style={{

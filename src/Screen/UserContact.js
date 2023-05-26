@@ -23,6 +23,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Line} from '../component/Line';
+import KeepAwake from 'react-native-keep-awake';
 import CustomButton from '../component/CustomButton';
 import {RestartProgressAPI} from '../services/WorkoutPlan';
 import {useSelector} from 'react-redux';
@@ -82,7 +83,7 @@ const UserContact = ({navigation}) => {
       </Text>
       <View style={[{}]}>
         {workOut.map((item, index) => (
-          <>
+          <View key={index}>
             <TouchableOpacity
               onPress={() => {
                 item.text == 'Restart progress'
@@ -106,7 +107,7 @@ const UserContact = ({navigation}) => {
             {index !== workOut.length - 1 && (
               <Line style={{marginVertical: responsiveHeight(2)}} />
             )}
-          </>
+          </View>
         ))}
       </View>
     </>
@@ -169,8 +170,9 @@ const UserContact = ({navigation}) => {
     <>
       <Text style={CssStyle.settingText}>General Settings</Text>
       <View style={[{}]}>
+        {isEnabled ? <KeepAwake /> : ''}
         {generalSetting.map((item, index) => (
-          <>
+          <View key={index}>
             <TouchableOpacity
               disabled={item.text == 'Keep the screen on' ? true : false}
               onPress={() => {
@@ -205,7 +207,7 @@ const UserContact = ({navigation}) => {
             {index !== generalSetting.length - 1 && (
               <Line style={{marginVertical: responsiveHeight(2)}} />
             )}
-          </>
+          </View>
         ))}
       </View>
     </>
@@ -215,7 +217,7 @@ const UserContact = ({navigation}) => {
       <Text style={CssStyle.settingText}>Support Us </Text>
       <View style={[{flex: 1, marginBottom: responsiveHeight(3)}]}>
         {SupportUs.map((item, index) => (
-          <>
+          <View key={index}>
             <TouchableOpacity
               onPress={() => {
                 item.text == 'Feedback'
@@ -240,29 +242,33 @@ const UserContact = ({navigation}) => {
             {index !== SupportUs.length - 1 && (
               <Line style={{marginVertical: responsiveHeight(2)}} />
             )}
-          </>
+          </View>
         ))}
       </View>
     </>
   );
+
   const [feedBack, setFeedBack] = useState('');
   const LogOut = async () => {
     await AsyncStorage.removeItem('userID');
     await AsyncStorage.removeItem('userPassword');
     await AsyncStorage.removeItem('DietPlanId');
-    await AsyncStorage.removeItem('WaterTrackerId');
+    await AsyncStorage.removeItem('Workout_Plan_Id');
     navigation.navigate('Auth', {screen: 'Login'});
     setOpenModel(false);
   };
+  const [dataRestart, setDataRestart] = useState('');
   const RestartProgress = async () => {
     setLoading(true);
     try {
       const result = await RestartProgressAPI(id);
-      console.log(result);
+      // console.log(result);
       if (result.status == true) {
         setLoading(false);
+        setDataRestart('');
         setOpenRestartModel(false);
       } else {
+        setDataRestart(result.message);
         console.error(result.message);
         setLoading(false);
       }
@@ -271,11 +277,35 @@ const UserContact = ({navigation}) => {
       console.log(error);
     }
   };
+  useEffect(() => {
+    var mount = true;
+    const listener = navigation.addListener('focus', async () => {
+      setLoadingUser(true);
+      try {
+        const result = await GetUserDetailApi(id);
+        console.log(result);
+        if (result.status == true) {
+          setLoadingUser(false);
+          setUserDetailData(result.result);
+        } else {
+          console.error(result.message);
+          setLoadingUser(false);
+        }
+      } catch (error) {
+        setLoadingUser(false);
+        console.log(error);
+      }
+    });
+    return () => {
+      listener;
+      mount = false;
+    };
+  }, []);
   const GetUserDetail = async () => {
     setLoadingUser(true);
     try {
       const result = await GetUserDetailApi(id);
-      console.log(result);
+      // console.log(result);
       if (result.status == true) {
         setLoadingUser(false);
         setUserDetailData(result.result);
@@ -305,7 +335,7 @@ const UserContact = ({navigation}) => {
         userDetailData.weight_unit,
         userDetailData.height_unit,
       );
-      console.log(result);
+      // console.log(result);
       if (result.status == true) {
         setLoadingUpdate(false);
         setOpenModelUsername(false);
@@ -325,9 +355,10 @@ const UserContact = ({navigation}) => {
     setLoadingFeedback(true);
     try {
       const result = await PostFeedBackApi(id, feedBack);
-      console.log(result, 'feedback');
+      // console.log(result, 'feedback');
       if (result.status == true) {
         setLoadingFeedback(false);
+        setFeedBack('');
         setPostFeedBack(false);
       } else {
         console.error(result.message);
@@ -558,16 +589,29 @@ const UserContact = ({navigation}) => {
                     }}>
                     Restart Progress
                   </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'Interstate-regular',
-                      color: 'white',
-                      marginBottom: responsiveHeight(2),
-                      fontSize: 15,
-                      opacity: 0.9,
-                    }}>
-                    Would you like to restart your workout progress?
-                  </Text>
+                  {dataRestart ? (
+                    <Text
+                      style={{
+                        fontFamily: 'Interstate-regular',
+                        color: 'white',
+                        marginBottom: responsiveHeight(2),
+                        fontSize: 15,
+                        opacity: 0.9,
+                      }}>
+                      There is no active workout plan
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        fontFamily: 'Interstate-regular',
+                        color: 'white',
+                        marginBottom: responsiveHeight(2),
+                        fontSize: 15,
+                        opacity: 0.9,
+                      }}>
+                      Would you like to restart your workout progress?
+                    </Text>
+                  )}
                 </View>
 
                 <View style={[CssStyle.flexJustify, {}]}>
@@ -587,9 +631,12 @@ const UserContact = ({navigation}) => {
                   />
                   <CustomButton
                     loading={loading}
-                    buttonText={'Restart'}
+                    buttonText={dataRestart ? 'Close' : 'Restart'}
                     onPress={() => {
-                      RestartProgress();
+                      dataRestart
+                        ? setOpenRestartModel(false)
+                        : RestartProgress(),
+                        setDataRestart('');
                     }}
                     // buttonColor={'transparent'}
                     // mode="outlined"

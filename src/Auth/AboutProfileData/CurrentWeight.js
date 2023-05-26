@@ -16,13 +16,8 @@ import {
 } from 'react-native-responsive-dimensions';
 import {AppColors} from '../../Helping/AppColor';
 import Icon from 'react-native-vector-icons/Ionicons';
-import SwiperFlatList from 'react-native-swiper-flatlist';
-import {useFocusEffect} from '@react-navigation/native';
 import CustomButton from '../../component/CustomButton';
-import {FocusedComponent} from '../../Helping/HelpingComponent';
-import {UpdateProfileApi} from '../../';
 import {RulerPicker} from 'react-native-ruler-picker';
-import Ruler from '../../Helping/Ruler';
 
 const CurrentWeight = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';

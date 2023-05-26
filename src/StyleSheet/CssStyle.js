@@ -74,8 +74,8 @@ export default CssStyle = StyleSheet.create({
   signInText: {
     color: 'white',
     fontFamily: 'Interstate-bold',
-    fontSize: 34,
-    width: responsiveWidth(67),
+    fontSize: 37,
+    width: responsiveWidth(69),
     lineHeight: responsiveHeight(5),
     marginLeft: responsiveWidth(2),
   },

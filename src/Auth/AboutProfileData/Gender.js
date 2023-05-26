@@ -26,7 +26,7 @@ import Ruler from '../../Helping/Ruler';
 
 const Gender = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item,'hello');
+  console.log(item, 'hello');
   const [addData, setAddData] = useState('male');
   // console.log(item);
   // console.log(
@@ -146,6 +146,7 @@ const Gender = ({navigation, route}) => {
           <View style={[CssStyle.flexJustify, {}]}>
             {genderCollectionData.map((item, index) => (
               <TouchableOpacity
+                activeOpacity={0.8}
                 key={index}
                 onPress={() => setAddData(item.text)}
                 style={{

@@ -32,6 +32,8 @@ import {GetSevenFourApi} from '../services/SevenFour';
 import {BaseUrl} from '../Helping/BaseUrl';
 import {GetUserDetailApi} from '../services/AuthScreen';
 import {useSelector} from 'react-redux';
+import Loader from '../component/Loader';
+import Geolocation from '@react-native-community/geolocation';
 
 const Dashboard = ({navigation}) => {
   const dataGym = [
@@ -96,7 +98,7 @@ const Dashboard = ({navigation}) => {
     setLoading(true);
     try {
       const result = await GetSevenFourApi();
-      console.log(result, 'seven by four');
+      // console.log(result, 'seven by four');
       if (result.status == true) {
         setSevenFourData(result.result.array_agg);
         setLoading(false);
@@ -140,16 +142,44 @@ const Dashboard = ({navigation}) => {
     AdvanceApi();
     GetSevenByFour();
     IntermediateApi();
+    WeatherApi();
   }, []);
+  const [getLat, setGetLat] = useState('');
+  const [getTemp, setGetTemp] = useState('');
+  const WeatherApi = async () => {
+    Geolocation.getCurrentPosition(info => setGetLat(info.coords));
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${
+      getLat && getLat.latitude
+    }&lon=${
+      getLat && getLat.longitude
+    }&appid=${'794cbb1f951392ed1e70d3c0a77c0766'}`;
+    // console.log(await url);
+    const result = await fetch(url);
+    const response = await result.json();
+    setGetTemp(response.main);
+    console.log(response.main, 'hello');
+    // const apiKey = "794cbb1f951392ed1e70d3c0a77c0766";
+    // const url = `https://api.openweathermap.org/data/2.5/weather?q=${'rawalpindi'}&units=metric&appid=${apiKey}`;
+    // return fetch(url)
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     // const weatherData = {
+    //     //   temperature: data.main.temp,
+    //     //   condition: data.weather[0].main,
+    //     //   location: data.name,
+    //     // };
+    //     console.log(data);
+    //     // return weatherData;
+    //   });
+  };
+  const resultDataTemp = getTemp && getTemp?.temp - 273.15;
+  // console.log(resultDataTemp.toFixed(0));
+  // console.log(resultDataTemp>11 ? resultDataTemp?.slice(0, 2) : '', 'sfs');
   const [advance, setAdvance] = useState([]);
   const [beginner, setBeginner] = useState([]);
   const [intermediate, setIntermediate] = useState([]);
   return loading ? (
-    <ActivityIndicator
-      size={'large'}
-      color="black"
-      style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
-    />
+    <Loader />
   ) : (
     <ScrollView
       style={[
@@ -195,7 +225,7 @@ const Dashboard = ({navigation}) => {
               fontFamily: 'Interstate-bold',
               fontSize: 30,
             }}>
-            30°C
+            {resultDataTemp ? resultDataTemp?.toFixed(0) : '30'}°C
           </Text>
         </View>
         {/* <Input
@@ -303,7 +333,7 @@ const Dashboard = ({navigation}) => {
             <TouchableOpacity
               onPress={() =>
                 sevenFourData
-                  ? navigation.navigate('StartNow', {item: sevenFourData})
+                  ? navigation.navigate('StartNow', {item: sevenFourData[0]})
                   : ToastAndroid.show(
                       'No exercise available',
                       ToastAndroid.SHORT,
@@ -323,13 +353,7 @@ const Dashboard = ({navigation}) => {
           <View style={{}}>
             <Image
               resizeMode="cover"
-              source={
-                sevenFourData
-                  ? {
-                      uri: `${BaseUrl}` + sevenFourData[0]?.image,
-                    }
-                  : require('../assets/Image7.png')
-              }
+              source={require('../assets/Image7.png')}
               style={{
                 width: responsiveHeight(29.4),
                 height: responsiveHeight(37.4),
@@ -426,6 +450,7 @@ const Dashboard = ({navigation}) => {
                   fontFamily: 'Interstate-regular',
                   fontSize: 17,
                   color: 'white',
+                  opacity: 0.8,
                 }}>
                 No Workout plan created.
               </Text>
@@ -520,6 +545,7 @@ const Dashboard = ({navigation}) => {
                   fontFamily: 'Interstate-regular',
                   fontSize: 17,
                   color: 'white',
+                  opacity: 0.8,
                 }}>
                 No Workout plan created.
               </Text>
@@ -611,6 +637,7 @@ const Dashboard = ({navigation}) => {
                   fontFamily: 'Interstate-regular',
                   fontSize: 17,
                   color: 'white',
+                  opacity: 0.8,
                 }}>
                 No Workout plan created.
               </Text>

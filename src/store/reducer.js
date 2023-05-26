@@ -5,6 +5,7 @@ const initialState = {
   workoutPlanId: null,
   waterTrackerId: null,
   userPassword: null,
+  workoutPlanData: [],
 };
 const mainReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -20,6 +21,8 @@ const mainReducer = (state = initialState, action) => {
       return {...state, waterTrackerId: action.ExId};
     case 'UserPassword':
       return {...state, userPassword: action.ExId};
+       case 'WorkoutPlanData':
+      return {...state, workoutPlanData: action.ExId};
     default:
       break;
   }

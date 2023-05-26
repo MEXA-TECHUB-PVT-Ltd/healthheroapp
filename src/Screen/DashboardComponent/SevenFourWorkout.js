@@ -29,7 +29,7 @@ const SevenFourWorkout = ({navigation, route}) => {
   const [sevenByFourData, setSevenByFourData] = useState('');
   const id = useSelector(data => data.id);
   const [loading, setLoading] = useState(false);
-  
+
   const GetCategory = async () => {
     setLoading(true);
     try {
@@ -128,86 +128,100 @@ const SevenFourWorkout = ({navigation, route}) => {
             <Text style={{color: 'white'}}>minutes</Text>
           </Text>
         </View>
-        <FlatList
-          data={item.exercises}
-          renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('ExerciseDetail', {item: item})
-                }
-                style={[
-                  CssStyle.flexData,
-                  {
-                    // width: responsiveWidth(50),
-                    marginBottom: responsiveHeight(2),
-                    marginRight: responsiveWidth(7),
-                  },
-                ]}>
-                <Image
-                  borderRadius={responsiveWidth(2)}
-                  source={{uri: `${BaseUrl}` + item.video_link}}
-                  style={{
-                    width: responsiveWidth(19),
-                    height: responsiveHeight(9),
-                    marginRight: responsiveWidth(4),
-                  }}
-                  resizeMode="contain"
-                />
-                <View>
-                  <Text
+        {item.exercises > 0 ? (
+          <FlatList
+            data={item.exercises}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('ExerciseDetail', {item: item})
+                  }
+                  style={[
+                    CssStyle.flexData,
+                    {
+                      // width: responsiveWidth(50),
+                      marginBottom: responsiveHeight(2),
+                      marginRight: responsiveWidth(7),
+                    },
+                  ]}>
+                  <Image
+                    borderRadius={responsiveWidth(2)}
+                    source={{uri: `${BaseUrl}` + item.video_link}}
                     style={{
-                      color: 'white',
-                      fontSize: 13,
-                      fontFamily: 'Interstate-regular',
-                      marginVertical: responsiveHeight(0.6),
-                      paddingTop: responsiveHeight(1),
-                    }}>
-                    {item.title}
-                  </Text>
-                  <View
-                    style={[
-                      CssStyle.flexJustify,
-                      {width: responsiveWidth(40)},
-                    ]}>
+                      width: responsiveWidth(19),
+                      height: responsiveHeight(9),
+                      marginRight: responsiveWidth(4),
+                    }}
+                    resizeMode="contain"
+                  />
+                  <View>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 13,
+                        fontFamily: 'Interstate-regular',
+                        marginVertical: responsiveHeight(0.6),
+                        paddingTop: responsiveHeight(1),
+                      }}>
+                      {item.title}
+                    </Text>
                     <View
                       style={[
-                        CssStyle.flexData,
-                        {marginVertical: responsiveHeight(1)},
+                        CssStyle.flexJustify,
+                        {width: responsiveWidth(40)},
                       ]}>
-                      <Logo width={16} height={16} />
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontFamily: 'Interstate-regular',
-                          fontSize: 12,
-                          marginLeft: responsiveWidth(2),
-                        }}>
-                        400 kcal
-                      </Text>
-                    </View>
-                    <View
-                      style={[
-                        CssStyle.flexData,
-                        {marginVertical: responsiveHeight(1)},
-                      ]}>
-                      <Clock width={16} height={16} />
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontFamily: 'Interstate-regular',
-                          fontSize: 12,
-                          marginLeft: responsiveWidth(2),
-                        }}>
-                        45 sec
-                      </Text>
+                      <View
+                        style={[
+                          CssStyle.flexData,
+                          {marginVertical: responsiveHeight(1)},
+                        ]}>
+                        <Logo width={16} height={16} />
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontFamily: 'Interstate-regular',
+                            fontSize: 12,
+                            marginLeft: responsiveWidth(2),
+                          }}>
+                          400 kcal
+                        </Text>
+                      </View>
+                      <View
+                        style={[
+                          CssStyle.flexData,
+                          {marginVertical: responsiveHeight(1)},
+                        ]}>
+                        <Clock width={16} height={16} />
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontFamily: 'Interstate-regular',
+                            fontSize: 12,
+                            marginLeft: responsiveWidth(2),
+                          }}>
+                          45 sec
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
+                </TouchableOpacity>
+              );
+            }}
+          />
+        ) : (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text
+              style={{
+                color: 'white',
+                fontFamily: 'Interstate-regular',
+                fontSize: 17,
+              }}>
+              No Exercise available
+            </Text>
+          </View>
+        )}
         <View
           style={{
             position: 'absolute',

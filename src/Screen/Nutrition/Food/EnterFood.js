@@ -27,6 +27,7 @@ import assets from '../../../assets';
 import {AddFoodUserApi} from '../../../services/DietPlan';
 import {GetFoodApi} from '../../../services/FoodApi';
 import Moment from 'react-moment';
+import moment from 'moment';
 
 const EnterFood = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -59,9 +60,6 @@ const EnterFood = ({navigation, route}) => {
     GetFood();
   }, []);
 
-  const [dateData, setDateData] = useState(new Date().toLocaleDateString());
-  // console.log(dateData.replace(/['/']/g, '-'));
-  // console.log(typeFoodId, 'hello sir', typeDateFood, typeDate);
   const AddFood = async () => {
     setLoading(true);
     try {
@@ -73,7 +71,7 @@ const EnterFood = ({navigation, route}) => {
         // typeFoodId,
         time,
         typeDateFood,
-        '2023-05-23',
+        moment(new Date()).format('YYYY-MM-DD'),
       );
       console.log(result, 'this is the');
       if (result) {
@@ -171,6 +169,23 @@ const EnterFood = ({navigation, route}) => {
             {/* {getFoodData?.map((item, index) => (
               
             ))} */}
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate('CreateFood')}
+              style={{
+                backgroundColor: '#00000010',
+                paddingVertical: responsiveHeight(1),
+                alignItems: 'center',
+                // paddingHorizontal: responsiveWidth(4),
+              }}>
+              <Text
+                style={{
+                  color: AppColors.textColor,
+                  marginLeft: responsiveWidth(3),
+                }}>
+                Add Food
+              </Text>
+            </TouchableOpacity>
             <FlatList
               data={getFoodData}
               renderItem={({item, index}) => {
@@ -200,22 +215,6 @@ const EnterFood = ({navigation, route}) => {
                 );
               }}
             />
-            <TouchableOpacity
-              onPress={() => {}}
-              style={{
-                backgroundColor: '#00000020',
-                paddingVertical: responsiveHeight(1),
-                alignItems: 'center',
-                // paddingHorizontal: responsiveWidth(4),
-              }}>
-              <Text
-                style={{
-                  color: AppColors.textColor,
-                  marginLeft: responsiveWidth(3),
-                }}>
-                Add Food
-              </Text>
-            </TouchableOpacity>
           </View>
         ) : null}
         {foodModel ? (
@@ -390,7 +389,8 @@ const EnterFood = ({navigation, route}) => {
               <CustomButton
                 buttonText={'Go Back'}
                 onPress={() => {
-                  setOpenRestartModel(false), navigation.navigate('main');
+                  setOpenRestartModel(false),
+                    navigation.navigate('main', {screen: 'Dashboard3'});
                 }}
                 buttonColor={'transparent'}
                 mode="outlined"

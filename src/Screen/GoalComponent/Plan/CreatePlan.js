@@ -24,6 +24,7 @@ import assets from '../../../assets';
 import LinearGradient from 'react-native-linear-gradient';
 import {CreatePlanApi} from '../../../services/UserPlan';
 import {useSelector} from 'react-redux';
+import moment from 'moment';
 const CreatePlan = ({navigation}) => {
   const [planTitle, setPlanTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -37,7 +38,6 @@ const CreatePlan = ({navigation}) => {
       setData('');
     }, 2500);
   }, []);
-  console.log(new Date().toLocaleDateString());
   const [loading, setLoading] = useState(false);
   const CreatePlan = async () => {
     setLoading(true);
@@ -47,7 +47,7 @@ const CreatePlan = ({navigation}) => {
         planTitle,
         description,
         exerciseData,
-        new Date().toLocaleDateString(),
+        moment(new Date()).format('YYYY-MM-DD'),
       );
       console.log(result);
       if (result.status == true) {

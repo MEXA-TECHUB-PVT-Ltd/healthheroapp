@@ -1,13 +1,14 @@
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import CssStyle from '../StyleSheet/CssStyle';
+import {AppColors} from '../Helping/AppColor';
 
 const Loader = () => {
   return (
     <ActivityIndicator
       size={'large'}
-      color="black"
-      style={[CssStyle.mainContainerModelCopied, {backgroundColor: 'white'}]}
+      color="white"
+      style={[CssStyle.mainContainerModelCopied, {backgroundColor: '#0B183C'}]}
     />
   );
 };

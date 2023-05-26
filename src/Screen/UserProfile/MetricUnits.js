@@ -40,6 +40,9 @@ const MetricUnits = ({navigation, route}) => {
   );
   const heightUnit = [{item: 'ft'}, {item: 'in'}];
   const weightUnit = [{item: 'kg'}, {item: 'gm'}];
+
+
+
   const UpdateMetric = async () => {
     setLoadingUser(true);
     try {
@@ -210,7 +213,7 @@ const MetricUnits = ({navigation, route}) => {
                   ]}>
                   {data == 'Height'
                     ? heightUnit.map((item, index) => (
-                        <CustomButton
+                        <CustomButton key={index}
                           buttonText={item.item}
                           onPress={() => {
                             setHeightUnit(item.item);
@@ -229,7 +232,7 @@ const MetricUnits = ({navigation, route}) => {
                         />
                       ))
                     : weightUnit.map((item, index) => (
-                        <CustomButton
+                        <CustomButton key={index}
                           buttonText={item.item}
                           onPress={() => {
                             setWeightUnit(item.item);

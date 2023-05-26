@@ -21,7 +21,9 @@ import CssStyle from '../../../StyleSheet/CssStyle';
 import CustomButton from '../../../component/CustomButton';
 import {useSelector} from 'react-redux';
 
-const SelectFood = ({navigation}) => {
+const SelectFood = ({navigation, route}) => {
+  const {item} = route.params ? route.params : '';
+  console.log(item);
   const [loading, setLoading] = useState(false);
   const id = useSelector(data => data.id);
   const gender = [
@@ -30,7 +32,7 @@ const SelectFood = ({navigation}) => {
     {item: 'lunch', id: 3},
     {item: 'dinner', id: 4},
   ];
-  const [review, setReview] = useState('');
+  const [review, setReview] = useState( '');
 
   return (
     <LinearGradient

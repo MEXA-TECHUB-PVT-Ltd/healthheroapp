@@ -34,25 +34,28 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AddDietPlan, UpdateDietPlanApi} from '../../services/DietPlan';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Diet_Id} from '../../store/action';
+import moment from 'moment';
 
 const SetCalories = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
   const [weightData, setWeightData] = useState(
     updateData ? updateData.diet_budget : '',
   );
+  // console.log(updateData);
   const [loading, setLoading] = useState(false);
   const [successfully, setSuccessfully] = useState(false);
   const [openRestartModel, setOpenRestartModel] = useState(false);
-  const id = useSelector(data => data.id);
+  const id = useSelector(data => data);
   const dispatch = useDispatch();
+
   const MakePlan = async () => {
     setOpenRestartModel(true);
     // setSuccessfully(true);
     try {
       const result = updateData
         ? await UpdateDietPlanApi(
-            updateData?.diet_plan_id,
-            id,
+            id.dietPlanId,
+            id.id,
             item.item.item.heightValue,
             item.item.item.item.item.weightValue,
             item.item.item.item.weightTargeted,
@@ -61,10 +64,10 @@ const SetCalories = ({navigation, route}) => {
             weightData,
             item.item.activeIndex,
             item.item.item.item.item.item.planType.review,
-            new Date().toLocaleDateString(),
+            moment(new Date()).format('YYYY-MM-DD'),
           )
         : await AddDietPlan(
-            id,
+            id.id,
             item.item.item.heightValue,
             item.item.item.item.item.weightValue,
             item.item.item.item.weightTargeted,
@@ -73,8 +76,9 @@ const SetCalories = ({navigation, route}) => {
             weightData,
             item.item.activeIndex,
             item.item.item.item.item.item.planType.review,
-            new Date().toLocaleDateString(),
+            moment(new Date()).format('YYYY-MM-DD'),
           );
+      console.log(result, 'helo');
       if (result.status == true) {
         setWeightData('');
         {
@@ -95,7 +99,7 @@ const SetCalories = ({navigation, route}) => {
         setSuccessfully(true);
       } else {
         setOpenRestartModel(false);
-        console.error(result.message);
+        ToastAndroid.show(result.message, ToastAndroid.SHORT);
       }
     } catch (error) {
       setOpenRestartModel(false);
@@ -143,7 +147,7 @@ const SetCalories = ({navigation, route}) => {
               lineHeight: responsiveHeight(6),
               textTransform: 'capitalize',
             }}>
-            Set you calories budget
+            Set your calories budget
           </Text>
           <Text
             style={{

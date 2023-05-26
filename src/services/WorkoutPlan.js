@@ -139,7 +139,7 @@ export const GetWorkoutPlanById = async name => {
     return error;
   }
 };
-export const GetWorkoutPlanAll = async (id) => {
+export const GetWorkoutPlanAll = async id => {
   try {
     const requestOptions = {
       method: 'GET',
@@ -202,6 +202,54 @@ export const RestartProgressAPI = async id => {
     };
     const response = await fetch(
       `${BaseUrlWorkout}restartProgress?user_id=${id}`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+export const GetWeeklyReport = async id => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      // body: JSON.stringify({
+      //   user_id: id,
+      //   plan_id: planId,
+      //   exersise_id: exercise,
+      // }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlWorkout}getWeekilyReport?user_id=${id}`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+export const StartWorkoutPlanApi = async (id, workoutId, PlanTime, time) => {
+  console.log(id, workoutId, PlanTime, 'created_at ----->', time);
+  try {
+    const requestOptions = {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: id,
+        workout_plan_id: workoutId,
+        time: PlanTime,
+        created_at: time,
+      }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlWorkout}start_workout`,
       requestOptions,
     );
     const result = await response.json();

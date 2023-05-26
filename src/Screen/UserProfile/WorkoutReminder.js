@@ -25,18 +25,46 @@ import assets from '../../assets';
 import {TakeCountDownApi} from '../../services/CountDownApi';
 import Octicons from 'react-native-vector-icons/Octicons';
 import {GetReminder} from '../../services/ReminderApi';
+import moment from 'moment';
 
 const WorkoutReminder = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(13);
   const id = useSelector(data => data.id);
-  const AddCountDown = async () => {
+  const [reminderData, setReminderData] = useState([]);
+  useEffect(() => {
+    var mount = true;
+    const listener = navigation.addListener('focus', async () => {
+      setLoading(true);
+      try {
+        const result = await GetReminder(id);
+        // console.log(result, 'get reminder');
+        if (result.status == true) {
+          setLoading(false);
+          setReminderData(result.result);
+          // setOpenRestartModel(true);
+        } else {
+          console.error(result.message);
+          setLoading(false);
+        }
+      } catch (error) {
+        setLoading;
+        console.log(error);
+      }
+    });
+    return () => {
+      listener;
+      mount = false;
+    };
+  }, []);
+  const GetReminderProfile = async () => {
     setLoading(true);
     try {
-      const result = await GetReminder(id, time);
-      console.log(result);
+      const result = await GetReminder(id);
+      console.log(result.result, 'get reminder');
       if (result.status == true) {
         setLoading(false);
+        setReminderData(result.result);
         // setOpenRestartModel(true);
       } else {
         console.error(result.message);
@@ -48,13 +76,10 @@ const WorkoutReminder = ({navigation, route}) => {
     }
   };
   useEffect(() => {
-    AddCountDown();
+    GetReminderProfile();
   }, []);
   const [openRestartModel, setOpenRestartModel] = useState(false);
-  const [dataItem, setDataItem] = useState([
-    {item: 1},
-    {item: 2},
-  ]);
+  const [dataItem, setDataItem] = useState([{item: 1}, {item: 2}]);
   const dayDataActive = [{day: 'M'}, {day: 'W'}, {day: 'Th'}, {day: 'F'}];
 
   const [isEnabled, setIsEnabled] = useState(false);
@@ -89,7 +114,11 @@ const WorkoutReminder = ({navigation, route}) => {
         </TouchableOpacity>
       </View>
       <View style={{flex: 0.3, marginTop: responsiveHeight(5)}}>
-        <Text style={[CssStyle.textInsideSettingComponent, {fontSize: 39}]}>
+        <Text
+          style={[
+            CssStyle.textInsideSettingComponent,
+            {fontSize: 33, width: responsiveWidth(90)},
+          ]}>
           Workout Reminder
         </Text>
         <Text style={[CssStyle.textInfoSetting]}>
@@ -99,48 +128,80 @@ const WorkoutReminder = ({navigation, route}) => {
       </View>
       <View style={{flex: 1}}>
         <FlatList
-          data={dataItem}
-          renderItem={({item, index}) => (
-            <View
-              style={[
-                CssStyle.flexJustify,
-                {
-                  marginBottom: responsiveHeight(2.9),
-                  borderRadius: 8,
-                  paddingHorizontal: responsiveWidth(5),
-                  paddingVertical: responsiveHeight(2),
-                  marginTop: responsiveHeight(0.8),
-                  backgroundColor: '#62637790',
-                },
-              ]}>
-              <Text
-                style={{
-                  color: 'white',
-                  paddingBottom: responsiveHeight(0.5),
-                  fontSize: 21,
-                  fontFamily: 'Interstate-bold',
-                }}>
-                02:00 PM
-              </Text>
-              <View style={CssStyle.flexData}>
+          data={reminderData}
+          renderItem={({item, index}) => {
+            // console.log(item);
+            // console.log(new Date().toLocaleDateString());
+            // console.log(new Date().toLocaleDateString() + 'T' + item.time);
+            // console.log(
+            //   new Date(
+            //     new Date().toLocaleDateString().replace(/['/']/g, '-') +
+            //       'T' +
+            //       item.time,
+            //   ).toLocaleTimeString(),
+            //   'it is the new time',
+            // );
+            return (
+              <View
+                style={[
+                  CssStyle.flexJustify,
+                  {
+                    marginBottom: responsiveHeight(2.9),
+                    borderRadius: 8,
+                    paddingHorizontal: responsiveWidth(5),
+                    paddingVertical: responsiveHeight(2),
+                    marginTop: responsiveHeight(0.8),
+                    backgroundColor: '#62637790',
+                  },
+                ]}>
+                <Text
+                  style={{
+                    color: 'white',
+                    paddingBottom: responsiveHeight(0.5),
+                    fontSize: 21,
+                    fontFamily: 'Interstate-bold',
+                  }}>
+                  {new Date(
+                    new Date().toLocaleDateString().replace(/['/']/g, '-') +
+                      'T' +
+                      item.time,
+                  ).toLocaleTimeString()}
+                </Text>
                 <View style={CssStyle.flexData}>
-                  {dayDataActive.map((item, index) => (
-                    <Text style={{fontSize: 10, color: 'white'}} key={index}>
-                      {item.day},
-                    </Text>
-                  ))}
+                  <View style={CssStyle.flexData}>
+                    {item?.days.map((itemDay, index) => (
+                      <Text style={{fontSize: 10, color: 'white'}} key={index}>
+                        {itemDay == 1
+                          ? 'M'
+                          : itemDay == 2
+                          ? 'T'
+                          : itemDay == 3
+                          ? 'W'
+                          : itemDay == 4
+                          ? 'Th'
+                          : itemDay == 5
+                          ? 'F'
+                          : itemDay == 6
+                          ? 'Sa'
+                          : itemDay == 7
+                          ? 'S'
+                          : itemDay}
+                        ,
+                      </Text>
+                    ))}
+                  </View>
+                  <Switch
+                    style={{marginLeft: responsiveWidth(1)}}
+                    trackColor={{false: '#D8D8D880', true: '#006FFF40'}}
+                    thumbColor={isEnabled ? AppColors.buttonText : '#D8D8D8'}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitch}
+                    value={isEnabled}
+                  />
                 </View>
-                <Switch
-                  style={{marginLeft: responsiveWidth(1)}}
-                  trackColor={{false: '#D8D8D880', true: '#006FFF40'}}
-                  thumbColor={isEnabled ? AppColors.buttonText : '#D8D8D8'}
-                  ios_backgroundColor="#3e3e3e"
-                  onValueChange={toggleSwitch}
-                  value={isEnabled}
-                />
               </View>
-            </View>
-          )}
+            );
+          }}
         />
       </View>
       <Modal

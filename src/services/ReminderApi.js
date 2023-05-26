@@ -1,13 +1,14 @@
 import {BaseUrlCountDown, BaseUrlReminder} from '../Helping/BaseUrl';
 
 export const CreateReminder = async (id, time, day) => {
+  console.log(id, time, day);
   try {
     const requestOptions = {
       method: 'POST',
       body: JSON.stringify({
         user_id: id,
         time: time,
-        day: day,
+        days: day,
       }).toString(),
       headers: {
         'Content-Type': 'application/json',
@@ -23,15 +24,15 @@ export const CreateReminder = async (id, time, day) => {
     return error;
   }
 };
-export const GetReminder = async (id) => {
+export const GetReminder = async id => {
   try {
     const requestOptions = {
       method: 'GET',
-    //   body: JSON.stringify({
-    //     user_id: id,
-    //     time: time,
-    //     day: day,
-    //   }).toString(),
+      //   body: JSON.stringify({
+      //     user_id: id,
+      //     time: time,
+      //     day: day,
+      //   }).toString(),
       headers: {
         'Content-Type': 'application/json',
       },

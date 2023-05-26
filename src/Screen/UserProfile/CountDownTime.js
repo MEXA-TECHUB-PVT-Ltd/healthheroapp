@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   responsiveHeight,
@@ -20,12 +20,33 @@ import {TakeTrainingRest} from '../../services/RestApi';
 import {useSelector} from 'react-redux';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
-import {TakeCountDownApi} from '../../services/CountDownApi';
+import {GetCountDownApi, TakeCountDownApi} from '../../services/CountDownApi';
 
 const CountDownTime = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
-  const [time, setTime] = useState(13);
+  const [time, setTime] = useState(10);
   const id = useSelector(data => data.id);
+
+  useEffect(() => {
+    getCountDown();
+  }, []);
+  const getCountDown = async () => {
+    setLoading(true);
+    try {
+      const result = await GetCountDownApi(id);
+      // console.log(result);
+      if (result.status == true) {
+        setLoading(false);
+        setTime(parseInt(result.result.time));
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading;
+      console.log(error);
+    }
+  };
   const AddCountDown = async () => {
     setLoading(true);
     try {
@@ -197,7 +218,7 @@ const CountDownTime = ({navigation, route}) => {
                     marginTop: responsiveHeight(4),
                     textTransform: 'capitalize',
                   }}>
-                  Time Set Successfully
+                  Countdown Change Successfully
                 </Text>
 
                 <View style={[{alignItems: 'center'}]}>

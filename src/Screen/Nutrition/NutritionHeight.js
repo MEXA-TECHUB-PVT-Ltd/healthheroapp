@@ -2,13 +2,15 @@ import {
   BackHandler,
   FlatList,
   Image,
+  Modal,
   StyleSheet,
   Text,
   ToastAndroid,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import CssStyle from '../../StyleSheet/CssStyle';
 import {
   responsiveFontSize,
@@ -21,19 +23,84 @@ import SwiperFlatList from 'react-native-swiper-flatlist';
 import {useFocusEffect} from '@react-navigation/native';
 import CustomButton from '../../component/CustomButton';
 import {FocusedComponent} from '../../Helping/HelpingComponent';
-import {UpdateProfileApi} from '../../';
 import {RulerPicker} from 'react-native-ruler-picker';
 import Ruler from '../../Helping/Ruler';
+import {GetUserDetailApi, UpdateProfileApi} from '../../services/AuthScreen';
+import {useSelector} from 'react-redux';
+
+import Lottie from 'lottie-react-native';
+import assets from '../../assets';
 
 const NutritionHeight = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
-  console.log(updateData);
+  console.log(updateData, item);
+
   const weightUnitData = [{text: 'cm'}, {text: 'in'}];
   const [weightData, setWeightData] = useState('in');
   const [heightValue, setHeightValue] = useState();
   const [activeIndex, setActiveIndex] = useState(
     updateData ? updateData.height : 55,
   );
+  const id = useSelector(data => data);
+  const [updateDataChanges, setUpdateDataChanges] = useState('');
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    getWeightHeight();
+  }, []);
+  const getWeightHeight = async () => {
+    setLoading(true);
+    try {
+      const result = await GetUserDetailApi(id.id);
+      // console.log(result, 'get user detail');
+      if (result.status == true) {
+        setLoading(false);
+        setUpdateDataChanges(result.result);
+      } else {
+        // navigation.navigate('SelectPlan');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const [loadingUser, setLoadingUser] = useState(false);
+  const [openUserSuccessfully, setOpenUserSuccessfully] = useState(false);
+  const UpdateUserName = async () => {
+    setLoadingUser(true);
+    // console.log(
+    //   id.id,
+    //   updateDataChanges.user_name,
+    //   updateDataChanges.device_id,
+    //   updateDataChanges.gender,
+    //   updateDataChanges.focused_areas,
+    //   activeIndex,
+    //   updateDataChanges.weight,
+    //   updateDataChanges.weight_unit,
+    //   updateDataChanges.height_unit,
+    // );
+    try {
+      const result = await UpdateProfileApi(
+        id.id,
+        updateDataChanges.user_name,
+        updateDataChanges.device_id,
+        updateDataChanges.gender,
+        updateDataChanges.focused_areas,
+        heightValue,
+        updateDataChanges.weight,
+        updateDataChanges.weight_unit,
+        updateDataChanges.height_unit,
+      );
+      if (result.status == true) {
+        setOpenUserSuccessfully(true);
+        setLoadingUser(false);
+      } else {
+        console.error(result.message);
+        setLoadingUser(false);
+      }
+    } catch (error) {
+      setLoadingUser(false);
+      console.log(error);
+    }
+  };
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -75,7 +142,7 @@ const NutritionHeight = ({navigation, route}) => {
                 width: responsiveWidth(90),
                 lineHeight: responsiveHeight(6),
               }}>
-              Current Height
+              {item == 'Update' ? item : 'Current'} Height
             </Text>
             <Text
               style={{
@@ -148,10 +215,12 @@ const NutritionHeight = ({navigation, route}) => {
             <CustomButton
               onPress={() => {
                 heightValue
-                  ? navigation.navigate('ActiveAge', {
-                      item: {item, heightValue},
-                      updateData,
-                    })
+                  ? item == 'Update'
+                    ? UpdateUserName()
+                    : navigation.navigate('ActiveAge', {
+                        item: {item, heightValue},
+                        updateData,
+                      })
                   : ToastAndroid.show(
                       'Please select the current height',
                       ToastAndroid.SHORT,
@@ -159,11 +228,89 @@ const NutritionHeight = ({navigation, route}) => {
               }}
               activeOpacity={1}
               style={{width: responsiveWidth(78)}}
-              buttonText={'Continue'}
+              buttonText={item == 'Update' ? 'Save Changes' : 'Continue'}
             />
           </View>
         </View>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={openUserSuccessfully}
+        onRequestClose={() => setOpenUserSuccessfully(false)}>
+        <TouchableWithoutFeedback
+          style={{flex: 1}}
+          onPress={() => setOpenUserSuccessfully(false)}>
+          <View style={{flex: 1, backgroundColor: '#00000090'}}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+              }}>
+              <View
+                style={{
+                  backgroundColor: AppColors.blueColor,
+                  borderTopEndRadius: responsiveHeight(3),
+                  borderTopLeftRadius: responsiveHeight(3),
+                  paddingVertical: responsiveHeight(3.8),
+                  paddingHorizontal: responsiveWidth(6),
+                  alignItems: 'center',
+                }}>
+                <View
+                  // activeOpacity={1}
+                  style={{
+                    // height: wp(28),
+                    width: 125,
+                    // backgroundColor: 'red',
+                    aspectRatio: 1,
+                    alignSelf: 'center',
+                  }}>
+                  <Lottie
+                    source={assets.loader}
+                    autoPlay
+                    loop={true}
+                    resizeMode="cover"
+                    speed={1}
+                    // style={{width}}
+                    colorFilter={[{color: 'red'}]}
+                  />
+                </View>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 23,
+                    fontFamily: 'Interstate-regular',
+                    width: responsiveWidth(60),
+                    textAlign: 'center',
+                    lineHeight: responsiveHeight(4),
+                    marginTop: responsiveHeight(2),
+                    textTransform: 'capitalize',
+                  }}>
+                  Changes saved Successfully
+                </Text>
+
+                <View style={[{alignItems: 'center'}]}>
+                  <CustomButton
+                    buttonText={'Go Back'}
+                    onPress={() => {
+                      setOpenUserSuccessfully(false), navigation.goBack();
+                    }}
+                    buttonColor={'transparent'}
+                    mode="outlined"
+                    fontWeight={'500'}
+                    borderColor={'white'}
+                    style={{
+                      marginTop: responsiveHeight(3.7),
+                      width: responsiveWidth(50),
+                      marginBottom: responsiveHeight(1),
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </View>
   );
 };

@@ -17,6 +17,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Logo from '../assets/Icon3';
+import NoImage from '../assets/noImageRed';
 import Loader from '../component/Loader';
 import {ExerciseOfTheDay} from '../services/WorkoutPlan';
 import {GetAllCategories} from '../services/WorkoutCategory';
@@ -36,7 +37,7 @@ const Discover = ({navigation}) => {
         setExerciseData(result.result);
         setLoading(false);
       } else {
-        console.error(result.message);
+        // console.error(result.message);
         setLoading(false);
       }
     } catch (error) {
@@ -48,7 +49,6 @@ const Discover = ({navigation}) => {
     setLoading(true);
     try {
       const result = await GetAllCategories();
-      console.log(result);
       if (result.status == true) {
         setCategory(result.result);
         setLoading(false);
@@ -65,7 +65,7 @@ const Discover = ({navigation}) => {
     ExerciseDay();
     GetCategory();
   }, []);
-  console.log(exerciseData);
+  // console.log(exerciseData);
   return loading ? (
     <Loader />
   ) : (
@@ -122,15 +122,13 @@ const Discover = ({navigation}) => {
             <Image
               borderRadius={responsiveWidth(2)}
               // resizeMode="contain"
-              source={{
-                uri: `${BaseUrl}` + exerciseData.animation,
-              }}
+              source={require('../assets/imageFlip.png')}
               style={{
                 width: responsiveHeight(25),
-                height: responsiveHeight(29.5),
+                height: responsiveHeight(33.5),
                 position: 'absolute',
-                bottom: responsiveHeight(-15),
-                // left: responsiveWidth(-8),
+                bottom: responsiveHeight(-17),
+                left: responsiveWidth(-4),
               }}
             />
           </View>
@@ -260,7 +258,6 @@ const Discover = ({navigation}) => {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             renderItem={({item, index}) => {
-              console.log(item,'sfsf');
               return (
                 <TouchableOpacity
                   onPress={() =>
@@ -270,15 +267,26 @@ const Discover = ({navigation}) => {
                     marginRight: responsiveWidth(5),
                     alignItems: 'center',
                   }}>
-                  <Image
-                    borderRadius={responsiveWidth(2)}
-                    source={{uri: `${BaseUrl}` + item.animation}}
-                    style={{
-                      width: responsiveWidth(34),
-                      height: responsiveHeight(15),
-                    }}
-                    resizeMode="contain"
-                  />
+                  {item.image ? (
+                    <Image
+                      borderRadius={responsiveWidth(2)}
+                      source={
+                        item.image || item.animation
+                          ? {uri: `${BaseUrl}` + item.animation}
+                          : require('../assets/noImage.jpeg')
+                      }
+                      style={{
+                        width: responsiveWidth(34),
+                        height: responsiveHeight(15),
+                      }}
+                      resizeMode="contain"
+                    />
+                  ) : (
+                    <NoImage
+                      width={responsiveWidth(34)}
+                      height={responsiveHeight(15)}
+                    />
+                  )}
                   <Text
                     style={{
                       color: 'white',

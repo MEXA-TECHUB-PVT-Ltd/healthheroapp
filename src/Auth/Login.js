@@ -2,6 +2,7 @@ import {
   Image,
   ImageBackground,
   KeyboardAvoidingView,
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -81,118 +82,124 @@ const Login = ({navigation}) => {
         start={{x: 1, y: 0.1}}
         end={{x: 1, y: 0.5}}
         style={{
-          paddingHorizontal: responsiveWidth(5),
+          // paddingHorizontal: responsiveWidth(5),
           flex: 1,
         }}>
-        <KeyboardAvoidingView behavior="position">
-          <Image
-            source={Logo}
-            resizeMode="contain"
+        <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+          <KeyboardAvoidingView
+            style={{paddingHorizontal: responsiveWidth(5)}}
+            behavior="position">
+            <Image
+              source={Logo}
+              resizeMode="contain"
+              style={{
+                width: responsiveWidth(21),
+                height: responsiveHeight(15),
+                marginTop: responsiveHeight(26),
+                marginBottom: responsiveHeight(1),
+                marginLeft: responsiveWidth(1),
+              }}
+            />
+            <Text style={CssStyle.signInText}>Sign in</Text>
+            <Text style={CssStyle.signInInfo}>
+              train and live the new experience of exercising at home
+            </Text>
+            <Input
+              bgColor={'#ffffff60'}
+              placeholder={'Email'}
+              noIcon={true}
+              value={email}
+              onChangeText={e => setEmail(e)}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+            {errorMessage && (
+              <Text style={{color: 'red', marginLeft: responsiveWidth(3)}}>
+                {errorMessage}
+              </Text>
+            )}
+            {data == 'email' ? (
+              <Text style={{color: 'red', marginLeft: responsiveWidth(3)}}>
+                Enter the email
+              </Text>
+            ) : (
+              data == 'Fill' && (
+                <Text
+                  style={{
+                    color: 'red',
+                    fontWeight: '500',
+                    marginLeft: responsiveWidth(3),
+                  }}>
+                  Fill the fields
+                </Text>
+              )
+            )}
+            <Input
+              bgColor={'#ffffff60'}
+              placeholder={'Password'}
+              noIcon={true}
+              fontSize={16}
+              value={password}
+              onChangeText={e => setPassword(e)}
+              rightIcon="eye-outline"
+              offIcon={'eye-off-outline'}
+              enableIcon={true}
+            />
+            {data == 'password' ? (
+              <Text style={{color: 'red'}}>Enter the password</Text>
+            ) : (
+              data == 'Fill' && (
+                <Text style={{color: 'red', fontWeight: '500'}}>
+                  Fill the fields
+                </Text>
+              )
+            )}
+            <CustomButton
+              buttonText={'Forgot password?'}
+              onPress={() => navigation.navigate('ForgotPassword')}
+              mode="outlined"
+              buttonColor={'transparent'}
+              borderColor={'transparent'}
+              style={{alignSelf: 'flex-end', marginRight: responsiveWidth(-4)}}
+            />
+          </KeyboardAvoidingView>
+          <View
             style={{
-              width: responsiveWidth(21),
-              height: responsiveHeight(15),
-              marginTop: responsiveHeight(20),
-              marginBottom: responsiveHeight(1),
-              marginLeft: responsiveWidth(1),
-            }}
-          />
-          <Text style={CssStyle.signInText}>Sign in</Text>
-          <Text style={CssStyle.signInInfo}>
-            train and live the new experience of exercising at home
-          </Text>
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            value={email}
-            onChangeText={e => setEmail(e)}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(1)}}
-          />
-          {errorMessage && (
-            <Text style={{color: 'red', marginLeft: responsiveWidth(3)}}>
-              {errorMessage}
-            </Text>
-          )}
-          {data == 'email' ? (
-            <Text style={{color: 'red', marginLeft: responsiveWidth(3)}}>
-              Enter the email
-            </Text>
-          ) : (
-            data == 'Fill' && (
-              <Text
-                style={{
-                  color: 'red',
-                  fontWeight: '500',
-                  marginLeft: responsiveWidth(3),
-                }}>
-                Fill the fields
-              </Text>
-            )
-          )}
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Password'}
-            noIcon={true}
-            fontSize={16}
-            value={password}
-            onChangeText={e => setPassword(e)}
-            rightIcon="eye-outline"
-            offIcon={'eye-off-outline'}
-            enableIcon={true}
-          />
-          {data == 'password' ? (
-            <Text style={{color: 'red'}}>Enter the password</Text>
-          ) : (
-            data == 'Fill' && (
-              <Text style={{color: 'red', fontWeight: '500'}}>
-                Fill the fields
-              </Text>
-            )
-          )}
-          <CustomButton
-            buttonText={'Forgot password?'}
-            onPress={() => navigation.navigate('ForgotPassword')}
-            mode="outlined"
-            buttonColor={'transparent'}
-            borderColor={'transparent'}
-            style={{alignSelf: 'flex-end', marginRight: responsiveWidth(-4)}}
-          />
-        </KeyboardAvoidingView>
-        <View
-          style={{
-            paddingHorizontal: responsiveWidth(12),
-            marginHorizontal: responsiveWidth(-5),
-            marginTop: responsiveHeight(1),
-            paddingTop: responsiveHeight(2.7),
-            backgroundColor: AppColors.blueColor,
-            flex: 1,
-          }}>
-          <CustomButton
-            loading={loading}
-            buttonText={'Login'}
-            marginLeft={loading ? responsiveWidth(5) : responsiveWidth(3)}
-            onPress={() =>
-              !email && !password
-                ? setData('Fill')
-                : !email
-                ? setData('email')
-                : !password
-                ? setData('password')
-                : SignIn()
-            }
-            style={{}}
-          />
-          <CustomButton
-            buttonText={'Sign Up'}
-            onPress={() => navigation.navigate('SignUp')}
-            buttonColor={'transparent'}
-            mode="outlined"
-            fontWeight={'500'}
-            borderColor={'white'}
-            style={{marginTop: responsiveHeight(2.7)}}
-          />
-        </View>
+              paddingHorizontal: responsiveWidth(12),
+              // marginHorizontal: responsiveWidth(4),
+              marginTop: responsiveHeight(1),
+              paddingTop: responsiveHeight(2.7),
+              backgroundColor: AppColors.blueColor,
+              paddingBottom: responsiveHeight(7),
+              // flex: 1,
+            }}>
+            <CustomButton
+              loading={loading}
+              buttonText={'Login'}
+              styleText={{width:responsiveWidth(22)}}
+              marginLeft={loading ? responsiveWidth(5) : responsiveWidth(3)}
+              onPress={() =>
+                !email && !password
+                  ? setData('Fill')
+                  : !email
+                  ? setData('email')
+                  : !password
+                  ? setData('password')
+                  : SignIn()
+              }
+              style={{}}
+            />
+            <CustomButton
+              buttonText={'Sign Up'}
+              onPress={() => navigation.navigate('SignUp')}
+              buttonColor={'transparent'}
+              mode="outlined"
+              fontWeight={'500'}
+              borderColor={'white'}
+              style={{marginTop: responsiveHeight(2.7)}}
+            />
+          </View>
+        </ScrollView>
       </LinearGradient>
     </ImageBackground>
   );

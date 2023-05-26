@@ -25,40 +25,32 @@ import {
   GetWorkoutById,
   GetWorkoutPlanAll,
   GetWorkoutPlanById,
+  StartWorkoutPlanApi,
 } from '../../services/WorkoutPlan';
 import Loader from '../../component/Loader';
 import {BaseUrl} from '../../Helping/BaseUrl';
+import {useDispatch, useSelector} from 'react-redux';
+import {DataWorkPlan} from '../../store/action';
 
 const WorkoutDetail = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item, 'workout id');
   const [loading, setLoading] = useState(false);
   const [workoutPlanData, setWorkoutPlanData] = useState([]);
+  const id = useSelector(data => data);
+  const [loadingStarted, setLoadingStarted] = useState(false);
+  const StartWorkoutPlan = async () => {
+    navigation.navigate('StartExercise', {item: workoutPlanData});
+  };
+  const dispatch = useDispatch();
 
-  // const GetWorkoutId = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const result = await GetWorkoutPlanById(item?.workout_plan_id);
-  //     // console.log(result, 'getworkoutid');
-  //     if (result.status == true) {
-  //       // setWorkoutPlanData(result.result);
-  //       setLoading(false);
-  //     } else {
-  //       console.error(result.message);
-  //       setLoading(false);
-  //     }
-  //   } catch (error) {
-  //     setLoading;
-  //     console.log(error);
-  //   }
-  // };
   const GetWorkOutAll = async () => {
     setLoading(true);
     try {
       const result = await GetWorkoutPlanAll(item);
-      console.log(result, 'after reesponse');
+      // console.log(result.result);
       if (result.status == true) {
         setWorkoutPlanData(result.result);
+        dispatch(DataWorkPlan(result.result));
         setLoading(false);
       } else {
         console.error(result.message);
@@ -72,7 +64,7 @@ const WorkoutDetail = ({navigation, route}) => {
   useEffect(() => {
     // GetWorkoutId();
     GetWorkOutAll();
-  }, []);
+  }, [item]);
   return loading ? (
     <Loader />
   ) : (
@@ -134,7 +126,7 @@ const WorkoutDetail = ({navigation, route}) => {
             <Text style={{color: 'white'}}>min</Text>
           </Text>
         </View>
-        <View style={{marginTop: responsiveHeight(3)}}>
+        <View style={{marginTop: responsiveHeight(3), flex: 1}}>
           <Text
             style={{
               color: 'white',
@@ -145,82 +137,74 @@ const WorkoutDetail = ({navigation, route}) => {
             }}>
             {workoutPlanData.d}
           </Text>
-          <FlatList
-            data={workoutPlanData?.workout_plan_exersises}
-            renderItem={({item, index}) => {
-              // console.log(item);
-              return (
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('ExerciseDetail', {item: item})
-                  }
-                  style={[
-                    CssStyle.flexData,
-                    {marginBottom: responsiveHeight(3.5)},
-                  ]}>
-                  <View style={{width: responsiveWidth(27)}}>
-                    <Image
-                      source={{
-                        uri: `${BaseUrl}` + item?.exersise_details?.animation,
-                      }}
-                      resizeMode="contain"
-                      style={{
-                        width: 99,
-                        height: 69,
-                        //   marginRight: responsiveWidth(2),
-                      }}
-                    />
-                  </View>
-                  <View style={{width: responsiveWidth(53)}}>
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontSize: 15,
-                        fontFamily: 'Interstate-regular',
-                        //   opacity: 0.8,
-                      }}>
-                      {item?.exersise_details?.title}
-                    </Text>
-                    <View
-                      style={[
-                        CssStyle.flexJustify,
-                        {
-                          width: responsiveWidth(45),
-                          marginTop: responsiveHeight(2),
-                        },
-                      ]}>
-                      <View style={[CssStyle.flexData]}>
-                        <Logo width={16} height={16} />
-                        <Text
-                          style={{
-                            color: 'white',
-                            fontFamily: 'Interstate-regular',
-                            fontSize: 12,
-                            marginLeft: responsiveWidth(2),
-                            opacity: 0.8,
-                          }}>
-                          {item?.calories_burnt} kcal
-                        </Text>
-                      </View>
-                      <View style={[CssStyle.flexData]}>
-                        <Logo width={16} height={16} />
-                        <Text
-                          style={{
-                            color: 'white',
-                            fontFamily: 'Interstate-regular',
-                            fontSize: 12,
-                            marginLeft: responsiveWidth(2),
-                            opacity: 0.8,
-                          }}>
-                          {item?.time?.slice(0, 5)} min
-                        </Text>
+          <View style={{flex: 1, paddingBottom: responsiveHeight(8)}}>
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={workoutPlanData?.workout_plan_exersises}
+              renderItem={({item, index}) => {
+                // console.log(item, 'flatlist');
+                return (
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('ExerciseDetail', {
+                        item: workoutPlanData,
+                      })
+                    }
+                    style={[
+                      CssStyle.flexData,
+                      {marginBottom: responsiveHeight(3.5)},
+                    ]}>
+                    <View style={{width: responsiveWidth(27)}}>
+                      <Image
+                        source={{
+                          uri: `${BaseUrl}` + item?.exersise_details?.animation,
+                        }}
+                        resizeMode="contain"
+                        style={{
+                          width: 99,
+                          height: 69,
+                          //   marginRight: responsiveWidth(2),
+                        }}
+                      />
+                    </View>
+                    <View style={{width: responsiveWidth(53)}}>
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 15,
+                          fontFamily: 'Interstate-regular',
+                          //   opacity: 0.8,
+                        }}>
+                        {item?.exersise_details?.title}
+                      </Text>
+                      <View
+                        style={[
+                          CssStyle.flexJustify,
+                          {
+                            width: responsiveWidth(45),
+                            marginTop: responsiveHeight(2),
+                          },
+                        ]}>
+                        <View style={[CssStyle.flexData]}>
+                          <Logo width={16} height={16} />
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'Interstate-regular',
+                              fontSize: 12,
+                              marginLeft: responsiveWidth(2),
+                              opacity: 0.8,
+                            }}>
+                            {item?.time?.slice(0, 5)}
+                          </Text>
+                        </View>
                       </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
-          />
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </View>
         </View>
       </View>
       <View
@@ -230,9 +214,10 @@ const WorkoutDetail = ({navigation, route}) => {
           left: responsiveWidth(10),
         }}>
         <CustomButton
-          onPress={() =>
-            navigation.navigate('StartExercise', {item: workoutPlanData})
-          }
+          loading={loadingStarted}
+          onPress={() => {
+            StartWorkoutPlan();
+          }}
           activeOpacity={1}
           buttonColor={AppColors.buttonText}
           paddingVertical={2}

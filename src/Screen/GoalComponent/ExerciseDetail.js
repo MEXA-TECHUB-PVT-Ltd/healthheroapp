@@ -11,6 +11,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import CustomButton from '../../component/CustomButton';
 import SwiperFlatList from 'react-native-swiper-flatlist';
 import {BaseUrl} from '../../Helping/BaseUrl';
+import {StartWorkoutPlanApi} from '../../services/WorkoutPlan';
+import {useSelector} from 'react-redux';
+import moment from 'moment';
 
 const ExerciseDetail = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -18,7 +21,33 @@ const ExerciseDetail = ({navigation, route}) => {
   const data = [{item: 1}, {item: 1}, {item: 1}, {item: 1}];
   const [activeIndex, setActiveIndex] = useState(0);
   const flatNode = useRef();
+  const id = useSelector(data => data.workoutPlanData);
+  const [staticValue, setStaticValue] = useState(id.workout_plan_exersises[0]);
+  console.log(staticValue);
   const dataImages = [{item: 1}, {item: 1}, {item: 1}, {item: 1}];
+  const [loading, setLoading] = useState(false);
+  const StartWorkoutPlan = async () => {
+    // setLoading(true);
+    // try {
+    //   const result = await StartWorkoutPlanApi(
+    //     id.id,
+    //     id.workoutPlanId,
+    //     time,
+    //     moment(new Date()).format('YYYY-MM-DD'),
+    //   );
+    //   console.log(result, 'workout plan');
+    //   if (result.status == true) {
+    //     setLoading(false);
+    navigation.navigate('StartExercise');
+    //   } else {
+    //     console.error(result.message);
+    //     setLoading(false);
+    //   }
+    // } catch (error) {
+    //   setLoading(false);
+    //   console.log(error);
+    // }
+  };
   const PaginationComponent = () => (
     <View style={CssStyle.flexData}>
       {data.map((item, index) => (
@@ -65,12 +94,10 @@ const ExerciseDetail = ({navigation, route}) => {
           data={dataImages}
           scrollEnabled={false}
           renderItem={({itemData, index}) => (
-            <View style={{width: responsiveWidth(100)}}>
+            <View style={{}}>
               <Text
                 style={[styles.signInText, {marginTop: responsiveHeight(3)}]}>
-                {item.exersise_details
-                  ? item.exersise_details?.title
-                  : item.title}
+                {staticValue.exersise_details.title}
               </Text>
               <Text
                 style={[styles.signInText, {fontFamily: 'Interstate-regular'}]}>
@@ -79,9 +106,10 @@ const ExerciseDetail = ({navigation, route}) => {
               <View
                 style={[CssStyle.flexData, {marginTop: responsiveHeight(2)}]}>
                 <CustomButton
-                  onPress={() =>
-                    navigation.navigate('StartExercise', {item: item})
-                  }
+                  loading={loading}
+                  onPress={() => {
+                    StartWorkoutPlan();
+                  }}
                   activeOpacity={1}
                   buttonColor={AppColors.buttonText}
                   style={{width: responsiveWidth(30)}}
@@ -97,6 +125,7 @@ const ExerciseDetail = ({navigation, route}) => {
                   }}
                   buttonText={'Add to My Plans'}
                   mode="outlined"
+                  styleText={{width: responsiveWidth(30)}}
                   borderColor={'white'}
                 />
               </View>
@@ -127,7 +156,7 @@ const ExerciseDetail = ({navigation, route}) => {
               </Text>
               <View
                 style={[CssStyle.flexJustify, {width: responsiveWidth(90)}]}>
-                <Image
+                {/* <Image
                   //   resizeMode="contain"
                   source={require('../../assets/Rectangle32.png')}
                   borderRadius={responsiveWidth(2)}
@@ -136,8 +165,28 @@ const ExerciseDetail = ({navigation, route}) => {
                     height: responsiveHeight(13),
                     marginVertical: responsiveHeight(2),
                   }}
-                />
-                <Image
+                /> */}
+
+                <View
+                  style={{
+                    width: responsiveWidth(42),
+                    height: responsiveHeight(13),
+                    marginVertical: responsiveHeight(2),
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // borderWidth: 1,
+                    // borderColor: 'white',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Interstate-regular',
+                      fontSize: 17,
+                      color: 'white',
+                    }}>
+                    {item.focus_area[0]}
+                  </Text>
+                </View>
+                {/* <Image
                   //   resizeMode="contain"
                   source={require('../../assets/Rectangle32.png')}
                   borderRadius={responsiveWidth(2)}
@@ -146,7 +195,24 @@ const ExerciseDetail = ({navigation, route}) => {
                     height: responsiveHeight(13),
                     marginVertical: responsiveHeight(2),
                   }}
-                />
+                /> */}
+                <View
+                  style={{
+                    width: responsiveWidth(42),
+                    height: responsiveHeight(13),
+                    marginVertical: responsiveHeight(2),
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Interstate-regular',
+                      fontSize: 17,
+                      color: 'white',
+                    }}>
+                    {item.focus_area[2]}
+                  </Text>
+                </View>
               </View>
             </View>
           )}

@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   responsiveHeight,
@@ -16,15 +16,36 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {AppColors} from '../../Helping/AppColor';
 import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
-import {TakeTrainingRest} from '../../services/RestApi';
+import {GetRestTimeApi, TakeTrainingRest} from '../../services/RestApi';
 import {useSelector} from 'react-redux';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 
 const TrainingRest = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
-  const [time, setTime] = useState(30);
+  const [time, setTime] = useState(0);
   const id = useSelector(data => data.id);
+  useEffect(() => {
+    getRestTime();
+  }, []);
+
+  const getRestTime = async () => {
+    setLoading(true);
+    try {
+      const result = await GetRestTimeApi(id);
+      // console.log(result);
+      if (result.status == true) {
+        setLoading(false);
+        setTime(parseInt(result.result.time));
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading;
+      console.log(error);
+    }
+  };
   const AddTrainingRestTime = async () => {
     setLoading(true);
     try {
