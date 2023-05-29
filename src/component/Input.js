@@ -29,6 +29,7 @@ const Input = ({
   fontSize,
   marginVertical,
   borderRadius,
+  maxLength,
 }) => {
   const [showIcon, setShowIcon] = useState(true);
   return (
@@ -38,6 +39,7 @@ const Input = ({
         numberOfLines={numLine}
         disabled={disabled}
         multiline={multiline}
+        maxLength={maxLength}
         cursorColor="white"
         placeholder={placeholder}
         value={value}

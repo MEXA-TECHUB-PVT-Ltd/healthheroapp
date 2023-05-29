@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import CssStyle from '../StyleSheet/CssStyle';
 import {
@@ -36,10 +36,76 @@ export const DayOfCount = ({item, index, selectItem, setSelectItem}) => {
           }}>
           Every{' '}
           {selectItem.map((item, index) => (
-            <Text key={index}>{item.item} ,</Text>
+            <Text key={index} style={{fontSize: 12, color: '#ffffffc1'}}>
+              {item.item} ,
+            </Text>
           ))}
         </Text>
       </View>
+      {!select ? (
+        <TouchableOpacity
+          onPress={() => {
+            setSelect(true);
+            addItem(item.day, index);
+          }}
+          style={{
+            width: 35,
+            height: 35,
+            borderWidth: 1,
+            borderColor: select ? AppColors.buttonText : 'transparent',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: responsiveHeight(20),
+          }}>
+          <Text style={{fontSize: 18, color: 'white'}} key={index}>
+            {item.day}
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          onPress={() => {
+            setSelect(false);
+            deleteItem(item.day);
+          }}
+          style={{
+            width: 35,
+            height: 35,
+            borderWidth: 1,
+            borderColor: select ? AppColors.buttonText : 'transparent',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: responsiveHeight(20),
+          }}>
+          <Text style={{fontSize: 18, color: 'white'}} key={index}>
+            {item.day}
+          </Text>
+        </TouchableOpacity>
+      )}
+    </>
+  );
+};
+
+const styles = StyleSheet.create({});
+
+export const DaysCounting = ({item, index, selectItem, setSelectItem}) => {
+  const arrayData = selectItem.map((item, index) => item.item);
+
+  const addItem = (num, id) => {
+    selectItem.push({
+      item: num,
+      id: id,
+    });
+    setSelect([...selectItem]);
+  };
+  const deleteItem = id => {
+    const result = selectItem?.filter((item, index) => {
+      return item.item !== id;
+    });
+    setSelectItem([...result]);
+  };
+  const [select, setSelect] = useState(false);
+  return (
+    <>
       {!select ? (
         <TouchableOpacity
           onPress={() => {
@@ -54,8 +120,9 @@ export const DayOfCount = ({item, index, selectItem, setSelectItem}) => {
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: responsiveHeight(20),
+            backgroundColor: select ? AppColors.buttonText : 'transparent',
           }}>
-          <Text style={{fontSize: 21, color: 'white'}} key={index}>
+          <Text style={{fontSize: 14, color: 'white'}} key={index}>
             {item.day}
           </Text>
         </TouchableOpacity>
@@ -73,31 +140,13 @@ export const DayOfCount = ({item, index, selectItem, setSelectItem}) => {
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: responsiveHeight(20),
+            backgroundColor: select ? AppColors.buttonText : 'transparent',
           }}>
-          <Text style={{fontSize: 21, color: 'white'}} key={index}>
+          <Text style={{fontSize: 14, color: 'white'}} key={index}>
             {item.day}
           </Text>
         </TouchableOpacity>
       )}
     </>
-  );
-};
-
-const styles = StyleSheet.create({});
-
-export const HeadingText = () => {
-  return (
-    <Text
-      style={{
-        fontSize: 12,
-        color: 'white',
-        marginBottom: responsiveHeight(2),
-      }}>
-      Every{' '}
-      {selectItem.map((item, index) => {
-        console.log(item, 'select item');
-        return <Text style={{color: 'white'}}>{item.item},</Text>;
-      })}
-    </Text>
   );
 };

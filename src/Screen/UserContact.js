@@ -26,7 +26,7 @@ import {Line} from '../component/Line';
 import KeepAwake from 'react-native-keep-awake';
 import CustomButton from '../component/CustomButton';
 import {RestartProgressAPI} from '../services/WorkoutPlan';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Input from '../component/Input';
 import {
@@ -38,6 +38,7 @@ import Loader from '../component/Loader';
 import Lottie from 'lottie-react-native';
 import assets from '../assets';
 import Share from 'react-native-share';
+import {Diet_Id, Water_Id} from '../store/action';
 
 const UserContact = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -99,6 +100,7 @@ const UserContact = ({navigation}) => {
                     fontFamily: 'Interstate-regular',
                     fontSize: 14,
                     letterSpacing: 0.8,
+                    opacity: 0.8,
                   }}>
                   {item.text}
                 </Text>
@@ -187,6 +189,8 @@ const UserContact = ({navigation}) => {
                     color: 'white',
                     fontSize: 14,
                     letterSpacing: 0.8,
+                    opacity: 0.8,
+                    fontFamily: 'Interstate-regular',
                   }}>
                   {item.text}
                 </Text>
@@ -244,6 +248,8 @@ const UserContact = ({navigation}) => {
                     color: 'white',
                     fontSize: 14,
                     letterSpacing: 0.8,
+                    opacity: 0.8,
+                    fontFamily: 'Interstate-regular',
                   }}>
                   {item.text}
                 </Text>
@@ -258,6 +264,7 @@ const UserContact = ({navigation}) => {
       </View>
     </>
   );
+  const dispatch = useDispatch();
 
   const [feedBack, setFeedBack] = useState('');
   const LogOut = async () => {
@@ -265,6 +272,9 @@ const UserContact = ({navigation}) => {
     await AsyncStorage.removeItem('userPassword');
     await AsyncStorage.removeItem('DietPlanId');
     await AsyncStorage.removeItem('Workout_Plan_Id');
+    await AsyncStorage.removeItem('WaterTrackerId');
+    dispatch(Water_Id(null));
+    dispatch(Diet_Id(null));
     navigation.navigate('Auth', {screen: 'Login'});
     setOpenModel(false);
   };
@@ -294,7 +304,7 @@ const UserContact = ({navigation}) => {
       setLoadingUser(true);
       try {
         const result = await GetUserDetailApi(id);
-        console.log(result);
+        // console.log(result);
         if (result.status == true) {
           setLoadingUser(false);
           setUserDetailData(result.result);
@@ -783,7 +793,7 @@ const UserContact = ({navigation}) => {
                     marginTop: responsiveHeight(2),
                     textTransform: 'capitalize',
                   }}>
-                  Password Updated Successfully
+                  Username Updated Successfully
                 </Text>
 
                 <View style={[{alignItems: 'center'}]}>

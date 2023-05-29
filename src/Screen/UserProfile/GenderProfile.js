@@ -238,7 +238,7 @@ const GenderProfile = ({navigation, route}) => {
                 <Text
                   style={{
                     color: 'white',
-                    fontSize: 23,
+                    fontSize: 19,
                     fontFamily: 'Interstate-regular',
                     width: responsiveWidth(75),
                     textAlign: 'center',

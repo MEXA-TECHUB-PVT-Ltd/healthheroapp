@@ -48,23 +48,26 @@ const ExerciseDetail = ({navigation, route}) => {
     //   console.log(error);
     // }
   };
-  const PaginationComponent = () => (
-    <View style={CssStyle.flexData}>
-      {data.map((item, index) => (
-        <View
-          key={index}
-          style={{
-            width: index == activeIndex ? 29 : 7,
-            height: 7,
-            backgroundColor:
-              index == activeIndex ? AppColors.buttonText : 'white',
-            borderRadius: responsiveWidth(5),
-            marginRight: responsiveWidth(2.6),
-          }}
-        />
-      ))}
-    </View>
-  );
+  const PaginationComponent = () =>
+    !staticValue ? (
+      <View style={CssStyle.flexData}>
+        {data.map((item, index) => (
+          <View
+            key={index}
+            style={{
+              width: index == activeIndex ? 29 : 7,
+              height: 7,
+              backgroundColor:
+                index == activeIndex ? AppColors.buttonText : 'white',
+              borderRadius: responsiveWidth(5),
+              marginRight: responsiveWidth(2.6),
+            }}
+          />
+        ))}
+      </View>
+    ) : (
+      <Text></Text>
+    );
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -244,15 +247,15 @@ const ExerciseDetail = ({navigation, route}) => {
               justifyContent: 'center',
             }}
             onPress={() => {
-              if (activeIndex !== 0) {
-                setActiveIndex(activeIndex - 1);
-                flatNode.current.scrollToIndex({
-                  animated: true,
-                  index: activeIndex - 1,
-                });
-              } else {
-                console.log('back');
-              }
+              staticValue
+                ? {}
+                : activeIndex == 0
+                ? (setActiveIndex(activeIndex - 1),
+                  flatNode.current.scrollToIndex({
+                    animated: true,
+                    index: activeIndex - 1,
+                  }))
+                : console.log('sdf');
             }}>
             <Icon
               name="chevron-back-outline"
@@ -260,10 +263,12 @@ const ExerciseDetail = ({navigation, route}) => {
               color={AppColors.buttonText}
             />
           </TouchableOpacity>
-          <Text style={{color: 'white', fontSize: 12}}>
-            <Text style={{fontSize: 17}}>0{activeIndex + 1}</Text>/0
-            {dataImages.length}
-          </Text>
+          {!staticValue && (
+            <Text style={{color: 'white', fontSize: 12}}>
+              <Text style={{fontSize: 17}}>0{activeIndex + 1}</Text>/0
+              {dataImages.length}
+            </Text>
+          )}
           <TouchableOpacity
             style={{
               backgroundColor: '#FF510050',
@@ -274,15 +279,15 @@ const ExerciseDetail = ({navigation, route}) => {
               justifyContent: 'center',
             }}
             onPress={() => {
-              if (activeIndex !== dataImages.length - 1) {
-                setActiveIndex(activeIndex + 1);
-                flatNode.current.scrollToIndex({
-                  animated: true,
-                  index: activeIndex + 1,
-                });
-              } else {
-                console.log('sdf');
-              }
+              staticValue
+                ? {}
+                : activeIndex !== id.workout_plan_exersises.length - 1
+                ? (setActiveIndex(activeIndex + 1),
+                  flatNode.current.scrollToIndex({
+                    animated: true,
+                    index: activeIndex + 1,
+                  }))
+                : console.log('sdf');
             }}>
             <Icon
               name="chevron-forward-outline"

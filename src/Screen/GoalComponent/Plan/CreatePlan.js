@@ -85,7 +85,7 @@ const CreatePlan = ({navigation}) => {
         </TouchableOpacity>
         <Text
           style={{
-            fontSize: responsiveFontSize(5),
+            fontSize: responsiveFontSize(4.4),
             color: 'white',
             textTransform: 'capitalize',
             fontFamily: 'Interstate-bold',
@@ -110,6 +110,7 @@ const CreatePlan = ({navigation}) => {
           bgColor={'#ffffff60'}
           placeholder={'Plan title'}
           noIcon={true}
+          maxLength={18}
           value={planTitle}
           onChangeText={e => setPlanTitle(e)}
           fontSize={16}

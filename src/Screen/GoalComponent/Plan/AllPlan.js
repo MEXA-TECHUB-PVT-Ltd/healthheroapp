@@ -30,6 +30,7 @@ import {ExerCise} from '../../../store/action';
 const AllPlan = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
   const ExerciseIdParam = item && item?.exersise_details?.exersise_id;
+  // console.log(ExerciseIdParam, 'je ');
   const [selectItem, setSelectItem] = useState('');
   const dataPlan = [
     {indoor: 'Beginner', lesson: 'Exercises', text: 'hello'},
@@ -78,6 +79,7 @@ const AllPlan = ({navigation, route}) => {
   //   }
   // };
   const AddToExercise = async (data, item, itemData) => {
+    // console.log(data, item, itemData);
     setLoading(true);
     // console.log(data, ExerciseIdParam, itemData);
     try {
@@ -91,7 +93,7 @@ const AllPlan = ({navigation, route}) => {
         setLoading(false);
       }
     } catch (error) {
-      setLoading;
+      setLoading(false);
       console.log(error);
     }
   };
@@ -145,7 +147,7 @@ const AllPlan = ({navigation, route}) => {
               color: 'white',
               fontSize: 22,
             }}>
-            Select Plan
+            My Plans
           </Text>
           <TouchableOpacity
             style={{marginRight: responsiveWidth(2)}}
@@ -153,71 +155,77 @@ const AllPlan = ({navigation, route}) => {
             <Octicons name="diff-added" size={23} color={'white'} />
           </TouchableOpacity>
         </View>
-        <View style={{marginTop: responsiveHeight(6)}}>
-          <FlatList
-            data={planData}
-            renderItem={({item, index}) => {
-              console.log(item, 'plan id');
-              return (
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    navigation.navigate('WorkoutDetail', {
-                      item: item,
-                    })
-                    // AddToExercise(data, ExerciseIdParam, item.workout_plan_id);
-                  }}
-                  style={[
-                    CssStyle.flexData,
-                    {
-                      marginBottom: responsiveHeight(1.9),
-                      borderWidth: 1,
-                      borderColor:
-                        selectItem == item.plan_name
-                          ? AppColors.buttonText
-                          : '#00000022',
-                      borderRadius: 12,
-                      backgroundColor:
-                        selectItem == item.plan_name ? '#0A1F58' : '#626377',
-                      paddingHorizontal: responsiveWidth(3),
-                      paddingVertical: responsiveHeight(1.5),
-                    },
-                  ]}>
-                  <View style={{width: responsiveWidth(30)}}>
-                    <Image
-                      borderRadius={responsiveWidth(2)}
-                      source={require('../../../assets/planImage.jpg')}
-                      resizeMode="contain"
-                      style={{
-                        width: 90,
-                        height: 65,
-                        //   marginRight: responsiveWidth(2),
-                      }}
-                    />
-                  </View>
-                  <View style={{width: responsiveWidth(57)}}>
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontSize: 15,
-                        fontFamily: 'Interstate-regular',
-                        opacity: 1,
-                      }}>
-                      {item.plan_name.slice(0, 29)}
-                    </Text>
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontSize: 11,
-                        fontFamily: 'Interstate-regular',
-                        marginTop: responsiveHeight(1),
-                        opacity: 0.8,
-                        lineHeight: responsiveHeight(2),
-                        letterSpacing: 0.4,
-                      }}>
-                      {item.description.slice(0, 39)}
-                    </Text>
-                    {/* <View
+        <View style={{marginTop: responsiveHeight(6), flex: 1}}>
+          {planData.length > 0 ? (
+            <FlatList
+              data={planData}
+              renderItem={({item, index}) => {
+                console.log(item, 'plan id');
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      ExerciseIdParam
+                        ? AddToExercise(
+                            data,
+                            ExerciseIdParam,
+                            item.workout_plan_id,
+                          )
+                        : navigation.navigate('WorkoutDetail', {
+                            item: item,
+                          });
+                    }}
+                    style={[
+                      CssStyle.flexData,
+                      {
+                        marginBottom: responsiveHeight(1.9),
+                        borderWidth: 1,
+                        borderColor:
+                          selectItem == item.plan_name
+                            ? AppColors.buttonText
+                            : '#00000022',
+                        borderRadius: 12,
+                        backgroundColor:
+                          selectItem == item.plan_name ? '#0A1F58' : '#626377',
+                        paddingHorizontal: responsiveWidth(3),
+                        paddingVertical: responsiveHeight(1.5),
+                      },
+                    ]}>
+                    <View style={{width: responsiveWidth(30)}}>
+                      <Image
+                        borderRadius={responsiveWidth(2)}
+                        source={require('../../../assets/planImage.jpg')}
+                        resizeMode="contain"
+                        style={{
+                          width: 90,
+                          height: 65,
+                          //   marginRight: responsiveWidth(2),
+                        }}
+                      />
+                    </View>
+                    <View style={{width: responsiveWidth(57)}}>
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 15,
+                          fontFamily: 'Interstate-regular',
+                          opacity: 1,
+                        }}>
+                        {item.plan_name.slice(0, 29)}
+                      </Text>
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 11,
+                          fontFamily: 'Interstate-regular',
+                          marginTop: responsiveHeight(1),
+                          opacity: 0.8,
+                          lineHeight: responsiveHeight(2),
+                          letterSpacing: 0.4,
+                        }}>
+                        {item.description.slice(0, 39)}
+                      </Text>
+                      {/* <View
                     style={{
                       borderBottomColor: 'white',
                       borderBottomWidth: 1,
@@ -275,11 +283,23 @@ const AllPlan = ({navigation, route}) => {
                       Beginner
                     </Text>
                   </View> */}
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
-          />
+                    </View>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          ) : (
+            <View style={CssStyle.flexCenter}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: 'white',
+                  fontFamily: 'Interstate-bold',
+                }}>
+                No Plan Available
+              </Text>
+            </View>
+          )}
         </View>
         {/* <View
           style={{
@@ -309,73 +329,69 @@ const AllPlan = ({navigation, route}) => {
         transparent={true}
         visible={openModel}
         onRequestClose={() => setOpenModel(false)}>
-        <TouchableWithoutFeedback
-          style={{flex: 1}}
-          onPress={() => setOpenModel(false)}>
-          <View style={{flex: 1, backgroundColor: '#00000060'}}>
+        <View style={{flex: 1, backgroundColor: '#00000060'}}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}>
             <View
               style={{
-                flex: 1,
-                justifyContent: 'flex-end',
+                backgroundColor: AppColors.blueColor,
+                alignItems: 'center',
+                borderTopEndRadius: responsiveHeight(3),
+                borderTopLeftRadius: responsiveHeight(3),
+                paddingVertical: responsiveHeight(4.8),
               }}>
               <View
+                // activeOpacity={1}
                 style={{
-                  backgroundColor: AppColors.blueColor,
-                  alignItems: 'center',
-                  borderTopEndRadius: responsiveHeight(3),
-                  borderTopLeftRadius: responsiveHeight(3),
-                  paddingVertical: responsiveHeight(4.8),
+                  // height: wp(28),
+                  width: 90,
+                  // backgroundColor: 'red',
+                  aspectRatio: 1,
+                  alignSelf: 'center',
+                  marginTop: responsiveHeight(1),
                 }}>
-                <View
-                  // activeOpacity={1}
-                  style={{
-                    // height: wp(28),
-                    width: 90,
-                    // backgroundColor: 'red',
-                    aspectRatio: 1,
-                    alignSelf: 'center',
-                    marginTop: responsiveHeight(1),
-                  }}>
-                  <Lottie
-                    source={assets.loader}
-                    autoPlay
-                    loop={true}
-                    resizeMode="cover"
-                    speed={1}
-                    colorFilter={[{color: 'red'}]}
-                  />
-                </View>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 23,
-                    fontFamily: 'Interstate-regular',
-                    width: responsiveWidth(75),
-                    textAlign: 'center',
-                    lineHeight: responsiveHeight(4),
-                    marginTop: responsiveHeight(4),
-                    textTransform: 'capitalize',
-                  }}>
-                  Exercise added to my plans Successfully
-                </Text>
-                <CustomButton
-                  buttonText={'Go Back'}
-                  onPress={() => {
-                    setOpenModel(false);
-                  }}
-                  buttonColor={'transparent'}
-                  mode="outlined"
-                  fontWeight={'500'}
-                  borderColor={'white'}
-                  style={{
-                    marginTop: responsiveHeight(3.7),
-                    width: responsiveWidth(46),
-                  }}
+                <Lottie
+                  source={assets.loader}
+                  autoPlay
+                  loop={true}
+                  resizeMode="cover"
+                  speed={1}
+                  colorFilter={[{color: 'red'}]}
                 />
               </View>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 23,
+                  fontFamily: 'Interstate-regular',
+                  width: responsiveWidth(75),
+                  textAlign: 'center',
+                  lineHeight: responsiveHeight(4),
+                  marginTop: responsiveHeight(4),
+                  textTransform: 'capitalize',
+                }}>
+                Exercise added to my plans Successfully
+              </Text>
+              <CustomButton
+                buttonText={'Go Back'}
+                onPress={() => {
+                  setOpenModel(false), navigation.goBack();
+                }}
+                buttonColor={'transparent'}
+                mode="outlined"
+                fontWeight={'500'}
+                borderColor={'white'}
+                style={{
+                  marginTop: responsiveHeight(3.7),
+                  width: responsiveWidth(46),
+                }}
+              />
             </View>
           </View>
-        </TouchableWithoutFeedback>
+        </View>
       </Modal>
     </View>
   );

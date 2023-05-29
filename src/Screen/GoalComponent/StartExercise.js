@@ -26,6 +26,7 @@ import {GetCountDownApi} from '../../services/CountDownApi';
 import {useSelector} from 'react-redux';
 import {BaseUrl} from '../../Helping/BaseUrl';
 import Loader from '../../component/Loader';
+import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 
 const StartExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : 0;
@@ -57,8 +58,9 @@ const StartExercise = ({navigation, route}) => {
   }, []);
   const countdownRef = useRef();
   const [loading, setLoading] = useState(false);
+  const [dataTime, setDataTime] = useState(false);
   useEffect(() => {
-    countdownRef.current.start();
+    // countdownRef.current.start();
   }, []);
 
   return loading ? (
@@ -87,7 +89,7 @@ const StartExercise = ({navigation, route}) => {
           <Icon name="chevron-back-outline" size={25} color={'white'} />
         </TouchableOpacity>
         <View style={{alignItems: 'center', flex: 1}}>
-          <ProgressCircle
+          {/* <ProgressCircle
             percent={countdownRef * 40}
             radius={50}
             borderWidth={4}
@@ -110,13 +112,29 @@ const StartExercise = ({navigation, route}) => {
                 }}
               />
             </View>
-          </ProgressCircle>
+          </ProgressCircle> */}
+          <CountdownCircleTimer
+            isPlaying={dataTime ? false : true}
+            duration={countDownData}
+            size={120}
+            strokeWidth={8}
+            onComplete={e => {
+              navigation.navigate('GetExercise', {item: 'StartExercise'}),
+                setDataTime(true);
+            }}
+            colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
+            {({remainingTime}) => (
+              <Text style={{color: 'white', fontSize: 22}}>
+                {remainingTime}
+              </Text>
+            )}
+          </CountdownCircleTimer>
           <Text
             style={[
               styles.signInText,
               {
-                fontFamily: 'Interstate-regular',
-                marginTop: responsiveHeight(4.7),
+                fontFamily: 'Interstate-bold',
+                marginTop: responsiveHeight(2.7),
               },
             ]}>
             Ready to Go!
@@ -186,7 +204,7 @@ const StartExercise = ({navigation, route}) => {
                       marginLeft: responsiveWidth(2),
                       opacity: 0.5,
                     }}>
-                    {reduxData ? reduxData?.exersise_details.time : '0 sec'}
+                    {reduxData?.exersise_details.time ? reduxData?.exersise_details.time : '0 sec'}
                   </Text>
                 </View>
               </View>

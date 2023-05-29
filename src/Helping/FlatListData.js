@@ -12,6 +12,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import NoImage from '../assets/noImageRed';
+import { BaseUrl } from './BaseUrl';
 
 export const FlatListData = ({category, navigation}) => {
   return (
@@ -29,6 +30,7 @@ export const FlatListData = ({category, navigation}) => {
               style={{
                 marginRight: responsiveWidth(6),
                 alignItems: 'center',
+                marginBottom: responsiveHeight(2),
               }}>
               {item.image ? (
                 <Image

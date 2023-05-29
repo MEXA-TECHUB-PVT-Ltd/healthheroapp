@@ -124,7 +124,7 @@ const ResetPassword = ({navigation, route}) => {
       ) : (
         data == 'Length' && (
           <Text style={{color: 'red'}}>
-            Password contain atleast one uppercase ,lowecase
+            Password must be at least one uppercase
           </Text>
         )
       )}
@@ -135,7 +135,7 @@ const ResetPassword = ({navigation, route}) => {
         placeholder={'Confirm Password'}
         noIcon={true}
         fontSize={16}
-        style={{marginTop: responsiveHeight(2)}}
+        style={{marginTop: responsiveHeight(1)}}
         rightIcon="eye-outline"
         offIcon={'eye-off-outline'}
         enableIcon={true}

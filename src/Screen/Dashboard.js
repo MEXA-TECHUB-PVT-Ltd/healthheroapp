@@ -20,6 +20,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import Input from '../component/Input';
 import Logo from '../assets/Icon3';
+import Timer from '../assets/Icon';
 import CustomButton from '../component/CustomButton';
 import {useFocusEffect} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -135,6 +136,7 @@ const Dashboard = ({navigation}) => {
         setIntermediate(result.result);
       } else {
         console.error(result.message);
+        WeatherApi();
       }
     } catch (error) {
       console.log(error);
@@ -181,6 +183,11 @@ const Dashboard = ({navigation}) => {
   const [advance, setAdvance] = useState([]);
   const [beginner, setBeginner] = useState([]);
   const [intermediate, setIntermediate] = useState([]);
+  const dateWithComma = new Date()
+    .toDateString()
+    .slice(4, 15)
+    .replace(/[' ']/g, ', ');
+  // console.log(dateWithComma.replace(',', ''));
   return loading ? (
     <Loader />
   ) : (
@@ -211,7 +218,7 @@ const Dashboard = ({navigation}) => {
                 fontSize: 12,
                 marginVertical: responsiveHeight(2),
               }}>
-              Today, {new Date().toDateString().slice(4, 15).replace(' ', ', ')}
+              Today, {dateWithComma.replace(',', '')}
             </Text>
             <Text
               style={{
@@ -255,10 +262,11 @@ const Dashboard = ({navigation}) => {
               fontSize: 11,
               color: 'white',
               fontFamily: 'Interstate-regular',
+              opacity: 0.8,
             }}>
             SEARCH WORKOUT
           </Text>
-          <Icon name={'search'} size={19} color="white" />
+          <Icon name={'search'} size={19} color="#ffffffb1" />
         </TouchableOpacity>
         <View
           style={[
@@ -310,7 +318,7 @@ const Dashboard = ({navigation}) => {
                   color: 'white',
                   fontFamily: 'Interstate-regular',
                   fontSize: 12,
-                  marginLeft: responsiveWidth(2),
+                  marginLeft: responsiveWidth(2),opacity: 0.8,
                 }}>
                 400 kcal
               </Text>
@@ -322,13 +330,14 @@ const Dashboard = ({navigation}) => {
                   overflow: 'visible',
                 },
               ]}>
-              <Logo width={16} height={16} />
+              <Timer width={16} height={16} />
               <Text
                 style={{
                   color: 'white',
                   fontFamily: 'Interstate-regular',
                   marginLeft: responsiveWidth(2),
                   fontSize: 12,
+                  opacity: 0.8,
                 }}>
                 45 min
               </Text>
@@ -350,7 +359,9 @@ const Dashboard = ({navigation}) => {
                 width: responsiveWidth(25),
                 marginTop: responsiveHeight(1.4),
               }}>
-              <Text style={{color: '#FF5100'}}>Start Now</Text>
+              <Text style={{color: '#FF5100', fontFamily: 'Interstate-bold'}}>
+                Start Now
+              </Text>
             </TouchableOpacity>
           </View>
           <View style={{}}>
@@ -362,7 +373,7 @@ const Dashboard = ({navigation}) => {
                 height: responsiveHeight(37.4),
                 position: 'absolute',
                 bottom: responsiveHeight(-17.93),
-                left: responsiveWidth(-10),
+                left: responsiveWidth(-12),
               }}
             />
           </View>
@@ -655,7 +666,7 @@ const Dashboard = ({navigation}) => {
             style={{width: responsiveWidth(70)}}
             buttonColor={'transparent'}
             colorText="white"
-            onPress={() => {}}
+            onPress={() => navigation.navigate('Dashboard1')}
             borderColor={'#FF5100'}
           />
         </View>

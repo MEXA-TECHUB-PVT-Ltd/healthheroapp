@@ -35,7 +35,7 @@ const NutritionTargeted = ({navigation, route}) => {
     updateData ? updateData?.targetted_weight : 36,
   );
   const [loading, setLoading] = useState(false);
-  const [weightTargeted, setWeightTargeted] = useState(null);
+  const [weightTargeted, setWeightTargeted] = useState(36);
   const [heightValue, setHeightValue] = useState(null);
   return (
     <View

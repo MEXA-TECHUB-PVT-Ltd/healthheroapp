@@ -35,7 +35,7 @@ import Loader from '../../component/Loader';
 const NutritionHeight = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
   // console.log(updateData, item);
-  const [updateDataChanges, setUpdateDataChanges] = useState('');
+  const [updateDataChanges, setUpdateDataChanges] = useState(20);
   useEffect(() => {
     getWeightHeight();
   }, []);
@@ -57,12 +57,12 @@ const NutritionHeight = ({navigation, route}) => {
   // console.log(updateDataChanges.height_unit,'dflasjd');
   const weightUnitData = [{text: 'ft'}, {text: 'in'}];
   const [weightData, setWeightData] = useState(
-    updateDataChanges ? updateDataChanges.height_unit : 'in',
+    updateDataChanges?.height_unit ? updateDataChanges.height_unit : 'in',
   );
   const [heightValue, setHeightValue] = useState(
-    updateDataChanges ? updateDataChanges?.height : '',
+    updateDataChanges?.height_unit ? updateDataChanges?.height : '',
   );
-  // console.log(heightValue, 'heig');
+  console.log(updateDataChanges, 'heig');
   const id = useSelector(data => data);
   const [loading, setLoading] = useState(false);
   const [loadingUser, setLoadingUser] = useState(false);
@@ -184,7 +184,9 @@ const NutritionHeight = ({navigation, route}) => {
               max={110}
               step={1}
               fractionDigits={0}
-              initialValue={updateDataChanges ? updateDataChanges.height : 50}
+              initialValue={
+                updateDataChanges?.height ? updateDataChanges?.height : 56
+              }
               gapBetweenSteps={5}
               indicatorColor="#FF5100"
               longStepColor="#FF5100"
@@ -200,7 +202,6 @@ const NutritionHeight = ({navigation, route}) => {
                 color: 'white',
                 fontSize: responsiveFontSize(6),
               }}
-              // onValueChange={number => console.log(number)}
               height={responsiveHeight(38)}
               onValueChangeEnd={number => setHeightValue(number)}
               unit={weightData}
