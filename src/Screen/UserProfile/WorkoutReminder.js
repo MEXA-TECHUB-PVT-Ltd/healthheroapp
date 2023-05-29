@@ -24,7 +24,11 @@ import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 import {TakeCountDownApi} from '../../services/CountDownApi';
 import Octicons from 'react-native-vector-icons/Octicons';
-import {GetReminder} from '../../services/ReminderApi';
+import {
+  ActiveReminderApi,
+  GetReminder,
+  InActiveReminderApi,
+} from '../../services/ReminderApi';
 import moment from 'moment';
 
 const WorkoutReminder = ({navigation, route}) => {
@@ -75,15 +79,87 @@ const WorkoutReminder = ({navigation, route}) => {
       console.log(error);
     }
   };
+  const ActiveReminder = async id => {
+    // console.log(id);
+    setLoading(true);
+    try {
+      const result = await ActiveReminderApi(id);
+      // console.log(result, 'active to indicatore', id);
+      if (result.status == true) {
+        setLoading(false);
+        // setReminderData(result.result);
+        // setOpenRestartModel(true);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading;
+      console.log(error);
+    }
+  };
+  const InActiveReminder = async id => {
+    // console.log(id);
+    // setLoading(true);
+    try {
+      const result = await InActiveReminderApi(id);
+      console.log(result, 'in active to statuc');
+      if (result.status == true) {
+        // setLoading(false);
+        // setReminderData(result.result);
+        // setOpenRestartModel(true);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading;
+      console.log(error);
+    }
+  };
   useEffect(() => {
     GetReminderProfile();
   }, []);
+
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const [dataItem, setDataItem] = useState([{item: 1}, {item: 2}]);
   const dayDataActive = [{day: 'M'}, {day: 'W'}, {day: 'Th'}, {day: 'F'}];
-
+  const [checked, setChecked] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  // const Pickup = () => {};
+  // console.log('not allowed');
+  const toggleAll = itemFlatList => {
+    // console.log(itemFlatList.reminder_id);
+    const newData = reminderData?.map(item => {
+      // if (item.id == id) {
+      if (item?.reminder_id == itemFlatList.reminder_id) {
+        if (item.active_status) {
+          InActiveReminder(item.reminder_id);
+        } else {
+          ActiveReminder(item.reminder_id);
+          // console.log('false and switch');
+        }
+        return {
+          ...item,
+          active_status: !item.active_status,
+        };
+      } else {
+        // console.log(' else wala');
+        return {
+          ...item,
+          active_status: item.active_status,
+        };
+      }
+    });
+    setReminderData(newData);
+    // console.log(newData);
+    // console.log(newData,'fsajdf');
+    // setMuteAll(true);
+
+    // item.active_status
+    //   ? (setMuteAll(false), InActiveReminder(item.reminder_id))
+    //   : (setMuteAll(true), ActiveReminder(item.reminder_id));
+  };
 
   return (
     <LinearGradient
@@ -130,17 +206,6 @@ const WorkoutReminder = ({navigation, route}) => {
         <FlatList
           data={reminderData}
           renderItem={({item, index}) => {
-            // console.log(item);
-            // console.log(new Date().toLocaleDateString());
-            // console.log(new Date().toLocaleDateString() + 'T' + item.time);
-            // console.log(
-            //   new Date(
-            //     new Date().toLocaleDateString().replace(/['/']/g, '-') +
-            //       'T' +
-            //       item.time,
-            //   ).toLocaleTimeString(),
-            //   'it is the new time',
-            // );
             return (
               <View
                 style={[
@@ -193,10 +258,12 @@ const WorkoutReminder = ({navigation, route}) => {
                   <Switch
                     style={{marginLeft: responsiveWidth(1)}}
                     trackColor={{false: '#D8D8D880', true: '#006FFF40'}}
-                    thumbColor={isEnabled ? AppColors.buttonText : '#D8D8D8'}
+                    thumbColor={
+                      item.active_status ? AppColors.buttonText : '#D8D8D8'
+                    }
                     ios_backgroundColor="#3e3e3e"
-                    onValueChange={toggleSwitch}
-                    value={isEnabled}
+                    onValueChange={() => toggleAll(item)}
+                    value={item.active_status}
                   />
                 </View>
               </View>

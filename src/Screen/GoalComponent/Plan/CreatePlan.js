@@ -32,7 +32,7 @@ const CreatePlan = ({navigation}) => {
   const [exerciseData, setExerciseData] = useState(null);
   const [data, setData] = useState('');
   const id = useSelector(data => data.id);
-  console.log(id);
+  // console.log(id);
   useEffect(() => {
     setTimeout(() => {
       setData('');
@@ -49,7 +49,7 @@ const CreatePlan = ({navigation}) => {
         exerciseData,
         moment(new Date()).format('YYYY-MM-DD'),
       );
-      console.log(result);
+      // console.log(result);
       if (result.status == true) {
         setOpenModel(true);
         setLoading(false);

@@ -47,3 +47,48 @@ export const GetReminder = async id => {
     return error;
   }
 };
+export const ActiveReminderApi = async id => {
+  console.log(id);
+  try {
+    const requestOptions = {
+      method: 'PUT',
+      body: JSON.stringify({
+        reminder_id: id,
+      }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlReminder}active_reminder`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const InActiveReminderApi = async id => {
+  console.log(id);
+  try {
+    const requestOptions = {
+      method: 'PUT',
+      body: JSON.stringify({
+        reminder_id: id,
+      }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlReminder}in_active_reminder`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};

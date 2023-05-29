@@ -30,20 +30,12 @@ import {useSelector} from 'react-redux';
 
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
+import Loader from '../../component/Loader';
 
 const NutritionHeight = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
-  console.log(updateData, item);
-
-  const weightUnitData = [{text: 'cm'}, {text: 'in'}];
-  const [weightData, setWeightData] = useState('in');
-  const [heightValue, setHeightValue] = useState();
-  const [activeIndex, setActiveIndex] = useState(
-    updateData ? updateData.height : 55,
-  );
-  const id = useSelector(data => data);
+  // console.log(updateData, item);
   const [updateDataChanges, setUpdateDataChanges] = useState('');
-  const [loading, setLoading] = useState(false);
   useEffect(() => {
     getWeightHeight();
   }, []);
@@ -51,17 +43,28 @@ const NutritionHeight = ({navigation, route}) => {
     setLoading(true);
     try {
       const result = await GetUserDetailApi(id.id);
-      // console.log(result, 'get user detail');
       if (result.status == true) {
         setLoading(false);
         setUpdateDataChanges(result.result);
       } else {
-        // navigation.navigate('SelectPlan');
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
+  // console.log(updateDataChanges.height_unit,'dflasjd');
+  const weightUnitData = [{text: 'ft'}, {text: 'in'}];
+  const [weightData, setWeightData] = useState(
+    updateDataChanges ? updateDataChanges.height_unit : 'in',
+  );
+  const [heightValue, setHeightValue] = useState(
+    updateDataChanges ? updateDataChanges?.height : '',
+  );
+  // console.log(heightValue, 'heig');
+  const id = useSelector(data => data);
+  const [loading, setLoading] = useState(false);
   const [loadingUser, setLoadingUser] = useState(false);
   const [openUserSuccessfully, setOpenUserSuccessfully] = useState(false);
   const UpdateUserName = async () => {
@@ -87,7 +90,7 @@ const NutritionHeight = ({navigation, route}) => {
         heightValue,
         updateDataChanges.weight,
         updateDataChanges.weight_unit,
-        updateDataChanges.height_unit,
+        weightData,
       );
       if (result.status == true) {
         setOpenUserSuccessfully(true);
@@ -101,7 +104,9 @@ const NutritionHeight = ({navigation, route}) => {
       console.log(error);
     }
   };
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
       <View style={{flex: 1}}>
@@ -179,7 +184,7 @@ const NutritionHeight = ({navigation, route}) => {
               max={110}
               step={1}
               fractionDigits={0}
-              initialValue={activeIndex}
+              initialValue={updateDataChanges ? updateDataChanges.height : 50}
               gapBetweenSteps={5}
               indicatorColor="#FF5100"
               longStepColor="#FF5100"
@@ -213,6 +218,7 @@ const NutritionHeight = ({navigation, route}) => {
               position: 'absolute',
             }}>
             <CustomButton
+              loading={loadingUser}
               onPress={() => {
                 heightValue
                   ? item == 'Update'

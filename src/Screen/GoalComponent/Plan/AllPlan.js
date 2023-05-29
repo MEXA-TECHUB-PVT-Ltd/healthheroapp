@@ -29,7 +29,7 @@ import {ExerCise} from '../../../store/action';
 
 const AllPlan = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  // console.log(item);
+  const ExerciseIdParam = item && item?.exersise_details?.exersise_id;
   const [selectItem, setSelectItem] = useState('');
   const dataPlan = [
     {indoor: 'Beginner', lesson: 'Exercises', text: 'hello'},
@@ -59,33 +59,30 @@ const AllPlan = ({navigation, route}) => {
     }
   };
   const dispatch = useDispatch();
-  const [exerciseId, setExerciseId] = useState('');
-  const GetExerciseId = async () => {
+  // const [exerciseId, setExerciseId] = useState('');
+  // const GetExerciseId = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const result = await GetExerciseID();
+  //     // console.log(result.result[0], 'get exercise id');
+  //     if (result.status == true) {
+  //       setExerciseId(result.result);
+  //       setLoading(false);
+  //     } else {
+  //       console.error(result.message);
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     setLoading;
+  //     console.log(error);
+  //   }
+  // };
+  const AddToExercise = async (data, item, itemData) => {
     setLoading(true);
+    // console.log(data, ExerciseIdParam, itemData);
     try {
-      const result = await GetExerciseID();
-      console.log(result.result[0], 'get exercise id');
-      if (result.status == true) {
-        setExerciseId(result.result);
-        setLoading(false);
-      } else {
-        console.error(result.message);
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading;
-      console.log(error);
-    }
-  };
-  const AddToExercise = async () => {
-    setLoading(true);
-    try {
-      const result = await AddExercise(
-        data,
-        exerciseId[0]?.exersise_id,
-        addToExerciseData.workout_plan_id,
-      );
-      // console.log(result);
+      const result = await AddExercise(data, ExerciseIdParam, itemData);
+      console.log(result, 'add to exercise in plan');
       if (result.status == true) {
         setOpenModel(true);
         setLoading(false);
@@ -100,7 +97,7 @@ const AllPlan = ({navigation, route}) => {
   };
   useEffect(() => {
     GetPlan();
-    GetExerciseId();
+    // GetExerciseId();
   }, []);
   useEffect(() => {
     var mount = true;
@@ -160,13 +157,15 @@ const AllPlan = ({navigation, route}) => {
           <FlatList
             data={planData}
             renderItem={({item, index}) => {
-              console.log(item,'plan id');
+              console.log(item, 'plan id');
               return (
-                <TouchableOpacity activeOpacity={0.8}
+                <TouchableOpacity
+                  activeOpacity={0.8}
                   onPress={() => {
                     navigation.navigate('WorkoutDetail', {
-                      item: item.workout_plan_id,
-                    });
+                      item: item,
+                    })
+                    // AddToExercise(data, ExerciseIdParam, item.workout_plan_id);
                   }}
                   style={[
                     CssStyle.flexData,
@@ -362,7 +361,7 @@ const AllPlan = ({navigation, route}) => {
                 <CustomButton
                   buttonText={'Go Back'}
                   onPress={() => {
-                    setOpenModel(false), navigation.navigate('WorkoutDetail');
+                    setOpenModel(false);
                   }}
                   buttonColor={'transparent'}
                   mode="outlined"

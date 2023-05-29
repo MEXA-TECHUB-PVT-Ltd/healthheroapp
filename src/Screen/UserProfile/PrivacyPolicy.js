@@ -19,25 +19,25 @@ import {GetPrivacyApi} from '../../services/PrivacyApi';
 
 const PrivacyPolicy = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
-  const GetPrivacy = async () => {
-    setLoading(true);
-    try {
-      const result = await GetPrivacyApi();
-      console.log(result);
-      if (result.status == true) {
-        setLoading(false);
-      } else {
-        console.error(result.message);
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading;
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    GetPrivacy();
-  }, []);
+  // const GetPrivacy = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const result = await GetPrivacyApi();
+  //     // console.log(result);
+  //     if (result.status == true) {
+  //       setLoading(false);
+  //     } else {
+  //       console.error(result.message);
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     setLoading;
+  //     console.log(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   GetPrivacy();
+  // }, []);
 
   return (
     <LinearGradient
@@ -51,7 +51,7 @@ const PrivacyPolicy = ({navigation, route}) => {
         backgroundColor: '#0A1F58',
       }}>
       <TouchableOpacity
-        style={{flex: 0.38, marginLeft: responsiveWidth(-3)}}
+        style={{flex: 0.1, marginLeft: responsiveWidth(-3)}}
         onPress={() => navigation.goBack()}>
         <Icon
           name="chevron-back-outline"
@@ -61,7 +61,7 @@ const PrivacyPolicy = ({navigation, route}) => {
         />
       </TouchableOpacity>
 
-      <View style={{}}>
+      <View style={{flex: 1}}>
         <Text style={[CssStyle.textInsideSettingComponent]}>
           Privacy Policy
         </Text>
@@ -73,24 +73,7 @@ const PrivacyPolicy = ({navigation, route}) => {
           ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
           sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
           dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-          et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-          takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
-          amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-          invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-          At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
-          kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
-          amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-          diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-          erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-          et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-          Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-          sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-          dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-          et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-          takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
-          amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-          invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-          At vero eos et accusam et justo duo
+          et justo duo dolores et ea.
         </Text>
       </View>
     </LinearGradient>

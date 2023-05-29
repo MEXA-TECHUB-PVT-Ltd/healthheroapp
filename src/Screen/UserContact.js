@@ -37,6 +37,7 @@ import {
 import Loader from '../component/Loader';
 import Lottie from 'lottie-react-native';
 import assets from '../assets';
+import Share from 'react-native-share';
 
 const UserContact = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -223,7 +224,17 @@ const UserContact = ({navigation}) => {
                 item.text == 'Feedback'
                   ? setPostFeedBack(true)
                   : item.text == 'Share with friends'
-                  ? Share.open('')
+                  ? Share.open({title: 'Feedback'})
+                      .then(res => {
+                        console.log(res);
+                      })
+                      .catch(err => {
+                        err && console.log(err);
+                      })
+                  : item.text == 'Rate us'
+                  ? {}
+                  : item.text == 'Remove ads'
+                  ? navigation.navigate('GoPremium')
                   : navigation.navigate('PrivacyPolicy');
               }}
               key={index}>

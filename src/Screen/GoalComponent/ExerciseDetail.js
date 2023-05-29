@@ -11,19 +11,19 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import CustomButton from '../../component/CustomButton';
 import SwiperFlatList from 'react-native-swiper-flatlist';
 import {BaseUrl} from '../../Helping/BaseUrl';
-import {StartWorkoutPlanApi} from '../../services/WorkoutPlan';
 import {useSelector} from 'react-redux';
-import moment from 'moment';
 
 const ExerciseDetail = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
+  // console.log(item);
   const data = [{item: 1}, {item: 1}, {item: 1}, {item: 1}];
   const [activeIndex, setActiveIndex] = useState(0);
   const flatNode = useRef();
   const id = useSelector(data => data.workoutPlanData);
-  const [staticValue, setStaticValue] = useState(id.workout_plan_exersises[0]);
-  console.log(staticValue);
+  const [staticValue, setStaticValue] = useState(
+    id.workout_plan_exersises[item ? item : 0],
+  );
+  console.log(staticValue, 'hello ');
   const dataImages = [{item: 1}, {item: 1}, {item: 1}, {item: 1}];
   const [loading, setLoading] = useState(false);
   const StartWorkoutPlan = async () => {
@@ -38,7 +38,7 @@ const ExerciseDetail = ({navigation, route}) => {
     //   console.log(result, 'workout plan');
     //   if (result.status == true) {
     //     setLoading(false);
-    navigation.navigate('StartExercise');
+    navigation.navigate('StartExercise', {item: item});
     //   } else {
     //     console.error(result.message);
     //     setLoading(false);
@@ -91,72 +91,82 @@ const ExerciseDetail = ({navigation, route}) => {
           ref={flatNode}
           index={activeIndex}
           showPagination
-          data={dataImages}
+          data={id.workout_plan_exersises}
           scrollEnabled={false}
-          renderItem={({itemData, index}) => (
-            <View style={{}}>
-              <Text
-                style={[styles.signInText, {marginTop: responsiveHeight(3)}]}>
-                {staticValue.exersise_details.title}
-              </Text>
-              <Text
-                style={[styles.signInText, {fontFamily: 'Interstate-regular'}]}>
-                7 mins
-              </Text>
-              <View
-                style={[CssStyle.flexData, {marginTop: responsiveHeight(2)}]}>
-                <CustomButton
-                  loading={loading}
-                  onPress={() => {
-                    StartWorkoutPlan();
+          renderItem={({itemData, index}) => {
+            return (
+              <View style={{}}>
+                <Text
+                  style={[styles.signInText, {marginTop: responsiveHeight(3)}]}>
+                  {itemData
+                    ? item.exersise_details.title
+                    : staticValue.exersise_details.title}
+                </Text>
+                <Text
+                  style={[
+                    styles.signInText,
+                    {fontFamily: 'Interstate-regular'},
+                  ]}>
+                  7 mins
+                </Text>
+                <View
+                  style={[CssStyle.flexData, {marginTop: responsiveHeight(2)}]}>
+                  <CustomButton
+                    loading={loading}
+                    onPress={() => {
+                      StartWorkoutPlan();
+                    }}
+                    activeOpacity={1}
+                    buttonColor={AppColors.buttonText}
+                    style={{width: responsiveWidth(30)}}
+                    buttonText={'Start'}
+                  />
+                  <CustomButton
+                    onPress={() =>
+                      navigation.navigate('AllPlan', {item: staticValue})
+                    }
+                    activeOpacity={1}
+                    buttonColor={'transparent'}
+                    style={{
+                      width: responsiveWidth(40),
+                      marginLeft: responsiveWidth(4),
+                    }}
+                    buttonText={'Add to My Plans'}
+                    mode="outlined"
+                    styleText={{width: responsiveWidth(30)}}
+                    borderColor={'white'}
+                  />
+                </View>
+                <Image
+                  //   resizeMode="contain"
+                  source={{
+                    uri: `${BaseUrl}` + staticValue.exersise_details.animation,
                   }}
-                  activeOpacity={1}
-                  buttonColor={AppColors.buttonText}
-                  style={{width: responsiveWidth(30)}}
-                  buttonText={'Start'}
-                />
-                <CustomButton
-                  onPress={() => navigation.navigate('AllPlan', {item: item})}
-                  activeOpacity={1}
-                  buttonColor={'transparent'}
+                  borderRadius={responsiveWidth(3)}
                   style={{
-                    width: responsiveWidth(40),
-                    marginLeft: responsiveWidth(4),
+                    width: responsiveWidth(90),
+                    height: responsiveHeight(30),
+                    marginTop: responsiveHeight(2),
+                    marginBottom: responsiveHeight(1),
                   }}
-                  buttonText={'Add to My Plans'}
-                  mode="outlined"
-                  styleText={{width: responsiveWidth(30)}}
-                  borderColor={'white'}
                 />
-              </View>
-              <Image
-                //   resizeMode="contain"
-                source={{uri: `${BaseUrl}` + item.animation}}
-                borderRadius={responsiveWidth(3)}
-                style={{
-                  width: responsiveWidth(90),
-                  height: responsiveHeight(30),
-                  marginTop: responsiveHeight(2),
-                  marginBottom: responsiveHeight(1),
-                }}
-              />
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 12,
-                  opacity: 0.7,
-                  marginBottom: responsiveHeight(1.2),
-                  lineHeight: responsiveHeight(2.6),
-                  width: responsiveWidth(90),
-                }}>
-                {item.description}
-              </Text>
-              <Text style={[styles.signInText, {fontSize: 16}]}>
-                Focused Area
-              </Text>
-              <View
-                style={[CssStyle.flexJustify, {width: responsiveWidth(90)}]}>
-                {/* <Image
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 12,
+                    opacity: 0.7,
+                    marginBottom: responsiveHeight(1.2),
+                    lineHeight: responsiveHeight(2.6),
+                    width: responsiveWidth(90),
+                  }}>
+                  {item.description}
+                </Text>
+                <Text style={[styles.signInText, {fontSize: 16}]}>
+                  Focused Area
+                </Text>
+                <View
+                  style={[CssStyle.flexJustify, {width: responsiveWidth(90)}]}>
+                  {/* <Image
                   //   resizeMode="contain"
                   source={require('../../assets/Rectangle32.png')}
                   borderRadius={responsiveWidth(2)}
@@ -167,26 +177,26 @@ const ExerciseDetail = ({navigation, route}) => {
                   }}
                 /> */}
 
-                <View
-                  style={{
-                    width: responsiveWidth(42),
-                    height: responsiveHeight(13),
-                    marginVertical: responsiveHeight(2),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    // borderWidth: 1,
-                    // borderColor: 'white',
-                  }}>
-                  <Text
+                  <View
                     style={{
-                      fontFamily: 'Interstate-regular',
-                      fontSize: 17,
-                      color: 'white',
+                      width: responsiveWidth(42),
+                      height: responsiveHeight(13),
+                      marginVertical: responsiveHeight(2),
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      // borderWidth: 1,
+                      // borderColor: 'white',
                     }}>
-                    {item.focus_area[0]}
-                  </Text>
-                </View>
-                {/* <Image
+                    <Text
+                      style={{
+                        fontFamily: 'Interstate-regular',
+                        fontSize: 17,
+                        color: 'white',
+                      }}>
+                      {/* {staticValue.focus_area[0]} */}
+                    </Text>
+                  </View>
+                  {/* <Image
                   //   resizeMode="contain"
                   source={require('../../assets/Rectangle32.png')}
                   borderRadius={responsiveWidth(2)}
@@ -196,26 +206,27 @@ const ExerciseDetail = ({navigation, route}) => {
                     marginVertical: responsiveHeight(2),
                   }}
                 /> */}
-                <View
-                  style={{
-                    width: responsiveWidth(42),
-                    height: responsiveHeight(13),
-                    marginVertical: responsiveHeight(2),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Text
+                  <View
                     style={{
-                      fontFamily: 'Interstate-regular',
-                      fontSize: 17,
-                      color: 'white',
+                      width: responsiveWidth(42),
+                      height: responsiveHeight(13),
+                      marginVertical: responsiveHeight(2),
+                      justifyContent: 'center',
+                      alignItems: 'center',
                     }}>
-                    {item.focus_area[2]}
-                  </Text>
+                    <Text
+                      style={{
+                        fontFamily: 'Interstate-regular',
+                        fontSize: 17,
+                        color: 'white',
+                      }}>
+                      {/* {item.focus_area[2]} */}
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          )}
+            );
+          }}
           paginationStyle={{}}
           paginationActiveColor={'transparent'}
           paginationStyleItem={{}}

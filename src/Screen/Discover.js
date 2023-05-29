@@ -22,6 +22,7 @@ import Loader from '../component/Loader';
 import {ExerciseOfTheDay} from '../services/WorkoutPlan';
 import {GetAllCategories} from '../services/WorkoutCategory';
 import {BaseUrl} from '../Helping/BaseUrl';
+import {FlatListData} from '../Helping/FlatListData';
 
 const Discover = ({navigation}) => {
   const advance = [{item: 1}, {item: 2}, {item: 3}];
@@ -32,7 +33,7 @@ const Discover = ({navigation}) => {
     setLoading(true);
     try {
       const result = await ExerciseOfTheDay();
-      // console.log(result);
+      console.log(result,'detial of exercise');
       if (result.status == true) {
         setExerciseData(result.result);
         setLoading(false);
@@ -66,10 +67,21 @@ const Discover = ({navigation}) => {
     GetCategory();
   }, []);
   // console.log(exerciseData);
+  const buttonMapData = [
+    {btn: 'Picks for you'},
+    {btn: 'Quarantine workout'},
+    {btn: 'For Beginners'},
+    {btn: 'Fast Workouts'},
+    {btn: 'With Equipment'},
+    {btn: 'Sleep'},
+    {btn: 'Body Focus'},
+  ];
+
   return loading ? (
     <Loader />
   ) : (
     <ScrollView
+      nestedScrollEnabled={true}
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
       <View
         style={{
@@ -105,6 +117,41 @@ const Discover = ({navigation}) => {
           </Text>
           <Icon name={'search'} size={19} color="white" />
         </TouchableOpacity>
+        <View
+          style={[
+            CssStyle.flexData,
+            {
+              marginTop: responsiveHeight(3.4),
+              marginRight: responsiveHeight(-4),
+            },
+          ]}>
+          <FlatList
+            data={buttonMapData}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item, index}) => (
+              <View
+                style={{
+                  borderWidth: 1,
+                  borderColor: 'white',
+                  borderRadius: responsiveHeight(5),
+                  paddingHorizontal: responsiveWidth(3),
+                  paddingVertical: responsiveHeight(1.2),
+                  marginRight: responsiveWidth(3),
+                }}>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    fontFamily: 'Interstate-bold',
+                    color: 'white',
+                    letterSpacing: 0.5,
+                  }}>
+                  {item.btn}
+                </Text>
+              </View>
+            )}
+          />
+        </View>
         <View
           style={[
             CssStyle.flexData,
@@ -198,7 +245,9 @@ const Discover = ({navigation}) => {
             </View>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('WorkoutExercise', {item: exerciseData})
+                navigation.navigate('WorkoutDetail', {
+                  // item: item.workout_plan_id,
+                })
               }
               style={{
                 borderRadius: responsiveWidth(2),
@@ -252,63 +301,7 @@ const Discover = ({navigation}) => {
             )}
           />
         </View> */}
-        <View style={{marginTop: responsiveHeight(3)}}>
-          <FlatList
-            data={category}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item, index}) => {
-              return (
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('WorkoutExercise', {item: item})
-                  }
-                  style={{
-                    marginRight: responsiveWidth(5),
-                    alignItems: 'center',
-                  }}>
-                  {item.image ? (
-                    <Image
-                      borderRadius={responsiveWidth(2)}
-                      source={
-                        item.image || item.animation
-                          ? {uri: `${BaseUrl}` + item.animation}
-                          : require('../assets/noImage.jpeg')
-                      }
-                      style={{
-                        width: responsiveWidth(34),
-                        height: responsiveHeight(15),
-                      }}
-                      resizeMode="contain"
-                    />
-                  ) : (
-                    <NoImage
-                      width={responsiveWidth(34)}
-                      height={responsiveHeight(15)}
-                    />
-                  )}
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 13,
-                      fontFamily: 'Interstate-regular',
-                      marginTop: responsiveHeight(1),
-                    }}>
-                    {item.category_name}
-                  </Text>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 12,
-                      fontFamily: 'Interstate-regular',
-                    }}>
-                    21 min | 400 k
-                  </Text>
-                </TouchableOpacity>
-              );
-            }}
-          />
-        </View>
+        <FlatListData category={category} navigation={navigation} />
       </View>
     </ScrollView>
   );

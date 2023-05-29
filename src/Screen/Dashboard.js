@@ -83,6 +83,7 @@ const Dashboard = ({navigation}) => {
         setUserDetailData(result.result);
       } else {
         console.error(result.message);
+        WeatherApi();
         setLoading(false);
       }
     } catch (error) {
@@ -102,6 +103,7 @@ const Dashboard = ({navigation}) => {
       if (result.status == true) {
         setSevenFourData(result.result.array_agg);
         setLoading(false);
+        WeatherApi();
       } else {
         console.error(result.message);
         setLoading(false);
@@ -117,6 +119,7 @@ const Dashboard = ({navigation}) => {
       // console.log(result);
       if (result.status == true) {
         setAdvance(result.result);
+        WeatherApi();
       } else {
         console.error(result.message);
       }

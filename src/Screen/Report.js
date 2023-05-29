@@ -26,6 +26,7 @@ import {GetWeeklyReport} from '../services/WorkoutPlan';
 import {GetUserDetailApi} from '../services/AuthScreen';
 import moment from 'moment';
 import Loader from '../component/Loader';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Report = ({navigation}) => {
   const [historyDataDate, setHistoryDataDate] = useState([]);
@@ -140,9 +141,14 @@ const Report = ({navigation}) => {
       console.log(error);
     }
   };
-  const heightValue = getUserDetail?.height / 3.281;
+  const heightValue =
+    getUserDetail.height_unit == 'in'
+      ? getUserDetail.height / 39.37
+      : getUserDetail.height / 3.281;
+  // const heightValue = getUserDetail?.height / 3.281;
   const totalHeight = heightValue * heightValue;
-  console.log(totalHeight, 'hello');
+  const totalBMI = getUserDetail && getUserDetail.weight / totalHeight;
+  console.log(totalBMI, 'hello');
   useEffect(() => {
     GetHistoryData();
   }, []);
@@ -267,7 +273,7 @@ const Report = ({navigation}) => {
                       Today's Height
                     </Text>
                     <TouchableOpacity
-                      style={{}}
+                      style={{padding: '2%'}}
                       onPress={() =>
                         navigation.navigate('NutritionHeight', {item: 'Update'})
                       }>
@@ -330,7 +336,7 @@ const Report = ({navigation}) => {
                     Today's Weight
                   </Text>
                   <TouchableOpacity
-                    style={{}}
+                    style={{padding: '2%'}}
                     onPress={() =>
                       navigation.navigate('NutritionWeight', {item: 'Update'})
                     }>
@@ -393,9 +399,7 @@ const Report = ({navigation}) => {
                           marginTop: responsiveHeight(3),
                         },
                       ]}>
-                      {getUserDetail && totalHeight
-                        ? getUserDetail.weight / totalHeight
-                        : 'no data'}
+                      {getUserDetail && totalHeight ? totalBMI : 'no data'}
                     </Text>
                     <Text
                       style={[
@@ -427,15 +431,16 @@ const Report = ({navigation}) => {
                   </Text>
                 )}
               </View>
-            </View>
-
-            <View
-              style={[
-                CssStyle.flexJustify,
-                {marginVertical: responsiveHeight(2)},
-              ]}>
-              {colorWeight.map((item, index) => (
-                <View
+              {/* <View
+                style={[
+                  CssStyle.flexData,
+                  {
+                    marginVertical: responsiveHeight(2),
+                    borderRadius: responsiveHeight(10),
+                  },
+                ]}> */}
+              {/* {colorWeight.map((item, index) => ( */}
+              {/* <View
                   key={index}
                   style={{
                     position: 'relative',
@@ -471,8 +476,42 @@ const Report = ({navigation}) => {
                       />
                     </View>
                   )}
-                </View>
-              ))}
+                </View> */}
+              <LinearGradient
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 1}}
+                style={{
+                  width: responsiveWidth(82),
+                  borderRadius: responsiveHeight(20),
+                  paddingVertical: responsiveHeight(1),
+                  overflow: 'hidden',
+                  marginTop: responsiveHeight(2),
+                }}
+                colors={[
+                  '#00DCFF',
+                  '#0D66DA',
+                  '#00E737',
+                  '#B7FF2A',
+                  '#FF6700',
+                  '#FE3A3A',
+                ]}>
+                {/* {÷ */}
+                <View
+                  style={{
+                    height: responsiveHeight(4.7),
+                    width: responsiveWidth(1.7),
+                    backgroundColor: 'white',
+                    position: 'absolute',
+                    left: responsiveWidth(totalBMI ? totalBMI : 1),
+                    top: -0.7,
+                    // borderRadius: responsiveHeight(2),
+                  }}
+                />
+                {/* } */}
+                <Text></Text>
+              </LinearGradient>
+              {/* ))} */}
+              {/* </View> */}
             </View>
           </>
         ) : (

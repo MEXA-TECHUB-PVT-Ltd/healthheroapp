@@ -111,6 +111,31 @@ export const GetWeeklyWaterApi = async (waterId, id) => {
     return error;
   }
 };
+export const GetDailyWaterApi = async (waterId, id) => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      //   body: JSON.stringify({
+      //     user_id: id,
+      //     measure: measure,
+      //     measuring_unit: unit,
+      //     quantity: quantity,
+      //     created_at: date,
+      //   }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlWaterTracker}get_daily_tracking?water_tracker_id=${waterId}&user_id=${id}`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
 export const GetWaterRecordApi = async (id, measure, quantity, date) => {
   console.log(id, measure, quantity, date);
   try {
