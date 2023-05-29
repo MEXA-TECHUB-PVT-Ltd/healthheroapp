@@ -29,13 +29,15 @@ import {AddWaterApi, UpdateWaterApi} from '../../services/WaterTrackerApi';
 import {Water_Id} from '../../store/action';
 import moment from 'moment';
 
-const TypeOfTracker = ({navigation}) => {
+const TypeOfTracker = ({navigation, route}) => {
+  const {item} = route.params ? route.params : '';
+  console.log(item);
   const [loading, setLoading] = useState(false);
-  const [time, setTime] = useState(12);
+  const [time, setTime] = useState(item ? item.quantity : 12);
   const id = useSelector(data => data);
   const [openRestartModel, setOpenRestartModel] = useState(false);
-  const [addData, setAddData] = useState('glass');
-  const [typeDate, setType] = useState('');
+  const [addData, setAddData] = useState(item ? item.measure : 'glass');
+  const [typeDate, setType] = useState(item ? item.measuring_unit : '');
   const measureType = [{item: 'ml'}, {item: 'fl'}, {item: 'oz'}];
   const [measureModel, setMeasureModel] = useState(false);
 
@@ -200,7 +202,7 @@ const TypeOfTracker = ({navigation}) => {
               justifyContent: 'center',
             }}
             onPress={() => {
-              time == 0 ? {} : setTime(time - 2);
+              time == 0 ? {} : setTime(time - 1);
             }}>
             <Icon
               name="chevron-back-outline"
@@ -252,11 +254,14 @@ const TypeOfTracker = ({navigation}) => {
           <Text style={{color: 'white'}}>
             {typeDate ? typeDate : 'Measures'}
           </Text>
-          <TouchableOpacity onPress={() => setMeasureModel(!measureModel)}>
+          <TouchableOpacity
+            onPress={() => {
+              setMeasureModel(!measureModel), setOpenRestartModel(true);
+            }}>
             <Icon name="chevron-down-outline" size={25} color="white" />
           </TouchableOpacity>
         </View>
-        {measureModel ? (
+        {/* {measureModel ? (
           <View style={[CssStyle.shadow, styles.modelOpenData]}>
             {measureType.map((item, index) => (
               <>
@@ -280,7 +285,7 @@ const TypeOfTracker = ({navigation}) => {
               </>
             ))}
           </View>
-        ) : null}
+        ) : null} */}
       </View>
       <View
         style={{
@@ -324,52 +329,82 @@ const TypeOfTracker = ({navigation}) => {
                 borderTopLeftRadius: responsiveHeight(3),
                 paddingVertical: responsiveHeight(3.8),
               }}>
-              <View
-                // activeOpacity={1}
-                style={{
-                  // height: wp(28),
-                  width: 120,
-                  // backgroundColor: 'red',
-                  aspectRatio: 1,
-                  alignSelf: 'center',
-                  marginTop: responsiveHeight(1),
-                }}>
-                <Lottie
-                  source={assets.loader}
-                  autoPlay
-                  loop={true}
-                  resizeMode="cover"
-                  speed={1}
-                  colorFilter={[{color: 'red'}]}
-                />
-              </View>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 23,
-                  fontFamily: 'Interstate-regular',
-                  width: responsiveWidth(75),
-                  textAlign: 'center',
-                  lineHeight: responsiveHeight(4),
-                  marginTop: responsiveHeight(4),
-                  textTransform: 'capitalize',
-                }}>
-                water consumption added successfully
-              </Text>
-              <CustomButton
-                buttonText={'Go Back'}
-                onPress={() => {
-                  setOpenRestartModel(false), navigation.navigate('main');
-                }}
-                buttonColor={'transparent'}
-                mode="outlined"
-                fontWeight={'500'}
-                borderColor={'white'}
-                style={{
-                  marginTop: responsiveHeight(3.7),
-                  width: responsiveWidth(46),
-                }}
-              />
+              {measureModel ? (
+                <View style={[styles.modelOpenData]}>
+                  {measureType.map((item, index) => (
+                    <View>
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          setType(item.item),
+                            setMeasureModel(false),
+                            setOpenRestartModel(false);
+                        }}
+                        style={{
+                          paddingVertical: responsiveHeight(1.5),
+                        }}>
+                        <Text
+                          style={{
+                            color: 'white',
+                            marginLeft: responsiveWidth(3),
+                          }}>
+                          {item.item}
+                        </Text>
+                      </TouchableOpacity>
+                      <Line />
+                    </View>
+                  ))}
+                </View>
+              ) : (
+                <>
+                  <View
+                    // activeOpacity={1}
+                    style={{
+                      // height: wp(28),
+                      width: 120,
+                      // backgroundColor: 'red',
+                      aspectRatio: 1,
+                      alignSelf: 'center',
+                      marginTop: responsiveHeight(1),
+                    }}>
+                    <Lottie
+                      source={assets.loader}
+                      autoPlay
+                      loop={true}
+                      resizeMode="cover"
+                      speed={1}
+                      colorFilter={[{color: 'red'}]}
+                    />
+                  </View>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 23,
+                      fontFamily: 'Interstate-regular',
+                      width: responsiveWidth(75),
+                      textAlign: 'center',
+                      lineHeight: responsiveHeight(4),
+                      marginTop: responsiveHeight(4),
+                      textTransform: 'capitalize',
+                    }}>
+                    water consumption added successfully
+                  </Text>
+                  <CustomButton
+                    buttonText={'Go Back'}
+                    onPress={() => {
+                      setOpenRestartModel(false), navigation.navigate('main');
+                    }}
+                    buttonColor={'transparent'}
+                    mode="outlined"
+                    fontWeight={'500'}
+                    borderColor={'white'}
+                    style={{
+                      marginTop: responsiveHeight(3.7),
+                      width: responsiveWidth(46),
+                    }}
+                  />
+                </>
+              )}
             </View>
           </View>
         </View>
@@ -391,17 +426,17 @@ const styles = StyleSheet.create({
   },
   modelOpenData: {
     paddingHorizontal: responsiveWidth(3),
-    borderWidth: 1,
-    borderColor: '#eee',
-    borderBottomEndRadius: responsiveWidth(2),
-    borderBottomLeftRadius: responsiveWidth(2),
-    backgroundColor: 'white',
+    // borderWidth: 1,
+    // borderColor: '#eee',
+    // borderBottomEndRadius: responsiveWidth(2),
+    // borderBottomLeftRadius: responsiveWidth(2),
+    // backgroundColor: 'white',
     marginHorizontal: responsiveWidth(0.1),
-    elevation: 1,
-    position: 'absolute',
+    // elevation: 1,
+    // position: 'absolute',
     width: responsiveWidth(87.8),
-    top: responsiveHeight(4),
-    paddingTop: responsiveHeight(3),
+    // top: responsiveHeight(4),
+    paddingBottom: responsiveHeight(3),
   },
   signInText: {
     color: 'white',

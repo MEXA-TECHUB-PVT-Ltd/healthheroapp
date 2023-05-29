@@ -17,36 +17,30 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import {AppColors} from '../../Helping/AppColor';
-import {Countdown} from 'react-native-element-timer';
-import ProgressCircle from 'react-native-progress-circle';
-import Logo from '../../assets/Icon3';
+import Logo from '../../assets/Icon';
 import CustomButton from '../../component/CustomButton';
-import {
-  GetWorkoutById,
-  GetWorkoutPlanAll,
-  GetWorkoutPlanById,
-  StartWorkoutPlanApi,
-} from '../../services/WorkoutPlan';
+import {GetWorkoutPlanAll} from '../../services/WorkoutPlan';
 import Loader from '../../component/Loader';
 import {BaseUrl} from '../../Helping/BaseUrl';
 import {useDispatch, useSelector} from 'react-redux';
-import {DataWorkPlan} from '../../store/action';
+import {DataWorkPlan, Workout_Plan_Id} from '../../store/action';
 
 const WorkoutDetail = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
   const [loading, setLoading] = useState(false);
   const [workoutPlanData, setWorkoutPlanData] = useState([]);
-  const id = useSelector(data => data);
+  const id = useSelector(data => data.workoutPlanId);
   const [loadingStarted, setLoadingStarted] = useState(false);
   const StartWorkoutPlan = async () => {
-    navigation.navigate('StartExercise', {item: workoutPlanData});
+    navigation.navigate('StartExercise', {item: 0});
   };
   const dispatch = useDispatch();
 
   const GetWorkOutAll = async () => {
     setLoading(true);
+    dispatch(Workout_Plan_Id(item));
     try {
-      const result = await GetWorkoutPlanAll(item);
+      const result = await GetWorkoutPlanAll(item ? item : id);
       // console.log(result.result);
       if (result.status == true) {
         setWorkoutPlanData(result.result);
@@ -63,7 +57,7 @@ const WorkoutDetail = ({navigation, route}) => {
   };
   useEffect(() => {
     // GetWorkoutId();
-    GetWorkOutAll();
+    item?.workout_plan_id ? {} : GetWorkOutAll();
   }, [item]);
   return loading ? (
     <Loader />
@@ -72,7 +66,11 @@ const WorkoutDetail = ({navigation, route}) => {
       <ImageBackground
         // resizeMode="contain"
         style={{width: responsiveWidth(100), height: responsiveHeight(40)}}
-        source={{uri: `${BaseUrl}` + workoutPlanData?.image}}>
+        source={
+          item?.workout_plan_id
+            ? require('../../assets/planImage.jpg')
+            : {uri: `${BaseUrl}` + workoutPlanData?.image}
+        }>
         <TouchableOpacity
           style={{
             marginLeft: responsiveWidth(3),
@@ -93,7 +91,9 @@ const WorkoutDetail = ({navigation, route}) => {
           paddingTop: responsiveHeight(2.7),
         }}>
         <Text style={[styles.signInText]}>
-          {workoutPlanData?.workout_title}
+          {item?.workout_plan_id
+            ? item?.plan_name
+            : workoutPlanData?.workout_title}
         </Text>
         <View
           style={[
@@ -108,10 +108,12 @@ const WorkoutDetail = ({navigation, route}) => {
             },
           ]}>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            {workoutPlanData?.workout_plan_exersises
+            {item?.exercise_details
+              ? item?.exercise_details?.length
+              : workoutPlanData?.workout_plan_exersises
               ? workoutPlanData?.workout_plan_exersises?.length
               : 0}{' '}
-            <Text style={{color: 'white'}}>workouts</Text>
+            <Text style={{color: 'white'}}>exercises</Text>
           </Text>
           <Text
             style={{
@@ -122,7 +124,7 @@ const WorkoutDetail = ({navigation, route}) => {
             {workoutPlanData?.level_of_workout}
           </Text>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            {workoutPlanData?.time?.slice(0, 2)}{' '}
+            {workoutPlanData?.time ? workoutPlanData?.time?.slice(0, 2) : 0}{' '}
             <Text style={{color: 'white'}}>min</Text>
           </Text>
         </View>
@@ -135,19 +137,25 @@ const WorkoutDetail = ({navigation, route}) => {
               marginBottom: responsiveHeight(3),
               lineHeight: responsiveHeight(2.4),
             }}>
-            {workoutPlanData.d}
+            {item?.workout_plan_id
+              ? item?.description
+              : workoutPlanData.description}
           </Text>
           <View style={{flex: 1, paddingBottom: responsiveHeight(8)}}>
             <FlatList
               showsVerticalScrollIndicator={false}
-              data={workoutPlanData?.workout_plan_exersises}
+              data={
+                item?.exercise_details
+                  ? item?.exercise_details
+                  : workoutPlanData?.workout_plan_exersises
+              }
               renderItem={({item, index}) => {
-                // console.log(item, 'flatlist');
+                console.log(item, 'flatlist');
                 return (
                   <TouchableOpacity
                     onPress={() =>
                       navigation.navigate('ExerciseDetail', {
-                        item: workoutPlanData,
+                        item: index,
                       })
                     }
                     style={[
@@ -156,12 +164,15 @@ const WorkoutDetail = ({navigation, route}) => {
                     ]}>
                     <View style={{width: responsiveWidth(27)}}>
                       <Image
+                        borderRadius={responsiveWidth(2)}
                         source={{
-                          uri: `${BaseUrl}` + item?.exersise_details?.animation,
+                          uri: item?.exersise_details
+                            ? `${BaseUrl}` + item?.exersise_details?.animation
+                            : `${BaseUrl}` + item?.animation,
                         }}
                         resizeMode="contain"
                         style={{
-                          width: 99,
+                          width: responsiveWidth(24),
                           height: 69,
                           //   marginRight: responsiveWidth(2),
                         }}
@@ -175,7 +186,21 @@ const WorkoutDetail = ({navigation, route}) => {
                           fontFamily: 'Interstate-regular',
                           //   opacity: 0.8,
                         }}>
-                        {item?.exersise_details?.title}
+                        {item?.exersise_details
+                          ? item?.exersise_details?.title
+                          : item?.title}
+                      </Text>
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 11,
+                          fontFamily: 'Interstate-regular',
+                          marginTop: responsiveHeight(0.4),
+                          //   opacity: 0.8,
+                        }}>
+                        {item?.exersise_details
+                          ? item?.exersise_details?.description
+                          : item?.description}
                       </Text>
                       <View
                         style={[

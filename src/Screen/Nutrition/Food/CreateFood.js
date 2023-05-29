@@ -1,4 +1,5 @@
 import {
+  Alert,
   FlatList,
   KeyboardAvoidingView,
   Modal,
@@ -26,56 +27,62 @@ import {Line} from '../../../component/Line';
 import Lottie from 'lottie-react-native';
 import assets from '../../../assets';
 import {AddFoodUserApi} from '../../../services/DietPlan';
-import {GetFoodApi} from '../../../services/FoodApi';
-import Moment from 'react-moment';
-import moment from 'moment';
+import {CreateFoodApi} from '../../../services/FoodApi';
 import Input from '../../../component/Input';
 
 const CreateFood = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
   const [loading, setLoading] = useState(false);
-  const [time, setTime] = useState(1);
   const id = useSelector(data => data);
   const [openRestartModel, setOpenRestartModel] = useState(false);
-  const foodType = [{item: 'Scoops'}, {item: 'Grams'}, {item: 'oz'}];
-  const [typeDate, setType] = useState('Beef');
+  const foodType = [{item: 'cup'}, {item: 'gram'}, {item: 'lb'}];
   const [typeDateFood, setTypeFood] = useState('');
-  // const measureType = [{item: 'Food 1'}, {item: 'Food 2'}, {item: 'Food 3'}];
-  const [measureModel, setMeasureModel] = useState(false);
   const [foodModel, setFoodModel] = useState(false);
-  const [getFoodData, setGetFoodData] = useState('');
-  const [typeFoodId, setTypeFoodId] = useState('');
-  const GetFood = async () => {
-    try {
-      const result = await GetFoodApi();
-      console.log(result, 'get the food');
-      if (result.status == true) {
-        setGetFoodData(result.result);
-      } else {
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    GetFood();
-  }, []);
+  const [foodName, setFoodName] = useState('');
+  const [energy, setEnergy] = useState('');
+  const [unit, setUnit] = useState('');
+  const [protein, setProtein] = useState('');
+  const [carbs, setCarbs] = useState('');
+  const [fats, setFats] = useState('');
+  const [monoFats, setMonoFats] = useState('');
+  const [saturatedFat, setSaturatedFat] = useState('');
+  const [sugar, setSugar] = useState('');
+  const [fiber, setFiber] = useState('');
+  const [sodium, setSodium] = useState('');
+  const [calcium, setCalcium] = useState('');
+  const [iron, setIron] = useState('');
+  const [vitaminA, setVitaminA] = useState('');
+  const [vitaminB, setVitaminB] = useState('');
+  const [vitaminC, setVitaminC] = useState('');
+  const [cholestrol, setCholestrol] = useState('');
 
   const AddFood = async () => {
     setLoading(true);
     try {
-      const result = await AddFoodUserApi(
+      const result = await CreateFoodApi(
+        'user',
         id.id,
-        id.dietPlanId,
-        item,
-        3000109,
-        // typeFoodId,
-        time,
+        foodName,
+        energy,
         typeDateFood,
-        moment(new Date()).format('YYYY-MM-DD'),
+        unit,
+        protein,
+        carbs,
+        fats,
+        monoFats,
+        saturatedFat,
+        sugar,
+        fiber,
+        sodium,
+        calcium,
+        iron,
+        vitaminA,
+        vitaminB,
+        vitaminC,
+        cholestrol,
       );
       console.log(result, 'this is the');
+      // Alert.alert('Hy', result);
       if (result) {
         setLoading(false);
         setOpenRestartModel(true);
@@ -84,6 +91,7 @@ const CreateFood = ({navigation, route}) => {
         // navigation.navigate('SelectPlan');
       }
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -100,17 +108,7 @@ const CreateFood = ({navigation, route}) => {
           paddingTop: responsiveHeight(3),
           backgroundColor: '#0A1F58',
         }}>
-        <TouchableOpacity
-          style={{marginLeft: responsiveWidth(-3)}}
-          onPress={() => navigation.goBack()}>
-          <Icon
-            name="chevron-back"
-            size={29}
-            style={{padding: '2%'}}
-            color={AppColors.buttonText}
-          />
-        </TouchableOpacity>
-        <View style={{marginTop: responsiveHeight(6), flex: 0.5}}>
+        <View style={{marginTop: responsiveHeight(4), flex: 0.5}}>
           <Text style={[CssStyle.textInsideSettingComponent, {fontSize: 41}]}>
             Add Food
           </Text>
@@ -128,43 +126,51 @@ const CreateFood = ({navigation, route}) => {
             consumed.
           </Text>
         </View>
-        <View style={{flex: 0.9}}>
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
+        <View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Food Name'}
+              noIcon={true}
+              value={foodName}
+              onChangeText={e => {
+                setFoodName(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Energy'}
+              noIcon={true}
+              value={energy}
+              keyboardType="numeric"
+              onChangeText={e => {
+                setEnergy(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
           <View
             style={[
               CssStyle.flexJustify,
               {
-                backgroundColor: '#515C7A',
+                backgroundColor: '#ffffff60',
                 borderRadius: responsiveWidth(7),
                 paddingHorizontal: responsiveWidth(4),
-                paddingVertical: responsiveHeight(1.2),
-                zIndex: measureModel ? 0 : 999,
-                marginTop: responsiveHeight(1),
+                paddingVertical: responsiveHeight(1.6),
+                // zIndex: measureModel ? 0 : 999,
+                marginBottom: responsiveHeight(0.8),
+                marginTop: responsiveHeight(1.8),
               },
             ]}>
             <Text style={{color: 'white'}}>
-              {typeDateFood ? typeDateFood : 'Food Unit'}
+              {typeDateFood ? typeDateFood : 'Measures'}
             </Text>
             <TouchableOpacity onPress={() => setFoodModel(!foodModel)}>
               <Icon name="chevron-down-outline" size={25} color="white" />
@@ -176,11 +182,11 @@ const CreateFood = ({navigation, route}) => {
                 CssStyle.shadow,
                 styles.modelOpenData,
                 {
-                  top: responsiveHeight(13.9),
+                  top: responsiveHeight(23.9),
                 },
               ]}>
               {foodType.map((item, index) => (
-                <>
+                <View key={index}>
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
@@ -198,391 +204,247 @@ const CreateFood = ({navigation, route}) => {
                     </Text>
                   </TouchableOpacity>
                   <Line />
-                </>
+                </View>
               ))}
             </View>
           ) : null}
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Input
-            bgColor={'#ffffff60'}
-            placeholder={'Email'}
-            noIcon={true}
-            // value={email}
-            onChangeText={e => {
-              //   setEmail(e), handleValidEmail(e);
-            }}
-            fontSize={16}
-            style={{marginTop: responsiveHeight(0.6)}}
-          />
-          <Text
-            style={[
-              CssStyle.textInfoSetting,
-              {
-                fontSize: 24,
-                fontFamily: 'Interstate-regular',
-                letterSpacing: 0.6,
-                zIndex: -1,
-              },
-            ]}>
-            Food Quality
-          </Text>
-          <View
-            style={[
-              CssStyle.flexJustify,
-              {paddingHorizontal: responsiveWidth(1), zIndex: -999},
-            ]}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#FF510050',
-                borderRadius: responsiveHeight(10),
-                width: 39,
-                height: 39,
-                alignItems: 'center',
-                justifyContent: 'center',
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Units'}
+              noIcon={true}
+              value={unit}
+              keyboardType="numeric"
+              onChangeText={e => {
+                setUnit(e);
               }}
-              onPress={() => {
-                time == 0 ? {} : setTime(time - 2);
-              }}>
-              <Icon
-                name="chevron-back-outline"
-                size={29}
-                color={AppColors.buttonText}
-              />
-            </TouchableOpacity>
-            <View style={{alignItems: 'center'}}>
-              <Text
-                style={{
-                  fontSize: 36,
-                  color: 'white',
-                  fontFamily: 'Interstate-regular',
-                }}>
-                {time}
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#FF510050',
-                borderRadius: responsiveHeight(10),
-                width: 39,
-                height: 39,
-                alignItems: 'center',
-                justifyContent: 'center',
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Protein'}
+              noIcon={true}
+              value={protein}
+              keyboardType="numeric"
+              onChangeText={e => {
+                setProtein(e);
               }}
-              onPress={() => (time == 180 ? {} : setTime(time + 2))}>
-              <Icon
-                name="chevron-forward-outline"
-                size={29}
-                color={AppColors.buttonText}
-              />
-            </TouchableOpacity>
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Carbs'}
+              noIcon={true}
+              value={carbs}
+              keyboardType="numeric"
+              onChangeText={e => {
+                setCarbs(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Fats'}
+              noIcon={true}
+              value={fats}
+              keyboardType="numeric"
+              onChangeText={e => {
+                setFats(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Monosaturated Fats (Optional)'}
+              noIcon={true}
+              value={monoFats}
+              keyboardType="numeric"
+              onChangeText={e => {
+                setMonoFats(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Saturated Fat (Optional)'}
+              noIcon={true}
+              value={saturatedFat}
+              keyboardType="numeric"
+              onChangeText={e => {
+                setSaturatedFat(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Sugar (optional)'}
+              noIcon={true}
+              keyboardType="numeric"
+              value={sugar}
+              onChangeText={e => {
+                setSugar(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Fiber (optional)'}
+              noIcon={true}
+              value={fiber}
+              keyboardType="numeric"
+              onChangeText={e => {
+                setFiber(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Sodium (optional)'}
+              noIcon={true}
+              value={sodium}
+              keyboardType="numeric"
+              onChangeText={e => {
+                setSodium(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Calcium (optional)'}
+              noIcon={true}
+              value={calcium}
+              keyboardType="numeric"
+              onChangeText={e => {
+                setCalcium(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Iron (optional)'}
+              noIcon={true}
+              keyboardType="numeric"
+              value={iron}
+              onChangeText={e => {
+                setIron(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Vitamin A (optional)'}
+              noIcon={true}
+              value={vitaminA}
+              keyboardType="numeric"
+              onChangeText={e => {
+                setVitaminA(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Vitamin B (optional)'}
+              noIcon={true}
+              value={vitaminB}
+              keyboardType="numeric"
+              onChangeText={e => {
+                setVitaminB(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Vitamin C (optional)'}
+              noIcon={true}
+              value={vitaminC}
+              keyboardType="numeric"
+              onChangeText={e => {
+                setVitaminC(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
+          </View>
+          <View>
+            <Input
+              height={responsiveHeight(6.5)}
+              bgColor={'#ffffff60'}
+              placeholder={'Cholestrol (optional)'}
+              noIcon={true}
+              keyboardType="numeric"
+              value={cholestrol}
+              onChangeText={e => {
+                setCholestrol(e);
+              }}
+              fontSize={16}
+              style={{marginTop: responsiveHeight(1)}}
+            />
           </View>
         </View>
         <View
           style={{
             alignItems: 'center',
-            paddingTop: responsiveHeight(2),
-            flex: 0.3,
+            paddingTop: responsiveHeight(4),
+            paddingBottom: responsiveHeight(8),
+            // flex: 0.3,
           }}>
           <CustomButton
             loading={loading}
             onPress={() =>
-              typeDate && typeDateFood
+              foodName && energy && unit && protein && carbs && fats
                 ? AddFood()
                 : ToastAndroid.show(
                     'Please fill the required data',
@@ -650,7 +512,7 @@ const CreateFood = ({navigation, route}) => {
                 <CustomButton
                   buttonText={'Go Back'}
                   onPress={() => {
-                    setOpenRestartModel(false), navigation.navigate('main');
+                    setOpenRestartModel(false), navigation.goBack();
                   }}
                   buttonColor={'transparent'}
                   mode="outlined"
@@ -692,7 +554,8 @@ const styles = StyleSheet.create({
     elevation: 1,
     position: 'absolute',
     width: responsiveWidth(87.8),
-    top: responsiveHeight(4),
+    // top: responsiveHeight(4),
     paddingTop: responsiveHeight(3),
+    zIndex: 999,
   },
 });

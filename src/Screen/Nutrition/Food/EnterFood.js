@@ -25,19 +25,19 @@ import {Line} from '../../../component/Line';
 import Lottie from 'lottie-react-native';
 import assets from '../../../assets';
 import {AddFoodUserApi} from '../../../services/DietPlan';
-import {GetFoodApi} from '../../../services/FoodApi';
+import {GetCreateFoodApi, GetFoodApi} from '../../../services/FoodApi';
 import Moment from 'react-moment';
 import moment from 'moment';
 
 const EnterFood = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
+  // console.log(item);
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(1);
   const id = useSelector(data => data);
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const foodType = [{item: 'Scoops'}, {item: 'Grams'}, {item: 'oz'}];
-  const [typeDate, setType] = useState('Beef');
+  const [typeDate, setType] = useState('');
   const [typeDateFood, setTypeFood] = useState('');
   // const measureType = [{item: 'Food 1'}, {item: 'Food 2'}, {item: 'Food 3'}];
   const [measureModel, setMeasureModel] = useState(false);
@@ -46,20 +46,20 @@ const EnterFood = ({navigation, route}) => {
   const [typeFoodId, setTypeFoodId] = useState('');
   const GetFood = async () => {
     try {
-      const result = await GetFoodApi();
+      const result = await GetCreateFoodApi();
       console.log(result, 'get the food');
       if (result.status == true) {
         setGetFoodData(result.result);
       } else {
       }
     } catch (error) {
-      console.log(error);
+      console.log(error, 'enter food');
     }
   };
   useEffect(() => {
     GetFood();
   }, []);
-
+  // console.log(typeFoodId,'flsa');
   const AddFood = async () => {
     setLoading(true);
     try {
@@ -67,8 +67,8 @@ const EnterFood = ({navigation, route}) => {
         id.id,
         id.dietPlanId,
         item,
-        3000109,
-        // typeFoodId,
+        // 3000109,
+        typeFoodId,
         time,
         typeDateFood,
         moment(new Date()).format('YYYY-MM-DD'),
@@ -165,19 +165,18 @@ const EnterFood = ({navigation, route}) => {
           </TouchableOpacity>
         </View>
         {measureModel ? (
-          <View style={[CssStyle.shadow, styles.modelOpenData]}>
-            {/* {getFoodData?.map((item, index) => (
-              
-            ))} */}
-
+          <View style={[CssStyle.shadow, styles.modelOpenData, {flex: 1}]}>
             <TouchableOpacity
               onPress={() => navigation.navigate('CreateFood')}
               style={{
-                backgroundColor: '#00000010',
+                // backgroundColor: '#00000010',
                 paddingVertical: responsiveHeight(1),
+                flexDirection: 'row',
                 alignItems: 'center',
+                // justifyContent: 'center',
                 // paddingHorizontal: responsiveWidth(4),
               }}>
+              <Icon name="add" size={23} color="black" />
               <Text
                 style={{
                   color: AppColors.textColor,
@@ -186,35 +185,38 @@ const EnterFood = ({navigation, route}) => {
                 Add Food
               </Text>
             </TouchableOpacity>
-            <FlatList
-              data={getFoodData}
-              renderItem={({item, index}) => {
-                console.log(item);
-                return (
-                  <>
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => {
-                        setType(item.food_name),
-                          setTypeFoodId(item.food_id),
-                          setMeasureModel(false);
-                      }}
-                      style={{
-                        paddingVertical: responsiveHeight(1.5),
-                      }}>
-                      <Text
+            <View style={{height: responsiveHeight(30)}}>
+              <FlatList
+                data={getFoodData}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                  // console.log(item);
+                  return (
+                    <View style={{flex: 1}}>
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          setType(item.food_name),
+                            setTypeFoodId(item.food_id),
+                            setMeasureModel(false);
+                        }}
                         style={{
-                          color: AppColors.textColor,
-                          marginLeft: responsiveWidth(3),
+                          paddingVertical: responsiveHeight(1.5),
                         }}>
-                        {item.food_name}
-                      </Text>
-                    </TouchableOpacity>
-                    <Line />
-                  </>
-                );
-              }}
-            />
+                        <Text
+                          style={{
+                            color: AppColors.textColor,
+                            marginLeft: responsiveWidth(3),
+                          }}>
+                          {item.food_name}
+                        </Text>
+                      </TouchableOpacity>
+                      {index == getFoodData?.length - 1 ? null : <Line />}
+                    </View>
+                  );
+                }}
+              />
+            </View>
           </View>
         ) : null}
         {foodModel ? (
@@ -224,10 +226,12 @@ const EnterFood = ({navigation, route}) => {
               styles.modelOpenData,
               {
                 top: responsiveHeight(13.9),
+                // flex: 1,
+                // height:responsiveHeight(20)
               },
             ]}>
             {foodType.map((item, index) => (
-              <>
+              <View>
                 <TouchableOpacity
                   key={index}
                   onPress={() => {
@@ -245,7 +249,7 @@ const EnterFood = ({navigation, route}) => {
                   </Text>
                 </TouchableOpacity>
                 <Line />
-              </>
+              </View>
             ))}
           </View>
         ) : null}
@@ -432,6 +436,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: responsiveWidth(87.8),
     top: responsiveHeight(4),
-    paddingTop: responsiveHeight(3),
+    paddingTop: responsiveHeight(4),
+    paddingBottom: responsiveHeight(1),
   },
 });

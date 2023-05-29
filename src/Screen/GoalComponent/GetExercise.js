@@ -62,39 +62,39 @@ const GetExercise = ({navigation, route}) => {
   const [completed, setCompleted] = useState(false);
   useEffect(() => {
     // item == 'RestTime' ?  : '';
-    countdownRef.current.start();
+    // countdownRef.current.start();
   }, []);
-  const isFocused = useIsFocused();
-  useFocusEffect(
-    useCallback(() => {
-      setTakeTime(0 + 1);
-      const timerID = setInterval(() => {
-        timerRef.current -= 1;
-        if (timerRef.current < 0) {
-          clearInterval(timerID);
-          // setTimeData('hello');
-        } else {
-          console.log('this is the owner ' + timerID);
-          activeIndex == dataTakeFromRedux.length - 1
-            ? setCompleted(true)
-            : navigation.navigate('RestTime', {item: activeIndex});
-          activeIndex == dataTakeFromRedux.length - 1
-            ? console.log('Completed the workout plan')
-            : (setActiveIndex(activeIndex + 1),
-              flatNode.current.scrollToIndex({
-                index: activeIndex + 1,
-                animated: true,
-              }));
-          // : {};
-          setTimeData(timerID);
-          setTakeTime(timerRef.current);
-        }
-      }, dataTakeFromRedux[activeIndex].reps * 500);
-      return () => {
-        clearInterval(timerID);
-      };
-    }, [isFocused, item]),
-  );
+  // const isFocused = useIsFocused();
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     setTakeTime(0 + 1);
+  //     const timerID = setInterval(() => {
+  //       timerRef.current -= 1;
+  //       if (timerRef.current < 0) {
+  //         clearInterval(timerID);
+  //         // setTimeData('hello');
+  //       } else {
+  //         console.log('this is the owner ' + timerID);
+  //         activeIndex == dataTakeFromRedux.length - 1
+  //           ? setCompleted(true)
+  //           : navigation.navigate('RestTime', {item: activeIndex});
+  //         activeIndex == dataTakeFromRedux.length - 1
+  //           ? console.log('Completed the workout plan')
+  //           : (setActiveIndex(activeIndex + 1),
+  //             flatNode.current.scrollToIndex({
+  //               index: activeIndex + 1,
+  //               animated: true,
+  //             }));
+  //         // : {};
+  //         setTimeData(timerID);
+  //         setTakeTime(timerRef.current);
+  //       }
+  //     }, dataTakeFromRedux[activeIndex].reps * 500);
+  //     return () => {
+  //       clearInterval(timerID);
+  //     };
+  //   }, [isFocused, item]),
+  // );
 
   // useFocusEffect(
   //   useCallback(() => {
@@ -109,6 +109,9 @@ const GetExercise = ({navigation, route}) => {
   //   }, []),
   // );
   // console.log(activeIndex, 'index value');
+  const [ActiveTimeSec, setActiveTimeSec] = useState(
+    dataTakeFromRedux[activeIndex].time,
+  );
   return (
     <ScrollView style={[CssStyle.mainContainer, {}]}>
       <ImageBackground
@@ -164,17 +167,19 @@ const GetExercise = ({navigation, route}) => {
           scrollEnabled={false}
           data={dataTakeFromRedux}
           renderItem={({item, index}) => {
+            // console.log(item);
             return (
               <View
                 key={index}
                 style={{
                   width: responsiveWidth(100),
                   paddingHorizontal: responsiveWidth(6),
+                  flex: 1,
                 }}>
                 <Text style={[styles.signInText]}>
                   {item.exersise_details.title}
                 </Text>
-                <View
+                {/* <View
                   style={[
                     CssStyle.flexJustify,
                     {
@@ -185,29 +190,13 @@ const GetExercise = ({navigation, route}) => {
                       paddingHorizontal: responsiveWidth(8),
                       marginTop: responsiveHeight(3.6),
                     },
-                  ]}>
-                  {/* <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            {item?.workout_plan_exersises
-              ? item?.workout_plan_exersises?.length
-              : 0}{' '}
-            <Text style={{color: 'white'}}>moves</Text>
-          </Text>
-          <Text style={{color: '#FF5100', fontFamily: 'Interstate-bold'}}>
-            {item?.level_of_workout}
-          </Text>
-          <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            {completedModel
-              ? '25'
-              : `${item?.time ? item?.time?.slice(0, 2) : '0'}`}{' '}
-            <Text style={{color: 'white'}}>sec</Text>
-          </Text> */}
-                </View>
+                  ]}></View> */}
+                <Text style={{color: 'white'}}>{item.time}</Text>
                 <View
                   style={[
                     CssStyle.flexJustify,
-                    {marginTop: responsiveHeight(5.4)},
+                    {marginTop: responsiveHeight(9.4)},
                   ]}>
-                  {/* <Text style={styles.watchTime}>00:{<Countdown ref={countdownRef} style={styles.timer} textStyle={styles.watchTime} initialSeconds={30} onTimes={(e) => {}} onPause={(e) => {}} onEnd={(e) => navigation.navigate("Rest")} />}</Text> */}
                   <TouchableOpacity
                     style={{
                       backgroundColor: '#FF510050',
@@ -232,20 +221,20 @@ const GetExercise = ({navigation, route}) => {
                       color={AppColors.buttonText}
                     />
                   </TouchableOpacity>
-                  <ProgressCircle
+                  {/* <ProgressCircle
                     percent={item?.reps * 8}
                     radius={52}
                     borderWidth={4}
                     color={'#FF7B27'}
                     shadowColor="#C6C6C6"
                     bgColor={AppColors.blueColor}>
-                    <Text>{item.reps}</Text>
+                      <Text style={{color:'white'}}>{item.time}</Text>
                     <View style={CssStyle.flexData}>
                       <Countdown
                         ref={countdownRef}
                         style={styles.timer}
                         textStyle={styles.watchTime}
-                        initialSeconds={item.reps ? item.reps : 15}
+                        initialSeconds={item.time}
                         onTimes={e => {
                           // setDataNumber(e);
                         }}
@@ -253,21 +242,28 @@ const GetExercise = ({navigation, route}) => {
                         onEnd={e => {}}
                       />
                     </View>
-                  </ProgressCircle>
-                  {/* <CountdownCircleTimer
-                  isPlaying
-                  duration={item.reps}
-                  size={120}
-                  strokeWidth={8}
-                  onComplete={() => navigation.navigate('RestTime')}
-                  colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
-                  {({remainingTime}) => (
-                    <Text style={{color: 'white', fontSize: 22}}>
-                      {remainingTime}
-                    </Text>
-                  )}
-                </CountdownCircleTimer> */}
-                  {console.log(activeIndex)}
+                  </ProgressCircle> */}
+                  <CountdownCircleTimer
+                    isPlaying
+                    duration={dataTakeFromRedux[index].time}
+                    size={120}
+                    strokeWidth={8}
+                    onComplete={e => {
+                      activeIndex !== dataTakeFromRedux.length - 1
+                        ? (setActiveIndex(activeIndex + 1),
+                          flatNode.current.scrollToIndex({
+                            index: activeIndex + 1,
+                            animated: true,
+                          }))
+                        : null;
+                    }}
+                    colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
+                    {({remainingTime}) => (
+                      <Text style={{color: 'white', fontSize: 22}}>
+                        {remainingTime}
+                      </Text>
+                    )}
+                  </CountdownCircleTimer>
                   <TouchableOpacity
                     style={{
                       backgroundColor: '#FF510050',
@@ -278,6 +274,7 @@ const GetExercise = ({navigation, route}) => {
                       justifyContent: 'center',
                     }}
                     onPress={() => {
+                      // navigation.navigate('RestTime', {item: activeIndex}),
                       activeIndex == dataTakeFromRedux.length - 1
                         ? {}
                         : (flatNode.current.scrollToIndex({
@@ -293,7 +290,7 @@ const GetExercise = ({navigation, route}) => {
                     />
                   </TouchableOpacity>
                 </View>
-                <View style={{marginTop: responsiveHeight(6), flex: 1}}>
+                <View style={{marginTop: responsiveHeight(9), flex: 1}}>
                   <Text
                     style={{
                       color: 'white',
@@ -335,7 +332,12 @@ const GetExercise = ({navigation, route}) => {
                         ]}>
                         <View style={{width: responsiveWidth(32)}}>
                           <Image
-                            source={require('../../assets/Rectangle33.png')}
+                            source={{
+                              uri:
+                                `${BaseUrl}` +
+                                dataTakeFromRedux[index + 1]?.exersise_details
+                                  .animation,
+                            }}
                             resizeMode="contain"
                             style={{
                               width: 99,

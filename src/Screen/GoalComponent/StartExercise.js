@@ -19,23 +19,17 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Countdown} from 'react-native-element-timer';
 import ProgressCircle from 'react-native-progress-circle';
 import {AppColors} from '../../Helping/AppColor';
-import Logo from '../../assets/Icon3';
 import Timer from '../../assets/Icon';
 import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
 import {GetCountDownApi} from '../../services/CountDownApi';
 import {useSelector} from 'react-redux';
 import {BaseUrl} from '../../Helping/BaseUrl';
-import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import Loader from '../../component/Loader';
 
 const StartExercise = ({navigation, route}) => {
-  const {item} = route.params ? route.params : '';
-  // console.log(item.workout_plan_exersises, 'start exercise');
-  const [countDownData, setCountDownData] = useState(
-    countDownData == 0 ? 0 : countDownData,
-  );
-  // console.log(countDownData);
+  const {item} = route.params ? route.params : 0;
+  const [countDownData, setCountDownData] = useState(9);
   const id = useSelector(data => data);
   const GetCategory = async () => {
     setLoading(true);
@@ -55,25 +49,16 @@ const StartExercise = ({navigation, route}) => {
       console.log(error);
     }
   };
-  // console.log(
-  //   id.workoutPlanData.workout_plan_exersises[0].exersise_details.title,
-  //   'redux data',
-  //   '',
-  // );
   const [reduxData, setReduxData] = useState(
-    id?.workoutPlanData?.workout_plan_exersises,
+    id?.workoutPlanData?.workout_plan_exersises[item],
   );
-  // console.log(reduxData);
   useEffect(() => {
     GetCategory();
   }, []);
   const countdownRef = useRef();
   const [loading, setLoading] = useState(false);
-  const [dataCount, setDataCount] = useState(
-    countDownData ? countDownData : 12,
-  );
   useEffect(() => {
-    setTimeout(() => {}, 100);
+    countdownRef.current.start();
   }, []);
 
   return loading ? (
@@ -82,9 +67,7 @@ const StartExercise = ({navigation, route}) => {
     <ImageBackground
       style={{
         flex: 1,
-        // resizeMode: 'contain',
       }}
-      // resizeMode="contain"
       source={require('../../assets/Health-Hero/backgroundOther.png')}>
       <LinearGradient
         colors={['#0B183C00', '#0B183Ce1']}
@@ -108,8 +91,6 @@ const StartExercise = ({navigation, route}) => {
             percent={countdownRef * 40}
             radius={50}
             borderWidth={4}
-            // outerCircleStyle={{backgroundColor: 'yellow', aspectRatio: 1,}}
-            // outerCircleStyle
             color={'#FF7B27'}
             containerStyle={{}}
             // shadowColor="#C6C6C6"
@@ -124,34 +105,12 @@ const StartExercise = ({navigation, route}) => {
                   //   setDataNumber(e);
                 }}
                 onPause={e => {}}
-                onEnd={
-                  e => {
-                    navigation.navigate('GetExercise', {item: 'StartExercise'});
-                    // console.log(e);
-                  }
-                  //   e == 0
-                  // : console.log(e, 'end')
-                }
+                onEnd={e => {
+                  navigation.navigate('GetExercise', {item: 'StartExercise'});
+                }}
               />
             </View>
           </ProgressCircle>
-          {/* <CountdownCircleTimer
-            isPlaying
-            duration={countDownData}
-            size={120}
-            strokeWidth={8}
-
-            onComplete={data => {
-              navigation.navigate('GetExercise', {item: item.item}),
-                setCountDownData(0);
-            }}
-            colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
-            {({remainingTime}) => (
-              <Text style={{color: 'white', fontSize: 22}}>
-                {remainingTime}
-              </Text>
-            )}
-          </CountdownCircleTimer> */}
           <Text
             style={[
               styles.signInText,
@@ -177,25 +136,9 @@ const StartExercise = ({navigation, route}) => {
             style={[CssStyle.flexData, {marginBottom: responsiveHeight(2)}]}>
             <View style={{width: responsiveWidth(29)}}>
               <Image
-                source={
-                  {
-                    // uri: item.workout_plan_exersises[0]?.exersise_details
-                    //   ? `${BaseUrl}` +
-                    //     item.workout_plan_exersises[0]?.exersise_details
-                    //       ?.animation
-                    //   : item?.image
-                    //   ? `${BaseUrl}` + item?.image
-                    //   : item?.item?.exercises
-                    //   ? `${BaseUrl}` + item?.item?.exercises[0].animation
-                    //   : item?.item?.exersise_details
-                    //   ? `${BaseUrl}` + item?.item?.exersise_details?.animation
-                    //   : item?.exersise_details
-                    //   ? `${BaseUrl}` + item?.exersise_details?.animation
-                    //   : item?.item?.animation
-                    //   ? `${BaseUrl}` + item?.item.animation
-                    //   : `${BaseUrl}` + item?.item?.image,
-                  }
-                }
+                source={{
+                  uri: `${BaseUrl}` + reduxData?.exersise_details.animation,
+                }}
                 resizeMode="contain"
                 style={{
                   width: 99,
@@ -213,7 +156,7 @@ const StartExercise = ({navigation, route}) => {
                   opacity: 0.8,
                   textTransform: 'capitalize',
                 }}>
-                {reduxData[0]?.exersise_details.title}
+                {reduxData?.exersise_details.title}
               </Text>
               <Text
                 style={{
@@ -225,7 +168,7 @@ const StartExercise = ({navigation, route}) => {
                   lineHeight: responsiveHeight(2),
                   height: responsiveHeight(2.7),
                 }}>
-                {reduxData[0]?.exersise_details.description}
+                {reduxData?.exersise_details.description}
               </Text>
               <View
                 style={[CssStyle.flexJustify, {width: responsiveWidth(50)}]}>
@@ -243,7 +186,7 @@ const StartExercise = ({navigation, route}) => {
                       marginLeft: responsiveWidth(2),
                       opacity: 0.5,
                     }}>
-                    {reduxData ? reduxData[0]?.exersise_details.time : '0 sec'}
+                    {reduxData ? reduxData?.exersise_details.time : '0 sec'}
                   </Text>
                 </View>
               </View>

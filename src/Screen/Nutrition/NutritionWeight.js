@@ -31,7 +31,7 @@ import assets from '../../assets';
 
 const NutritionWeight = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
-  console.log(updateData);
+  // console.log(updateData);
   const weightUnitData = [{text: 'gm'}, {text: 'kg'}];
   const [weightData, setWeightData] = useState('kg');
   const flatNode = useRef();
@@ -48,7 +48,7 @@ const NutritionWeight = ({navigation, route}) => {
     setLoading(true);
     try {
       const result = await GetUserDetailApi(id.id);
-      console.log(result, 'get user detail');
+      // console.log(result, 'get user detail');
       if (result.status == true) {
         setLoading(false);
         setUpdateDataChanges(result.result);
@@ -59,10 +59,10 @@ const NutritionWeight = ({navigation, route}) => {
       console.log(error);
     }
   };
-  console.log(updateDataChanges);
+  // console.log(updateDataChanges);
 
-  const [weightValue, setWeightValue] = useState(null);
-  console.log(weightValue);
+  const [weightValue, setWeightValue] = useState(38);
+  // console.log(weightValue);
   const [loadingUser, setLoadingUser] = useState(false);
   const [openUserSuccessfully, setOpenUserSuccessfully] = useState(false);
   const UpdateUserName = async () => {
@@ -76,10 +76,10 @@ const NutritionWeight = ({navigation, route}) => {
         updateDataChanges.focused_areas,
         updateDataChanges.height,
         weightValue,
-        updateDataChanges.weight_unit,
+        weightData,
         updateDataChanges.height_unit,
       );
-      console.log(result);
+      // console.log(result);
       if (result.status == true) {
         setOpenUserSuccessfully(true);
         setLoadingUser(false);
