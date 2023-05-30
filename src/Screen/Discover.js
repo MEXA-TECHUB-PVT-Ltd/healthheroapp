@@ -30,6 +30,25 @@ const Discover = ({navigation}) => {
   const [exerciseData, setExerciseData] = useState('');
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState('');
+
+  useEffect(() => {
+    ExerciseDay();
+    GetCategory();
+  }, []);
+  const buttonMapData = [
+    {btn: 'Picks for you'},
+    {btn: 'Quarantine workout'},
+    {btn: 'For Beginners'},
+    {btn: 'Fast Workouts'},
+    {btn: 'With Equipment'},
+    {btn: 'Sleep'},
+    {btn: 'Body Focus'},
+  ];
+
+  const [selectItem, setSelect] = useState('Picks for you');
+  const [categoryIdIndex, setCategoryIdIndex] = useState('');
+  const [workoutData, setWorkoutData] = useState([]);
+
   const ExerciseDay = async () => {
     setLoading(true);
     try {
@@ -47,6 +66,10 @@ const Discover = ({navigation}) => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    WorkoutPlan();
+  }, [categoryIdIndex]);
   const GetCategory = async () => {
     setLoading(true);
     try {
@@ -54,6 +77,7 @@ const Discover = ({navigation}) => {
       if (result.status == true) {
         setCategory(result.result);
         setLoading(false);
+        setCategoryIdIndex(result.result[0].workout_category_id);
       } else {
         console.error(result.message);
         setLoading(false);
@@ -63,29 +87,6 @@ const Discover = ({navigation}) => {
       console.log(error);
     }
   };
-  useEffect(() => {
-    ExerciseDay();
-    GetCategory();
-  }, []);
-  // console.log(exerciseData);
-  const buttonMapData = [
-    {btn: 'Picks for you'},
-    {btn: 'Quarantine workout'},
-    {btn: 'For Beginners'},
-    {btn: 'Fast Workouts'},
-    {btn: 'With Equipment'},
-    {btn: 'Sleep'},
-    {btn: 'Body Focus'},
-  ];
-
-  const [selectItem, setSelect] = useState('Picks for you');
-  const [categoryIdIndex, setCategoryIdIndex] = useState('');
-  console.log(categoryIdIndex);
-  const [workoutData, setWorkoutData] = useState([]);
-
-  useEffect(() => {
-    WorkoutPlan();
-  }, [categoryIdIndex]);
   const WorkoutPlan = async () => {
     setLoading(true);
     try {
@@ -138,10 +139,11 @@ const Discover = ({navigation}) => {
               fontSize: 11,
               color: 'white',
               fontFamily: 'Interstate-regular',
+              opacity: 0.8,
             }}>
             SEARCH WORKOUT
           </Text>
-          <Icon name={'search'} size={19} color="white" />
+          <Icon name={'search'} size={19} color="#ffffffb1" />
         </TouchableOpacity>
         <View
           style={[
@@ -158,7 +160,7 @@ const Discover = ({navigation}) => {
             renderItem={({item, index}) => (
               <TouchableOpacity
                 onPress={() => {
-                  setSelect(item.btn),
+                  setSelect(item.category_name),
                     setCategoryIdIndex(item.workout_category_id);
                 }}
                 style={{
@@ -302,48 +304,13 @@ const Discover = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
-        {/* <View style={{marginTop: responsiveHeight(4)}}>
-          <FlatList
-            data={advance}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item, index}) => (
-              <View
-                style={{marginRight: responsiveWidth(5), alignItems: 'center'}}>
-                <Image
-                  borderRadius={responsiveWidth(2.7)}
-                  source={require('../assets/Rectangle32.png')}
-                  style={{
-                    width: responsiveWidth(34),
-                    height: responsiveHeight(15),
-                  }}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 13,
-                    fontFamily: 'Interstate-regular',
-                    marginTop: responsiveHeight(1),
-                  }}>
-                  Beginner
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 12,
-                    fontFamily: 'Interstate-regular',
-                  }}>
-                  21 min | 400 k
-                </Text>
-              </View>
-            )}
+
+        <ScrollView horizontal={true}>
+          <FlatListData
+            category={workoutData ? workoutData : category}
+            navigation={navigation}
           />
-        </View> */}
-        <FlatListData
-          category={workoutData ? workoutData : category}
-          navigation={navigation}
-        />
+        </ScrollView>
       </View>
     </ScrollView>
   );

@@ -27,6 +27,7 @@ import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 import {DaysCounting} from '../Helping/DayOfCount';
 import Loader from '../component/Loader';
+import {GetWeeklyWeightApi} from '../services/HeightApi';
 
 const Report = ({navigation}) => {
   const [historyDataDate, setHistoryDataDate] = useState([]);
@@ -127,6 +128,23 @@ const Report = ({navigation}) => {
       console.log(result, 'weekly report user');
       if (result.status == false) {
         setHistoryDataDate(result.result);
+      } else {
+        // navigation.navigate('SelectPlan');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GetWeeklyWeightDataReport();
+  }, []);
+  
+  const GetWeeklyWeightDataReport = async () => {
+    try {
+      const result = await GetWeeklyWeightApi(id.id);
+      console.log(result, 'weekly report user');
+      if (result.status == false) {
+        // setHistoryDataDate(result.result);
       } else {
         // navigation.navigate('SelectPlan');
       }
@@ -410,7 +428,9 @@ const Report = ({navigation}) => {
                           marginTop: responsiveHeight(3),
                         },
                       ]}>
-                      {getUserDetail && totalHeight ? totalBMI : 'no data'}
+                      {getUserDetail && totalHeight
+                        ? totalBMI.toFixed(2)
+                        : 'no data'}
                     </Text>
                     <Text
                       style={[
@@ -478,6 +498,18 @@ const Report = ({navigation}) => {
                   <Text></Text>
                 </LinearGradient>
               )}
+              {getUserDetail?.weight && getUserDetail?.height && (
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 12,
+                    fontFamily: 'Interstate-regular',
+                    left: responsiveWidth(totalBMI > 2 ? totalBMI - 5 : 1),
+                    marginTop: responsiveHeight(0.7),
+                  }}>
+                  Healthy weight
+                </Text>
+              )}
             </View>
           </>
         ) : buttonDataMap == 'History' ? (
@@ -491,20 +523,22 @@ const Report = ({navigation}) => {
                   backgroundColor: '#626377',
                   borderRadius: responsiveWidth(2),
                 }}
-                markedDates={{
-                  '2023-05-18': {
-                    selected: true,
-                    marked: true,
-                    selectedColor: 'white',
-                  },
-                  '2023-05-20': {marked: true},
-                  '2023-05-24': {
-                    selected: true,
-                    marked: true,
-                    selectedColor: 'white',
-                    color: '#FF6700',
-                  },
-                }}
+                markedDates={
+                  {
+                    // '2023-05-18': {
+                    //   selected: true,
+                    //   marked: true,
+                    //   selectedColor: 'white',
+                    // },
+                    // '2023-05-20': {marked: true},
+                    // '2023-05-24': {
+                    //   selected: true,
+                    //   marked: true,
+                    //   selectedColor: 'white',
+                    //   color: '#FF6700',
+                    // },
+                  }
+                }
                 theme={{
                   backgroundColor: '#626377',
                   calendarBackground: '#626377',
@@ -579,7 +613,7 @@ const Report = ({navigation}) => {
                   </View>
                 </View>
               </View>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={
                   () => {}
                   // navigation.navigate('ExerciseDetail', {item: item})
@@ -652,7 +686,7 @@ const Report = ({navigation}) => {
                     </View>
                   </View>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <View
                 style={{borderBottomColor: 'white', borderBottomWidth: 1}}
               />

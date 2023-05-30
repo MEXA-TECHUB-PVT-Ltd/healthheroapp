@@ -22,3 +22,5 @@ export const BaseUrlWaterTracker =
   'https://staging-healthhero-be.mtechub.com/water_tracking/';
 export const BaseUrlWeekGoal =
   'https://staging-healthhero-be.mtechub.com/week_goals/';
+export const BaseUrlHeightApi =
+  'https://staging-healthhero-be.mtechub.com/height_weight/';

@@ -107,7 +107,7 @@ const SignUp = ({navigation}) => {
           flex: 1,
         }}>
         <ScrollView
-          keyboardShouldPersistTaps={true}
+          keyboardShouldPersistTaps='always'
           showsVerticalScrollIndicator={false}>
           <KeyboardAvoidingView
             style={{paddingHorizontal: responsiveWidth(5)}}

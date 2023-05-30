@@ -262,7 +262,7 @@ const StartNow = ({navigation, route}) => {
                                 {itemData.item}
                               </Text>
                             </TouchableOpacity>
-                            {indexData !== -1 ? (
+                            {indexData !== weekData.length-1 ? (
                               <View
                                 style={{
                                   backgroundColor:

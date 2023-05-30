@@ -29,9 +29,11 @@ import {useSelector} from 'react-redux';
 import SwiperFlatList from 'react-native-swiper-flatlist';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import CircularProgress from 'react-native-circular-progress-indicator';
+import {StartWorkoutPlanApi} from '../../services/WorkoutPlan';
+import moment from 'moment';
 const GetExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item, 'item');
+  // console.log(item, 'item');
   // console.log(item, 'get exercise');
   const countdownRef = useRef();
   const dataRedux = useSelector(data => data.workoutPlanData);
@@ -41,99 +43,71 @@ const GetExercise = ({navigation, route}) => {
   const [index, setIndex] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   // console.log(dataTakeFromRedux);
-
+  const [takeNumberOfCircle, setTakeNumberOfCircle] = useState('');
   const [openModel, setOpenModel] = useState(false);
-  // const id = 0;
-
-  // for (let id = 0; id < dataRedux.length; id++) {
-  //   console.log(dataRedux[id].reps, 'this is reps');
-  //   setTimeout(() => {
-  //     // console.log(id);
-  //     // console.log('set time out is' + id);
-  //     console.log(dataRedux[id]?.reps * 100, 'hello', '   ' + id);
-  //   }, dataRedux[id]?.reps * 100);
-  // }
-  const [taketime, setTakeTime] = useState(dataTakeFromRedux.length);
-  // const [taketime, setTakeTime] = useState(1);
-  const timerRef = useRef(taketime);
-  const [timeData, setTimeData] = useState('');
-  const flatNode = useRef();
-  // console.log(taketime, 'data from api');
-  // console.log(timeData);
-  const [completed, setCompleted] = useState(false);
-  const progressRef = useRef();
   useEffect(() => {
     countdownRef.current.start();
+    setRunning(true);
   }, [item, index]);
+  const [running, setRunning] = useState(true);
+  const [timeElapsed, setTimeElapsed] = useState(0);
 
-  // const isFocused = useIsFocused();
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     setTakeTime(0 + 1);
-  //     const timerID = setInterval(() => {
-  //       timerRef.current -= 1;
-  //       if (timerRef.current < 0) {
-  //         clearInterval(timerID);
-  //         // setTimeData('hello');
-  //       } else {
-  //         console.log('this is the owner ' + timerID);
-  //         activeIndex == dataTakeFromRedux.length - 1
-  //           ? setCompleted(true)
-  //           : navigation.navigate('RestTime', {item: activeIndex});
-  //         activeIndex == dataTakeFromRedux.length - 1
-  //           ? console.log('Completed the workout plan')
-  //           : (setActiveIndex(activeIndex + 1),
-  //             flatNode.current.scrollToIndex({
-  //               index: activeIndex + 1,
-  //               animated: true,
-  //             }));
-  //         // : {};
-  //         setTimeData(timerID);
-  //         setTakeTime(timerRef.current);
-  //       }
-  //     }, dataTakeFromRedux[activeIndex].reps * 500);
-  //     return () => {
-  //       clearInterval(timerID);
-  //     };
-  //   }, [isFocused, item]),
-  // );
+  useEffect(() => {
+    let interval = null;
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const backAction = () => {
-  //       setOpenModel(true);
-  //     };
-  //     const backHandler = BackHandler.addEventListener(
-  //       'hardwareBackPress',
-  //       backAction,
-  //     );
-  //     return () => backHandler.remove();
-  //   }, []),
-  // );
-  // console.log(activeIndex, 'index value');
-  const [ActiveTimeSec, setActiveTimeSec] = useState(
-    dataTakeFromRedux[activeIndex].time,
-  );
-  const [dataTime, setDataTime] = useState(false);
+    if (running) {
+      interval = setInterval(() => {
+        setTimeElapsed(prevTime => prevTime + 1);
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [running]);
+  const formatTime = time => {
+    const hours = Math.floor(time / 3600);
+    const minutes = Math.floor((time % 3600) / 60);
+    const seconds = time % 60;
+
+    return `${padDigits(hours)}:${padDigits(minutes)}:${padDigits(seconds)}`;
+  };
+
+  const padDigits = number => {
+    return number.toString().padStart(2, '0');
+  };
+  const id = useSelector(data => data.id);
+  const [loading, setLoading] = useState(false);
+  const StartWorkoutForProgress = async () => {
+    setLoading(true);
+    try {
+      const result = await StartWorkoutPlanApi(
+        id,
+        dataRedux.workout_plan_id,
+        formatTime(timeElapsed),
+        moment(new Date()).format('YYYY-MM-DD'),
+      );
+      if (result.status == true) {
+        setLoading(false);
+      } else {
+        setLoading(false);
+        console.error(result.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
   return (
     <ScrollView style={[CssStyle.mainContainer, {}]}>
       <ImageBackground
-        // resizeMode="contain"
         style={{width: responsiveWidth(100), height: responsiveHeight(40)}}
         source={{
           uri:
             `${BaseUrl}` +
             dataTakeFromRedux[index]?.exersise_details?.animation,
-        }}>
-        {/* <TouchableOpacity
-          style={{
-            paddingLeft: responsiveWidth(5),
-            paddingTop: responsiveHeight(3),
-          }}
-          onPress={() => setOpenModel(true)}>
-          <Icon name="chevron-back-outline" size={25} color={'white'} />
-        </TouchableOpacity> */}
-      </ImageBackground>
+        }}></ImageBackground>
 
       <View
         style={{
@@ -141,36 +115,9 @@ const GetExercise = ({navigation, route}) => {
           backgroundColor: AppColors.blueColor,
           borderTopLeftRadius: responsiveWidth(5),
           borderTopRightRadius: responsiveWidth(5),
-          // paddingHorizontal: responsiveWidth(6),
           marginTop: responsiveHeight(-3),
           paddingTop: responsiveHeight(5),
         }}>
-        {/* {dataRedux.map((item, index) => {
-          const timer = setTimeout(() => {
-            // Perform some action after a specific timeout
-            console.log(`Item ${index + 1} processed after 1 second`);
-            return (
-              <View>
-                <Text style={{color: 'white'}}>hello</Text>
-                <Text style={{color: 'white'}}>hello</Text>
-                <Text style={{color: 'white'}}>hello</Text>
-              </View>
-            );
-            // Here you can update the state or perform any other action
-
-            // Clear the timeout once the action is completed
-            clearTimeout(timer);
-          }, (index + 1) * 1000);
-          // return {...items,}
-        })} */}
-        {/* <SwiperFlatList
-          ref={flatNode}
-          index={activeIndex}
-          scrollEnabled={false}
-          data={dataTakeFromRedux}
-          renderItem={({item, index}) => { */}
-        {/* // console.log(item); */}
-        {/* return ( */}
         <View
           style={{
             width: responsiveWidth(100),
@@ -180,19 +127,6 @@ const GetExercise = ({navigation, route}) => {
           <Text style={[styles.signInText]}>
             {dataTakeFromRedux[index]?.exersise_details?.title}
           </Text>
-          {/* <View
-                  style={[
-                    CssStyle.flexJustify,
-                    {
-                      borderWidth: 1,
-                      borderColor: 'white',
-                      borderRadius: responsiveWidth(10),
-                      paddingVertical: responsiveHeight(1.8),
-                      paddingHorizontal: responsiveWidth(8),
-                      marginTop: responsiveHeight(3.6),
-                    },
-                  ]}></View> */}
-          {/* <Text style={{color: 'white'}}>{dataTakeFromRedux[index].time}</Text> */}
           <View
             style={[
               CssStyle.flexJustify,
@@ -208,13 +142,6 @@ const GetExercise = ({navigation, route}) => {
                 justifyContent: 'center',
               }}
               onPress={() => {
-                // activeIndex == 0
-                //   ? {}
-                //   : (setActiveIndex(activeIndex - 1),
-                //     flatNode.current.scrollToIndex({
-                //       index: activeIndex - 1,
-                //       animated: true,
-                //     }));
                 index == 0 ? {} : setIndex(index - 1);
               }}>
               <Icon
@@ -224,70 +151,30 @@ const GetExercise = ({navigation, route}) => {
               />
             </TouchableOpacity>
             <ProgressCircle
-              percent={countdownRef * 25}
+              percent={takeNumberOfCircle * 8}
               radius={52}
               borderWidth={4}
               color={'#FF7B27'}
               shadowColor="#C6C6C6"
               bgColor={AppColors.blueColor}>
-              {/* <Text style={{color: 'white'}}>
-                {dataTakeFromRedux[index].time}
-              </Text> */}
               <View style={CssStyle.flexData}>
                 <Countdown
                   ref={countdownRef}
                   style={styles.timer}
                   textStyle={styles.watchTime}
                   initialSeconds={dataTakeFromRedux[index].time}
-                  onTimes={e => {}}
+                  onTimes={e => setTakeNumberOfCircle(e)}
                   onPause={e => {}}
                   onEnd={e =>
                     index == dataTakeFromRedux.length - 1
                       ? {}
                       : (setIndex(index + 1),
-                        navigation.navigate('RestTime', {item: index}))
+                        navigation.navigate('RestTime', {item: index}),
+                        setRunning(false))
                   }
                 />
               </View>
             </ProgressCircle>
-            {/* <CircularProgress
-              ref={progressRef}
-              value={0}
-              radius={120}
-              maxValue={10}
-              initialValue={dataTakeFromRedux[index].time}
-              progressValueColor={'#fff'}
-              activeStrokeWidth={15}
-              inActiveStrokeWidth={15}
-              duration={10000}
-              onAnimationComplete={() => console.log('complted')}
-            /> */}
-            {/* <CountdownCircleTimer
-              isPlaying={dataTime ? false : true}
-              duration={dataTakeFromRedux[index].time}
-              size={120}
-              strokeWidth={8}
-              key={0}
-              initialRemainingTime={dataTakeFromRedux[index].time}
-              onComplete={e => {
-                // activeIndex !== dataTakeFromRedux.length - 1
-                //   ? (setActiveIndex(activeIndex + 1),
-                //     flatNode.current.scrollToIndex({
-                //       index: activeIndex + 1,
-                //       animated: true,
-                //     }))
-                //   : null;
-                // activeIndex == dataTakeFromRedux.length - 1
-                //   ? setDataTime(true)
-                //   : setDataTime(true);
-              }}
-              colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
-              {({remainingTime}) => (
-                <Text style={{color: 'white', fontSize: 22}}>
-                  {remainingTime}
-                </Text>
-              )}
-            </CountdownCircleTimer> */}
             <TouchableOpacity
               style={{
                 backgroundColor: '#FF510050',
@@ -298,20 +185,15 @@ const GetExercise = ({navigation, route}) => {
                 justifyContent: 'center',
               }}
               onPress={() => {
-                // navigation.navigate('RestTime', {item: activeIndex}),
-                // activeIndex == dataTakeFromRedux.length - 1
-                //   ? {}
-                //   : (flatNode.current.scrollToIndex({
-                //       index: activeIndex + 1,
-                //       animated: true,
-                //     }),
-                //     setActiveIndex(index + 1));
                 index == dataTakeFromRedux.length - 1
                   ? {}
                   : setIndex(index + 1),
                   index == dataTakeFromRedux.length - 1
-                    ? {}
-                    : navigation.navigate('RestTime', {item: activeIndex});
+                    ? (navigation.navigate('Focused'),
+                      setRunning(false),
+                      StartWorkoutForProgress())
+                    : (navigation.navigate('RestTime', {item: index}),
+                      setRunning(false));
               }}>
               <Icon
                 name="chevron-forward-outline"
@@ -322,6 +204,7 @@ const GetExercise = ({navigation, route}) => {
           </View>
           <View style={{marginTop: responsiveHeight(9), flex: 1}}>
             <Text
+              onPress={() => setRunning(!running)}
               style={{
                 color: 'white',
                 fontFamily: 'Interstate-regular',
@@ -348,6 +231,10 @@ const GetExercise = ({navigation, route}) => {
                   </Text> */}
                   <CustomButton
                     iconName={'checkmark'}
+                    onPress={() => {
+                      // navigation.navigate('Focused', {item: 'hello'}),
+                      setRunning(false), StartWorkoutForProgress();
+                    }}
                     iconColor="white"
                     buttonText={'Complete workout'}
                     style={{width: responsiveWidth(80)}}
@@ -404,28 +291,7 @@ const GetExercise = ({navigation, route}) => {
                           .description
                       }
                     </Text>
-                    <View
-                      style={[
-                        CssStyle.flexJustify,
-                        // {width: responsiveWidth(45)},
-                      ]}>
-                      {/* <View
-                              style={[
-                                CssStyle.flexData,
-                                {marginVertical: responsiveHeight(0.6)},
-                              ]}>
-                              <Logo width={16} height={16} />
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'Interstate-regular',
-                                  fontSize: 12,
-                                  marginLeft: responsiveWidth(2),
-                                  opacity: 0.5,
-                                }}>
-                                400 kcal
-                              </Text>
-                            </View> */}
+                    <View style={[CssStyle.flexJustify]}>
                       <View
                         style={[
                           CssStyle.flexData,
@@ -450,9 +316,6 @@ const GetExercise = ({navigation, route}) => {
             </View>
           </View>
         </View>
-        {/* ); */}
-        {/* }}
-        /> */}
       </View>
       <Modal
         animationType="slide"

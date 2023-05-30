@@ -318,7 +318,8 @@ const Dashboard = ({navigation}) => {
                   color: 'white',
                   fontFamily: 'Interstate-regular',
                   fontSize: 12,
-                  marginLeft: responsiveWidth(2),opacity: 0.8,
+                  marginLeft: responsiveWidth(2),
+                  opacity: 0.8,
                 }}>
                 400 kcal
               </Text>
