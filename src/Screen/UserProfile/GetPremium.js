@@ -35,7 +35,7 @@ const GetPremium = ({navigation, route}) => {
     setLoading(true);
     try {
       const result = await GetPremiumApi(id);
-      console.log(result);
+      console.log(result.result.user_subscription);
       if (result.status == true) {
         setLoading(false);
         setPremiumData(true);

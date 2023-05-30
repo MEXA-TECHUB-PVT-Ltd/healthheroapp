@@ -62,7 +62,7 @@ const NutritionHeight = ({navigation, route}) => {
   const [heightValue, setHeightValue] = useState(
     updateDataChanges?.height_unit ? updateDataChanges?.height : '',
   );
-  console.log(updateDataChanges, 'heig');
+  // console.log(updateDataChanges, 'heig');
   const id = useSelector(data => data);
   const [loading, setLoading] = useState(false);
   const [loadingUser, setLoadingUser] = useState(false);

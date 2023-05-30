@@ -38,7 +38,7 @@ import Loader from '../component/Loader';
 import Lottie from 'lottie-react-native';
 import assets from '../assets';
 import Share from 'react-native-share';
-import {Diet_Id, Water_Id} from '../store/action';
+import {Diet_Id, Water_Id, Workout_Plan_Id} from '../store/action';
 
 const UserContact = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -275,6 +275,7 @@ const UserContact = ({navigation}) => {
     await AsyncStorage.removeItem('WaterTrackerId');
     dispatch(Water_Id(null));
     dispatch(Diet_Id(null));
+    dispatch(Workout_Plan_Id(null));
     navigation.navigate('Auth', {screen: 'Login'});
     setOpenModel(false);
   };

@@ -218,7 +218,7 @@ const Focused = ({navigation, route}) => {
                 <CustomButton
                   buttonText={'Go Back'}
                   onPress={() => {
-                    setOpenModel(false), navigation.navigate('WorkoutExercise');
+                    setOpenModel(false), navigation.goBack();
                   }}
                   buttonColor={'transparent'}
                   mode="outlined"
