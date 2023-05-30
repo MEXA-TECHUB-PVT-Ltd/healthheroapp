@@ -28,7 +28,7 @@ import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import {useSelector} from 'react-redux';
 import SwiperFlatList from 'react-native-swiper-flatlist';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-
+import CircularProgress from 'react-native-circular-progress-indicator';
 const GetExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
   console.log(item, 'item');
@@ -38,6 +38,7 @@ const GetExercise = ({navigation, route}) => {
   const [dataTakeFromRedux, setDataTakeFromRedux] = useState(
     dataRedux ? dataRedux?.workout_plan_exersises : [],
   );
+  const [index, setIndex] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   // console.log(dataTakeFromRedux);
 
@@ -60,10 +61,11 @@ const GetExercise = ({navigation, route}) => {
   // console.log(taketime, 'data from api');
   // console.log(timeData);
   const [completed, setCompleted] = useState(false);
+  const progressRef = useRef();
   useEffect(() => {
-    // item == 'RestTime' ?  : '';
-    // countdownRef.current.start();
-  }, []);
+    countdownRef.current.start();
+  }, [item, index]);
+
   // const isFocused = useIsFocused();
   // useFocusEffect(
   //   useCallback(() => {
@@ -112,6 +114,7 @@ const GetExercise = ({navigation, route}) => {
   const [ActiveTimeSec, setActiveTimeSec] = useState(
     dataTakeFromRedux[activeIndex].time,
   );
+  const [dataTime, setDataTime] = useState(false);
   return (
     <ScrollView style={[CssStyle.mainContainer, {}]}>
       <ImageBackground
@@ -120,16 +123,16 @@ const GetExercise = ({navigation, route}) => {
         source={{
           uri:
             `${BaseUrl}` +
-            dataRedux.workout_plan_exersises[0].exersise_details.animation,
+            dataTakeFromRedux[index]?.exersise_details?.animation,
         }}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             paddingLeft: responsiveWidth(5),
             paddingTop: responsiveHeight(3),
           }}
           onPress={() => setOpenModel(true)}>
           <Icon name="chevron-back-outline" size={25} color={'white'} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ImageBackground>
 
       <View
@@ -160,26 +163,24 @@ const GetExercise = ({navigation, route}) => {
           }, (index + 1) * 1000);
           // return {...items,}
         })} */}
-
-        <SwiperFlatList
+        {/* <SwiperFlatList
           ref={flatNode}
           index={activeIndex}
           scrollEnabled={false}
           data={dataTakeFromRedux}
-          renderItem={({item, index}) => {
-            // console.log(item);
-            return (
-              <View
-                key={index}
-                style={{
-                  width: responsiveWidth(100),
-                  paddingHorizontal: responsiveWidth(6),
-                  flex: 1,
-                }}>
-                <Text style={[styles.signInText]}>
-                  {item.exersise_details.title}
-                </Text>
-                {/* <View
+          renderItem={({item, index}) => { */}
+        {/* // console.log(item); */}
+        {/* return ( */}
+        <View
+          style={{
+            width: responsiveWidth(100),
+            paddingHorizontal: responsiveWidth(6),
+            flex: 1,
+          }}>
+          <Text style={[styles.signInText]}>
+            {dataTakeFromRedux[index]?.exersise_details?.title}
+          </Text>
+          {/* <View
                   style={[
                     CssStyle.flexJustify,
                     {
@@ -191,194 +192,224 @@ const GetExercise = ({navigation, route}) => {
                       marginTop: responsiveHeight(3.6),
                     },
                   ]}></View> */}
-                <Text style={{color: 'white'}}>{item.time}</Text>
+          {/* <Text style={{color: 'white'}}>{dataTakeFromRedux[index].time}</Text> */}
+          <View
+            style={[
+              CssStyle.flexJustify,
+              {marginTop: responsiveHeight(9.4), flex: 1},
+            ]}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#FF510050',
+                borderRadius: responsiveHeight(10),
+                width: 39,
+                height: 39,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                // activeIndex == 0
+                //   ? {}
+                //   : (setActiveIndex(activeIndex - 1),
+                //     flatNode.current.scrollToIndex({
+                //       index: activeIndex - 1,
+                //       animated: true,
+                //     }));
+                index == 0 ? {} : setIndex(index - 1);
+              }}>
+              <Icon
+                name="chevron-back-outline"
+                size={29}
+                color={AppColors.buttonText}
+              />
+            </TouchableOpacity>
+            <ProgressCircle
+              percent={countdownRef * 25}
+              radius={52}
+              borderWidth={4}
+              color={'#FF7B27'}
+              shadowColor="#C6C6C6"
+              bgColor={AppColors.blueColor}>
+              {/* <Text style={{color: 'white'}}>
+                {dataTakeFromRedux[index].time}
+              </Text> */}
+              <View style={CssStyle.flexData}>
+                <Countdown
+                  ref={countdownRef}
+                  style={styles.timer}
+                  textStyle={styles.watchTime}
+                  initialSeconds={dataTakeFromRedux[index].time}
+                  onTimes={e => {}}
+                  onPause={e => {}}
+                  onEnd={e =>
+                    index == dataTakeFromRedux.length - 1
+                      ? {}
+                      : (setIndex(index + 1),
+                        navigation.navigate('RestTime', {item: index}))
+                  }
+                />
+              </View>
+            </ProgressCircle>
+            {/* <CircularProgress
+              ref={progressRef}
+              value={0}
+              radius={120}
+              maxValue={10}
+              initialValue={dataTakeFromRedux[index].time}
+              progressValueColor={'#fff'}
+              activeStrokeWidth={15}
+              inActiveStrokeWidth={15}
+              duration={10000}
+              onAnimationComplete={() => console.log('complted')}
+            /> */}
+            {/* <CountdownCircleTimer
+              isPlaying={dataTime ? false : true}
+              duration={dataTakeFromRedux[index].time}
+              size={120}
+              strokeWidth={8}
+              key={0}
+              initialRemainingTime={dataTakeFromRedux[index].time}
+              onComplete={e => {
+                // activeIndex !== dataTakeFromRedux.length - 1
+                //   ? (setActiveIndex(activeIndex + 1),
+                //     flatNode.current.scrollToIndex({
+                //       index: activeIndex + 1,
+                //       animated: true,
+                //     }))
+                //   : null;
+                // activeIndex == dataTakeFromRedux.length - 1
+                //   ? setDataTime(true)
+                //   : setDataTime(true);
+              }}
+              colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
+              {({remainingTime}) => (
+                <Text style={{color: 'white', fontSize: 22}}>
+                  {remainingTime}
+                </Text>
+              )}
+            </CountdownCircleTimer> */}
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#FF510050',
+                borderRadius: responsiveHeight(10),
+                width: 39,
+                height: 39,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                // navigation.navigate('RestTime', {item: activeIndex}),
+                // activeIndex == dataTakeFromRedux.length - 1
+                //   ? {}
+                //   : (flatNode.current.scrollToIndex({
+                //       index: activeIndex + 1,
+                //       animated: true,
+                //     }),
+                //     setActiveIndex(index + 1));
+                index == dataTakeFromRedux.length - 1
+                  ? {}
+                  : setIndex(index + 1),
+                  index == dataTakeFromRedux.length - 1
+                    ? {}
+                    : navigation.navigate('RestTime', {item: activeIndex});
+              }}>
+              <Icon
+                name="chevron-forward-outline"
+                size={29}
+                color={AppColors.buttonText}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={{marginTop: responsiveHeight(9), flex: 1}}>
+            <Text
+              style={{
+                color: 'white',
+                fontFamily: 'Interstate-regular',
+                fontSize: 17,
+                marginBottom: responsiveHeight(2),
+              }}>
+              Next Exercise
+            </Text>
+            <View style={{flex: 1, paddingBottom: responsiveHeight(7)}}>
+              {!dataTakeFromRedux[index + 1] ? (
                 <View
-                  style={[
-                    CssStyle.flexJustify,
-                    {marginTop: responsiveHeight(9.4)},
-                  ]}>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: '#FF510050',
-                      borderRadius: responsiveHeight(10),
-                      width: 39,
-                      height: 39,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                    onPress={() => {
-                      activeIndex == 0
-                        ? {}
-                        : (setActiveIndex(activeIndex - 1),
-                          flatNode.current.scrollToIndex({
-                            index: activeIndex - 1,
-                            animated: true,
-                          }));
-                    }}>
-                    <Icon
-                      name="chevron-back-outline"
-                      size={29}
-                      color={AppColors.buttonText}
-                    />
-                  </TouchableOpacity>
-                  {/* <ProgressCircle
-                    percent={item?.reps * 8}
-                    radius={52}
-                    borderWidth={4}
-                    color={'#FF7B27'}
-                    shadowColor="#C6C6C6"
-                    bgColor={AppColors.blueColor}>
-                      <Text style={{color:'white'}}>{item.time}</Text>
-                    <View style={CssStyle.flexData}>
-                      <Countdown
-                        ref={countdownRef}
-                        style={styles.timer}
-                        textStyle={styles.watchTime}
-                        initialSeconds={item.time}
-                        onTimes={e => {
-                          // setDataNumber(e);
-                        }}
-                        onPause={e => {}}
-                        onEnd={e => {}}
-                      />
-                    </View>
-                  </ProgressCircle> */}
-                  <CountdownCircleTimer
-                    isPlaying
-                    duration={dataTakeFromRedux[index].time}
-                    size={120}
-                    strokeWidth={8}
-                    onComplete={e => {
-                      activeIndex !== dataTakeFromRedux.length - 1
-                        ? (setActiveIndex(activeIndex + 1),
-                          flatNode.current.scrollToIndex({
-                            index: activeIndex + 1,
-                            animated: true,
-                          }))
-                        : null;
-                    }}
-                    colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
-                    {({remainingTime}) => (
-                      <Text style={{color: 'white', fontSize: 22}}>
-                        {remainingTime}
-                      </Text>
-                    )}
-                  </CountdownCircleTimer>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: '#FF510050',
-                      borderRadius: responsiveHeight(10),
-                      width: 39,
-                      height: 39,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                    onPress={() => {
-                      // navigation.navigate('RestTime', {item: activeIndex}),
-                      activeIndex == dataTakeFromRedux.length - 1
-                        ? {}
-                        : (flatNode.current.scrollToIndex({
-                            index: activeIndex + 1,
-                            animated: true,
-                          }),
-                          setActiveIndex(index + 1));
-                    }}>
-                    <Icon
-                      name="chevron-forward-outline"
-                      size={29}
-                      color={AppColors.buttonText}
-                    />
-                  </TouchableOpacity>
-                </View>
-                <View style={{marginTop: responsiveHeight(9), flex: 1}}>
-                  <Text
+                  style={{
+                    alignItems: 'center',
+                    paddingVertical: responsiveHeight(2),
+                  }}>
+                  {/* <Text
                     style={{
                       color: 'white',
-                      fontFamily: 'Interstate-regular',
                       fontSize: 17,
-                      marginBottom: responsiveHeight(2),
+                      fontFamily: 'Interstate-regular',
+                      paddingBottom: responsiveHeight(5),
                     }}>
-                    Next Exercise
-                  </Text>
-                  <View style={{flex: 1}}>
-                    {!dataTakeFromRedux[index + 1] ? (
-                      <View
-                        style={{
-                          alignItems: 'center',
-                          paddingVertical: responsiveHeight(2),
-                        }}>
-                        <Text
-                          style={{
-                            color: 'white',
-                            fontSize: 17,
-                            fontFamily: 'Interstate-regular',
-                            paddingBottom: responsiveHeight(5),
-                          }}>
-                          {completed ? 'completed' : 'No Next Exercise'}
-                        </Text>
-                      </View>
-                    ) : (
-                      <TouchableOpacity
-                        onPress={() => {
-                          setActiveIndex(activeIndex + 1),
-                            flatNode.current.scrollToIndex({
-                              index: activeIndex + 1,
-                              animated: true,
-                            });
-                        }}
-                        style={[
-                          CssStyle.flexData,
-                          {marginBottom: responsiveHeight(2)},
-                        ]}>
-                        <View style={{width: responsiveWidth(32)}}>
-                          <Image
-                            source={{
-                              uri:
-                                `${BaseUrl}` +
-                                dataTakeFromRedux[index + 1]?.exersise_details
-                                  .animation,
-                            }}
-                            resizeMode="contain"
-                            style={{
-                              width: 99,
-                              height: 90,
-                              //   marginRight: responsiveWidth(2),
-                            }}
-                          />
-                        </View>
-                        <View style={{width: responsiveWidth(53)}}>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontSize: 15,
-                              fontFamily: 'Interstate-regular',
-                              opacity: 0.8,
-                            }}>
-                            {
-                              dataTakeFromRedux[index + 1]?.exersise_details
-                                .title
-                            }
-                          </Text>
-                          <Text
-                            style={{
-                              color: 'white',
-                              fontSize: 11,
-                              fontFamily: 'Interstate-regular',
-                              marginVertical: responsiveHeight(0.7),
-                              opacity: 0.5,
-                              lineHeight: responsiveHeight(2),
-                            }}>
-                            {
-                              dataTakeFromRedux[index + 1]?.exersise_details
-                                .description
-                            }
-                          </Text>
-                          <View
-                            style={[
-                              CssStyle.flexJustify,
-                              // {width: responsiveWidth(45)},
-                            ]}>
-                            {/* <View
+                    {completed ? 'completed' : 'No Next Exercise'}
+                  </Text> */}
+                  <CustomButton
+                    iconName={'checkmark'}
+                    iconColor="white"
+                    buttonText={'Complete workout'}
+                    style={{width: responsiveWidth(80)}}
+                  />
+                </View>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    index == dataTakeFromRedux.length - 1
+                      ? {}
+                      : setIndex(index + 1);
+                  }}
+                  style={[
+                    CssStyle.flexData,
+                    {marginBottom: responsiveHeight(2)},
+                  ]}>
+                  <View style={{width: responsiveWidth(32)}}>
+                    <Image
+                      source={{
+                        uri:
+                          `${BaseUrl}` +
+                          dataTakeFromRedux[index + 1]?.exersise_details
+                            .animation,
+                      }}
+                      resizeMode="contain"
+                      style={{
+                        width: 99,
+                        height: 90,
+                        //   marginRight: responsiveWidth(2),
+                      }}
+                    />
+                  </View>
+                  <View style={{width: responsiveWidth(53)}}>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 15,
+                        fontFamily: 'Interstate-regular',
+                        opacity: 0.8,
+                      }}>
+                      {dataTakeFromRedux[index + 1]?.exersise_details.title}
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 11,
+                        fontFamily: 'Interstate-regular',
+                        marginVertical: responsiveHeight(0.7),
+                        opacity: 0.5,
+                        lineHeight: responsiveHeight(2),
+                      }}>
+                      {
+                        dataTakeFromRedux[index + 1]?.exersise_details
+                          .description
+                      }
+                    </Text>
+                    <View
+                      style={[
+                        CssStyle.flexJustify,
+                        // {width: responsiveWidth(45)},
+                      ]}>
+                      {/* <View
                               style={[
                                 CssStyle.flexData,
                                 {marginVertical: responsiveHeight(0.6)},
@@ -395,33 +426,33 @@ const GetExercise = ({navigation, route}) => {
                                 400 kcal
                               </Text>
                             </View> */}
-                            <View
-                              style={[
-                                CssStyle.flexData,
-                                {marginVertical: responsiveHeight(1)},
-                              ]}>
-                              <Logo width={16} height={16} />
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontFamily: 'Interstate-regular',
-                                  fontSize: 12,
-                                  marginLeft: responsiveWidth(2),
-                                  opacity: 0.5,
-                                }}>
-                                45 min
-                              </Text>
-                            </View>
-                          </View>
-                        </View>
-                      </TouchableOpacity>
-                    )}
+                      <View
+                        style={[
+                          CssStyle.flexData,
+                          {marginVertical: responsiveHeight(1)},
+                        ]}>
+                        <Logo width={16} height={16} />
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontFamily: 'Interstate-regular',
+                            fontSize: 12,
+                            marginLeft: responsiveWidth(2),
+                            opacity: 0.5,
+                          }}>
+                          45 min
+                        </Text>
+                      </View>
+                    </View>
                   </View>
-                </View>
-              </View>
-            );
-          }}
-        />
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        </View>
+        {/* ); */}
+        {/* }}
+        /> */}
       </View>
       <Modal
         animationType="slide"

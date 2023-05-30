@@ -35,7 +35,7 @@ const ForgotPassword = ({navigation}) => {
         navigation.navigate('Verification', {item: result.data.email});
       } else {
         setLoading(false);
-        setData('Enter valid email address');
+        setData('Unregistered email');
       }
     } catch (error) {
       console.log(error);

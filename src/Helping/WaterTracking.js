@@ -25,7 +25,7 @@ export const WaterTracking = ({
   // for (let n = 0; n < getDailyRecordTracker.quantity; n++) {
   //   data.push({itemValue: n});
   // }
-  // console.log(index + 1 <= getDailyRecordTracker?.quantity, 'quantity');
+  console.log(getDailyRecordTracker?.quantity, 'quantity of number');
   return (
     <TouchableOpacity
       disabled={index + 1 <= getDailyRecordTracker?.quantity ? true : false}
@@ -42,9 +42,9 @@ export const WaterTracking = ({
           <Bottle width={36} height={36} />
         )
       ) : index + 1 <= getDailyRecordTracker?.quantity ? (
-        <FillGlass width={36} height={36} />
-      ) : (
         <Glass width={36} height={36} />
+      ) : (
+        <FillGlass width={36} height={36} />
       )}
     </TouchableOpacity>
   );

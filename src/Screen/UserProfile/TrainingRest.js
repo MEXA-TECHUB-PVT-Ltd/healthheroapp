@@ -183,6 +183,7 @@ const TrainingRest = ({navigation, route}) => {
                   borderTopLeftRadius: responsiveHeight(3),
                   paddingVertical: responsiveHeight(4.8),
                   paddingHorizontal: responsiveWidth(6),
+                  alignItems: 'center',
                 }}>
                 <View
                   // activeOpacity={1}

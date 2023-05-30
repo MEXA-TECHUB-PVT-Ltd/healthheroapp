@@ -126,7 +126,7 @@ const SignUp = ({navigation}) => {
             <Text style={[CssStyle.signInText, {fontSize: 33}]}>
               Create Account
             </Text>
-            <Text style={CssStyle.signInInfo}>
+            <Text style={[CssStyle.signInInfo,{fontSize:12,opacity:0.8}]}>
               train and live the new experience of exercising at home
             </Text>
             {/* <Input
@@ -149,7 +149,7 @@ const SignUp = ({navigation}) => {
                 setEmail(e), handleValidEmail(e);
               }}
               fontSize={16}
-              style={{marginTop: responsiveHeight(6)}}
+              style={{marginTop: responsiveHeight(4)}}
             />
             {data == 'emailFormat' ? (
               <Text style={{color: 'red'}}>Enter the valid email address</Text>
@@ -204,12 +204,12 @@ const SignUp = ({navigation}) => {
           </KeyboardAvoidingView>
           <View
             style={{
-              paddingHorizontal: responsiveWidth(12),
+              paddingHorizontal: responsiveWidth(15),
               marginHorizontal: responsiveWidth(-5),
               marginTop: responsiveHeight(1),
               paddingTop: responsiveHeight(3),
               backgroundColor: AppColors.blueColor,
-              paddingBottom: responsiveHeight(6),
+              paddingBottom: responsiveHeight(8),
               // flex: 1,
             }}>
             <CustomButton

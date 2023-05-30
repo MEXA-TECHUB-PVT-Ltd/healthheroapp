@@ -138,7 +138,7 @@ const StartScreen = ({navigation}) => {
                   color: 'white',
                   fontFamily: 'Interstate-regular',
                   lineHeight: responsiveHeight(3),
-                  fontSize: 16,
+                  fontSize: 14,
                   marginLeft: responsiveWidth(2),
                 }}>
                 {item.description}

@@ -62,6 +62,7 @@ import EnterFood from '../Screen/Nutrition/Food/EnterFood';
 import TypeOfTracker from '../Screen/Nutrition/TypeOfTracker';
 import Report from '../Screen/Report';
 import CreateFood from '../Screen/Nutrition/Food/CreateFood';
+import EditWeeklyGoal from '../Screen/Report/EditWeeklyGoal';
 
 export const BottomTab = () => {
   const Bottom = createBottomTabNavigator();
@@ -246,6 +247,7 @@ export const UserNavigation = () => {
       <Stack.Screen name="SelectFood" component={SelectFood} />
       <Stack.Screen name="EnterFood" component={EnterFood} />
       <Stack.Screen name="TypeOfTracker" component={TypeOfTracker} />
+      <Stack.Screen name="EditWeeklyGoal" component={EditWeeklyGoal} />
     </Stack.Navigator>
   );
 };

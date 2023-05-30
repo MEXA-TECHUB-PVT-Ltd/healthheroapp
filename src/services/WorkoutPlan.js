@@ -117,6 +117,7 @@ export const GetWorkoutById = async name => {
   }
 };
 export const GetWorkoutPlanById = async name => {
+  console.log(name);
   try {
     const requestOptions = {
       method: 'GET',

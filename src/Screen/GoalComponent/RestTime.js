@@ -22,6 +22,7 @@ import {useSelector} from 'react-redux';
 import {GetRestTimeApi} from '../../services/RestApi';
 import Loader from '../../component/Loader';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
+import {BaseUrl} from '../../Helping/BaseUrl';
 
 const RestTime = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -67,7 +68,7 @@ const RestTime = ({navigation, route}) => {
         // resizeMode: 'contain',
       }}
       // resizeMode="contain"
-      source={require('../../assets/signIn.png')}>
+      source={require('../../assets/Health-Hero/restTime.png')}>
       <LinearGradient
         colors={['#0B183C00', '#0B183Ce1']}
         start={{x: 1, y: 0.1}}
@@ -148,7 +149,12 @@ const RestTime = ({navigation, route}) => {
               style={[CssStyle.flexData, {marginBottom: responsiveHeight(2)}]}>
               <View style={{width: responsiveWidth(34)}}>
                 <Image
-                  source={require('../../assets/Rectangle33.png')}
+                  source={{
+                    uri:
+                      `${BaseUrl}` +
+                      dataTakeFromRedux.workout_plan_exersises[item + 1]
+                        .exersise_details.animation,
+                  }}
                   // resizeMode="contain"
                   style={{
                     width: 110,
@@ -243,7 +249,7 @@ const RestTime = ({navigation, route}) => {
               />
               <CustomButton
                 onPress={() => {
-                  navigation.navigate('GetExercise', {item: 'RestTime'});
+                  navigation.navigate('GetExercise', {item: Math.random()});
                 }}
                 buttonText={'Skip'}
                 style={{width: responsiveWidth(38)}}

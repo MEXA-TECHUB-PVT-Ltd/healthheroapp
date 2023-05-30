@@ -46,7 +46,7 @@ const Nutrition = ({navigation, route}) => {
   const [waterData, setWaterData] = useState('');
   const [getDailyRecordTracker, setGetDailyRecordTracker] = useState('');
   const [weeklyWaterData, setWeeklyWaterData] = useState('');
-  console.log(weeklyWaterData[0].json_build_object.created_at, 'helso');
+  // console.log(weeklyWaterData[0].json_build_object.created_at, 'helso');
 
   const chartConfig = {
     backgroundGradientFrom: '#626377',
@@ -316,6 +316,7 @@ const Nutrition = ({navigation, route}) => {
     GetFoodRecord();
     GetWaterTracking();
     id.waterTrackerId ? GetWeeklyReport() : {};
+    GetDietPlan();
   }, []);
 
   const idWaterTracker = useSelector(data => data.waterTrackerId);
@@ -578,47 +579,42 @@ const Nutrition = ({navigation, route}) => {
                           flexWrap: 'wrap',
                         },
                       ]}>
-                      {waterData
-                        ? Array.from(
-                            {length: waterData?.quantity},
-                            (v, i) => i,
-                          ).map((item, index) => {
-                            return (
-                              <WaterTracking
-                                key={index}
-                                getDailyRecordTracker={getDailyRecordTracker}
-                                weeklyWaterData={weeklyWaterData}
-                                onPress={() =>
-                                  AddDailyRecord(
-                                    id.id,
-                                    id.water_tracker_id,
-                                    index + 1,
-                                    moment(new Date()).format('YYYY-MM-DD'),
-                                  )
-                                }
-                                index={index}
-                                waterData={waterData}
-                              />
-                            );
-                          })
-                        : Array.from({length: 3}, (v, i) => i).map(
-                            (item, index) => (
-                              <GetWaterTracker
-                                key={index}
-                                onPress={() =>
-                                  AddDailyRecord(
-                                    id.id,
-                                    id.water_tracker_id,
-                                    index,
-                                    moment(new Date()).format('YYYY-MM-DD'),
-                                  )
-                                }
-                                index={index}
-                                waterData={waterData}
-                              />
-                            ),
-                          )}
-                      {/* <FillGlass width={30} height={30} /> */}
+                      {waterData ? (
+                        Array.from(
+                          {length: waterData?.quantity},
+                          (v, i) => i,
+                        ).map((item, index) => {
+                          return (
+                            <WaterTracking
+                              key={index}
+                              getDailyRecordTracker={getDailyRecordTracker}
+                              weeklyWaterData={weeklyWaterData}
+                              onPress={() =>
+                                AddDailyRecord(
+                                  id.id,
+                                  id.water_tracker_id,
+                                  index + 1,
+                                  moment(new Date()).format('YYYY-MM-DD'),
+                                )
+                              }
+                              index={index}
+                              waterData={waterData}
+                            />
+                          );
+                        })
+                      ) : (
+                        <View style={{justifyContent: 'center'}}>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontSize: 17,
+                              fontFamily: 'Interstate-regular',
+                              alignSelf: 'center',
+                            }}>
+                            No Water Record Available
+                          </Text>
+                        </View>
+                      )}
                     </View>
                   </>
                 ) : (

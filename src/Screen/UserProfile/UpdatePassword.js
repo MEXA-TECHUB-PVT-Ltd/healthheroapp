@@ -137,7 +137,9 @@ const UpdatePassword = ({navigation, route}) => {
               noIcon={true}
               fontSize={16}
               value={password}
-              onChangeText={e => setPassword(e)}
+              onChangeText={e => {
+                setPassword(e);
+              }}
               rightIcon="eye-outline"
               offIcon={'eye-off-outline'}
               enableIcon={true}
@@ -179,7 +181,7 @@ const UpdatePassword = ({navigation, route}) => {
               fontSize={16}
               value={newPassword}
               onChangeText={e => {
-                setNewPassword(e);
+                setNewPassword(e), handleValidEmail(e);
               }}
               rightIcon="eye-outline"
               offIcon={'eye-off-outline'}
@@ -203,15 +205,24 @@ const UpdatePassword = ({navigation, route}) => {
                 }}>
                 Fill the fields
               </Text>
+            ) : data == 'oldNewMatch' ? (
+              <Text
+                style={{
+                  color: 'red',
+                  fontSize: 12,
+                  marginLeft: responsiveWidth(5),
+                }}>
+                New password and old password is matching
+              </Text>
             ) : (
-              data == 'oldNewMatch' && (
+              data == 'NewAuthentic' && (
                 <Text
                   style={{
                     color: 'red',
                     fontSize: 12,
                     marginLeft: responsiveWidth(5),
                   }}>
-                  New password and old password is matching
+                  Password must contain at least uppercase and lowercase
                 </Text>
               )
             )}
@@ -253,7 +264,7 @@ const UpdatePassword = ({navigation, route}) => {
               loading={loading}
               onPress={() => {
                 password && newPassword && confirmPassword
-                  ? id.userPassword == password
+                  ? id.userPassword !== password
                     ? setData('oldPassword')
                     : newPassword !== confirmPassword
                     ? setData('NewPassword')

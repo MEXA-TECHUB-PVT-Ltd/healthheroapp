@@ -37,7 +37,7 @@ const NutritionWeight = ({navigation, route}) => {
   const flatNode = useRef();
   const id = useSelector(data => data);
   const [activeIndex, setActiveIndex] = useState(
-    updateData ? updateData.weight : 35,
+    updateDataChanges?.weight ? updateDataChanges.weight : 35,
   );
   const [updateDataChanges, setUpdateDataChanges] = useState('');
   const [loading, setLoading] = useState(false);
@@ -48,18 +48,15 @@ const NutritionWeight = ({navigation, route}) => {
     setLoading(true);
     try {
       const result = await GetUserDetailApi(id.id);
-      // console.log(result, 'get user detail');
       if (result.status == true) {
         setLoading(false);
         setUpdateDataChanges(result.result);
       } else {
-        // navigation.navigate('SelectPlan');
       }
     } catch (error) {
       console.log(error);
     }
   };
-  // console.log(updateDataChanges);
 
   const [weightValue, setWeightValue] = useState(38);
   // console.log(weightValue);

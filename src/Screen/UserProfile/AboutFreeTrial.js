@@ -13,6 +13,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {AppColors} from '../../Helping/AppColor';
 import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
@@ -68,8 +69,8 @@ const AboutFreeTrial = ({navigation, route}) => {
           />
         </TouchableOpacity>
         <TouchableOpacity style={{}} onPress={() => navigation.navigate('Faq')}>
-          <Icon
-            name="chevron-forward-outline"
+          <AntDesign
+            name="questioncircleo"
             size={25}
             style={{padding: '2%'}}
             color={AppColors.buttonText}
@@ -99,17 +100,18 @@ const AboutFreeTrial = ({navigation, route}) => {
         </Text>
         {freeTrial.map((item, index) => (
           <View
-            style={[CssStyle.flexData, {marginBottom: responsiveHeight(0.7)}]}>
+            style={[{flexDirection: 'row', marginBottom: responsiveHeight(1)}]}>
             <View
               style={{
                 width: 9,
                 height: 9,
                 borderRadius: 13,
+                marginTop: responsiveHeight(0.8),
                 backgroundColor: AppColors.buttonText,
                 marginRight: responsiveWidth(2),
               }}
             />
-            <Text style={{color: 'white', fontSize: 13, opacity: 0.7}}>
+            <Text style={{color: 'white', fontSize: 12, opacity: 0.7}}>
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
               nonumy eirmod tempor invidunt ut labore et
             </Text>
@@ -124,7 +126,7 @@ const AboutFreeTrial = ({navigation, route}) => {
           activeOpacity={1}
           buttonColor={AppColors.buttonText}
           style={{width: responsiveWidth(78)}}
-          buttonText={'Set Time'}
+          buttonText={'Free 7 Days Trial'}
           paddingVertical={1}
         />
       </View>

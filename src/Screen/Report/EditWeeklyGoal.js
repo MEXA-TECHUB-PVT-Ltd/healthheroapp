@@ -2,6 +2,7 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Modal,
+  ScrollView,
   StyleSheet,
   Text,
   ToastAndroid,
@@ -16,27 +17,37 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {AppColors} from '../../../Helping/AppColor';
-import CssStyle from '../../../StyleSheet/CssStyle';
-import CustomButton from '../../../component/CustomButton';
 import {useSelector} from 'react-redux';
-import {Line} from '../../../component/Line';
-
+import {
+  UpdateFirstDayInWeekApi,
+  AddWeeklyDataApi,
+  AddFirstDayInWeekApi,
+} from '../../services/WeeklyGoal';
 import Lottie from 'lottie-react-native';
-import assets from '../../../assets';
-import {AddFoodUserApi} from '../../../services/DietPlan';
-import {GetCreateFoodApi, GetFoodApi} from '../../../services/FoodApi';
-import Moment from 'react-moment';
+import assets from '../../assets';
+import CssStyle from '../../StyleSheet/CssStyle';
+import {AppColors} from '../../Helping/AppColor';
+import {Line} from '../../component/Line';
+import CustomButton from '../../component/CustomButton';
+import Input from '../../component/Input';
 import moment from 'moment';
 
-const EnterFood = ({navigation, route}) => {
+const EditWeeklyGoal = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
   // console.log(item);
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(1);
   const id = useSelector(data => data);
   const [openRestartModel, setOpenRestartModel] = useState(false);
-  const foodType = [{item: 'Scoops'}, {item: 'Grams'}, {item: 'oz'}];
+  const foodType = [
+    {item: 'Sun'},
+    {item: 'Mon'},
+    {item: 'Tue'},
+    {item: 'Wed'},
+    {item: 'Thu'},
+    {item: 'Fri'},
+    {item: 'Sat'},
+  ];
   const [typeDate, setType] = useState('');
   const [typeDateFood, setTypeFood] = useState('');
   // const measureType = [{item: 'Food 1'}, {item: 'Food 2'}, {item: 'Food 3'}];
@@ -44,69 +55,53 @@ const EnterFood = ({navigation, route}) => {
   const [foodModel, setFoodModel] = useState(false);
   const [getFoodData, setGetFoodData] = useState('');
   const [typeFoodId, setTypeFoodId] = useState('');
-  const GetFood = async () => {
-    try {
-      const result = await GetCreateFoodApi();
-      console.log(result, 'get the food');
-      if (result.status == true) {
-        setGetFoodData(result.result);
-      } else {
-      }
-    } catch (error) {
-      console.log(error, 'enter food');
-    }
-  };
-  useEffect(() => {
-    GetFood();
-  }, []);
+  const [indexNumber, setIndexNumber] = useState('');
+  const [noOfDays, setNoOfDays] = useState('');
+  const [data, setData] = useState('');
 
-  useEffect(() => {
-    var mount = true;
-    const listener = navigation.addListener('focus', async () => {
-      // setLoading(true);
-      try {
-        const result = await GetCreateFoodApi();
-        console.log(result, 'get the food');
-        if (result.status == true) {
-          setGetFoodData(result.result);
-        } else {
-        }
-      } catch (error) {
-        console.log(error, 'enter food');
-      }
-    });
-    return () => {
-      listener;
-      mount = false;
-    };
-  }, []);
-  // console.log(typeFoodId,'flsa');
-  const AddFood = async () => {
+  const SetFirstDayWeekUser = async () => {
     setLoading(true);
     try {
-      const result = await AddFoodUserApi(
+      const result = await AddFirstDayInWeekApi(
         id.id,
-        id.dietPlanId,
-        item,
-        // 3000109,
-        typeFoodId,
-        time,
-        typeDateFood,
+        indexNumber + 1,
+        // moment(new Date()).format('YYYY-MM-DD'),
+      );
+      // console.log(result, 'this is first ');
+      if (result.status == true) {
+        setLoading(false);
+        // setData('First Week');
+        // setOpenRestartModel(true);
+      } else {
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+  const PostWeeklyReportUser = async () => {
+    setLoading(true);
+    try {
+      const result = await AddWeeklyDataApi(
+        id.id,
+        noOfDays,
         moment(new Date()).format('YYYY-MM-DD'),
       );
-      console.log(result, 'this is the');
-      if (result) {
+      // console.log(result, 'this is the');
+      if (result.status == true) {
         setLoading(false);
         setOpenRestartModel(true);
+        setNoOfDays('');
       } else {
         setLoading(false);
         // navigation.navigate('SelectPlan');
       }
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
-
   return (
     <LinearGradient
       colors={['#0A1F58', '#0A1637']}
@@ -128,9 +123,9 @@ const EnterFood = ({navigation, route}) => {
           color={AppColors.buttonText}
         />
       </TouchableOpacity>
-      <View style={{marginTop: responsiveHeight(6), flex: 0.5}}>
+      <View style={{marginTop: responsiveHeight(3), flex: 0.5}}>
         <Text style={[CssStyle.textInsideSettingComponent, {fontSize: 41}]}>
-          Enter Food
+          Edit Weekly Goal
         </Text>
         <Text
           style={[
@@ -147,26 +142,20 @@ const EnterFood = ({navigation, route}) => {
         </Text>
       </View>
       <View style={{flex: 0.9}}>
-        <View
-          style={[
-            CssStyle.flexJustify,
-            {
-              backgroundColor: '#515C7A',
-              borderRadius: responsiveWidth(7),
-              paddingHorizontal: responsiveWidth(4),
-              paddingVertical: responsiveHeight(1.6),
-              marginBottom: responsiveHeight(4),
-              zIndex: 999,
-            },
-          ]}>
-          <Text style={{color: 'white'}}>
-            {typeDate ? typeDate : 'Select Food'}
-          </Text>
-          <TouchableOpacity onPress={() => setMeasureModel(!measureModel)}>
-            <Icon name="chevron-down-outline" size={25} color="white" />
-          </TouchableOpacity>
-        </View>
-        <View
+        <Input
+          bgColor={'#515C7A'}
+          placeholder={'Number of days'}
+          noIcon={true}
+          height={responsiveHeight(6.5)}
+          value={noOfDays}
+          keyboardType="numeric"
+          onChangeText={e => setNoOfDays(e)}
+          fontSize={16}
+          style={{marginTop: responsiveHeight(1)}}
+        />
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => setFoodModel(!foodModel)}
           style={[
             CssStyle.flexJustify,
             {
@@ -175,88 +164,30 @@ const EnterFood = ({navigation, route}) => {
               paddingHorizontal: responsiveWidth(4),
               paddingVertical: responsiveHeight(1.6),
               zIndex: measureModel ? 0 : 999,
-              marginBottom: responsiveHeight(2),
+              marginVertical: responsiveHeight(2),
             },
           ]}>
           <Text style={{color: 'white'}}>
-            {typeDateFood ? typeDateFood : 'Food Unit'}
+            {typeDateFood ? typeDateFood : 'First day of week'}
           </Text>
-          <TouchableOpacity onPress={() => setFoodModel(!foodModel)}>
-            <Icon name="chevron-down-outline" size={25} color="white" />
-          </TouchableOpacity>
-        </View>
-        {measureModel ? (
-          <View style={[CssStyle.shadow, styles.modelOpenData, {flex: 1}]}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('CreateFood')}
-              style={{
-                // backgroundColor: '#00000010',
-                paddingVertical: responsiveHeight(1),
-                flexDirection: 'row',
-                alignItems: 'center',
-                // justifyContent: 'center',
-                // paddingHorizontal: responsiveWidth(4),
-              }}>
-              <Icon name="add" size={23} color="black" />
-              <Text
-                style={{
-                  color: AppColors.textColor,
-                  marginLeft: responsiveWidth(3),
-                }}>
-                Add Food
-              </Text>
-            </TouchableOpacity>
-            <View style={{height: responsiveHeight(30)}}>
-              <FlatList
-                data={getFoodData}
-                showsVerticalScrollIndicator={false}
-                renderItem={({item, index}) => {
-                  // console.log(item);
-                  return (
-                    <View style={{flex: 1}}>
-                      <TouchableOpacity
-                        key={index}
-                        onPress={() => {
-                          setType(item.food_name),
-                            setTypeFoodId(item.food_id),
-                            setMeasureModel(false);
-                        }}
-                        style={{
-                          paddingVertical: responsiveHeight(1.5),
-                        }}>
-                        <Text
-                          style={{
-                            color: AppColors.textColor,
-                            marginLeft: responsiveWidth(3),
-                          }}>
-                          {item.food_name}
-                        </Text>
-                      </TouchableOpacity>
-                      {index == getFoodData?.length - 1 ? null : <Line />}
-                    </View>
-                  );
-                }}
-              />
-            </View>
-          </View>
-        ) : null}
+          <Icon name="chevron-down-outline" size={25} color="white" />
+        </TouchableOpacity>
         {foodModel ? (
-          <View
+          <ScrollView
             style={[
               CssStyle.shadow,
               styles.modelOpenData,
               {
                 top: responsiveHeight(13.9),
-                // flex: 1,
-                // height:responsiveHeight(20)
               },
             ]}>
             {foodType.map((item, index) => (
-              <View>
+              <View key={index}>
                 <TouchableOpacity
-                  key={index}
                   onPress={() => {
-                    setTypeFood(item.item), setFoodModel(false);
+                    setTypeFood(item.item),
+                      setFoodModel(false),
+                      setIndexNumber(index);
                   }}
                   style={{
                     paddingVertical: responsiveHeight(1),
@@ -272,82 +203,21 @@ const EnterFood = ({navigation, route}) => {
                 <Line />
               </View>
             ))}
-          </View>
+          </ScrollView>
         ) : null}
-        <Text
-          style={[
-            CssStyle.textInfoSetting,
-            {
-              fontSize: 24,
-              fontFamily: 'Interstate-regular',
-              letterSpacing: 0.6,
-              zIndex: -1,
-            },
-          ]}>
-          Food Quality
-        </Text>
-        <View
-          style={[
-            CssStyle.flexJustify,
-            {paddingHorizontal: responsiveWidth(1), zIndex: -999},
-          ]}>
-          <TouchableOpacity
-            style={{
-              backgroundColor: '#FF510050',
-              borderRadius: responsiveHeight(10),
-              width: 39,
-              height: 39,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            onPress={() => {
-              time == 0 ? {} : setTime(time - 2);
-            }}>
-            <Icon
-              name="chevron-back-outline"
-              size={29}
-              color={AppColors.buttonText}
-            />
-          </TouchableOpacity>
-          <View style={{alignItems: 'center'}}>
-            <Text
-              style={{
-                fontSize: 36,
-                color: 'white',
-                fontFamily: 'Interstate-regular',
-              }}>
-              {time}
-            </Text>
-          </View>
-          <TouchableOpacity
-            style={{
-              backgroundColor: '#FF510050',
-              borderRadius: responsiveHeight(10),
-              width: 39,
-              height: 39,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            onPress={() => (time == 180 ? {} : setTime(time + 2))}>
-            <Icon
-              name="chevron-forward-outline"
-              size={29}
-              color={AppColors.buttonText}
-            />
-          </TouchableOpacity>
-        </View>
       </View>
       <View
         style={{
           alignItems: 'center',
           paddingTop: responsiveHeight(2),
           flex: 0.3,
+          zIndex: foodModel ? -99 : 0,
         }}>
         <CustomButton
           loading={loading}
           onPress={() =>
-            typeDate && typeDateFood
-              ? AddFood()
+            noOfDays && indexNumber
+              ? (SetFirstDayWeekUser(), PostWeeklyReportUser())
               : ToastAndroid.show(
                   'Please fill the required data',
                   ToastAndroid.SHORT,
@@ -356,7 +226,7 @@ const EnterFood = ({navigation, route}) => {
           activeOpacity={1}
           buttonColor={AppColors.buttonText}
           style={{width: responsiveWidth(78)}}
-          buttonText={'Add'}
+          buttonText={'Edit'}
           paddingVertical={1}
         />
       </View>
@@ -409,13 +279,14 @@ const EnterFood = ({navigation, route}) => {
                   marginTop: responsiveHeight(4),
                   textTransform: 'capitalize',
                 }}>
-                Food Added Successfully
+                {data
+                  ? 'First Week Added Successfully'
+                  : 'Weekly Goal Added Successfully'}
               </Text>
               <CustomButton
                 buttonText={'Go Back'}
                 onPress={() => {
-                  setOpenRestartModel(false),
-                    navigation.navigate('main', {screen: 'Dashboard3'});
+                  setOpenRestartModel(false);
                 }}
                 buttonColor={'transparent'}
                 mode="outlined"
@@ -434,7 +305,7 @@ const EnterFood = ({navigation, route}) => {
   );
 };
 
-export default EnterFood;
+export default EditWeeklyGoal;
 
 const styles = StyleSheet.create({
   buttonGender: {

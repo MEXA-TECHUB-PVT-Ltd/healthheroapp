@@ -182,7 +182,7 @@ const CreateFood = ({navigation, route}) => {
                 CssStyle.shadow,
                 styles.modelOpenData,
                 {
-                  top: responsiveHeight(23.9),
+                  top: responsiveHeight(24.9),
                 },
               ]}>
               {foodType.map((item, index) => (
@@ -547,15 +547,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: responsiveWidth(3),
     borderWidth: 1,
     borderColor: '#eee',
-    borderBottomEndRadius: responsiveWidth(2),
-    borderBottomLeftRadius: responsiveWidth(2),
+    // borderBottomEndRadius: responsiveWidth(2),
+    // borderBottomLeftRadius: responsiveWidth(2),
+    borderRadius: responsiveWidth(2),
     backgroundColor: 'white',
     marginHorizontal: responsiveWidth(0.1),
     elevation: 1,
     position: 'absolute',
     width: responsiveWidth(87.8),
     // top: responsiveHeight(4),
-    paddingTop: responsiveHeight(3),
+    paddingTop: responsiveHeight(1),
     zIndex: 999,
   },
 });

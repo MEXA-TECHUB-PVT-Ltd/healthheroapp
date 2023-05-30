@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -19,7 +20,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Logo from '../assets/Icon3';
 import NoImage from '../assets/noImageRed';
 import Loader from '../component/Loader';
-import {ExerciseOfTheDay} from '../services/WorkoutPlan';
+import {ExerciseOfTheDay, GetWorkoutById} from '../services/WorkoutPlan';
 import {GetAllCategories} from '../services/WorkoutCategory';
 import {BaseUrl} from '../Helping/BaseUrl';
 import {FlatListData} from '../Helping/FlatListData';
@@ -33,7 +34,7 @@ const Discover = ({navigation}) => {
     setLoading(true);
     try {
       const result = await ExerciseOfTheDay();
-      console.log(result,'detial of exercise');
+      console.log(result, 'detial of exercise');
       if (result.status == true) {
         setExerciseData(result.result);
         setLoading(false);
@@ -77,6 +78,31 @@ const Discover = ({navigation}) => {
     {btn: 'Body Focus'},
   ];
 
+  const [selectItem, setSelect] = useState('Picks for you');
+  const [categoryIdIndex, setCategoryIdIndex] = useState('');
+  console.log(categoryIdIndex);
+  const [workoutData, setWorkoutData] = useState([]);
+
+  useEffect(() => {
+    WorkoutPlan();
+  }, [categoryIdIndex]);
+  const WorkoutPlan = async () => {
+    setLoading(true);
+    try {
+      const result = await GetWorkoutById(categoryIdIndex);
+      console.log(result.result, 'workout plan');
+      if (result.status == true) {
+        setWorkoutData(result.result);
+        setLoading(false);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
   return loading ? (
     <Loader />
   ) : (
@@ -126,11 +152,15 @@ const Discover = ({navigation}) => {
             },
           ]}>
           <FlatList
-            data={buttonMapData}
+            data={category}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             renderItem={({item, index}) => (
-              <View
+              <TouchableOpacity
+                onPress={() => {
+                  setSelect(item.btn),
+                    setCategoryIdIndex(item.workout_category_id);
+                }}
                 style={{
                   borderWidth: 1,
                   borderColor: 'white',
@@ -138,6 +168,10 @@ const Discover = ({navigation}) => {
                   paddingHorizontal: responsiveWidth(3),
                   paddingVertical: responsiveHeight(1.2),
                   marginRight: responsiveWidth(3),
+                  backgroundColor:
+                    selectItem == item.category_name
+                      ? AppColors.buttonText
+                      : 'transparent',
                 }}>
                 <Text
                   style={{
@@ -146,9 +180,9 @@ const Discover = ({navigation}) => {
                     color: 'white',
                     letterSpacing: 0.5,
                   }}>
-                  {item.btn}
+                  {item.category_name}
                 </Text>
-              </View>
+              </TouchableOpacity>
             )}
           />
         </View>
@@ -245,9 +279,14 @@ const Discover = ({navigation}) => {
             </View>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('WorkoutDetail', {
-                  // item: item.workout_plan_id,
-                })
+                exerciseData
+                  ? navigation.navigate('WorkoutDetail', {
+                      // item: item.workout_plan_id,
+                    })
+                  : ToastAndroid.show(
+                      'No Exercise of the day available',
+                      ToastAndroid.SHORT,
+                    )
               }
               style={{
                 borderRadius: responsiveWidth(2),
@@ -301,7 +340,10 @@ const Discover = ({navigation}) => {
             )}
           />
         </View> */}
-        <FlatListData category={category} navigation={navigation} />
+        <FlatListData
+          category={workoutData ? workoutData : category}
+          navigation={navigation}
+        />
       </View>
     </ScrollView>
   );
