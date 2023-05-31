@@ -1,4 +1,5 @@
 import {
+  FlatList,
   Image,
   ScrollView,
   StyleSheet,
@@ -14,6 +15,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Feather';
+import Octicons from 'react-native-vector-icons/Octicons';
 import IconSvg from '../assets/bodyBuilding';
 import Logo from '../assets/Icon3';
 import Timer from '../assets/Icon';
@@ -28,31 +30,42 @@ import LinearGradient from 'react-native-linear-gradient';
 import {DaysCounting} from '../Helping/DayOfCount';
 import Loader from '../component/Loader';
 import {GetWeeklyWeightApi} from '../services/HeightApi';
+import {
+  GetProgressReportApi,
+  GetWeeklyGoalDaysApi,
+} from '../services/WeeklyGoal';
+import PushNotification from 'react-native-push-notification';
+import {BaseUrl} from '../Helping/BaseUrl';
 
 const Report = ({navigation}) => {
   const [historyDataDate, setHistoryDataDate] = useState([]);
   const [loading, setLoading] = useState(false);
   const [getUserDetail, setGetUserDetail] = useState('');
+  const [getWeeklyDataReport, setGetWeeklyDataReport] = useState([]);
+  const [selectItem, setSelectItem] = useState([]);
+  const [weeklyDaysTraining, setWeeklyDaysTraining] = useState();
+  const [selected, setSelected] = useState('');
+  const [calendarProgressReport, setCalendarProgressReport] = useState([]);
   const [buttonDataMap, setButtonData] = useState('Weekly Report');
   const id = useSelector(data => data);
   const Card = [
     {
       desc: 'Kcal',
-      number: historyDataDate?.macrosTaken?.protein
-        ? historyDataDate?.macrosTaken?.protein
+      number: historyDataDate[0]
+        ? historyDataDate[0]?.total_week_calories_to_burn
         : '0',
     },
     {
       desc: 'Minutes',
-      number: historyDataDate?.macrosTaken?.fats
-        ? historyDataDate?.macrosTaken?.fats
+      number: historyDataDate[0]
+        ? historyDataDate[0]?.total_user_done_workout_time
         : '0',
     },
     {
       desc: 'workout',
-      number: historyDataDate?.macrosTaken?.carbs
-        ? historyDataDate?.macrosTaken?.carbs
-        : 0,
+      number: historyDataDate[0]
+        ? historyDataDate[0]?.total_week_calories_burned_by_user
+        : '0',
     },
   ];
   const ButtonData = [
@@ -64,18 +77,33 @@ const Report = ({navigation}) => {
     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
     datasets: [
       {
-        data: [20, 40, 60, 80],
+        data: [
+          getWeeklyDataReport[0]?.average_weight_kg
+            ? getWeeklyDataReport[0]?.average_weight_kg
+            : 0,
+          getWeeklyDataReport[1]?.average_weight_kg
+            ? getWeeklyDataReport[1]?.average_weight_kg
+            : 0,
+          getWeeklyDataReport[2]?.average_weight_kg
+            ? getWeeklyDataReport[2]?.average_weight_kg
+            : 0,
+          getWeeklyDataReport[3]?.average_weight_kg
+            ? getWeeklyDataReport[3]?.average_weight_kg
+            : 0,
+        ],
       },
     ],
   };
   const chartConfig = {
     backgroundGradientFrom: '#626377',
     backgroundGradientTo: '#626377',
-    fillShadowGradient: AppColors.buttonText,
-    fillShadowGradientOpacity: 1, // THIS
+    barPercentage: 0.7,
+    height: 5000,
+    fillShadowGradient: `rgba(1, 122, 205, 1)`,
+    fillShadowGradientOpacity: 1,
+    decimalPlaces: 0, // optional, defaults to 2dp
     color: (opacity = 1) => `white`,
     strokeWidth: 0, // optional, default 3
-    barPercentage: 0.8,
     useShadowColorFromDataset: false, // optional
   };
   useEffect(() => {
@@ -84,11 +112,10 @@ const Report = ({navigation}) => {
   useEffect(() => {
     var mount = true;
     const listener = navigation.addListener('focus', async () => {
-      setLoading(true);
+      // setLoading(true);
       try {
         const result = await GetUserDetailApi(id.id);
-        // console.log(result, 'get user detail');
-        if (result) {
+        if (result.status == true) {
           setLoading(false);
           setGetUserDetail(result.result);
         } else {
@@ -106,8 +133,7 @@ const Report = ({navigation}) => {
   const getWeightHeight = async () => {
     try {
       const result = await GetUserDetailApi(id.id);
-      // console.log(result, 'get user detail');
-      if (result.status == false) {
+      if (result.status == true) {
         setLoading(false);
         setGetUserDetail(result.result);
       } else {
@@ -117,17 +143,64 @@ const Report = ({navigation}) => {
       console.log(error);
     }
   };
-  console.log(
-    getUserDetail.weight /
-      ((getUserDetail.height / 3.28) * (getUserDetail.height / 3.28)),
-  );
+  useEffect(() => {
+    var mount = true;
+    const listener = navigation.addListener('focus', async () => {
+      try {
+        const result = await GetWeeklyReport(id.id);
+        if (result.status == true) {
+          setHistoryDataDate(result.result);
+        } else {
+          // navigation.navigate('SelectPlan');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    return () => {
+      listener;
+      mount = false;
+    };
+  }, []);
+  // useEffect(() => {
+  //   var mount = true;
+  //   const listener = navigation.addListener('focus', async () => {
+  //     try {
+  //       const result = await GetWeeklyGoalDaysApi(id.id);
+  //       // console.log(result, 'weekly goal days ');
+  //       if (result.status == true) {
+  //         setLoading(false);
+  //         setWeeklyDaysTraining(result.result);
+  //       } else {
+  //         setLoading(false);
+  //         // navigation.navigate('SelectPlan');
+  //       }
+  //     } catch (error) {
+  //       setLoading(false);
+  //       console.log(error);
+  //     }
+  //   });
+  //   return () => {
+  //     listener;
+  //     mount = false;
+  //   };
+  // }, []);
+  useEffect(() => {
+    GetHistoryData();
+    WeekProgressReport();
+    GetWeeklyWeightDataReport();
+  }, []);
+  const [markedDates, setMarkedDates] = useState({});
 
   const GetHistoryData = async () => {
     try {
       const result = await GetWeeklyReport(id.id);
-      console.log(result, 'weekly report user');
-      if (result.status == false) {
+      if (result.status == true) {
         setHistoryDataDate(result.result);
+        const processedMarkedDates = processMarkedDates(
+          result.result[0].records[0].workout_plan.created_at,
+        );
+        setMarkedDates(processedMarkedDates);
       } else {
         // navigation.navigate('SelectPlan');
       }
@@ -135,16 +208,46 @@ const Report = ({navigation}) => {
       console.log(error);
     }
   };
-  useEffect(() => {
-    GetWeeklyWeightDataReport();
-  }, []);
-  
+
+  const WeekProgressReport = async () => {
+    // setLoading(true);
+    try {
+      const result = await GetProgressReportApi(id.id);
+      if (result.status == true) {
+        setLoading(false);
+        setWeeklyDaysTraining(result.result);
+      } else {
+        setLoading(false);
+        // navigation.navigate('SelectPlan');
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+  // const GetWeeklyGoalDays = async () => {
+  //   // setLoading(true);
+  //   try {
+  //     const result = await GetWeeklyGoalDaysApi(id.id);
+  //     console.log(result, 'weekly goal days ');
+  //     if (result.status == true) {
+  //       setLoading(false);
+  //       setWeeklyDaysTraining(result.result);
+  //     } else {
+  //       setLoading(false);
+  //       // navigation.navigate('SelectPlan');
+  //     }
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.log(error);
+  //   }
+  // };
+
   const GetWeeklyWeightDataReport = async () => {
     try {
       const result = await GetWeeklyWeightApi(id.id);
-      console.log(result, 'weekly report user');
-      if (result.status == false) {
-        // setHistoryDataDate(result.result);
+      if (result.status == true) {
+        setGetWeeklyDataReport(result.result);
       } else {
         // navigation.navigate('SelectPlan');
       }
@@ -159,21 +262,96 @@ const Report = ({navigation}) => {
       : getUserDetail.height / 3.281;
   const totalHeight = heightValue * heightValue;
   const totalBMI = getUserDetail && getUserDetail.weight / totalHeight;
-  console.log(totalBMI, 'hello');
-  useEffect(() => {
-    GetHistoryData();
-  }, []);
-  const [selected, setSelected] = useState('');
   const dayDataActive = [
-    {day: 'Sun'},
     {day: 'Mon'},
     {day: 'Tue'},
     {day: 'Wed'},
     {day: 'Thu'},
     {day: 'Fri'},
     {day: 'Sat'},
+    {day: 'Sun'},
   ];
-  const [selectItem, setSelectItem] = useState([]);
+  const [selectedDay, setSelectedDay] = useState(null);
+
+  // const handleDayPress = day => {
+  //   console.log(day);
+  //   setSelectedDay(day);
+  // };
+
+  const getWeekFromDate = date => {
+    const selectedDate = new Date(date.year, date.month - 1, date.day);
+    const firstDayOfWeek = new Date(selectedDate);
+    firstDayOfWeek.setDate(selectedDate.getDate());
+    const lastDayOfWeek = new Date(selectedDate);
+    lastDayOfWeek.setDate(selectedDate.getDate() + 6);
+
+    const days = [];
+    const currentDate = new Date(firstDayOfWeek);
+    while (currentDate <= lastDayOfWeek) {
+      days.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return {
+      firstDayOfWeek,
+      lastDayOfWeek,
+      days,
+    };
+  };
+
+  const dataTime = selectedDay && getWeekFromDate(selectedDay).days[0].day;
+  const setTiming = selectedDay ? moment(dataTime).format('YYYY-MM-DD') : '';
+
+  const handleDayPress = day => {
+    // const selectedDate = day.dateString;
+
+    // // Add or remove the selected date from the marked dates
+    // if (markedDates[selectedDate]) {
+    //   const updatedMarkedDates = {...markedDates};
+    //   delete updatedMarkedDates[selectedDate];
+    //   setMarkedDates(updatedMarkedDates);
+    // } else {
+    //   setMarkedDates({...markedDates, [selectedDate]: {selected: true}});
+    // }
+    PushNotification.localNotification({
+      title: 'My Notification Title', // (optional)
+      message: 'My Notification Message',
+      channelId: 1,
+    });
+  };
+  const processMarkedDates = apiData => {
+    // Process the API data and format it to match the required format for markedDates prop
+    // The returned object should have date strings as keys and marker configurations as values
+    // Example: { '2023-06-01': { marked: true, dotColor: 'blue' }, ... }
+    // You may need to customize this based on your API response structure
+
+    // Here's an example assuming the API data contains an array of date strings
+    const processedDates = {};
+
+    apiData.forEach(date => {
+      processedDates[date] = {marked: true, dotColor: 'red'};
+    });
+
+    return processedDates;
+  };
+  const calendar = [
+    {item: '2023-05-23'},
+    {item: '2023-05-24'},
+    {item: '2023-05-26'},
+    {item: '2023-05-28'},
+  ];
+  // moment(
+  //   new Date(historyDataDate[0].records[0].workout_plan.created_at),
+  // ).format('YYYY-MM-DD');
+  // let markedDay = {};
+
+  // calendar.map(item => {
+  //   markedDay[item.date] = {
+  //     selected: true,
+  //     marked: true,
+  //     selectedColor: 'purple',
+  //   };
+  // });
   return loading ? (
     <Loader />
   ) : (
@@ -391,9 +569,6 @@ const Report = ({navigation}) => {
                   width={responsiveWidth(88)}
                   height={responsiveHeight(28)}
                   showBarTops={false}
-                  // yAxisInterval={0}
-                  // yLabelsOffset={0}
-                  // yAxisLabel={0}
                   withInnerLines={false}
                   chartConfig={chartConfig}
                   style={{
@@ -515,27 +690,69 @@ const Report = ({navigation}) => {
         ) : buttonDataMap == 'History' ? (
           historyDataDate ? (
             <View>
+              {console.log(
+                historyDataDate[0],
+                moment(
+                  new Date(
+                    historyDataDate[0].records[0].workout_plan.created_at,
+                  ),
+                ).format('YYYY-MM-DD'),
+                ' on progress',
+              )}
               <Calendar
-                onDayPress={day => {
-                  setSelected(day.dateString);
-                }}
+                firstDay={1}
+                onDayPress={handleDayPress}
+                // onDayPress={day => {
+                //   setSelected(day.dateString);
+                // }}
                 style={{
                   backgroundColor: '#626377',
                   borderRadius: responsiveWidth(2),
                 }}
                 markedDates={
+                  // markedDay
                   {
-                    // '2023-05-18': {
+                    [moment(
+                      new Date(historyDataDate[0].records[0].created_at),
+                    ).format('YYYY-MM-DD')]: {
+                      selected: true,
+                      selectedColor: 'white',
+                    },
+                    [moment(
+                      new Date(historyDataDate[0].records[1].created_at),
+                    ).format('YYYY-MM-DD')]: {
+                      selected: true,
+                      selectedColor: 'white',
+                    },
+                    // [moment(
+                    //   new Date(historyDataDate[0].records[0].created_at),
+                    // ).format('YYYY-MM-DD')]: {
                     //   selected: true,
-                    //   marked: true,
                     //   selectedColor: 'white',
                     // },
-                    // '2023-05-20': {marked: true},
-                    // '2023-05-24': {
+                    // [moment(
+                    //   new Date(historyDataDate[0].records[0].created_at),
+                    // ).format('YYYY-MM-DD')]: {
                     //   selected: true,
-                    //   marked: true,
                     //   selectedColor: 'white',
-                    //   color: '#FF6700',
+                    // },
+                    // [moment(
+                    //   new Date(historyDataDate[0].records[0].created_at),
+                    // ).format('YYYY-MM-DD')]: {
+                    //   selected: true,
+                    //   selectedColor: 'white',
+                    // },
+                    // [moment(
+                    //   new Date(historyDataDate[0].records[0].created_at),
+                    // ).format('YYYY-MM-DD')]: {
+                    //   selected: true,
+                    //   selectedColor: 'white',
+                    // },
+                    // [moment(
+                    //   new Date(historyDataDate[0].records[0].created_at),
+                    // ).format('YYYY-MM-DD')]: {
+                    //   selected: true,
+                    //   selectedColor: 'white',
                     // },
                   }
                 }
@@ -554,7 +771,171 @@ const Report = ({navigation}) => {
                   arrowStyle: {backgroundColor: '#626377'},
                 }}
               />
-              <View
+              <FlatList
+                data={historyDataDate[0].records}
+                renderItem={({item, index}) => (
+                  <>
+                    <View
+                      style={[
+                        CssStyle.flexJustify,
+                        {marginVertical: responsiveHeight(2)},
+                      ]}>
+                      <View>
+                        <Text
+                          style={{
+                            fontSize: 20,
+                            fontFamily: 'Interstate-regular',
+                            color: 'white',
+                            paddingBottom: responsiveHeight(1),
+                          }}>
+                          {new Date(item.created_at)
+                            .toDateString()
+                            .slice(4, 15)
+                            .replace(' ', ', ')}
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 13,
+                            fontFamily: 'Interstate-regular',
+                            color: 'white',
+                          }}>
+                          {item?.workout_plan?.workout_plan_exercises?.length
+                            ? item?.workout_plan?.workout_plan_exercises?.length
+                            : 0}{' '}
+                          exercise
+                        </Text>
+                      </View>
+                      <View>
+                        <View
+                          style={[
+                            CssStyle.flexData,
+                            {marginVertical: responsiveHeight(1)},
+                          ]}>
+                          <Logo width={16} height={16} />
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'Interstate-regular',
+                              fontSize: 12,
+                              marginLeft: responsiveWidth(2),
+                            }}>
+                            {item.workout_plan.calories_burnt} kcal
+                          </Text>
+                        </View>
+                        <View
+                          style={[
+                            CssStyle.flexData,
+                            {marginVertical: responsiveHeight(1)},
+                          ]}>
+                          <IconSvg width={16} height={16} />
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: 'Interstate-regular',
+                              fontSize: 12,
+                              marginLeft: responsiveWidth(2),
+                            }}>
+                            {item.workout_plan.time}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                    <FlatList
+                      data={item.workout_plan.workout_plan_exercises}
+                      renderItem={({item, index}) => (
+                        <TouchableOpacity
+                          onPress={
+                            () => {}
+                            // navigation.navigate('ExerciseDetail', {item: item})
+                          }
+                          style={[
+                            CssStyle.flexData,
+                            {
+                              // width: responsiveWidth(50),
+                              marginBottom: responsiveHeight(2),
+                              marginRight: responsiveWidth(7),
+                            },
+                          ]}>
+                          <Image
+                            borderRadius={responsiveWidth(2)}
+                            source={{uri: `${BaseUrl}` + item.animation}}
+                            style={{
+                              width: responsiveWidth(19),
+                              height: responsiveHeight(9),
+                              marginRight: responsiveWidth(4),
+                            }}
+                            resizeMode="contain"
+                          />
+                          <View>
+                            <Text
+                              style={{
+                                color: 'white',
+                                fontSize: 13,
+                                fontFamily: 'Interstate-regular',
+                                marginVertical: responsiveHeight(0.6),
+                                paddingBottom: responsiveHeight(1),
+                              }}>
+                              {item.title}
+                            </Text>
+                            <Text
+                              style={{
+                                color: 'white',
+                                fontSize: 12,
+                                fontFamily: 'Interstate-regular',
+                                // marginVertical: responsiveHeight(0.6),
+                                paddingBottom: responsiveHeight(1),
+                              }}>
+                              {item.description}
+                            </Text>
+                            {/* <View
+                              style={[
+                                CssStyle.flexJustify,
+                                {width: responsiveWidth(40)},
+                              ]}>
+                              <View
+                                style={[
+                                  CssStyle.flexData,
+                                  {marginVertical: responsiveHeight(1)},
+                                ]}>
+                                <Logo width={16} height={16} />
+                                <Text
+                                  style={{
+                                    color: 'white',
+                                    fontFamily: 'Interstate-regular',
+                                    fontSize: 12,
+                                    marginLeft: responsiveWidth(2),
+                                  }}>
+                                  400 kcal
+                                </Text>
+                              </View>
+                              <View
+                                style={[
+                                  CssStyle.flexData,
+                                  {marginVertical: responsiveHeight(1)},
+                                ]}>
+                                <IconSvg width={16} height={16} />
+                                <Text
+                                  style={{
+                                    color: 'white',
+                                    fontFamily: 'Interstate-regular',
+                                    fontSize: 12,
+                                    marginLeft: responsiveWidth(2),
+                                  }}>
+                                  45 sec
+                                </Text>
+                              </View>
+                            </View> */}
+                          </View>
+                        </TouchableOpacity>
+                      )}
+                    />
+                    <View
+                      style={{borderBottomColor: 'white', borderBottomWidth: 1}}
+                    />
+                  </>
+                )}
+              />
+              {/* <View
                 style={[
                   CssStyle.flexJustify,
                   {marginVertical: responsiveHeight(2)},
@@ -613,7 +994,7 @@ const Report = ({navigation}) => {
                   </View>
                 </View>
               </View>
-              {/* <TouchableOpacity
+              <TouchableOpacity
                 onPress={
                   () => {}
                   // navigation.navigate('ExerciseDetail', {item: item})
@@ -687,9 +1068,9 @@ const Report = ({navigation}) => {
                   </View>
                 </View>
               </TouchableOpacity> */}
-              <View
+              {/* <View
                 style={{borderBottomColor: 'white', borderBottomWidth: 1}}
-              />
+              /> */}
             </View>
           ) : (
             <View
@@ -734,19 +1115,27 @@ const Report = ({navigation}) => {
                     alignItems: 'center',
                     padding: '2%',
                   }}
-                  onPress={() => navigation.navigate('EditWeeklyGoal')}>
+                  onPress={() =>
+                    navigation.navigate('EditWeeklyGoal', {
+                      item: historyDataDate,
+                    })
+                  }>
                   <Text
                     style={{
                       color: 'white',
                       marginRight: responsiveWidth(2),
                     }}>
-                    Edit
+                    {historyDataDate ? 'Edit' : ' Add'}
                   </Text>
-                  <Image
-                    resizeMode="contain"
-                    style={{width: 13, height: 13}}
-                    source={require('../assets/Health-Hero/Iconfeather-edit-3.png')}
-                  />
+                  {historyDataDate ? (
+                    <Image
+                      resizeMode="contain"
+                      style={{width: 13, height: 13}}
+                      source={require('../assets/Health-Hero/Iconfeather-edit-3.png')}
+                    />
+                  ) : (
+                    <Octicons name="diff-added" size={18} color="white" />
+                  )}
                 </TouchableOpacity>
               </View>
               <View style={{alignItems: 'center'}}>
@@ -758,8 +1147,10 @@ const Report = ({navigation}) => {
                       width: responsiveWidth(79),
                     },
                   ]}>
+                  {console.log(weeklyDaysTraining, 'hello')}
                   {dayDataActive.map((item, index) => (
                     <DaysCounting
+                      weeklyDaysTraining={weeklyDaysTraining}
                       key={index}
                       selectItem={selectItem}
                       setSelectItem={setSelectItem}
@@ -998,3 +1389,52 @@ const styles = StyleSheet.create({
     fontFamily: 'Interstate-bold',
   },
 });
+
+// import React, { useState, useEffect } from 'react';
+// import { View } from 'react-native';
+// import { Calendar } from 'react-native-calendars';
+
+// const CalendarComponent = () => {
+//   const [markedDates, setMarkedDates] = useState({});
+
+//   useEffect(() => {
+//     fetchMarkedDates(); // Fetch marked dates from the API when the component mounts
+//   }, []);
+
+//   const fetchMarkedDates = async () => {
+//     try {
+//       // Make an API request to fetch the marked dates
+//       const response = await fetch('YOUR_API_ENDPOINT');
+//       const data = await response.json();
+
+//       // Process the API data and update the marked dates state
+//       const processedMarkedDates = processMarkedDates(data);
+//       setMarkedDates(processedMarkedDates);
+//     } catch (error) {
+//       console.error('Error fetching marked dates:', error);
+//     }
+//   };
+
+//   const processMarkedDates = (apiData) => {
+//     // Process the API data and format it to match the required format for markedDates prop
+//     // The returned object should have date strings as keys and marker configurations as values
+//     // Example: { '2023-06-01': { marked: true, dotColor: 'blue' }, ... }
+//     // You may need to customize this based on your API response structure
+
+//     // Here's an example assuming the API data contains an array of date strings
+//     const processedDates = {};
+//     apiData.forEach((date) => {
+//       processedDates[date] = { marked: true, dotColor: 'blue' };
+//     });
+
+//     return processedDates;
+//   };
+
+//   return (
+//     <View>
+//       <Calendar markedDates={markedDates} />
+//     </View>
+//   );
+// };
+
+// export default CalendarComponent;

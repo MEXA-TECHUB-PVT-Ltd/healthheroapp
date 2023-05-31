@@ -87,7 +87,13 @@ export const DayOfCount = ({item, index, selectItem, setSelectItem}) => {
 
 const styles = StyleSheet.create({});
 
-export const DaysCounting = ({item, index, selectItem, setSelectItem}) => {
+export const DaysCounting = ({
+  item,
+  weeklyDaysTraining,
+  index,
+  selectItem,
+  setSelectItem,
+}) => {
   const arrayData = selectItem.map((item, index) => item.item);
 
   const addItem = (num, id) => {
@@ -115,12 +121,18 @@ export const DaysCounting = ({item, index, selectItem, setSelectItem}) => {
           style={{
             width: 40,
             height: 40,
-            borderWidth: 1,
-            borderColor: select ? AppColors.buttonText : 'transparent',
+            // borderWidth: 1,
+            // borderColor:
+            //   weeklyDaysTraining[index].day == [index - 1]
+            //     ? AppColors.buttonText
+            //     : 'transparent',
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: responsiveHeight(20),
-            backgroundColor: select ? AppColors.buttonText : 'transparent',
+            backgroundColor:
+              weeklyDaysTraining[index+1].exersise_done == true
+                ? AppColors.buttonText
+                : 'transparent',
           }}>
           <Text style={{fontSize: 14, color: 'white'}} key={index}>
             {item.day}
