@@ -150,7 +150,7 @@ const WorkoutDetail = ({navigation, route}) => {
                   : workoutPlanData?.workout_plan_exersises
               }
               renderItem={({item, index}) => {
-                console.log(item, 'flatlist');
+                // console.log(item, 'flatlist');
                 return (
                   <TouchableOpacity
                     onPress={() =>
@@ -232,24 +232,28 @@ const WorkoutDetail = ({navigation, route}) => {
           </View>
         </View>
       </View>
-      <View
-        style={{
-          position: 'absolute',
-          top: responsiveHeight(90),
-          left: responsiveWidth(10),
-        }}>
-        <CustomButton
-          loading={loadingStarted}
-          onPress={() => {
-            StartWorkoutPlan();
-          }}
-          activeOpacity={1}
-          buttonColor={AppColors.buttonText}
-          paddingVertical={2}
-          style={{width: responsiveWidth(80)}}
-          buttonText={'Get Started'}
-        />
-      </View>
+      {item?.exercise_details
+        ? item?.exercise_details
+        : workoutPlanData?.workout_plan_exersises && (
+            <View
+              style={{
+                position: 'absolute',
+                top: responsiveHeight(90),
+                left: responsiveWidth(10),
+              }}>
+              <CustomButton
+                loading={loadingStarted}
+                onPress={() => {
+                  StartWorkoutPlan();
+                }}
+                activeOpacity={1}
+                buttonColor={AppColors.buttonText}
+                paddingVertical={2}
+                style={{width: responsiveWidth(80)}}
+                buttonText={'Get Started'}
+              />
+            </View>
+          )}
     </View>
   );
 };

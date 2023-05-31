@@ -87,6 +87,7 @@ const GetExercise = ({navigation, route}) => {
         formatTime(timeElapsed),
         moment(new Date()).format('YYYY-MM-DD'),
       );
+      console.log(result, 'start workout api response');
       if (result.status == true) {
         setLoading(false);
       } else {
@@ -232,7 +233,7 @@ const GetExercise = ({navigation, route}) => {
                   <CustomButton
                     iconName={'checkmark'}
                     onPress={() => {
-                      // navigation.navigate('Focused', {item: 'hello'}),
+                      navigation.navigate('Focused', {item: 'hello'}),
                       setRunning(false), StartWorkoutForProgress();
                     }}
                     iconColor="white"

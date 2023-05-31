@@ -26,7 +26,7 @@ import {BaseUrl} from '../../Helping/BaseUrl';
 
 const RestTime = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
+  // console.log(item);
   const countdownRef = useRef();
 
   const data = useSelector(data => data);
@@ -35,12 +35,10 @@ const RestTime = ({navigation, route}) => {
     data.workoutPlanData,
   );
   const [sec, setSec] = useState(12);
-  const [restTimeData, setRestTimeData] = useState('');
   const GetPlan = async () => {
     setLoading(true);
     try {
       const result = await GetRestTimeApi(data.id);
-      // console.log(result);
       if (result.status == true) {
         setLoading(false);
         setSec(parseInt(result.result.time));
@@ -49,7 +47,7 @@ const RestTime = ({navigation, route}) => {
         setLoading(false);
       }
     } catch (error) {
-      setLoading;
+      setLoading(false);
       console.log(error);
     }
   };
@@ -65,9 +63,7 @@ const RestTime = ({navigation, route}) => {
     <ImageBackground
       style={{
         flex: 1,
-        // resizeMode: 'contain',
       }}
-      // resizeMode="contain"
       source={require('../../assets/Health-Hero/restTime.png')}>
       <LinearGradient
         colors={['#0B183C00', '#0B183Ce1']}
@@ -83,7 +79,9 @@ const RestTime = ({navigation, route}) => {
             paddingTop: responsiveHeight(3),
             flex: 1.5,
           }}
-          onPress={() => navigation.goBack()}>
+          onPress={() => {
+            navigation.navigate('GetExercise', {item: Math.random()});
+          }}>
           <Icon name="chevron-back-outline" size={25} color={'white'} />
         </TouchableOpacity>
         <View style={{alignItems: 'center', flex: 1}}>
@@ -113,9 +111,9 @@ const RestTime = ({navigation, route}) => {
             duration={sec}
             size={120}
             strokeWidth={8}
-            onComplete={() =>
-              navigation.navigate('GetExercise', {item: Math.random()})
-            }
+            onComplete={() => {
+              navigation.navigate('GetExercise', {item: Math.random()});
+            }}
             colors={['#FF5100', '#FF5100', '#FF5100']}>
             {({remainingTime}) => (
               <Text style={{color: 'white', fontSize: 22}}>

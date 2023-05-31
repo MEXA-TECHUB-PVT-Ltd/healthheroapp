@@ -22,6 +22,7 @@ import {
   UpdateFirstDayInWeekApi,
   AddWeeklyDataApi,
   AddFirstDayInWeekApi,
+  UpdateWeeklyDataApi,
 } from '../../services/WeeklyGoal';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
@@ -34,9 +35,8 @@ import moment from 'moment';
 
 const EditWeeklyGoal = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  // console.log(item);
+  // console.log(item==undefined ? item : 'no one', 'this si the ');
   const [loading, setLoading] = useState(false);
-  const [time, setTime] = useState(1);
   const id = useSelector(data => data);
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const foodType = [
@@ -48,26 +48,50 @@ const EditWeeklyGoal = ({navigation, route}) => {
     {item: 'Fri'},
     {item: 'Sat'},
   ];
-  const [typeDate, setType] = useState('');
   const [typeDateFood, setTypeFood] = useState('');
   // const measureType = [{item: 'Food 1'}, {item: 'Food 2'}, {item: 'Food 3'}];
   const [measureModel, setMeasureModel] = useState(false);
   const [foodModel, setFoodModel] = useState(false);
-  const [getFoodData, setGetFoodData] = useState('');
-  const [typeFoodId, setTypeFoodId] = useState('');
   const [indexNumber, setIndexNumber] = useState('');
   const [noOfDays, setNoOfDays] = useState('');
   const [data, setData] = useState('');
 
+  const PostWeeklyReportUser = async () => {
+    setLoading(true);
+    try {
+      const result = await (item
+        ? UpdateWeeklyDataApi(
+            id.id,
+            noOfDays,
+            // moment(new Date()).format('YYYY-MM-DD'),
+          )
+        : AddWeeklyDataApi(
+            id.id,
+            noOfDays,
+            moment(new Date()).format('YYYY-MM-DD'),
+          ));
+      console.log(result, 'add weekly data');
+      if (result.status == true) {
+        setLoading(false);
+        setOpenRestartModel(true);
+        SetFirstDayWeekUser();
+        setNoOfDays('');
+      } else {
+        setLoading(false);
+        // navigation.navigate('SelectPlan');
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
   const SetFirstDayWeekUser = async () => {
     setLoading(true);
     try {
-      const result = await AddFirstDayInWeekApi(
-        id.id,
-        indexNumber + 1,
-        // moment(new Date()).format('YYYY-MM-DD'),
-      );
-      // console.log(result, 'this is first ');
+      const result = await (item
+        ? UpdateFirstDayInWeekApi(id.id, indexNumber + 1)
+        : AddFirstDayInWeekApi(id.id, indexNumber + 1));
+      console.log(result, 'this is first ');
       if (result.status == true) {
         setLoading(false);
         // setData('First Week');
@@ -80,28 +104,7 @@ const EditWeeklyGoal = ({navigation, route}) => {
       console.log(error);
     }
   };
-  const PostWeeklyReportUser = async () => {
-    setLoading(true);
-    try {
-      const result = await AddWeeklyDataApi(
-        id.id,
-        noOfDays,
-        moment(new Date()).format('YYYY-MM-DD'),
-      );
-      // console.log(result, 'this is the');
-      if (result.status == true) {
-        setLoading(false);
-        setOpenRestartModel(true);
-        setNoOfDays('');
-      } else {
-        setLoading(false);
-        // navigation.navigate('SelectPlan');
-      }
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-    }
-  };
+
   return (
     <LinearGradient
       colors={['#0A1F58', '#0A1637']}
@@ -216,8 +219,8 @@ const EditWeeklyGoal = ({navigation, route}) => {
         <CustomButton
           loading={loading}
           onPress={() =>
-            noOfDays && indexNumber
-              ? (SetFirstDayWeekUser(), PostWeeklyReportUser())
+            indexNumber + 1
+              ? PostWeeklyReportUser()
               : ToastAndroid.show(
                   'Please fill the required data',
                   ToastAndroid.SHORT,
@@ -226,7 +229,7 @@ const EditWeeklyGoal = ({navigation, route}) => {
           activeOpacity={1}
           buttonColor={AppColors.buttonText}
           style={{width: responsiveWidth(78)}}
-          buttonText={'Edit'}
+          buttonText={item ? 'Edit' : 'Add'}
           paddingVertical={1}
         />
       </View>
@@ -286,7 +289,7 @@ const EditWeeklyGoal = ({navigation, route}) => {
               <CustomButton
                 buttonText={'Go Back'}
                 onPress={() => {
-                  setOpenRestartModel(false);
+                  setOpenRestartModel(false), navigation.goBack();
                 }}
                 buttonColor={'transparent'}
                 mode="outlined"
