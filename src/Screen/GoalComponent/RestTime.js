@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   ImageBackground,
   KeyboardAvoidingView,
@@ -142,16 +143,18 @@ const RestTime = ({navigation, route}) => {
             }}>
             Next Exercise
           </Text>
-          {dataTakeFromRedux.workout_plan_exersises[item + 1] ? (
+          {dataTakeFromRedux[item + 1] ? (
             <View
               style={[CssStyle.flexData, {marginBottom: responsiveHeight(2)}]}>
               <View style={{width: responsiveWidth(34)}}>
                 <Image
                   source={{
-                    uri:
-                      `${BaseUrl}` +
-                      dataTakeFromRedux.workout_plan_exersises[item + 1]
-                        .exersise_details.animation,
+                    uri: dataTakeFromRedux[item + 1]?.exercise_details
+                      ? `${BaseUrl}` +
+                        dataTakeFromRedux[item + 1]?.exercise_details[0]
+                          .animation
+                      : `${BaseUrl}` +
+                        dataTakeFromRedux[item + 1]?.exersise_details?.animation,
                   }}
                   // resizeMode="contain"
                   style={{
@@ -162,7 +165,7 @@ const RestTime = ({navigation, route}) => {
                   borderRadius={responsiveWidth(2)}
                 />
               </View>
-              <View style={{width: responsiveWidth(49)}}>
+              <View style={{width: responsiveWidth(56)}}>
                 <Text
                   style={{
                     color: 'white',
@@ -170,10 +173,9 @@ const RestTime = ({navigation, route}) => {
                     fontFamily: 'Interstate-regular',
                     opacity: 0.8,
                   }}>
-                  {
-                    dataTakeFromRedux.workout_plan_exersises[item + 1]
-                      .exersise_details.title
-                  }
+                  {dataTakeFromRedux[item + 1]?.exercise_details
+                    ? dataTakeFromRedux[item + 1]?.exercise_details[0]?.title
+                    : dataTakeFromRedux[item + 1]?.exersise_details?.title}
                 </Text>
                 <Text
                   style={{
@@ -184,10 +186,26 @@ const RestTime = ({navigation, route}) => {
                     opacity: 0.5,
                     lineHeight: responsiveHeight(2),
                   }}>
-                  {
-                    dataTakeFromRedux.workout_plan_exersises[item + 1]
-                      .exersise_details.description
-                  }
+                  {dataTakeFromRedux[item + 1]?.exercise_details
+                    ? dataTakeFromRedux[item + 1]?.exercise_details[0]
+                        ?.description
+                    : dataTakeFromRedux[
+                        item + 1
+                      ]?.exersise_details?.description?.slice(0, 62)}
+                  {dataTakeFromRedux[item + 1]?.exersise_details?.description
+                    ?.length > 71 && (
+                    <Text
+                      style={{color: 'blue'}}
+                      onPress={() =>
+                        Alert.alert(
+                          'Information',
+                          dataTakeFromRedux[item + 1]?.exersise_details
+                            ?.description,
+                        )
+                      }>
+                      See more
+                    </Text>
+                  )}
                 </Text>
                 <View
                   style={[CssStyle.flexJustify, {width: responsiveWidth(45)}]}>
@@ -205,7 +223,7 @@ const RestTime = ({navigation, route}) => {
                         marginLeft: responsiveWidth(2),
                         opacity: 0.5,
                       }}>
-                      {dataTakeFromRedux.workout_plan_exersises[item + 1].time}
+                      {dataTakeFromRedux[item + 1]?.time}
                     </Text>
                   </View>
                 </View>

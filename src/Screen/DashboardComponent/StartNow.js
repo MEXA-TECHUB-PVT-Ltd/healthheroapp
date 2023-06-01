@@ -21,7 +21,7 @@ import Loader from '../../component/Loader';
 
 const StartNow = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
+  console.log(item, 'jhela ');
   const [sevenByFourData, setSevenByFourData] = useState([]);
   const [loading, setLoading] = useState(false);
   const GetSeven = async () => {
@@ -71,11 +71,13 @@ const StartNow = ({navigation, route}) => {
           style={[
             CssStyle.flexJustify,
             {
-              paddingTop: responsiveHeight(2),
+              paddingTop: responsiveHeight(3),
               paddingHorizontal: responsiveWidth(5),
             },
           ]}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={{backgroundColor: '#00000010'}}
+            onPress={() => navigation.goBack()}>
             <Icon name="chevron-back-outline" size={27} color="white" />
           </TouchableOpacity>
         </View>
@@ -262,7 +264,7 @@ const StartNow = ({navigation, route}) => {
                                 {itemData.item}
                               </Text>
                             </TouchableOpacity>
-                            {indexData !== weekData.length-1 ? (
+                            {indexData !== weekData.length - 1 ? (
                               <View
                                 style={{
                                   backgroundColor:
@@ -295,7 +297,7 @@ const StartNow = ({navigation, route}) => {
             left: responsiveWidth(5),
           }}>
           <CustomButton
-            onPress={() => navigation.navigate('WorkoutExercise')}
+            onPress={() => navigation.navigate('WorkoutExercise', {item: ''})}
             buttonText={'GO!'}
             fontWeight="500"
             style={{}}

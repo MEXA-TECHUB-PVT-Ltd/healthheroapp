@@ -97,6 +97,7 @@ const ExerciseDetail = ({navigation, route}) => {
           data={id.workout_plan_exersises}
           scrollEnabled={false}
           renderItem={({itemData, index}) => {
+            console.log(itemData, 'hello');
             return (
               <View style={{}}>
                 <Text
@@ -110,7 +111,7 @@ const ExerciseDetail = ({navigation, route}) => {
                     styles.signInText,
                     {fontFamily: 'Interstate-regular'},
                   ]}>
-                  7 mins
+                  {staticValue?.time}
                 </Text>
                 <View
                   style={[CssStyle.flexData, {marginTop: responsiveHeight(2)}]}>
@@ -156,13 +157,13 @@ const ExerciseDetail = ({navigation, route}) => {
                 <Text
                   style={{
                     color: 'white',
-                    fontSize: 12,
+                    fontSize: 13,
                     opacity: 0.7,
-                    marginBottom: responsiveHeight(1.2),
                     lineHeight: responsiveHeight(2.6),
                     width: responsiveWidth(90),
+                    marginVertical: responsiveHeight(2),
                   }}>
-                  {item.description}
+                  {staticValue.exersise_details.description}
                 </Text>
                 <Text style={[styles.signInText, {fontSize: 16}]}>
                   Focused Area
@@ -196,19 +197,9 @@ const ExerciseDetail = ({navigation, route}) => {
                         fontSize: 17,
                         color: 'white',
                       }}>
-                      {/* {staticValue.focus_area[0]} */}
+                      {id?.focus_area[0]}
                     </Text>
                   </View>
-                  {/* <Image
-                  //   resizeMode="contain"
-                  source={require('../../assets/Rectangle32.png')}
-                  borderRadius={responsiveWidth(2)}
-                  style={{
-                    width: responsiveWidth(42),
-                    height: responsiveHeight(13),
-                    marginVertical: responsiveHeight(2),
-                  }}
-                /> */}
                   <View
                     style={{
                       width: responsiveWidth(42),
@@ -223,7 +214,7 @@ const ExerciseDetail = ({navigation, route}) => {
                         fontSize: 17,
                         color: 'white',
                       }}>
-                      {/* {item.focus_area[2]} */}
+                      {id?.focus_area[1]}
                     </Text>
                   </View>
                 </View>

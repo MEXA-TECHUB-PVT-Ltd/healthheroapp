@@ -60,7 +60,7 @@ const QuitExercise = ({navigation}) => {
                   width: responsiveWidth(90),
                 },
               ]}
-              onPress={() => {navigation.navigate('WorkoutDetail')}}>
+              onPress={() => {navigation.navigate('main')}}>
               <Text
                 style={{
                   color: 'white',

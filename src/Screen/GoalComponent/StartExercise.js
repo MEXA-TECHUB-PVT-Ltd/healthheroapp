@@ -50,9 +50,11 @@ const StartExercise = ({navigation, route}) => {
       console.log(error);
     }
   };
-  const [reduxData, setReduxData] = useState(
-    id?.workoutPlanData?.workout_plan_exersises[item],
-  );
+  const [reduxData, setReduxData] = useState(id ? id.workoutPlanData[0] : '');
+  const otherExercise_data = reduxData?.exercise_details
+    ? reduxData?.exercise_details[0]
+    : reduxData?.exersise_details;
+  console.log(reduxData, 'fsldfjskld');
   useEffect(() => {
     GetCategory();
   }, []);
@@ -155,7 +157,7 @@ const StartExercise = ({navigation, route}) => {
             <View style={{width: responsiveWidth(29)}}>
               <Image
                 source={{
-                  uri: `${BaseUrl}` + reduxData?.exersise_details.animation,
+                  uri: `${BaseUrl}` + otherExercise_data?.animation,
                 }}
                 resizeMode="contain"
                 style={{
@@ -174,7 +176,7 @@ const StartExercise = ({navigation, route}) => {
                   opacity: 0.8,
                   textTransform: 'capitalize',
                 }}>
-                {reduxData?.exersise_details.title}
+                {otherExercise_data?.title}
               </Text>
               <Text
                 style={{
@@ -186,7 +188,7 @@ const StartExercise = ({navigation, route}) => {
                   lineHeight: responsiveHeight(2),
                   height: responsiveHeight(2.7),
                 }}>
-                {reduxData?.exersise_details.description}
+                {otherExercise_data?.description}
               </Text>
               <View
                 style={[CssStyle.flexJustify, {width: responsiveWidth(50)}]}>

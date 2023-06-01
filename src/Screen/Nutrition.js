@@ -222,7 +222,7 @@ const Nutrition = ({navigation, route}) => {
   const GetFoodRecord = async () => {
     try {
       const result = await GetFoodApi(id.id, id.dietPlanId);
-      // console.log(result, 'Food record');
+      console.log(result, 'Food record');
       if (result) {
         setLoading(false);
         setFoodData(result.result?.foodIntakesToday);
