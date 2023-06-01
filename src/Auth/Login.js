@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   Image,
   ImageBackground,
   KeyboardAvoidingView,
@@ -8,7 +9,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   responsiveHeight,
@@ -23,6 +24,7 @@ import {LoginApi} from '../services/AuthScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {Add} from '../store/action';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -32,6 +34,20 @@ const Login = ({navigation}) => {
   const [data, setData] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
+  
+  useFocusEffect(
+    useCallback(() => {
+      const backAction = () => {
+        // console.log('hello sir');
+        BackHandler.exitApp();
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+      );
+      return () => backHandler.remove();
+    }, []),
+  );
 
   const SignIn = async () => {
     setLoading(true);
@@ -176,7 +192,7 @@ const Login = ({navigation}) => {
             <CustomButton
               loading={loading}
               buttonText={'Login'}
-              styleText={{width:responsiveWidth(22)}}
+              styleText={{width: responsiveWidth(22)}}
               marginLeft={loading ? responsiveWidth(5) : responsiveWidth(3)}
               onPress={() =>
                 !email && !password

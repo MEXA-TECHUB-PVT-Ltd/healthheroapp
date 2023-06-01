@@ -25,61 +25,59 @@ import CustomButton from '../../component/CustomButton';
 import {RulerPicker} from 'react-native-ruler-picker';
 import Ruler from '../../Helping/Ruler';
 import {GetUserDetailApi, UpdateProfileApi} from '../../services/AuthScreen';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
+import {
+  AddWeightWithoutProfileApi,
+  UpdateWeightWithoutProfileApi,
+} from '../../services/HeightApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {WeightReviewId} from '../../store/action';
 
 const NutritionWeight = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
-  // console.log(updateData);
+  // console.log(item);
   const weightUnitData = [{text: 'gm'}, {text: 'kg'}];
   const [weightData, setWeightData] = useState('kg');
   const flatNode = useRef();
   const id = useSelector(data => data);
   const [activeIndex, setActiveIndex] = useState(
-    updateDataChanges?.weight ? updateDataChanges.weight : 35,
+    item[0]?.current_weight
+      ? item[0]?.current_weight
+      : updateDataChanges?.weight
+      ? updateDataChanges.weight
+      : 35,
   );
   const [updateDataChanges, setUpdateDataChanges] = useState('');
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    getWeightHeight();
-  }, []);
-  const getWeightHeight = async () => {
-    setLoading(true);
-    try {
-      const result = await GetUserDetailApi(id.id);
-      if (result.status == true) {
-        setLoading(false);
-        setUpdateDataChanges(result.result);
-      } else {
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  const [weightValue, setWeightValue] = useState(38);
+  const [weightValue, setWeightValue] = useState(
+    item[0]?.current_weight ? item[0]?.current_weight : 38,
+  );
   // console.log(weightValue);
   const [loadingUser, setLoadingUser] = useState(false);
   const [openUserSuccessfully, setOpenUserSuccessfully] = useState(false);
-  const UpdateUserName = async () => {
+  // console.log(weightValue, 'hello');
+  const dispatch = useDispatch();
+  const UpdateWeight = async () => {
     setLoadingUser(true);
     try {
-      const result = await UpdateProfileApi(
-        id.id,
-        updateDataChanges.user_name,
-        updateDataChanges.device_id,
-        updateDataChanges.gender,
-        updateDataChanges.focused_areas,
-        updateDataChanges.height,
-        weightValue,
-        weightData,
-        updateDataChanges.height_unit,
-      );
-      // console.log(result);
+      const result = await (id.WeightReview
+        ? UpdateWeightWithoutProfileApi(
+            id.WeightReview,
+            weightValue,
+            weightData,
+          )
+        : AddWeightWithoutProfileApi(id.id, weightValue, weightData));
+        // console.log(result,'shdfle');
       if (result.status == true) {
         setOpenUserSuccessfully(true);
         setLoadingUser(false);
+        await AsyncStorage.setItem(
+          'WeightReviewId',
+          `${result.result[0].weight_review_id}`,
+        );
+        dispatch(WeightReviewId(result.result[0].weight_review_id));
       } else {
         console.error(result.message);
         setLoadingUser(false);
@@ -89,6 +87,7 @@ const NutritionWeight = ({navigation, route}) => {
       console.log(error);
     }
   };
+  // console.log(id.id, weightValue, weightData);
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -130,7 +129,8 @@ const NutritionWeight = ({navigation, route}) => {
                 width: responsiveWidth(90),
                 lineHeight: responsiveHeight(6),
               }}>
-              {item == 'Update' ? item : 'Current'} Weight
+              {item[0]?.user_id || item == 'Update' ? 'Update' : 'Current'}{' '}
+              Weight
             </Text>
             <Text
               style={{
@@ -152,19 +152,19 @@ const NutritionWeight = ({navigation, route}) => {
               {weightUnitData.map((item, index) => (
                 <CustomButton
                   key={index}
-                  buttonText={item.text}
-                  onPress={() => setWeightData(item.text)}
+                  buttonText={item?.text}
+                  onPress={() => setWeightData(item?.text)}
                   style={{width: responsiveWidth(42)}}
                   styleText={{textTransform: 'uppercase'}}
-                  mode={weightData == item.text ? '' : 'outlined'}
-                  borderColor={weightData == item.text ? '' : 'white'}
-                  buttonColor={weightData == item.text ? '' : 'transparent'}
+                  mode={weightData == item?.text ? '' : 'outlined'}
+                  borderColor={weightData == item?.text ? '' : 'white'}
+                  buttonColor={weightData == item?.text ? '' : 'transparent'}
                 />
               ))}
             </View>
             <RulerPicker
               min={0}
-              max={110}
+              max={weightData == 'kg' ? 150 : 5000}
               step={1}
               fractionDigits={0}
               initialValue={activeIndex}
@@ -175,6 +175,7 @@ const NutritionWeight = ({navigation, route}) => {
               longStepHeight={70}
               shortStepHeight={20}
               stepWidth={3}
+              decelerationRate="fast"
               unitTextStyle={{
                 color: 'white',
                 fontSize: responsiveFontSize(2),
@@ -203,8 +204,8 @@ const NutritionWeight = ({navigation, route}) => {
             <CustomButton
               onPress={() => {
                 weightValue
-                  ? item == 'Update'
-                    ? UpdateUserName()
+                  ? item[0]?.user_id || item == 'Update'
+                    ? UpdateWeight()
                     : navigation.navigate('NutritionTargeted', {
                         item: {item, weightValue},
                         updateData,
@@ -216,7 +217,11 @@ const NutritionWeight = ({navigation, route}) => {
               }}
               activeOpacity={1}
               style={{width: responsiveWidth(78)}}
-              buttonText={item == 'Update' ? 'Save Changes' : 'Continue'}
+              buttonText={
+                item[0]?.user_id || item == 'Update'
+                  ? 'Save Changes'
+                  : 'Continue'
+              }
             />
           </View>
         </View>

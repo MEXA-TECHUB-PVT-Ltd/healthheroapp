@@ -236,66 +236,68 @@ const ExerciseDetail = ({navigation, route}) => {
           paginationDefaultColor={'transparent'}
           paginationStyleItemInactive={{}}
         />
-        <View style={[CssStyle.flexJustify, {}]}>
-          <TouchableOpacity
-            style={{
-              backgroundColor: '#FF510050',
-              borderRadius: responsiveHeight(10),
-              width: 39,
-              height: 39,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            onPress={() => {
-              staticValue
-                ? {}
-                : activeIndex == 0
-                ? (setActiveIndex(activeIndex - 1),
-                  flatNode.current.scrollToIndex({
-                    animated: true,
-                    index: activeIndex - 1,
-                  }))
-                : console.log('sdf');
-            }}>
-            <Icon
-              name="chevron-back-outline"
-              size={29}
-              color={AppColors.buttonText}
-            />
-          </TouchableOpacity>
-          {!staticValue && (
-            <Text style={{color: 'white', fontSize: 12}}>
-              <Text style={{fontSize: 17}}>0{activeIndex + 1}</Text>/0
-              {dataImages.length}
-            </Text>
-          )}
-          <TouchableOpacity
-            style={{
-              backgroundColor: '#FF510050',
-              borderRadius: responsiveHeight(10),
-              width: 39,
-              height: 39,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            onPress={() => {
-              staticValue
-                ? {}
-                : activeIndex !== id.workout_plan_exersises.length - 1
-                ? (setActiveIndex(activeIndex + 1),
-                  flatNode.current.scrollToIndex({
-                    animated: true,
-                    index: activeIndex + 1,
-                  }))
-                : console.log('sdf');
-            }}>
-            <Icon
-              name="chevron-forward-outline"
-              size={29}
-              color={AppColors.buttonText}
-            />
-          </TouchableOpacity>
-        </View>
+        {staticValue ? null : (
+          <View style={[CssStyle.flexJustify, {}]}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#FF510050',
+                borderRadius: responsiveHeight(10),
+                width: 39,
+                height: 39,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                staticValue
+                  ? {}
+                  : activeIndex == 0
+                  ? (setActiveIndex(activeIndex - 1),
+                    flatNode.current.scrollToIndex({
+                      animated: true,
+                      index: activeIndex - 1,
+                    }))
+                  : console.log('sdf');
+              }}>
+              <Icon
+                name="chevron-back-outline"
+                size={29}
+                color={AppColors.buttonText}
+              />
+            </TouchableOpacity>
+            {!staticValue && (
+              <Text style={{color: 'white', fontSize: 12}}>
+                <Text style={{fontSize: 17}}>0{activeIndex + 1}</Text>/0
+                {dataImages.length}
+              </Text>
+            )}
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#FF510050',
+                borderRadius: responsiveHeight(10),
+                width: 39,
+                height: 39,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={() => {
+                staticValue
+                  ? {}
+                  : activeIndex !== id.workout_plan_exersises.length - 1
+                  ? (setActiveIndex(activeIndex + 1),
+                    flatNode.current.scrollToIndex({
+                      animated: true,
+                      index: activeIndex + 1,
+                    }))
+                  : console.log('sdf');
+              }}>
+              <Icon
+                name="chevron-forward-outline"
+                size={29}
+                color={AppColors.buttonText}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
   );

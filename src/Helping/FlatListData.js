@@ -12,7 +12,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import NoImage from '../assets/noImageRed';
-import { BaseUrl } from './BaseUrl';
+import {BaseUrl} from './BaseUrl';
 
 export const FlatListData = ({category, navigation}) => {
   return (
@@ -25,7 +25,9 @@ export const FlatListData = ({category, navigation}) => {
           return (
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('WorkoutExercise', {item: item})
+                navigation.navigate('WorkoutDetail', {
+                  item: item.workout_plan_id,
+                })
               }
               style={{
                 marginRight: responsiveWidth(6),
@@ -35,11 +37,7 @@ export const FlatListData = ({category, navigation}) => {
               {item.image ? (
                 <Image
                   borderRadius={responsiveWidth(2)}
-                  source={
-                    item.image || item.animation
-                      ? {uri: `${BaseUrl}` + item.animation}
-                      : require('../assets/noImage.jpeg')
-                  }
+                  source={{uri: `${BaseUrl}` + item.image}}
                   style={{
                     width: responsiveWidth(42),
                     height: responsiveHeight(20),
@@ -57,17 +55,18 @@ export const FlatListData = ({category, navigation}) => {
                   color: 'white',
                   fontSize: 13,
                   fontFamily: 'Interstate-regular',
-                  // marginTop: responsiveHeight(1),
+                  marginTop: responsiveHeight(1),
                 }}>
-                {item.category_name}
+                {item.workout_title}
               </Text>
               <Text
                 style={{
                   color: 'white',
                   fontSize: 12,
                   fontFamily: 'Interstate-regular',
+                  marginTop: responsiveHeight(0.3),
                 }}>
-                21 min | 400 k
+                {item?.time?.slice(0, 8)} | {item.calories_burnt} k
               </Text>
             </TouchableOpacity>
           );

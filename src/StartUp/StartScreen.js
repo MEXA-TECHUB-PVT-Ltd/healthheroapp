@@ -90,19 +90,20 @@ const StartScreen = ({navigation}) => {
     labelSize: 13,
     currentStepLabelColor: '#3E94A6',
   };
+  console.log(activeIndex, 'hello');
   return (
     <>
-      {/* <StatusBar hidden={true}  backgroundColor='white' /> */}
+      <StatusBar hidden={true} backgroundColor="white" />
       <SwiperFlatList
         ref={flatNode}
         index={activeIndex}
         showPagination
         data={dataImages}
-        // scrollEnabled={false}
+        scrollEnabled={false}
         renderItem={({item, index}) => (
           <View key={index} style={{flex: 1}}>
             <Image
-              resizeMode="contain"
+              // resizeMode="contain"
               source={item.image}
               style={{
                 width: responsiveWidth(100),
@@ -116,7 +117,7 @@ const StartScreen = ({navigation}) => {
               style={{
                 // position: 'absolute',
                 bottom: responsiveHeight(58.5),
-                paddingHorizontal: responsiveWidth(5),
+                // paddingHorizontal: responsiveWidth(5),
                 paddingBottom: responsiveHeight(20),
                 paddingTop: responsiveHeight(26),
               }}>
@@ -129,6 +130,7 @@ const StartScreen = ({navigation}) => {
                   marginLeft: responsiveWidth(1.2),
                   width: responsiveWidth(90),
                   lineHeight: responsiveHeight(6),
+                  paddingHorizontal: responsiveWidth(5),
                 }}>
                 {item.headerText}
               </Text>
@@ -137,6 +139,7 @@ const StartScreen = ({navigation}) => {
                   width: width - 60,
                   color: 'white',
                   fontFamily: 'Interstate-regular',
+                  paddingHorizontal: responsiveWidth(5),
                   lineHeight: responsiveHeight(3),
                   fontSize: 14,
                   marginLeft: responsiveWidth(2),

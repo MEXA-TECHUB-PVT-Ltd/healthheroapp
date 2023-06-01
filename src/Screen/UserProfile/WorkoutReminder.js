@@ -22,6 +22,7 @@ import {TakeTrainingRest} from '../../services/RestApi';
 import {useSelector} from 'react-redux';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
+import PushNotification, {Importance} from 'react-native-push-notification';
 import {TakeCountDownApi} from '../../services/CountDownApi';
 import Octicons from 'react-native-vector-icons/Octicons';
 import {
@@ -32,133 +33,125 @@ import {
 import moment from 'moment';
 
 const WorkoutReminder = ({navigation, route}) => {
+  const {item, itemData} = route.params ? route.params : '';
+  // console.log(itemData);
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(13);
   const id = useSelector(data => data.id);
   const [reminderData, setReminderData] = useState([]);
+  const [dataArrayReminder, setDataArrayReminder] = useState([]);
   useEffect(() => {
-    var mount = true;
-    const listener = navigation.addListener('focus', async () => {
-      setLoading(true);
-      try {
-        const result = await GetReminder(id);
-        // console.log(result, 'get reminder');
-        if (result.status == true) {
-          setLoading(false);
-          setReminderData(result.result);
-          // setOpenRestartModel(true);
-        } else {
-          console.error(result.message);
-          setLoading(false);
-        }
-      } catch (error) {
-        setLoading;
-        console.log(error);
-      }
+    itemData == undefined
+      ? setDataArrayReminder([])
+      : dataArrayReminder.push(itemData);
+    setDataArrayReminder([...dataArrayReminder]);
+  }, [itemData]);
+  console.log(dataArrayReminder, 'array method');
+  // useEffect(() => {
+  //   var mount = true;
+  //   const listener = navigation.addListener('focus', async () => {
+  //     setLoading(true);
+  //     try {
+  //       const result = await GetReminder(id);
+  //       // console.log(result, 'get reminder');
+  //       if (result.status == true) {
+  //         setLoading(false);
+  //         setReminderData(result.result);
+  //         // setOpenRestartModel(true);
+  //       } else {
+  //         console.error(result.message);
+  //         setLoading(false);
+  //       }
+  //     } catch (error) {
+  //       setLoading;
+  //       console.log(error);
+  //     }
+  //   });
+  //   return () => {
+  //     listener;
+  //     mount = false;
+  //   };
+  // }, []);
+  // const GetReminderProfile = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const result = await GetReminder(id);
+  //     // console.log(result.result, 'get reminder');
+  //     if (result.status == true) {
+  //       setLoading(false);
+  //       setReminderData(result.result);
+  //       // setOpenRestartModel(true);
+  //     } else {
+  //       console.error(result.message);
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     setLoading;
+  //     console.log(error);
+  //   }
+  // };
+  const ActiveReminder = async item => {
+    handleScheduleNotification(item);
+  };
+  const InActiveReminder = async item => {
+    PushNotification.localNotificationSchedule({});
+    PushNotification.cancelLocalNotification({id: item.id});
+  };
+  // useEffect(() => {
+  //   GetReminderProfile();
+  // }, []);
+  const createNotificationChannel = () => {
+    PushNotification.createChannel(
+      {
+        channelId: 'channel-id',
+        channelName: 'My channel', // (required)
+        channelDescription: 'A channel to categorise your notifications', // (optional) default: undefined.
+        playSound: true, // (optional) default: true
+        importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+        vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+      },
+      created => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+    );
+  };
+  // localNotification
+  const handleScheduleNotification = item => {
+    createNotificationChannel();
+    console.log(new Date(`${item.time}`), 'pre defined schq');
+    PushNotification.localNotificationSchedule({
+      channelId: 'channel-id',
+      title: 'Workout Reminder',
+      id: '9',
+      message: `Do your workout to stay healthy`, // (required)
+      date: new Date(item.time),
+      allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
+      playSound: true,
+      vibrate: true,
+      /* Android Only Properties */
+      repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
     });
-    return () => {
-      listener;
-      mount = false;
-    };
-  }, []);
-  const GetReminderProfile = async () => {
-    setLoading(true);
-    try {
-      const result = await GetReminder(id);
-      console.log(result.result, 'get reminder');
-      if (result.status == true) {
-        setLoading(false);
-        setReminderData(result.result);
-        // setOpenRestartModel(true);
-      } else {
-        console.error(result.message);
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading;
-      console.log(error);
-    }
   };
-  const ActiveReminder = async id => {
-    // console.log(id);
-    setLoading(true);
-    try {
-      const result = await ActiveReminderApi(id);
-      // console.log(result, 'active to indicatore', id);
-      if (result.status == true) {
-        setLoading(false);
-        // setReminderData(result.result);
-        // setOpenRestartModel(true);
-      } else {
-        console.error(result.message);
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading;
-      console.log(error);
-    }
-  };
-  const InActiveReminder = async id => {
-    // console.log(id);
-    // setLoading(true);
-    try {
-      const result = await InActiveReminderApi(id);
-      console.log(result, 'in active to statuc');
-      if (result.status == true) {
-        // setLoading(false);
-        // setReminderData(result.result);
-        // setOpenRestartModel(true);
-      } else {
-        console.error(result.message);
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading;
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    GetReminderProfile();
-  }, []);
 
   const [openRestartModel, setOpenRestartModel] = useState(false);
-  const [dataItem, setDataItem] = useState([{item: 1}, {item: 2}]);
-  const dayDataActive = [{day: 'M'}, {day: 'W'}, {day: 'Th'}, {day: 'F'}];
-  const [checked, setChecked] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(false);
-  // const Pickup = () => {};
-  // console.log('not allowed');
   const toggleAll = itemFlatList => {
-    // console.log(itemFlatList.reminder_id);
-    const newData = reminderData?.map(item => {
-      // if (item.id == id) {
-      if (item?.reminder_id == itemFlatList.reminder_id) {
-        if (item.active_status) {
-          InActiveReminder(item.reminder_id);
+    const newData = dataArrayReminder?.map(item => {
+      if (item?.id == itemFlatList?.id) {
+        if (item?.active_status) {
+          InActiveReminder(item);
         } else {
-          ActiveReminder(item.reminder_id);
-          // console.log('false and switch');
+          ActiveReminder(item);
         }
         return {
           ...item,
-          active_status: !item.active_status,
+          active_status: !item?.active_status,
         };
       } else {
-        // console.log(' else wala');
         return {
           ...item,
-          active_status: item.active_status,
+          active_status: item?.active_status,
         };
       }
     });
-    setReminderData(newData);
-    // console.log(newData);
-    // console.log(newData,'fsajdf');
-    // setMuteAll(true);
-
-    // item.active_status
-    //   ? (setMuteAll(false), InActiveReminder(item.reminder_id))
-    //   : (setMuteAll(true), ActiveReminder(item.reminder_id));
+    setDataArrayReminder(newData);
   };
 
   return (
@@ -203,73 +196,74 @@ const WorkoutReminder = ({navigation, route}) => {
         </Text>
       </View>
       <View style={{flex: 1}}>
-        <FlatList
-          data={reminderData}
-          renderItem={({item, index}) => {
-            return (
-              <View
-                style={[
-                  CssStyle.flexJustify,
-                  {
-                    marginBottom: responsiveHeight(2.9),
-                    borderRadius: 8,
-                    paddingHorizontal: responsiveWidth(5),
-                    paddingVertical: responsiveHeight(2),
-                    marginTop: responsiveHeight(0.8),
-                    backgroundColor: '#62637790',
-                  },
-                ]}>
-                <Text
-                  style={{
-                    color: 'white',
-                    paddingBottom: responsiveHeight(0.5),
-                    fontSize: 21,
-                    fontFamily: 'Interstate-bold',
-                  }}>
-                  {new Date(
-                    new Date().toLocaleDateString().replace(/['/']/g, '-') +
-                      'T' +
-                      item.time,
-                  ).toLocaleTimeString()}
-                </Text>
-                <View style={CssStyle.flexData}>
+        {dataArrayReminder.length > 0 ? (
+          <FlatList
+            data={dataArrayReminder}
+            renderItem={({item, index}) => {
+              console.log(item);
+              return (
+                <View
+                  style={[
+                    CssStyle.flexJustify,
+                    {
+                      marginBottom: responsiveHeight(2.9),
+                      borderRadius: 8,
+                      paddingHorizontal: responsiveWidth(5),
+                      paddingVertical: responsiveHeight(2),
+                      marginTop: responsiveHeight(0.8),
+                      backgroundColor: '#62637790',
+                    },
+                  ]}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      paddingBottom: responsiveHeight(0.5),
+                      fontSize: 21,
+                      fontFamily: 'Interstate-bold',
+                    }}>
+                    {moment(item.time).format('hh:mm:ss a')}
+                  </Text>
                   <View style={CssStyle.flexData}>
-                    {item?.days.map((itemDay, index) => (
-                      <Text style={{fontSize: 10, color: 'white'}} key={index}>
-                        {itemDay == 1
-                          ? 'M'
-                          : itemDay == 2
-                          ? 'T'
-                          : itemDay == 3
-                          ? 'W'
-                          : itemDay == 4
-                          ? 'Th'
-                          : itemDay == 5
-                          ? 'F'
-                          : itemDay == 6
-                          ? 'Sa'
-                          : itemDay == 7
-                          ? 'S'
-                          : itemDay}
-                        ,
-                      </Text>
-                    ))}
+                    <View style={CssStyle.flexData}>
+                      {item?.day.map((itemDay, index) => (
+                        <Text
+                          style={{fontSize: 10, color: 'white'}}
+                          key={index}>
+                          {itemDay == 1
+                            ? 'M'
+                            : itemDay == 2
+                            ? 'T'
+                            : itemDay == 3
+                            ? 'W'
+                            : itemDay == 4
+                            ? 'Th'
+                            : itemDay == 5
+                            ? 'F'
+                            : itemDay == 6
+                            ? 'Sa'
+                            : itemDay == 7
+                            ? 'S'
+                            : itemDay}
+                          ,
+                        </Text>
+                      ))}
+                    </View>
+                    <Switch
+                      style={{marginLeft: responsiveWidth(1)}}
+                      trackColor={{false: '#D8D8D880', true: '#006FFF40'}}
+                      thumbColor={
+                        item?.active_status ? AppColors.buttonText : '#D8D8D8'
+                      }
+                      ios_backgroundColor="#3e3e3e"
+                      onValueChange={() => toggleAll(item)}
+                      value={item?.active_status}
+                    />
                   </View>
-                  <Switch
-                    style={{marginLeft: responsiveWidth(1)}}
-                    trackColor={{false: '#D8D8D880', true: '#006FFF40'}}
-                    thumbColor={
-                      item.active_status ? AppColors.buttonText : '#D8D8D8'
-                    }
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={() => toggleAll(item)}
-                    value={item.active_status}
-                  />
                 </View>
-              </View>
-            );
-          }}
-        />
+              );
+            }}
+          />
+        ) : null}
       </View>
       <Modal
         animationType="slide"

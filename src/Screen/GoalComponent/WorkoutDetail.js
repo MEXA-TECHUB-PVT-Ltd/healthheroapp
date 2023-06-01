@@ -124,8 +124,8 @@ const WorkoutDetail = ({navigation, route}) => {
             {workoutPlanData?.level_of_workout}
           </Text>
           <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-            {workoutPlanData?.time ? workoutPlanData?.time?.slice(0, 2) : 0}{' '}
-            <Text style={{color: 'white'}}>min</Text>
+            {workoutPlanData?.time ? workoutPlanData?.time : 0}
+            {/* <Text style={{color: 'white'}}>min</Text> */}
           </Text>
         </View>
         <View style={{marginTop: responsiveHeight(3), flex: 1}}>
@@ -220,7 +220,7 @@ const WorkoutDetail = ({navigation, route}) => {
                               marginLeft: responsiveWidth(2),
                               opacity: 0.8,
                             }}>
-                            {item?.time?.slice(0, 5)}
+                            {item?.time}
                           </Text>
                         </View>
                       </View>

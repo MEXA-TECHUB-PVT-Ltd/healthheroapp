@@ -4,10 +4,6 @@ export const GetBeginner = async () => {
   try {
     const requestOptions = {
       method: 'GET',
-      //   body: new URLSearchParams({
-      //     email: email,
-      //     password: password,
-      //   }).toString(),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
@@ -27,10 +23,6 @@ export const GetAdvance = async () => {
   try {
     const requestOptions = {
       method: 'GET',
-      //   body: new URLSearchParams({
-      //     email: email,
-      //     password: password,
-      //   }).toString(),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
@@ -50,10 +42,6 @@ export const GetIntermediate = async () => {
   try {
     const requestOptions = {
       method: 'GET',
-      //   body: new URLSearchParams({
-      //     email: email,
-      //     password: password,
-      //   }).toString(),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
@@ -97,10 +85,6 @@ export const GetWorkoutById = async name => {
   try {
     const requestOptions = {
       method: 'GET',
-      //   body: new URLSearchParams({
-      //     email: email,
-      //     password: password,
-      //   }).toString(),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -121,10 +105,6 @@ export const GetWorkoutPlanById = async name => {
   try {
     const requestOptions = {
       method: 'GET',
-      //   body: new URLSearchParams({
-      //     email: email,
-      //     password: password,
-      //   }).toString(),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -144,10 +124,6 @@ export const GetWorkoutPlanAll = async id => {
   try {
     const requestOptions = {
       method: 'GET',
-      //   body: new URLSearchParams({
-      //     email: email,
-      //     password: password,
-      //   }).toString(),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -192,11 +168,6 @@ export const RestartProgressAPI = async id => {
   try {
     const requestOptions = {
       method: 'GET',
-      // body: JSON.stringify({
-      //   user_id: id,
-      //   plan_id: planId,
-      //   exersise_id: exercise,
-      // }).toString(),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
@@ -215,11 +186,6 @@ export const GetWeeklyReport = async id => {
   try {
     const requestOptions = {
       method: 'GET',
-      // body: JSON.stringify({
-      //   user_id: id,
-      //   plan_id: planId,
-      //   exersise_id: exercise,
-      // }).toString(),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -266,10 +232,6 @@ export const ExerciseOfTheDay = async name => {
   try {
     const requestOptions = {
       method: 'GET',
-      //   body: new URLSearchParams({
-      //     email: email,
-      //     password: password,
-      //   }).toString(),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
@@ -289,11 +251,6 @@ export const GetExerciseID = async () => {
   try {
     const requestOptions = {
       method: 'GET',
-      // body: JSON.stringify({
-      //   user_id: id,
-      //   plan_id: planId,
-      //   exersise_id: exercise,
-      // }).toString(),
       headers: {
         'Content-Type': 'application/json',
       },

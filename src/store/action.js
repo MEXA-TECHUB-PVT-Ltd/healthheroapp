@@ -4,6 +4,7 @@ import {
   EXERCISE,
   UserPassword,
   WaterTrackerId,
+  WeightReview,
   WorkoutPlanData,
   WorkoutPlanId,
 } from './type';
@@ -28,4 +29,7 @@ export const User_password = id => {
 };
 export const DataWorkPlan = id => {
   return {type: WorkoutPlanData, ExId: id};
+};
+export const WeightReviewId = id => {
+  return {type: WeightReview, ExId: id};
 };

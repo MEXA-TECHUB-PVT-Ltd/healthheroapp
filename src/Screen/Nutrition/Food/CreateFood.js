@@ -156,7 +156,11 @@ const CreateFood = ({navigation, route}) => {
               style={{marginTop: responsiveHeight(1)}}
             />
           </View>
-          <View
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              setFoodModel(true), setOpenRestartModel(true);
+            }}
             style={[
               CssStyle.flexJustify,
               {
@@ -164,7 +168,6 @@ const CreateFood = ({navigation, route}) => {
                 borderRadius: responsiveWidth(7),
                 paddingHorizontal: responsiveWidth(4),
                 paddingVertical: responsiveHeight(1.6),
-                // zIndex: measureModel ? 0 : 999,
                 marginBottom: responsiveHeight(0.8),
                 marginTop: responsiveHeight(1.8),
               },
@@ -172,11 +175,10 @@ const CreateFood = ({navigation, route}) => {
             <Text style={{color: 'white'}}>
               {typeDateFood ? typeDateFood : 'Measures'}
             </Text>
-            <TouchableOpacity onPress={() => setFoodModel(!foodModel)}>
-              <Icon name="chevron-down-outline" size={25} color="white" />
-            </TouchableOpacity>
-          </View>
-          {foodModel ? (
+            <Icon name="chevron-down-outline" size={25} color="white" />
+          </TouchableOpacity>
+          {/* </View> */}
+          {/* {foodModel ? (
             <View
               style={[
                 CssStyle.shadow,
@@ -207,7 +209,7 @@ const CreateFood = ({navigation, route}) => {
                 </View>
               ))}
             </View>
-          ) : null}
+          ) : null} */}
           <View>
             <Input
               height={responsiveHeight(6.5)}
@@ -477,52 +479,89 @@ const CreateFood = ({navigation, route}) => {
                   borderTopLeftRadius: responsiveHeight(3),
                   paddingVertical: responsiveHeight(4.8),
                 }}>
-                <View
-                  // activeOpacity={1}
-                  style={{
-                    // height: wp(28),
-                    width: 90,
-                    // backgroundColor: 'red',
-                    aspectRatio: 1,
-                    alignSelf: 'center',
-                    marginTop: responsiveHeight(1),
-                  }}>
-                  <Lottie
-                    source={assets.loader}
-                    autoPlay
-                    loop={true}
-                    resizeMode="cover"
-                    speed={1}
-                    colorFilter={[{color: 'red'}]}
-                  />
-                </View>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 23,
-                    fontFamily: 'Interstate-regular',
-                    width: responsiveWidth(75),
-                    textAlign: 'center',
-                    lineHeight: responsiveHeight(4),
-                    marginTop: responsiveHeight(4),
-                    textTransform: 'capitalize',
-                  }}>
-                  Food Added Successfully
-                </Text>
-                <CustomButton
-                  buttonText={'Go Back'}
-                  onPress={() => {
-                    setOpenRestartModel(false), navigation.goBack();
-                  }}
-                  buttonColor={'transparent'}
-                  mode="outlined"
-                  fontWeight={'500'}
-                  borderColor={'white'}
-                  style={{
-                    marginTop: responsiveHeight(3.7),
-                    width: responsiveWidth(46),
-                  }}
-                />
+                {foodModel ? (
+                  <View
+                    style={[
+                      // CssStyle.shadow,
+                      styles.modelOpenData,
+                      {
+                        top: responsiveHeight(-0.8),
+                      },
+                    ]}>
+                    {foodType.map((item, index) => (
+                      <View key={index}>
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => {
+                            setTypeFood(item.item),
+                              setFoodModel(false),
+                              setOpenRestartModel(false);
+                          }}
+                          style={{
+                            paddingVertical: responsiveHeight(1),
+                          }}>
+                          <Text
+                            style={{
+                              color: 'white',
+                              marginLeft: responsiveWidth(3),
+                            }}>
+                            {item.item}
+                          </Text>
+                        </TouchableOpacity>
+                        <Line />
+                      </View>
+                    ))}
+                  </View>
+                ) : (
+                  <>
+                    <View
+                      // activeOpacity={1}
+                      style={{
+                        // height: wp(28),
+                        width: 90,
+                        // backgroundColor: 'red',
+                        aspectRatio: 1,
+                        alignSelf: 'center',
+                        marginTop: responsiveHeight(1),
+                      }}>
+                      <Lottie
+                        source={assets.loader}
+                        autoPlay
+                        loop={true}
+                        resizeMode="cover"
+                        speed={1}
+                        colorFilter={[{color: 'red'}]}
+                      />
+                    </View>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 23,
+                        fontFamily: 'Interstate-regular',
+                        width: responsiveWidth(75),
+                        textAlign: 'center',
+                        lineHeight: responsiveHeight(4),
+                        marginTop: responsiveHeight(4),
+                        textTransform: 'capitalize',
+                      }}>
+                      Food Added Successfully
+                    </Text>
+                    <CustomButton
+                      buttonText={'Go Back'}
+                      onPress={() => {
+                        setOpenRestartModel(false), navigation.goBack();
+                      }}
+                      buttonColor={'transparent'}
+                      mode="outlined"
+                      fontWeight={'500'}
+                      borderColor={'white'}
+                      style={{
+                        marginTop: responsiveHeight(3.7),
+                        width: responsiveWidth(46),
+                      }}
+                    />
+                  </>
+                )}
               </View>
             </View>
           </View>
@@ -545,18 +584,18 @@ const styles = StyleSheet.create({
   },
   modelOpenData: {
     paddingHorizontal: responsiveWidth(3),
-    borderWidth: 1,
-    borderColor: '#eee',
+    // borderWidth: 1,
+    // borderColor: '#eee',
     // borderBottomEndRadius: responsiveWidth(2),
     // borderBottomLeftRadius: responsiveWidth(2),
-    borderRadius: responsiveWidth(2),
-    backgroundColor: 'white',
+    // borderRadius: responsiveWidth(2),
+    // backgroundColor: 'white',
     marginHorizontal: responsiveWidth(0.1),
-    elevation: 1,
-    position: 'absolute',
+    // elevation: 1,
+    // position: 'absolute',
     width: responsiveWidth(87.8),
     // top: responsiveHeight(4),
     paddingTop: responsiveHeight(1),
-    zIndex: 999,
+    // zIndex: 999,
   },
 });

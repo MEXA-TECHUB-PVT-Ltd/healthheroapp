@@ -35,32 +35,16 @@ import Loader from '../../component/Loader';
 const NutritionHeight = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
   // console.log(updateData, item);
-  const [updateDataChanges, setUpdateDataChanges] = useState(20);
-  useEffect(() => {
-    getWeightHeight();
-  }, []);
-  const getWeightHeight = async () => {
-    setLoading(true);
-    try {
-      const result = await GetUserDetailApi(id.id);
-      if (result.status == true) {
-        setLoading(false);
-        setUpdateDataChanges(result.result);
-      } else {
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-    }
-  };
-  // console.log(updateDataChanges.height_unit,'dflasjd');
+  console.log(item, updateData);
+  const [updateDataChanges, setUpdateDataChanges] = useState(
+    item?.email ? item?.height : 20,
+  );
   const weightUnitData = [{text: 'ft'}, {text: 'in'}];
   const [weightData, setWeightData] = useState(
-    updateDataChanges?.height_unit ? updateDataChanges.height_unit : 'in',
+    item?.height_unit ? item?.height_unit : 'in',
   );
   const [heightValue, setHeightValue] = useState(
-    updateDataChanges?.height_unit ? updateDataChanges?.height : '',
+    updateDataChanges?.height_unit ? updateDataChanges?.height : 'in',
   );
   // console.log(updateDataChanges, 'heig');
   const id = useSelector(data => data);
@@ -69,17 +53,6 @@ const NutritionHeight = ({navigation, route}) => {
   const [openUserSuccessfully, setOpenUserSuccessfully] = useState(false);
   const UpdateUserName = async () => {
     setLoadingUser(true);
-    // console.log(
-    //   id.id,
-    //   updateDataChanges.user_name,
-    //   updateDataChanges.device_id,
-    //   updateDataChanges.gender,
-    //   updateDataChanges.focused_areas,
-    //   activeIndex,
-    //   updateDataChanges.weight,
-    //   updateDataChanges.weight_unit,
-    //   updateDataChanges.height_unit,
-    // );
     try {
       const result = await UpdateProfileApi(
         id.id,
@@ -147,7 +120,7 @@ const NutritionHeight = ({navigation, route}) => {
                 width: responsiveWidth(90),
                 lineHeight: responsiveHeight(6),
               }}>
-              {item == 'Update' ? item : 'Current'} Height
+              {item?.email ? 'Update' : 'Current'} Height
             </Text>
             <Text
               style={{
@@ -169,24 +142,22 @@ const NutritionHeight = ({navigation, route}) => {
               {weightUnitData.map((item, index) => (
                 <CustomButton
                   key={index}
-                  buttonText={item.text}
-                  onPress={() => setWeightData(item.text)}
+                  buttonText={item?.text}
+                  onPress={() => setWeightData(item?.text)}
                   style={{width: responsiveWidth(42)}}
                   styleText={{textTransform: 'uppercase'}}
-                  mode={weightData == item.text ? '' : 'outlined'}
-                  borderColor={weightData == item.text ? '' : 'white'}
-                  buttonColor={weightData == item.text ? '' : 'transparent'}
+                  mode={weightData == item?.text ? '' : 'outlined'}
+                  borderColor={weightData == item?.text ? '' : 'white'}
+                  buttonColor={weightData == item?.text ? '' : 'transparent'}
                 />
               ))}
             </View>
             <RulerPicker
               min={0}
-              max={110}
+              max={weightData == 'in' ? 180 : 20}
               step={1}
               fractionDigits={0}
-              initialValue={
-                updateDataChanges?.height ? updateDataChanges?.height : 56
-              }
+              initialValue={3}
               gapBetweenSteps={5}
               indicatorColor="#FF5100"
               longStepColor="#FF5100"
@@ -222,7 +193,7 @@ const NutritionHeight = ({navigation, route}) => {
               loading={loadingUser}
               onPress={() => {
                 heightValue
-                  ? item == 'Update'
+                  ? item?.email
                     ? UpdateUserName()
                     : navigation.navigate('ActiveAge', {
                         item: {item, heightValue},
@@ -235,7 +206,7 @@ const NutritionHeight = ({navigation, route}) => {
               }}
               activeOpacity={1}
               style={{width: responsiveWidth(78)}}
-              buttonText={item == 'Update' ? 'Save Changes' : 'Continue'}
+              buttonText={item?.email ? 'Save Changes' : 'Continue'}
             />
           </View>
         </View>
