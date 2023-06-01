@@ -53,7 +53,6 @@ const Discover = ({navigation}) => {
     setLoading(true);
     try {
       const result = await ExerciseOfTheDay();
-      console.log(result, 'detial of exercise');
       if (result.status == true) {
         setExerciseData(result.result);
         setLoading(false);
@@ -76,7 +75,7 @@ const Discover = ({navigation}) => {
       const result = await GetAllCategories();
       if (result.status == true) {
         setCategory(result.result);
-        setLoading(false);
+        // setLoading(false);
         setCategoryIdIndex(result.result[0].workout_category_id);
       } else {
         console.error(result.message);
@@ -91,7 +90,6 @@ const Discover = ({navigation}) => {
     setLoading(true);
     try {
       const result = await GetWorkoutById(categoryIdIndex);
-      console.log(result.result, 'workout plan');
       if (result.status == true) {
         setWorkoutData(result.result);
         setLoading(false);
@@ -215,19 +213,21 @@ const Discover = ({navigation}) => {
               }}
             />
           </View>
-          <View style={{}}>
-            <Text
-              style={{
-                color: 'white',
-                fontFamily: 'Interstate-bold',
-                fontSize: 29,
-                width: responsiveWidth(34),
-                flexWrap: 'wrap',
-                lineHeight: responsiveHeight(4.4),
-              }}>
-              {exerciseData ? exerciseData.title : 'Exercise Name'}
-            </Text>
-            {/* <Text
+          {exerciseData ? (
+            <View style={{width: responsiveWidth(40)}}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontFamily: 'Interstate-bold',
+                  fontSize: 25,
+                  // width: responsiveWidth(34),
+                  flexWrap: 'wrap',
+                  // lineHeight: responsiveHeight(4.4),
+                  textAlign: 'center',
+                }}>
+                {exerciseData ? exerciseData?.title?.slice(0,22) : 'Exercise Name'}
+              </Text>
+              {/* <Text
               style={{
                 color: 'white',
                 fontFamily: 'Interstate-bold',
@@ -235,74 +235,108 @@ const Discover = ({navigation}) => {
               }}>
               Name
             </Text> */}
-            <Text
-              style={{
-                color: 'white',
-                fontFamily: 'Interstate-regular',
-                width: responsiveWidth(34),
-                lineHeight: responsiveHeight(2.5),
-                marginVertical: responsiveHeight(1),
-              }}>
-              {exerciseData?.description?.slice(0, 20)}
-            </Text>
-            <View
-              style={[
-                CssStyle.flexData,
-                {marginVertical: responsiveHeight(1)},
-              ]}>
-              <Logo width={16} height={16} />
               <Text
                 style={{
                   color: 'white',
                   fontFamily: 'Interstate-regular',
-                  fontSize: 12,
-                  marginLeft: responsiveWidth(2),
+                  width: responsiveWidth(34),
+                  lineHeight: responsiveHeight(2.5),
+                  marginVertical: responsiveHeight(1),
                 }}>
-                400 kcal
+                {exerciseData?.description?.slice(0, 33)}
               </Text>
+              <View
+                style={[
+                  CssStyle.flexData,
+                  {marginVertical: responsiveHeight(1)},
+                ]}>
+                <Logo width={16} height={16} />
+                <Text
+                  style={{
+                    color: 'white',
+                    fontFamily: 'Interstate-regular',
+                    fontSize: 12,
+                    marginLeft: responsiveWidth(2),
+                  }}>
+                  400 kcal
+                </Text>
+              </View>
+              <View
+                style={[
+                  CssStyle.flexData,
+                  {
+                    overflow: 'visible',
+                  },
+                ]}>
+                <Logo width={16} height={16} />
+                <Text
+                  style={{
+                    color: 'white',
+                    fontFamily: 'Interstate-regular',
+                    marginLeft: responsiveWidth(2),
+                    fontSize: 12,
+                  }}>
+                  45 min
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() =>
+                  exerciseData
+                    ? navigation.navigate('WorkoutDetail', {
+                        // item: item.workout_plan_id,
+                      })
+                    : ToastAndroid.show(
+                        'No Exercise of the day available',
+                        ToastAndroid.SHORT,
+                      )
+                }
+                style={{
+                  borderRadius: responsiveWidth(2),
+                  backgroundColor: '#ffffffd1',
+                  alignItems: 'center',
+                  paddingVertical: responsiveHeight(1),
+                  width: responsiveWidth(25),
+                  marginTop: responsiveHeight(1.8),
+                }}>
+                <Text style={{color: '#FF5100', fontWeight: '500'}}>
+                  Start Now
+                </Text>
+              </TouchableOpacity>
             </View>
-            <View
-              style={[
-                CssStyle.flexData,
-                {
-                  overflow: 'visible',
-                },
-              ]}>
-              <Logo width={16} height={16} />
+          ) : (
+            <View style={{alignItems: 'center'}}>
               <Text
                 style={{
                   color: 'white',
-                  fontFamily: 'Interstate-regular',
-                  marginLeft: responsiveWidth(2),
-                  fontSize: 12,
+                  fontFamily: 'Interstate-bold',
+                  fontSize: 27,
+                  width: responsiveWidth(34),
+                  flexWrap: 'wrap',
                 }}>
-                45 min
+                Stay Fit
+              </Text>
+              <Text
+                style={{
+                  color: 'white',
+                  fontFamily: 'Interstate-bold',
+                  fontSize: 39,
+                  width: responsiveWidth(43),
+                  left: responsiveWidth(-6),
+                }}>
+                Workout
+              </Text>
+              <Text
+                style={{
+                  color: 'white',
+                  fontFamily: 'Interstate-bold',
+                  fontSize: 27,
+                  width: responsiveWidth(34),
+                  flexWrap: 'wrap',
+                }}>
+                Daily
               </Text>
             </View>
-            <TouchableOpacity
-              onPress={() =>
-                exerciseData
-                  ? navigation.navigate('WorkoutDetail', {
-                      // item: item.workout_plan_id,
-                    })
-                  : ToastAndroid.show(
-                      'No Exercise of the day available',
-                      ToastAndroid.SHORT,
-                    )
-              }
-              style={{
-                borderRadius: responsiveWidth(2),
-                backgroundColor: '#ffffffd1',
-                alignItems: 'center',
-                paddingVertical: responsiveHeight(1),
-                width: responsiveWidth(25),
-                marginTop: responsiveHeight(1.8),
-              }}>
-              <Text style={{color: '#FF5100', fontWeight: '500'}}>
-                Start Now
-              </Text>
-            </TouchableOpacity>
-          </View>
+          )}
         </View>
 
         <ScrollView horizontal={true}>

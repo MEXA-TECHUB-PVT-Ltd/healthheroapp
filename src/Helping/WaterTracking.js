@@ -25,7 +25,7 @@ export const WaterTracking = ({
   // for (let n = 0; n < getDailyRecordTracker.quantity; n++) {
   //   data.push({itemValue: n});
   // }
-  console.log(getDailyRecordTracker?.quantity, 'quantity of number');
+  // console.log(getDailyRecordTracker?.quantity, 'quantity of number');
   return (
     <TouchableOpacity
       disabled={index + 1 <= getDailyRecordTracker?.quantity ? true : false}

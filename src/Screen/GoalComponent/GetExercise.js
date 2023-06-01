@@ -72,7 +72,14 @@ const GetExercise = ({navigation, route}) => {
 
     return `${padDigits(hours)}:${padDigits(minutes)}:${padDigits(seconds)}`;
   };
+  // console.log(dataTakeFromRedux[0].time);
+  // console.log(new Date(dataTakeFromRedux[0].time));
+  const timeStr = dataTakeFromRedux[index].time;
+  const timeObj = moment(timeStr, 'HH:mm:ss');
+  const seconds =
+    timeObj.hours() * 3600 + timeObj.minutes() * 60 + timeObj.seconds();
 
+  // console.log('Number of seconds:', seconds);
   const padDigits = number => {
     return number.toString().padStart(2, '0');
   };
@@ -143,7 +150,11 @@ const GetExercise = ({navigation, route}) => {
                 justifyContent: 'center',
               }}
               onPress={() => {
-                index == 0 ? {} : setIndex(index - 1);
+                index == 0
+                  ? {}
+                  : (setIndex(index - 1),
+                    navigation.navigate('RestTime', {item: index - 1}),
+                    setRunning(true));
               }}>
               <Icon
                 name="chevron-back-outline"
@@ -162,8 +173,13 @@ const GetExercise = ({navigation, route}) => {
                 <Countdown
                   ref={countdownRef}
                   style={styles.timer}
-                  textStyle={styles.watchTime}
-                  initialSeconds={dataTakeFromRedux[index].time}
+                  textStyle={[
+                    styles.watchTime,
+                    {
+                      fontSize: responsiveWidth(5.5),
+                    },
+                  ]}
+                  initialSeconds={seconds}
                   onTimes={e => setTakeNumberOfCircle(e)}
                   onPause={e => {}}
                   onEnd={e =>
@@ -234,7 +250,8 @@ const GetExercise = ({navigation, route}) => {
                     iconName={'checkmark'}
                     onPress={() => {
                       navigation.navigate('Focused', {item: 'hello'}),
-                      setRunning(false), StartWorkoutForProgress();
+                        setRunning(false),
+                        StartWorkoutForProgress();
                     }}
                     iconColor="white"
                     buttonText={'Complete workout'}
@@ -307,7 +324,7 @@ const GetExercise = ({navigation, route}) => {
                             marginLeft: responsiveWidth(2),
                             opacity: 0.5,
                           }}>
-                          45 min
+                          {dataTakeFromRedux[index + 1]?.time}
                         </Text>
                       </View>
                     </View>
@@ -409,7 +426,6 @@ const styles = StyleSheet.create({
   },
   watchTime: {
     color: 'white',
-    fontSize: responsiveWidth(6),
     fontWeight: 'bold',
   },
   timer: {

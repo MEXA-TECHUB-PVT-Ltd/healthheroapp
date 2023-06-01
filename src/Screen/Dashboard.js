@@ -162,7 +162,7 @@ const Dashboard = ({navigation}) => {
     const result = await fetch(url);
     const response = await result.json();
     setGetTemp(response.main);
-    console.log(response.main, 'hello');
+    // console.log(response.main, 'hello');
     // const apiKey = "794cbb1f951392ed1e70d3c0a77c0766";
     // const url = `https://api.openweathermap.org/data/2.5/weather?q=${'rawalpindi'}&units=metric&appid=${apiKey}`;
     // return fetch(url)

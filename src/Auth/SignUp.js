@@ -246,8 +246,7 @@ const SignUp = ({navigation}) => {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={openModel}
-        onRequestClose={() => setOpenModel(false)}>
+        visible={openModel}>
         <View style={{flex: 1, backgroundColor: '#00000090'}}>
           <View
             style={{

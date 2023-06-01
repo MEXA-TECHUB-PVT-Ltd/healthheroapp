@@ -1,5 +1,6 @@
 import {
   FlatList,
+  Keyboard,
   KeyboardAvoidingView,
   Modal,
   ScrollView,
@@ -35,25 +36,27 @@ import moment from 'moment';
 
 const EditWeeklyGoal = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  // console.log(item==undefined ? item : 'no one', 'this si the ');
+  console.log(item, 'this si the ');
   const [loading, setLoading] = useState(false);
   const id = useSelector(data => data);
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const foodType = [
-    {item: 'Sun'},
-    {item: 'Mon'},
-    {item: 'Tue'},
-    {item: 'Wed'},
-    {item: 'Thu'},
-    {item: 'Fri'},
-    {item: 'Sat'},
+    {item: 'Mon', id: 1},
+    {item: 'Tue', id: 2},
+    {item: 'Wed', id: 3},
+    {item: 'Thu', id: 4},
+    {item: 'Fri', id: 5},
+    {item: 'Sat', id: 6},
+    {item: 'Sun', id: 7},
   ];
   const [typeDateFood, setTypeFood] = useState('');
   // const measureType = [{item: 'Food 1'}, {item: 'Food 2'}, {item: 'Food 3'}];
   const [measureModel, setMeasureModel] = useState(false);
   const [foodModel, setFoodModel] = useState(false);
   const [indexNumber, setIndexNumber] = useState('');
-  const [noOfDays, setNoOfDays] = useState('');
+  const [noOfDays, setNoOfDays] = useState(
+    item?.no_of_days ? `${item?.no_of_days}` : '',
+  );
   const [data, setData] = useState('');
 
   const PostWeeklyReportUser = async () => {
@@ -158,7 +161,9 @@ const EditWeeklyGoal = ({navigation, route}) => {
         />
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => setFoodModel(!foodModel)}
+          onPress={() => {
+            setFoodModel(!foodModel), Keyboard.dismiss();
+          }}
           style={[
             CssStyle.flexJustify,
             {
@@ -219,7 +224,7 @@ const EditWeeklyGoal = ({navigation, route}) => {
         <CustomButton
           loading={loading}
           onPress={() =>
-            indexNumber + 1
+            indexNumber + 1 || noOfDays
               ? PostWeeklyReportUser()
               : ToastAndroid.show(
                   'Please fill the required data',

@@ -204,7 +204,7 @@ const StartExercise = ({navigation, route}) => {
                       marginLeft: responsiveWidth(2),
                       opacity: 0.5,
                     }}>
-                    {reduxData?.exersise_details.time ? reduxData?.exersise_details.time : '0 sec'}
+                    {reduxData?.time ? reduxData?.time : '0 sec'}
                   </Text>
                 </View>
               </View>

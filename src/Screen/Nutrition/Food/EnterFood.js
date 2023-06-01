@@ -252,7 +252,7 @@ const EnterFood = ({navigation, route}) => {
               },
             ]}>
             {foodType.map((item, index) => (
-              <View>
+              <View key={index}>
                 <TouchableOpacity
                   key={index}
                   onPress={() => {

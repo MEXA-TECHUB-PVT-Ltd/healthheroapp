@@ -273,6 +273,7 @@ const UserContact = ({navigation}) => {
     await AsyncStorage.removeItem('DietPlanId');
     await AsyncStorage.removeItem('Workout_Plan_Id');
     await AsyncStorage.removeItem('WaterTrackerId');
+    await AsyncStorage.removeItem('WeightReviewId');
     dispatch(Water_Id(null));
     dispatch(Diet_Id(null));
     dispatch(Workout_Plan_Id(null));

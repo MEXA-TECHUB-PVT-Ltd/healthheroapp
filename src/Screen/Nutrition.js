@@ -46,8 +46,11 @@ const Nutrition = ({navigation, route}) => {
   const [waterData, setWaterData] = useState('');
   const [getDailyRecordTracker, setGetDailyRecordTracker] = useState('');
   const [weeklyWaterData, setWeeklyWaterData] = useState('');
-  // console.log(weeklyWaterData[0].json_build_object.created_at, 'helso');
-
+  console.log(
+    moment(weeklyWaterData[1]?.json_build_object?.created_at).format('dddd'),
+    'helso',
+  );
+  // console.log();
   const chartConfig = {
     backgroundGradientFrom: '#626377',
     backgroundGradientTo: '#626377',
@@ -235,7 +238,7 @@ const Nutrition = ({navigation, route}) => {
     // setLoading(true);
     try {
       const result = await GetWeeklyWaterApi(id.waterTrackerId, id.id);
-      // console.log(result.result[1], 'weeky data');
+      console.log(result.result[1], 'weeky data');
       if (result) {
         setLoading(false);
         setWeeklyWaterData(result.result);
@@ -285,10 +288,6 @@ const Nutrition = ({navigation, route}) => {
               ? weeklyWaterData[6]?.json_build_object?.quantity
               : 0
             : 0,
-          // 2,
-          // 4,
-          // 6,
-          // 8,
         ],
       },
     ],

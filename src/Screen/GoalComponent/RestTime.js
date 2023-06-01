@@ -205,7 +205,7 @@ const RestTime = ({navigation, route}) => {
                         marginLeft: responsiveWidth(2),
                         opacity: 0.5,
                       }}>
-                      {dataTakeFromRedux.workout_plan_exersises[item + 1].reps}
+                      {dataTakeFromRedux.workout_plan_exersises[item + 1].time}
                     </Text>
                   </View>
                 </View>
