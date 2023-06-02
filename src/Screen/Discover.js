@@ -53,6 +53,7 @@ const Discover = ({navigation}) => {
     setLoading(true);
     try {
       const result = await ExerciseOfTheDay();
+      console.log(result,'sfsd');
       if (result.status == true) {
         setExerciseData(result.result);
         setLoading(false);
@@ -69,6 +70,7 @@ const Discover = ({navigation}) => {
   useEffect(() => {
     WorkoutPlan();
   }, [categoryIdIndex]);
+
   const GetCategory = async () => {
     setLoading(true);
     try {
@@ -86,6 +88,7 @@ const Discover = ({navigation}) => {
       console.log(error);
     }
   };
+
   const WorkoutPlan = async () => {
     setLoading(true);
     try {
@@ -102,6 +105,7 @@ const Discover = ({navigation}) => {
       console.log(error);
     }
   };
+  
   return loading ? (
     <Loader />
   ) : (
@@ -158,7 +162,7 @@ const Discover = ({navigation}) => {
             renderItem={({item, index}) => (
               <TouchableOpacity
                 onPress={() => {
-                  setSelect(item.category_name),
+                  setSelect(index),
                     setCategoryIdIndex(item.workout_category_id);
                 }}
                 style={{
@@ -169,9 +173,7 @@ const Discover = ({navigation}) => {
                   paddingVertical: responsiveHeight(1.2),
                   marginRight: responsiveWidth(3),
                   backgroundColor:
-                    selectItem == item.category_name
-                      ? AppColors.buttonText
-                      : 'transparent',
+                    selectItem == index ? AppColors.buttonText : 'transparent',
                 }}>
                 <Text
                   style={{
@@ -225,7 +227,9 @@ const Discover = ({navigation}) => {
                   // lineHeight: responsiveHeight(4.4),
                   textAlign: 'center',
                 }}>
-                {exerciseData ? exerciseData?.title?.slice(0,22) : 'Exercise Name'}
+                {exerciseData
+                  ? exerciseData?.title?.slice(0, 22)
+                  : 'Exercise Name'}
               </Text>
               {/* <Text
               style={{

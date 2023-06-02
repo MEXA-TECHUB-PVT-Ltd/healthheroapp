@@ -24,11 +24,10 @@ const CurrentWeight = ({navigation, route}) => {
   console.log(item);
   const weightUnitData = [{text: 'gm'}, {text: 'kg'}];
   const [weightData, setWeightData] = useState(null);
-  const flatNode = useRef();
-  const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(false);
+  const CustomLine = [{ie: 1}, {ie: 1}, {ie: 1}, {ie: 1}];
+
   const [weightValue, setWeightValue] = useState(null);
-  const [heightValue, setHeightValue] = useState(null);
   console.log(weightValue);
   return (
     <View
@@ -141,7 +140,7 @@ const CurrentWeight = ({navigation, route}) => {
           }}>
           <View
             style={{
-              bottom: responsiveHeight(11.7),
+              bottom: responsiveHeight(15.7),
               left: responsiveWidth(11),
               position: 'absolute',
             }}>
@@ -156,6 +155,27 @@ const CurrentWeight = ({navigation, route}) => {
               style={{width: responsiveWidth(78)}}
               buttonText={'Continue'}
             />
+          </View>
+          <View
+            style={[
+              CssStyle.flexJustify,
+              {paddingHorizontal: responsiveWidth(10)},
+            ]}>
+            {CustomLine.map((item, index) => (
+              <View
+                key={index}
+                style={{
+                  width: responsiveWidth(18),
+                  height: responsiveHeight(0.5),
+                  backgroundColor:
+                    index == 0 || index == 1 || index == 2
+                      ? AppColors.buttonText
+                      : 'white',
+                  borderRadius: responsiveWidth(20),
+                  marginBottom: responsiveHeight(9.4),
+                }}
+              />
+            ))}
           </View>
         </View>
       </View>

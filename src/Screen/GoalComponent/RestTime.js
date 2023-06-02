@@ -154,7 +154,8 @@ const RestTime = ({navigation, route}) => {
                         dataTakeFromRedux[item + 1]?.exercise_details[0]
                           .animation
                       : `${BaseUrl}` +
-                        dataTakeFromRedux[item + 1]?.exersise_details?.animation,
+                        dataTakeFromRedux[item + 1]?.exersise_details
+                          ?.animation,
                   }}
                   // resizeMode="contain"
                   style={{
@@ -187,12 +188,13 @@ const RestTime = ({navigation, route}) => {
                     lineHeight: responsiveHeight(2),
                   }}>
                   {dataTakeFromRedux[item + 1]?.exercise_details
-                    ? dataTakeFromRedux[item + 1]?.exercise_details[0]
-                        ?.description
+                    ? dataTakeFromRedux[
+                        item + 1
+                      ]?.exercise_details[0]?.description.slice(0, 72)
                     : dataTakeFromRedux[
                         item + 1
-                      ]?.exersise_details?.description?.slice(0, 62)}
-                  {dataTakeFromRedux[item + 1]?.exersise_details?.description
+                      ]?.exersise_details?.description?.slice(0, 72)}
+                  {/* {dataTakeFromRedux[item + 1]?.exersise_details?.description
                     ?.length > 71 && (
                     <Text
                       style={{color: 'blue'}}
@@ -205,7 +207,7 @@ const RestTime = ({navigation, route}) => {
                       }>
                       See more
                     </Text>
-                  )}
+                  )} */}
                 </Text>
                 <View
                   style={[CssStyle.flexJustify, {width: responsiveWidth(45)}]}>

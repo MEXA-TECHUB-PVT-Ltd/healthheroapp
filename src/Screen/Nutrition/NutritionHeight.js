@@ -36,15 +36,12 @@ const NutritionHeight = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
   // console.log(updateData, item);
   console.log(item, updateData);
-  const [updateDataChanges, setUpdateDataChanges] = useState(
-    item?.email ? item?.height : 20,
-  );
   const weightUnitData = [{text: 'ft'}, {text: 'in'}];
   const [weightData, setWeightData] = useState(
     item?.height_unit ? item?.height_unit : 'in',
   );
   const [heightValue, setHeightValue] = useState(
-    updateDataChanges?.height_unit ? updateDataChanges?.height : 'in',
+    updateData ? updateData.height : 23,
   );
   // console.log(updateDataChanges, 'heig');
   const id = useSelector(data => data);
@@ -157,7 +154,9 @@ const NutritionHeight = ({navigation, route}) => {
               max={weightData == 'in' ? 180 : 20}
               step={1}
               fractionDigits={0}
-              initialValue={3}
+              initialValue={
+                updateData ? updateData.height : item ? item?.height : 3
+              }
               gapBetweenSteps={5}
               indicatorColor="#FF5100"
               longStepColor="#FF5100"

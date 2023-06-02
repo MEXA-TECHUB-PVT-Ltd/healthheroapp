@@ -33,8 +33,13 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import CircularProgress from 'react-native-circular-progress-indicator';
 import {StartWorkoutPlanApi} from '../../services/WorkoutPlan';
 import moment from 'moment';
+import {
+  CompleteSevenByFourApi,
+  StartSevenByFourApi,
+} from '../../services/SevenFour';
+
 const GetExercise = ({navigation, route}) => {
-  const {item} = route.params ? route.params : '';
+  const {item, itemIndex} = route.params ? route.params : '';
   // console.log(item, 'item');
   // console.log(item, 'get exercise');
   const countdownRef = useRef();
@@ -66,6 +71,7 @@ const GetExercise = ({navigation, route}) => {
 
     return () => clearInterval(interval);
   }, [running]);
+  console.log(timeElapsed, 'get exercise');
   const formatTime = time => {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
@@ -97,6 +103,32 @@ const GetExercise = ({navigation, route}) => {
         moment(new Date()).format('YYYY-MM-DD'),
       );
       console.log(result, 'start workout api response');
+      if (result.status == true) {
+        setLoading(false);
+      } else {
+        setLoading(false);
+        ToastAndroid.show(result.message, ToastAndroid.SHORT);
+        console.error(result.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+  const SevenByFour = useSelector(data => data);
+
+  const CompleteSevenByFour = async () => {
+    setLoading(true);
+    try {
+      const result = await StartSevenByFourApi(
+        id,
+        SevenByFour.SevenByFourId,
+        SevenByFour.SevenByFourWeekId,
+        SevenByFour.SevenByFourDayId,
+        formatTime(timeElapsed),
+        moment(new Date()).format('YYYY-MM-DD'),
+      );
+      console.log(result, 'this is the complete seven by four');
       if (result.status == true) {
         setLoading(false);
       } else {
@@ -143,7 +175,7 @@ const GetExercise = ({navigation, route}) => {
       removeBackPressListener();
     };
   }, []);
-
+  const [countQuit, setCountQuit] = useState(10);
   return (
     <ScrollView style={[CssStyle.mainContainer, {}]}>
       <ImageBackground
@@ -183,7 +215,7 @@ const GetExercise = ({navigation, route}) => {
             ]}>
             <TouchableOpacity
               style={{
-                backgroundColor: '#FF510050',
+                backgroundColor: index == 0 ? '#ffffff40' : '#FF510050',
                 borderRadius: responsiveHeight(10),
                 width: 39,
                 height: 39,
@@ -235,7 +267,10 @@ const GetExercise = ({navigation, route}) => {
             </ProgressCircle>
             <TouchableOpacity
               style={{
-                backgroundColor: '#FF510050',
+                backgroundColor:
+                  index == dataTakeFromRedux.length - 1
+                    ? '#ffffff40'
+                    : '#FF510050',
                 borderRadius: responsiveHeight(10),
                 width: 39,
                 height: 39,
@@ -249,7 +284,9 @@ const GetExercise = ({navigation, route}) => {
                   index == dataTakeFromRedux.length - 1
                     ? (navigation.navigate('Focused'),
                       setRunning(false),
-                      StartWorkoutForProgress())
+                      dataTakeFromRedux[index]?.exercise_details
+                        ? CompleteSevenByFour()
+                        : StartWorkoutForProgress())
                     : (navigation.navigate('RestTime', {item: index}),
                       setRunning(false));
               }}>
@@ -292,7 +329,9 @@ const GetExercise = ({navigation, route}) => {
                     onPress={() => {
                       navigation.navigate('Focused', {item: 'hello'}),
                         setRunning(false),
-                        StartWorkoutForProgress();
+                        dataTakeFromRedux[index]?.exercise_details
+                          ? CompleteSevenByFour()
+                          : StartWorkoutForProgress();
                     }}
                     iconColor="white"
                     buttonText={'Complete workout'}
@@ -357,8 +396,8 @@ const GetExercise = ({navigation, route}) => {
                           ]?.exercise_details[0]?.description.slice(0, 62)
                         : dataTakeFromRedux[
                             index + 1
-                          ]?.exersise_details?.description.slice(0, 62)}
-                      {(dataTakeFromRedux[index + 1]?.exersise_details
+                          ]?.exersise_details?.description.slice(0, 72)}
+                      {/* {(dataTakeFromRedux[index + 1]?.exersise_details
                         ?.description?.length > 71 ||
                         dataTakeFromRedux[index + 1]?.exercise_details
                           ?.description?.length > 71) && (
@@ -376,7 +415,7 @@ const GetExercise = ({navigation, route}) => {
                           }>
                           See more
                         </Text>
-                      )}
+                      )} */}
                     </Text>
                     <View style={[CssStyle.flexJustify]}>
                       <View
@@ -429,10 +468,12 @@ const GetExercise = ({navigation, route}) => {
                 }}>
                 <CountdownCircleTimer
                   isPlaying
-                  duration={10}
+                  duration={countQuit}
                   size={110}
                   strokeWidth={8}
-                  onComplete={() => setOpenModel(false)}
+                  onComplete={() => {
+                    setOpenModel(false), setCountQuit(0);
+                  }}
                   colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
                   {({remainingTime}) => (
                     <Text style={{color: 'white', fontSize: 22}}>
@@ -448,9 +489,13 @@ const GetExercise = ({navigation, route}) => {
                   <CustomButton
                     onPress={() => {
                       navigation.navigate('QuitExercise', {item: item}),
-                        StartWorkoutForProgress(),
-                        setRunning(false);
+                        dataTakeFromRedux[index]?.exercise_details
+                          ? CompleteSevenByFour()
+                          : StartWorkoutForProgress();
+                      setRunning(false);
                       setOpenModel(false);
+                      setCountQuit(0);
+                      BackHandler.removeEventListener('hardwareBackPress');
                     }}
                     activeOpacity={1}
                     buttonColor={'transparent'}

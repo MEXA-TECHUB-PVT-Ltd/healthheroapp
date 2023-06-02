@@ -27,13 +27,11 @@ const CurrentHeight = ({navigation, route}) => {
   const [addData, setAddData] = useState('male');
   const [focusedArea, setFocusedArea] = useState('Arms');
   const [dataArray, setDataArray] = useState([]);
+  const CustomLine = [{ie: 1}, {ie: 1}, {ie: 1}, {ie: 1}];
 
   const heightUnitData = [{text: 'ft'}, {text: 'in'}];
   const [heightData, setHeightData] = useState(null);
-  const flatNode = useRef();
-  const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [weightValue, setWeightValue] = useState(null);
   const [heightValue, setHeightValue] = useState(null);
   const id = useSelector(data => data.id);
   const UpdateProfile = async () => {
@@ -170,7 +168,7 @@ const CurrentHeight = ({navigation, route}) => {
           }}>
           <View
             style={{
-              bottom: responsiveHeight(11.7),
+              bottom: responsiveHeight(6.4),
               left: responsiveWidth(11),
               position: 'absolute',
             }}>
@@ -184,6 +182,24 @@ const CurrentHeight = ({navigation, route}) => {
               buttonText={'Continue'}
             />
           </View>
+        </View>
+        <View
+          style={[
+            CssStyle.flexJustify,
+            {paddingHorizontal: responsiveWidth(10)},
+          ]}>
+          {CustomLine.map((item, index) => (
+            <View
+              key={index}
+              style={{
+                width: responsiveWidth(18),
+                height: responsiveHeight(0.5),
+                backgroundColor: AppColors.buttonText,
+                borderRadius: responsiveWidth(20),
+                marginBottom: responsiveHeight(9.4),
+              }}
+            />
+          ))}
         </View>
       </View>
     </View>

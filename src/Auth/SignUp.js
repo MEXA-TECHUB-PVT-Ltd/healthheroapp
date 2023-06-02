@@ -107,7 +107,7 @@ const SignUp = ({navigation}) => {
           flex: 1,
         }}>
         <ScrollView
-          keyboardShouldPersistTaps='always'
+          keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}>
           <KeyboardAvoidingView
             style={{paddingHorizontal: responsiveWidth(5)}}
@@ -126,7 +126,7 @@ const SignUp = ({navigation}) => {
             <Text style={[CssStyle.signInText, {fontSize: 33}]}>
               Create Account
             </Text>
-            <Text style={[CssStyle.signInInfo,{fontSize:12,opacity:0.8}]}>
+            <Text style={[CssStyle.signInInfo, {fontSize: 12, opacity: 0.8}]}>
               train and live the new experience of exercising at home
             </Text>
             {/* <Input
@@ -243,10 +243,7 @@ const SignUp = ({navigation}) => {
           </View>
         </ScrollView>
       </LinearGradient>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={openModel}>
+      <Modal animationType="slide" transparent={true} visible={openModel}>
         <View style={{flex: 1, backgroundColor: '#00000090'}}>
           <View
             style={{
@@ -288,7 +285,7 @@ const SignUp = ({navigation}) => {
               <CustomButton
                 buttonText={'Continue'}
                 onPress={() => {
-                  username.length > 2
+                  username.length > 0
                     ? (navigation.navigate('UserNavigation', {
                         screen: 'Gender',
                         params: {
@@ -300,6 +297,7 @@ const SignUp = ({navigation}) => {
                       }),
                       setUsername(''))
                     : setData('username');
+                  setOpenModel(false);
                 }}
                 buttonColor={'transparent'}
                 mode="outlined"

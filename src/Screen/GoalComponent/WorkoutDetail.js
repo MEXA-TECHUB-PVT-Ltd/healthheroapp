@@ -143,6 +143,7 @@ const WorkoutDetail = ({navigation, route}) => {
               ? workoutPlanData.description
               : 'No description available'}
           </Text>
+          {console.log(workoutPlanData.focus_area, 'this is the')}
           <View style={{flex: 1, paddingBottom: responsiveHeight(8)}}>
             <FlatList
               showsVerticalScrollIndicator={false}
@@ -158,6 +159,7 @@ const WorkoutDetail = ({navigation, route}) => {
                     onPress={() =>
                       navigation.navigate('ExerciseDetail', {
                         item: index,
+                        focus: workoutPlanData?.focus_area,
                       })
                     }
                     style={[

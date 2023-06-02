@@ -28,6 +28,7 @@ import NoImage from '../../assets/noImageRed';
 import Timer from '../../assets/Icon';
 import {HelpingComponent} from '../../Helping/HelpingComponent';
 import {BaseUrl} from '../../Helping/BaseUrl';
+import Loader from '../../component/Loader';
 
 const Search = ({navigation}) => {
   const buttonMap = [
@@ -87,17 +88,22 @@ const Search = ({navigation}) => {
       console.log(error);
     }
   };
+  const [loading, setLoading] = useState(false);
   const [getAllWorkoutPlanIdea, setGetAllWrongWorkoutPlanIdea] = useState([]);
   const GetAllWorkout = async () => {
+    setLoading(true);
     try {
       const result = await GetAllWorkoutPlanAPI();
       // console.log(result);
       if (result.status == true) {
+        setLoading(false);
         setGetAllWrongWorkoutPlanIdea(result.result);
       } else {
+        setLoading(false);
         console.error(result.message);
       }
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -148,7 +154,9 @@ const Search = ({navigation}) => {
   useEffect(() => {
     GetSearchApi();
   }, [search]);
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <View style={[CssStyle.mainContainer, {backgroundColor: '#0B183C'}]}>
       <StatusBar hidden={true} />
       <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
@@ -266,27 +274,7 @@ const Search = ({navigation}) => {
             </View>
           </View>
         )}
-        {/* <FlatList
-          data={filteredData}
-          renderItem={({item, index}) => {
-            // console.log(item, 'hellu');
-            return (
-              <View
-                style={{
-                  paddingVertical: responsiveHeight(1),
-                  borderColor: 'white',
-                  borderWidth: 1,
-                  paddingHorizontal: responsiveWidth(3),
-                  borderRadius: responsiveWidth(2),
-                }}>
-                <Text style={{color: 'white'}}>{item.description}</Text>
-                <Text style={{color: 'white', fontSize: 12}}>
-                  {item.workout_title}
-                </Text>
-              </View>
-            );
-          }}
-        /> */}
+
         {status == 'Beginner' ? (
           <>
             <Text
@@ -304,7 +292,12 @@ const Search = ({navigation}) => {
                   data={beginner}
                   showsVerticalScrollIndicator={false}
                   renderItem={({item, index}) => (
-                    <View
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate('WorkoutDetail', {
+                          item: item.workout_plan_id,
+                        })
+                      }
                       style={[
                         CssStyle.flexData,
                         {marginBottom: responsiveHeight(2)},
@@ -312,16 +305,17 @@ const Search = ({navigation}) => {
                       <View style={{width: responsiveWidth(36)}}>
                         {item.image ? (
                           <Image
+                            borderRadius={responsiveWidth(2)}
                             source={{uri: `${BaseUrl}` + item.image}}
                             resizeMode="contain"
                             style={{
-                              width: 130,
-                              height: 130,
-                              marginRight: responsiveWidth(1),
+                              width: 120,
+                              height: 80,
+                              marginRight: responsiveWidth(2),
                             }}
                           />
                         ) : (
-                          <NoImage width={130} height={130} />
+                          <NoImage width={120} height={120} />
                         )}
                       </View>
                       <View style={{width: responsiveWidth(47)}}>
@@ -342,7 +336,9 @@ const Search = ({navigation}) => {
                             marginVertical: responsiveHeight(0.7),
                             opacity: 0.5,
                           }}>
-                          {item.description}
+                          {item.description
+                            ? item.description
+                            : 'No description available'}
                         </Text>
                         <View
                           style={[
@@ -385,7 +381,7 @@ const Search = ({navigation}) => {
                           </View>
                         </View>
                       </View>
-                    </View>
+                    </TouchableOpacity>
                   )}
                 />
               ) : (
@@ -425,23 +421,33 @@ const Search = ({navigation}) => {
                   showsVerticalScrollIndicator={false}
                   renderItem={({item, index}) => {
                     return (
-                      <View
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate('WorkoutDetail', {
+                            item: item.workout_plan_id,
+                          })
+                        }
                         style={[
                           CssStyle.flexData,
                           {marginBottom: responsiveHeight(2)},
                         ]}>
                         <View style={{width: responsiveWidth(39)}}>
-                          <Image
-                            source={{uri: `${BaseUrl}` + item.image}}
-                            resizeMode="contain"
-                            style={{
-                              width: 130,
-                              height: 130,
-                              marginRight: responsiveWidth(2),
-                            }}
-                          />
+                          {item.image ? (
+                            <Image
+                              borderRadius={responsiveWidth(2)}
+                              source={{uri: `${BaseUrl}` + item.image}}
+                              resizeMode="contain"
+                              style={{
+                                width: 130,
+                                height: 80,
+                                marginRight: responsiveWidth(2),
+                              }}
+                            />
+                          ) : (
+                            <NoImage width={120} height={120} />
+                          )}
                         </View>
-                        <View style={{width: responsiveWidth(47)}}>
+                        <View style={{width: responsiveWidth(50)}}>
                           <Text
                             style={{
                               color: 'white',
@@ -459,12 +465,14 @@ const Search = ({navigation}) => {
                               marginVertical: responsiveHeight(0.7),
                               opacity: 0.5,
                             }}>
-                            {item.description}
+                            {item.description
+                              ? item.description
+                              : 'No description available'}
                           </Text>
                           <View
                             style={[
                               CssStyle.flexJustify,
-                              {width: responsiveWidth(45)},
+                              {width: responsiveWidth(48)},
                             ]}>
                             <View
                               style={[
@@ -497,12 +505,12 @@ const Search = ({navigation}) => {
                                   marginLeft: responsiveWidth(2),
                                   opacity: 0.5,
                                 }}>
-                                {item.time.slice(0, 3)}
+                                {item.time}
                               </Text>
                             </View>
                           </View>
                         </View>
-                      </View>
+                      </TouchableOpacity>
                     );
                   }}
                 />
@@ -543,7 +551,12 @@ const Search = ({navigation}) => {
                     data={intermediate}
                     showsVerticalScrollIndicator={false}
                     renderItem={({item, index}) => (
-                      <View
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate('WorkoutDetail', {
+                            item: item.workout_plan_id,
+                          })
+                        }
                         style={[
                           CssStyle.flexData,
                           {marginBottom: responsiveHeight(2)},
@@ -551,16 +564,17 @@ const Search = ({navigation}) => {
                         <View style={{width: responsiveWidth(39)}}>
                           {item.image ? (
                             <Image
+                              borderRadius={responsiveWidth(2)}
                               source={{uri: `${BaseUrl}` + item.image}}
                               resizeMode="contain"
                               style={{
-                                width: 130,
-                                height: 130,
+                                width: 120,
+                                height: 80,
                                 marginRight: responsiveWidth(2),
                               }}
                             />
                           ) : (
-                            <NoImage width={130} height={130} />
+                            <NoImage width={120} height={120} />
                           )}
                         </View>
                         <View style={{width: responsiveWidth(47)}}>
@@ -581,7 +595,9 @@ const Search = ({navigation}) => {
                               marginVertical: responsiveHeight(0.7),
                               opacity: 0.5,
                             }}>
-                            {item.description}
+                            {item.description
+                              ? item.description
+                              : 'No description available'}
                           </Text>
                           <View
                             style={[
@@ -624,7 +640,7 @@ const Search = ({navigation}) => {
                             </View>
                           </View>
                         </View>
-                      </View>
+                      </TouchableOpacity>
                     )}
                   />
                 ) : (
@@ -660,36 +676,41 @@ const Search = ({navigation}) => {
               Workout Plans
             </Text>
             <View style={[CssStyle.flexData, {flexWrap: 'wrap'}]}>
-              <FlatList
+              {/* <FlatList
                 data={getAllWorkoutPlanIdea}
                 renderItem={({item, index}) => {
-                  return (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => {
-                        // setStatusFilter(item.text), setSearch(item.text);
-                      }}
-                      style={{
-                        borderRadius: responsiveWidth(2),
-                        backgroundColor: '#FF510055',
-                        paddingVertical: responsiveHeight(0.9),
-                        paddingHorizontal: responsiveWidth(2),
-                        marginVertical: responsiveHeight(0.4),
-                        width: responsiveWidth(50),
-                      }}>
-                      <Text
-                        style={{
-                          fontFamily: 'Interstate-bold',
-                          color: 'white',
-                          fontSize: 13,
-                          opacity: 0.8,
-                        }}>
-                        {item.workout_title}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                }}
-              />
+                  return ( */}
+              {getAllWorkoutPlanIdea.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    navigation.navigate('WorkoutDetail', {
+                      item: item.workout_plan_id,
+                    });
+                  }}
+                  style={{
+                    borderRadius: responsiveWidth(2),
+                    backgroundColor: '#FF510055',
+                    paddingVertical: responsiveHeight(0.9),
+                    paddingHorizontal: responsiveWidth(2),
+                    marginVertical: responsiveHeight(0.4),
+                    // width: responsiveWidth(40),
+                    marginRight: responsiveWidth(2),
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Interstate-bold',
+                      color: 'white',
+                      fontSize: 13,
+                      opacity: 0.8,
+                    }}>
+                    {item.workout_title}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+              {/* ); */}
+              {/* }}
+              /> */}
             </View>
           </View>
         )}

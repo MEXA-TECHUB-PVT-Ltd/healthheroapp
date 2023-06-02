@@ -25,6 +25,7 @@ export const GetWeeklyWeightApi = async id => {
 };
 
 export const AddWeightWithoutProfileApi = async (id, weight, unit) => {
+  console.log(id, weight, unit, 'add this');
   try {
     const requestOptions = {
       method: 'POST',
@@ -48,6 +49,7 @@ export const AddWeightWithoutProfileApi = async (id, weight, unit) => {
   }
 };
 export const UpdateWeightWithoutProfileApi = async (id, weight, unit) => {
+  console.log(id, weight, unit, 'hello sd');
   try {
     const requestOptions = {
       method: 'PUT',

@@ -40,7 +40,7 @@ const Gender = ({navigation, route}) => {
   //   weightValue,
   //   'dummy',
   // );
-
+  const CustomLine = [{ie: 1}, {ie: 1}, {ie: 1}, {ie: 1}];
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
@@ -224,7 +224,7 @@ const Gender = ({navigation, route}) => {
           }}>
           <View
             style={{
-              bottom: responsiveHeight(11.7),
+              bottom: responsiveHeight(9.7),
               left: responsiveWidth(11),
               position: 'absolute',
             }}>
@@ -239,6 +239,24 @@ const Gender = ({navigation, route}) => {
               buttonText={'Continue'}
             />
           </View>
+        </View>
+        <View
+          style={[
+            CssStyle.flexJustify,
+            {paddingHorizontal: responsiveWidth(10)},
+          ]}>
+          {CustomLine.map((item, index) => (
+            <View
+              key={index}
+              style={{
+                width: responsiveWidth(18),
+                height: responsiveHeight(0.5),
+                backgroundColor: index == 0 ? AppColors.buttonText : 'white',
+                borderRadius: responsiveWidth(20),
+                marginBottom: responsiveHeight(9.4),
+              }}
+            />
+          ))}
         </View>
       </View>
     </View>

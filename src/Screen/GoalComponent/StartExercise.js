@@ -50,11 +50,13 @@ const StartExercise = ({navigation, route}) => {
       console.log(error);
     }
   };
-  const [reduxData, setReduxData] = useState(id ? id.workoutPlanData[0] : '');
+  const [reduxData, setReduxData] = useState(
+    id ? id.workoutPlanData[item ? item : 0] : '',
+  );
   const otherExercise_data = reduxData?.exercise_details
     ? reduxData?.exercise_details[0]
     : reduxData?.exersise_details;
-  console.log(reduxData, 'fsldfjskld');
+  // console.log(reduxData, 'fsldfjskld');
   useEffect(() => {
     GetCategory();
   }, []);

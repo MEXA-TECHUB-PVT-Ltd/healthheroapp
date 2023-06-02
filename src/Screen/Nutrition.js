@@ -46,17 +46,17 @@ const Nutrition = ({navigation, route}) => {
   const [waterData, setWaterData] = useState('');
   const [getDailyRecordTracker, setGetDailyRecordTracker] = useState('');
   const [weeklyWaterData, setWeeklyWaterData] = useState('');
-  console.log(
-    moment(weeklyWaterData[1]?.json_build_object?.created_at).format('dddd'),
-    'helso',
-  );
+  // console.log(
+  //   moment(weeklyWaterData[1]?.json_build_object?.created_at).format('dddd'),
+  //   'helso',
+  // );
   // console.log();
   const chartConfig = {
     backgroundGradientFrom: '#626377',
     backgroundGradientTo: '#626377',
     barPercentage: 0.7,
     height: 5000,
-    fillShadowGradient: `rgba(1, 122, 205, 1)`,
+    fillShadowGradient: AppColors.buttonText,
     fillShadowGradientOpacity: 1,
     decimalPlaces: 0, // optional, defaults to 2dp
     color: (opacity = 1) => `rgba(1, 122, 205, 1)`,
@@ -170,12 +170,12 @@ const Nutrition = ({navigation, route}) => {
       mount = false;
     };
   }, []);
+  const [dietPlanData, setDietPlanData] = useState('');
 
   useEffect(() => {
     id.dietPlanId ? GetDietPlan() : navigation.navigate('SelectPlan');
   }, [id.dietPlanId]);
 
-  const [dietPlanData, setDietPlanData] = useState('');
   const GetDietPlan = async () => {
     setLoading(true);
     try {
@@ -248,6 +248,7 @@ const Nutrition = ({navigation, route}) => {
       console.log(error);
     }
   };
+  // console.log(moment(new Date() * 24 * 60 * 60 * 1000).format('dddd'), 'hello');
   const data = {
     labels: ['Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat', 'Sun'],
     datasets: [
@@ -317,7 +318,7 @@ const Nutrition = ({navigation, route}) => {
     id.waterTrackerId ? GetWeeklyReport() : {};
     GetDietPlan();
   }, []);
-
+  console.log(moment('2023-06-02T00:00:00+00:00').format('dddd'));
   const idWaterTracker = useSelector(data => data.waterTrackerId);
   const AddDailyRecord = async (system, idWaterTracker, index, Text) => {
     // console.log('clicked');
@@ -639,7 +640,7 @@ const Nutrition = ({navigation, route}) => {
               style={[styles.dailyButton, {marginBottom: responsiveHeight(6)}]}>
               <Text
                 style={[styles.dailyText, {marginBottom: responsiveHeight(1)}]}>
-                Weekly Report
+                Weekly Record
               </Text>
               {id.waterTrackerId ? (
                 <BarChart
@@ -649,6 +650,7 @@ const Nutrition = ({navigation, route}) => {
                   showBarTops={false}
                   withInnerLines={false}
                   chartConfig={chartConfig}
+                  withVerticalLabels={false}
                   style={{
                     borderRadius: responsiveWidth(2),
                     marginLeft: responsiveHeight(-1.7),

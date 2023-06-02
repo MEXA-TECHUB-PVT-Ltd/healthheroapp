@@ -33,7 +33,6 @@ const Input = ({
 }) => {
   const [showIcon, setShowIcon] = useState(true);
   return (
-    <View>
       <TextInput
         keyboardType={keyboardType}
         numberOfLines={numLine}
@@ -57,7 +56,7 @@ const Input = ({
             marginVertical: marginVertical ? marginVertical : 5,
             paddingVertical: paddingVertical ? paddingVertical : 0,
             fontWeight: fontWeight ? fontWeight : '500',
-            height: height ? height : responsiveHeight(6),
+            // height: height ? height : responsiveHeight(6),
             fontSize: fontSize ? fontSize : 11,
             fontFamily: 'Roboto-bold',
             letterSpacing: 0.4,
@@ -96,7 +95,6 @@ const Input = ({
           ) : null
         }
       />
-    </View>
   );
 };
 
