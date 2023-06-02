@@ -1,4 +1,5 @@
 import {
+  Alert,
   BackHandler,
   Image,
   ImageBackground,
@@ -6,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -38,13 +40,12 @@ const GetExercise = ({navigation, route}) => {
   const countdownRef = useRef();
   const dataRedux = useSelector(data => data.workoutPlanData);
   const [dataTakeFromRedux, setDataTakeFromRedux] = useState(
-    dataRedux ? dataRedux?.workout_plan_exersises : [],
+    dataRedux ? dataRedux : [],
   );
   const [index, setIndex] = useState(0);
-  const [activeIndex, setActiveIndex] = useState(0);
-  // console.log(dataTakeFromRedux);
   const [takeNumberOfCircle, setTakeNumberOfCircle] = useState('');
   const [openModel, setOpenModel] = useState(false);
+
   useEffect(() => {
     countdownRef.current.start();
     setRunning(true);
@@ -72,9 +73,9 @@ const GetExercise = ({navigation, route}) => {
 
     return `${padDigits(hours)}:${padDigits(minutes)}:${padDigits(seconds)}`;
   };
-  // console.log(dataTakeFromRedux[0].time);
-  // console.log(new Date(dataTakeFromRedux[0].time));
-  const timeStr = dataTakeFromRedux[index].time;
+  // console.log(dataTakeFromRedux[0]?.time);
+  // console.log(new Date(dataTakeFromRedux[0]?.time));
+  const timeStr = dataTakeFromRedux[index]?.time;
   const timeObj = moment(timeStr, 'HH:mm:ss');
   const seconds =
     timeObj.hours() * 3600 + timeObj.minutes() * 60 + timeObj.seconds();
@@ -84,13 +85,14 @@ const GetExercise = ({navigation, route}) => {
     return number.toString().padStart(2, '0');
   };
   const id = useSelector(data => data.id);
+  const workplanId = useSelector(data => data.workoutPlanId);
   const [loading, setLoading] = useState(false);
   const StartWorkoutForProgress = async () => {
     setLoading(true);
     try {
       const result = await StartWorkoutPlanApi(
         id,
-        dataRedux.workout_plan_id,
+        workplanId,
         formatTime(timeElapsed),
         moment(new Date()).format('YYYY-MM-DD'),
       );
@@ -99,6 +101,7 @@ const GetExercise = ({navigation, route}) => {
         setLoading(false);
       } else {
         setLoading(false);
+        ToastAndroid.show(result.message, ToastAndroid.SHORT);
         console.error(result.message);
       }
     } catch (error) {
@@ -107,14 +110,50 @@ const GetExercise = ({navigation, route}) => {
     }
   };
 
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const backAction = () => {
+  //       setOpenModel(true);
+  //       BackHandler.addEventListener('hardwareBackPress', backAction);
+  //     };
+  //     const backHandler = BackHandler.addEventListener(
+  //       'hardwareBackPress',
+  //       () => setOpenModel(true),
+  //     );
+  //     return () => backHandler.remove();
+  //   }, []),
+  // );
+  useEffect(() => {
+    const handleBackPress = () => {
+      setOpenModel(true);
+      return true;
+    };
+
+    const addBackPressListener = () => {
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    };
+
+    const removeBackPressListener = () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+
+    addBackPressListener();
+
+    return () => {
+      removeBackPressListener();
+    };
+  }, []);
+
   return (
     <ScrollView style={[CssStyle.mainContainer, {}]}>
       <ImageBackground
         style={{width: responsiveWidth(100), height: responsiveHeight(40)}}
         source={{
-          uri:
-            `${BaseUrl}` +
-            dataTakeFromRedux[index]?.exersise_details?.animation,
+          uri: dataTakeFromRedux[index]?.exercise_details
+            ? `${BaseUrl}` +
+              dataTakeFromRedux[index]?.exercise_details[0]?.animation
+            : `${BaseUrl}` +
+              dataTakeFromRedux[index]?.exersise_details?.animation,
         }}></ImageBackground>
 
       <View
@@ -133,7 +172,9 @@ const GetExercise = ({navigation, route}) => {
             flex: 1,
           }}>
           <Text style={[styles.signInText]}>
-            {dataTakeFromRedux[index]?.exersise_details?.title}
+            {dataTakeFromRedux[index]?.exercise_details
+              ? dataTakeFromRedux[index]?.exercise_details[0]?.title
+              : dataTakeFromRedux[index]?.exersise_details?.title}
           </Text>
           <View
             style={[
@@ -260,11 +301,12 @@ const GetExercise = ({navigation, route}) => {
                 </View>
               ) : (
                 <TouchableOpacity
-                  onPress={() => {
-                    index == dataTakeFromRedux.length - 1
-                      ? {}
-                      : setIndex(index + 1);
-                  }}
+                  activeOpacity={1}
+                  // onPress={() => {
+                  //   index == dataTakeFromRedux.length - 1
+                  //     ? {}
+                  //     : setIndex(index + 1);
+                  // }}
                   style={[
                     CssStyle.flexData,
                     {marginBottom: responsiveHeight(2)},
@@ -272,10 +314,12 @@ const GetExercise = ({navigation, route}) => {
                   <View style={{width: responsiveWidth(32)}}>
                     <Image
                       source={{
-                        uri:
-                          `${BaseUrl}` +
-                          dataTakeFromRedux[index + 1]?.exersise_details
-                            .animation,
+                        uri: dataTakeFromRedux[index + 1]?.exercise_details
+                          ? `${BaseUrl}` +
+                            dataTakeFromRedux[index + 1]?.exercise_details
+                          : `${BaseUrl}` +
+                            dataTakeFromRedux[index + 1]?.exersise_details
+                              ?.animation,
                       }}
                       resizeMode="contain"
                       style={{
@@ -293,7 +337,10 @@ const GetExercise = ({navigation, route}) => {
                         fontFamily: 'Interstate-regular',
                         opacity: 0.8,
                       }}>
-                      {dataTakeFromRedux[index + 1]?.exersise_details.title}
+                      {dataTakeFromRedux[index + 1]?.exercise_details
+                        ? dataTakeFromRedux[index + 1]?.exercise_details[0]
+                            ?.title
+                        : dataTakeFromRedux[index + 1]?.exersise_details?.title}
                     </Text>
                     <Text
                       style={{
@@ -304,10 +351,32 @@ const GetExercise = ({navigation, route}) => {
                         opacity: 0.5,
                         lineHeight: responsiveHeight(2),
                       }}>
-                      {
-                        dataTakeFromRedux[index + 1]?.exersise_details
-                          .description
-                      }
+                      {dataTakeFromRedux[index + 1]?.exercise_details
+                        ? dataTakeFromRedux[
+                            index + 1
+                          ]?.exercise_details[0]?.description.slice(0, 62)
+                        : dataTakeFromRedux[
+                            index + 1
+                          ]?.exersise_details?.description.slice(0, 62)}
+                      {(dataTakeFromRedux[index + 1]?.exersise_details
+                        ?.description?.length > 71 ||
+                        dataTakeFromRedux[index + 1]?.exercise_details
+                          ?.description?.length > 71) && (
+                        <Text
+                          style={{color: 'blue'}}
+                          onPress={() =>
+                            Alert.alert(
+                              'Information',
+                              dataTakeFromRedux[index + 1]?.exercise_details
+                                ? dataTakeFromRedux[index + 1]
+                                    .exercise_details[0]?.description
+                                : dataTakeFromRedux[index + 1]?.exersise_details
+                                    ?.description,
+                            )
+                          }>
+                          See more
+                        </Text>
+                      )}
                     </Text>
                     <View style={[CssStyle.flexJustify]}>
                       <View
@@ -379,7 +448,9 @@ const GetExercise = ({navigation, route}) => {
                   <CustomButton
                     onPress={() => {
                       navigation.navigate('QuitExercise', {item: item}),
-                        setOpenModel(false);
+                        StartWorkoutForProgress(),
+                        setRunning(false);
+                      setOpenModel(false);
                     }}
                     activeOpacity={1}
                     buttonColor={'transparent'}

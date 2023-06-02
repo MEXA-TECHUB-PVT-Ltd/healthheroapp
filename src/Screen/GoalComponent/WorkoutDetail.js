@@ -44,7 +44,7 @@ const WorkoutDetail = ({navigation, route}) => {
       // console.log(result.result);
       if (result.status == true) {
         setWorkoutPlanData(result.result);
-        dispatch(DataWorkPlan(result.result));
+        dispatch(DataWorkPlan(result.result.workout_plan_exersises));
         setLoading(false);
       } else {
         console.error(result.message);
@@ -138,8 +138,10 @@ const WorkoutDetail = ({navigation, route}) => {
               lineHeight: responsiveHeight(2.4),
             }}>
             {item?.workout_plan_id
-              ? item?.description
-              : workoutPlanData.description}
+              ? item?.description.slice(0, 29)
+              : workoutPlanData.description
+              ? workoutPlanData.description
+              : 'No description available'}
           </Text>
           <View style={{flex: 1, paddingBottom: responsiveHeight(8)}}>
             <FlatList
@@ -199,8 +201,8 @@ const WorkoutDetail = ({navigation, route}) => {
                           //   opacity: 0.8,
                         }}>
                         {item?.exersise_details
-                          ? item?.exersise_details?.description
-                          : item?.description}
+                          ? item?.exersise_details?.description.slice(0, 49)
+                          : item?.description.slice(0, 49)}
                       </Text>
                       <View
                         style={[

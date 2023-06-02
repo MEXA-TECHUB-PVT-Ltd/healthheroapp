@@ -134,21 +134,15 @@ const Dashboard = ({navigation}) => {
       // console.log(result);
       if (result.status == true) {
         setIntermediate(result.result);
+        WeatherApi();
       } else {
         console.error(result.message);
-        WeatherApi();
       }
     } catch (error) {
       console.log(error);
     }
   };
-  useEffect(() => {
-    BeginnerApi();
-    AdvanceApi();
-    GetSevenByFour();
-    IntermediateApi();
-    WeatherApi();
-  }, []);
+
   const [getLat, setGetLat] = useState('');
   const [getTemp, setGetTemp] = useState('');
   const WeatherApi = async () => {
@@ -162,24 +156,8 @@ const Dashboard = ({navigation}) => {
     const result = await fetch(url);
     const response = await result.json();
     setGetTemp(response.main);
-    // console.log(response.main, 'hello');
-    // const apiKey = "794cbb1f951392ed1e70d3c0a77c0766";
-    // const url = `https://api.openweathermap.org/data/2.5/weather?q=${'rawalpindi'}&units=metric&appid=${apiKey}`;
-    // return fetch(url)
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     // const weatherData = {
-    //     //   temperature: data.main.temp,
-    //     //   condition: data.weather[0].main,
-    //     //   location: data.name,
-    //     // };
-    //     console.log(data);
-    //     // return weatherData;
-    //   });
   };
   const resultDataTemp = getTemp && getTemp?.temp - 273.15;
-  // console.log(resultDataTemp.toFixed(0));
-  // console.log(resultDataTemp>11 ? resultDataTemp?.slice(0, 2) : '', 'sfs');
   const [advance, setAdvance] = useState([]);
   const [beginner, setBeginner] = useState([]);
   const [intermediate, setIntermediate] = useState([]);
@@ -187,7 +165,13 @@ const Dashboard = ({navigation}) => {
     .toDateString()
     .slice(4, 15)
     .replace(/[' ']/g, ', ');
-  // console.log(dateWithComma.replace(',', ''));
+  useEffect(() => {
+    BeginnerApi();
+    AdvanceApi();
+    GetSevenByFour();
+    IntermediateApi();
+    WeatherApi();
+  }, []);
   return loading ? (
     <Loader />
   ) : (

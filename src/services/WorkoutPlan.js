@@ -182,6 +182,24 @@ export const RestartProgressAPI = async id => {
     return error;
   }
 };
+export const GetAllWorkoutPlanAPI = async id => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlWorkout}getAllWorkoutPlans?page=1&limit=20`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
 export const GetWeeklyReport = async id => {
   try {
     const requestOptions = {

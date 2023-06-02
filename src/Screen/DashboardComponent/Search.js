@@ -18,11 +18,14 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Input from '../../component/Input';
 import {
   GetAdvance,
+  GetAllWorkoutPlanAPI,
   GetBeginner,
   GetIntermediate,
   GetSearchData,
 } from '../../services/WorkoutPlan';
 import Logo from '../../assets/Icon3';
+import NoImage from '../../assets/noImageRed';
+import Timer from '../../assets/Icon';
 import {HelpingComponent} from '../../Helping/HelpingComponent';
 import {BaseUrl} from '../../Helping/BaseUrl';
 
@@ -84,8 +87,23 @@ const Search = ({navigation}) => {
       console.log(error);
     }
   };
+  const [getAllWorkoutPlanIdea, setGetAllWrongWorkoutPlanIdea] = useState([]);
+  const GetAllWorkout = async () => {
+    try {
+      const result = await GetAllWorkoutPlanAPI();
+      // console.log(result);
+      if (result.status == true) {
+        setGetAllWrongWorkoutPlanIdea(result.result);
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     BeginnerApi();
+    GetAllWorkout();
     AdvanceApi();
     IntermediateApi();
   }, []);
@@ -130,7 +148,6 @@ const Search = ({navigation}) => {
   useEffect(() => {
     GetSearchApi();
   }, [search]);
-  console.log(getSearch);
   return (
     <View style={[CssStyle.mainContainer, {backgroundColor: '#0B183C'}]}>
       <StatusBar hidden={true} />
@@ -292,16 +309,20 @@ const Search = ({navigation}) => {
                         CssStyle.flexData,
                         {marginBottom: responsiveHeight(2)},
                       ]}>
-                      <View style={{width: responsiveWidth(39)}}>
-                        <Image
-                          source={require('../../assets/Rectangle32.png')}
-                          resizeMode="contain"
-                          style={{
-                            width: 130,
-                            height: 130,
-                            marginRight: responsiveWidth(2),
-                          }}
-                        />
+                      <View style={{width: responsiveWidth(36)}}>
+                        {item.image ? (
+                          <Image
+                            source={{uri: `${BaseUrl}` + item.image}}
+                            resizeMode="contain"
+                            style={{
+                              width: 130,
+                              height: 130,
+                              marginRight: responsiveWidth(1),
+                            }}
+                          />
+                        ) : (
+                          <NoImage width={130} height={130} />
+                        )}
                       </View>
                       <View style={{width: responsiveWidth(47)}}>
                         <Text
@@ -311,7 +332,7 @@ const Search = ({navigation}) => {
                             fontFamily: 'Interstate-regular',
                             opacity: 0.8,
                           }}>
-                          Yoga Workout plan
+                          {item.workout_title}
                         </Text>
                         <Text
                           style={{
@@ -321,9 +342,7 @@ const Search = ({navigation}) => {
                             marginVertical: responsiveHeight(0.7),
                             opacity: 0.5,
                           }}>
-                          Lorem ipsum dolor sit emet , consectetur amet elitr
-                          dolor sit emet , consectetur amet elitr dolor sit emet
-                          , consectetur amet elitr
+                          {item.description}
                         </Text>
                         <View
                           style={[
@@ -344,7 +363,7 @@ const Search = ({navigation}) => {
                                 marginLeft: responsiveWidth(2),
                                 opacity: 0.5,
                               }}>
-                              400 kcal
+                              {item.calories_burnt} kcal
                             </Text>
                           </View>
                           <View
@@ -352,7 +371,7 @@ const Search = ({navigation}) => {
                               CssStyle.flexData,
                               {marginVertical: responsiveHeight(1)},
                             ]}>
-                            <Logo width={16} height={16} />
+                            <Timer width={16} height={16} />
                             <Text
                               style={{
                                 color: 'white',
@@ -361,7 +380,7 @@ const Search = ({navigation}) => {
                                 marginLeft: responsiveWidth(2),
                                 opacity: 0.5,
                               }}>
-                              45 min
+                              {item.time}
                             </Text>
                           </View>
                         </View>
@@ -405,7 +424,6 @@ const Search = ({navigation}) => {
                   data={advance}
                   showsVerticalScrollIndicator={false}
                   renderItem={({item, index}) => {
-                    console.log(item);
                     return (
                       <View
                         style={[
@@ -441,9 +459,7 @@ const Search = ({navigation}) => {
                               marginVertical: responsiveHeight(0.7),
                               opacity: 0.5,
                             }}>
-                            Lorem ipsum dolor sit emet , consectetur amet elitr
-                            dolor sit emet , consectetur amet elitr dolor sit
-                            emet , consectetur amet elitr
+                            {item.description}
                           </Text>
                           <View
                             style={[
@@ -481,7 +497,7 @@ const Search = ({navigation}) => {
                                   marginLeft: responsiveWidth(2),
                                   opacity: 0.5,
                                 }}>
-                                {item.time.slice(0,3)}
+                                {item.time.slice(0, 3)}
                               </Text>
                             </View>
                           </View>
@@ -533,15 +549,19 @@ const Search = ({navigation}) => {
                           {marginBottom: responsiveHeight(2)},
                         ]}>
                         <View style={{width: responsiveWidth(39)}}>
-                          <Image
-                            source={require('../../assets/Rectangle32.png')}
-                            resizeMode="contain"
-                            style={{
-                              width: 130,
-                              height: 130,
-                              marginRight: responsiveWidth(2),
-                            }}
-                          />
+                          {item.image ? (
+                            <Image
+                              source={{uri: `${BaseUrl}` + item.image}}
+                              resizeMode="contain"
+                              style={{
+                                width: 130,
+                                height: 130,
+                                marginRight: responsiveWidth(2),
+                              }}
+                            />
+                          ) : (
+                            <NoImage width={130} height={130} />
+                          )}
                         </View>
                         <View style={{width: responsiveWidth(47)}}>
                           <Text
@@ -551,7 +571,7 @@ const Search = ({navigation}) => {
                               fontFamily: 'Interstate-regular',
                               opacity: 0.8,
                             }}>
-                            Yoga Workout plan
+                            {item.workout_title}
                           </Text>
                           <Text
                             style={{
@@ -561,9 +581,7 @@ const Search = ({navigation}) => {
                               marginVertical: responsiveHeight(0.7),
                               opacity: 0.5,
                             }}>
-                            Lorem ipsum dolor sit emet , consectetur amet elitr
-                            dolor sit emet , consectetur amet elitr dolor sit
-                            emet , consectetur amet elitr
+                            {item.description}
                           </Text>
                           <View
                             style={[
@@ -584,7 +602,7 @@ const Search = ({navigation}) => {
                                   marginLeft: responsiveWidth(2),
                                   opacity: 0.5,
                                 }}>
-                                400 kcal
+                                {item.calories_burnt} kcal
                               </Text>
                             </View>
                             <View
@@ -592,7 +610,7 @@ const Search = ({navigation}) => {
                                 CssStyle.flexData,
                                 {marginVertical: responsiveHeight(1)},
                               ]}>
-                              <Logo width={16} height={16} />
+                              <Timer width={16} height={16} />
                               <Text
                                 style={{
                                   color: 'white',
@@ -601,7 +619,7 @@ const Search = ({navigation}) => {
                                   marginLeft: responsiveWidth(2),
                                   opacity: 0.5,
                                 }}>
-                                45 min
+                                {item.time}
                               </Text>
                             </View>
                           </View>
@@ -642,9 +660,36 @@ const Search = ({navigation}) => {
               Workout Plans
             </Text>
             <View style={[CssStyle.flexData, {flexWrap: 'wrap'}]}>
-              {/* {dataArray.map((item, index) => (
-                <HelpingComponent item={item} index={index} key={index} />
-              ))} */}
+              <FlatList
+                data={getAllWorkoutPlanIdea}
+                renderItem={({item, index}) => {
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        // setStatusFilter(item.text), setSearch(item.text);
+                      }}
+                      style={{
+                        borderRadius: responsiveWidth(2),
+                        backgroundColor: '#FF510055',
+                        paddingVertical: responsiveHeight(0.9),
+                        paddingHorizontal: responsiveWidth(2),
+                        marginVertical: responsiveHeight(0.4),
+                        width: responsiveWidth(50),
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: 'Interstate-bold',
+                          color: 'white',
+                          fontSize: 13,
+                          opacity: 0.8,
+                        }}>
+                        {item.workout_title}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                }}
+              />
             </View>
           </View>
         )}
