@@ -37,11 +37,6 @@ import Loader from '../component/Loader';
 import Geolocation from '@react-native-community/geolocation';
 
 const Dashboard = ({navigation}) => {
-  const dataGym = [
-    {image: require('../assets/second.png')},
-    {image: require('../assets/third.png')},
-    {image: require('../assets/first.png')},
-  ];
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
@@ -100,7 +95,7 @@ const Dashboard = ({navigation}) => {
     setLoading(true);
     try {
       const result = await GetSevenFourApi();
-      // console.log(result, 'seven by four');
+      console.log(result, 'seven by four');
       if (result.status == true) {
         setSevenFourData(result.result.array_agg);
         setLoading(false);
@@ -170,8 +165,10 @@ const Dashboard = ({navigation}) => {
     AdvanceApi();
     GetSevenByFour();
     IntermediateApi();
-    WeatherApi();
   }, []);
+  useEffect(() => {
+    WeatherApi();
+  }, [getTemp == undefined]);
   return loading ? (
     <Loader />
   ) : (
@@ -222,13 +219,6 @@ const Dashboard = ({navigation}) => {
             {resultDataTemp ? resultDataTemp?.toFixed(0) : '30'}°C
           </Text>
         </View>
-        {/* <Input
-          onPressRightIcon={() => navigation.navigate('Search')}
-          noIcon={true}
-          height={responsiveHeight(5)}
-          placeholder={'SEARCH WORKOUT'}
-          rightIcon="search"
-        /> */}
         <TouchableOpacity
           onPress={() => navigation.navigate('Search')}
           style={[
@@ -305,7 +295,7 @@ const Dashboard = ({navigation}) => {
                   marginLeft: responsiveWidth(2),
                   opacity: 0.8,
                 }}>
-                400 kcal
+                {sevenFourData ? sevenFourData[0]?.calories_burns : '400'} kcal
               </Text>
             </View>
             <View
@@ -324,7 +314,7 @@ const Dashboard = ({navigation}) => {
                   fontSize: 12,
                   opacity: 0.8,
                 }}>
-                45 min
+                {sevenFourData ? sevenFourData[0]?.time : '0'}
               </Text>
             </View>
             <TouchableOpacity

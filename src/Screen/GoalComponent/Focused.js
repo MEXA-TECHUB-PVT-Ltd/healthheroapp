@@ -18,7 +18,6 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import {AppColors} from '../../Helping/AppColor';
 import CssStyle from '../../StyleSheet/CssStyle';
-import Contact from '../../Helping/FocusedData';
 import CustomButton from '../../component/CustomButton';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';

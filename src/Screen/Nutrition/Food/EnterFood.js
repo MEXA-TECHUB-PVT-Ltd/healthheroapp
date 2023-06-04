@@ -147,7 +147,9 @@ const EnterFood = ({navigation, route}) => {
         </Text>
       </View>
       <View style={{flex: 0.9}}>
-        <View
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => setMeasureModel(!measureModel)}
           style={[
             CssStyle.flexJustify,
             {
@@ -162,11 +164,11 @@ const EnterFood = ({navigation, route}) => {
           <Text style={{color: 'white'}}>
             {typeDate ? typeDate : 'Select Food'}
           </Text>
-          <TouchableOpacity onPress={() => setMeasureModel(!measureModel)}>
-            <Icon name="chevron-down-outline" size={25} color="white" />
-          </TouchableOpacity>
-        </View>
-        <View
+          <Icon name="chevron-down-outline" size={25} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => setFoodModel(!foodModel)}
           style={[
             CssStyle.flexJustify,
             {
@@ -181,10 +183,8 @@ const EnterFood = ({navigation, route}) => {
           <Text style={{color: 'white'}}>
             {typeDateFood ? typeDateFood : 'Food Unit'}
           </Text>
-          <TouchableOpacity onPress={() => setFoodModel(!foodModel)}>
-            <Icon name="chevron-down-outline" size={25} color="white" />
-          </TouchableOpacity>
-        </View>
+          <Icon name="chevron-down-outline" size={25} color="white" />
+        </TouchableOpacity>
         {measureModel ? (
           <View style={[CssStyle.shadow, styles.modelOpenData, {flex: 1}]}>
             <TouchableOpacity

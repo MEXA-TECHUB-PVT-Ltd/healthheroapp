@@ -177,39 +177,6 @@ const CreateFood = ({navigation, route}) => {
             </Text>
             <Icon name="chevron-down-outline" size={25} color="white" />
           </TouchableOpacity>
-          {/* </View> */}
-          {/* {foodModel ? (
-            <View
-              style={[
-                CssStyle.shadow,
-                styles.modelOpenData,
-                {
-                  top: responsiveHeight(24.9),
-                },
-              ]}>
-              {foodType.map((item, index) => (
-                <View key={index}>
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      setTypeFood(item.item), setFoodModel(false);
-                    }}
-                    style={{
-                      paddingVertical: responsiveHeight(1),
-                    }}>
-                    <Text
-                      style={{
-                        color: AppColors.textColor,
-                        marginLeft: responsiveWidth(3),
-                      }}>
-                      {item.item}
-                    </Text>
-                  </TouchableOpacity>
-                  <Line />
-                </View>
-              ))}
-            </View>
-          ) : null} */}
           <View>
             <Input
               height={responsiveHeight(6.5)}

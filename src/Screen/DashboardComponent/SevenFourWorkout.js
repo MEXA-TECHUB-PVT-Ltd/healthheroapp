@@ -16,22 +16,64 @@ import {
 import CssStyle from '../../StyleSheet/CssStyle';
 import {AppColors} from '../../Helping/AppColor';
 import CustomButton from '../../component/CustomButton';
-import {GetSevenById} from '../../services/SevenFour';
+import {GetSevenById, StartSevenByFourApi} from '../../services/SevenFour';
 import Logo from '../../assets/Icon3';
 import Clock from '../../assets/Icon';
 import {BaseUrl} from '../../Helping/BaseUrl';
 import {useDispatch, useSelector} from 'react-redux';
-import {DataWorkPlan} from '../../store/action';
+import {
+  DataWorkPlan,
+  SevenByFour,
+  SevenByFourDay,
+  SevenByFourWeek,
+  TimeTakenAction,
+  Workout_Plan_Id,
+} from '../../store/action';
+import moment from 'moment';
 
 const SevenFourWorkout = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  // console.log(item?.exercises, 'param');
-  const [sevenByFourData, setSevenByFourData] = useState(item.exercises);
+  // console.log(
+  //   item.seven_by_four_challenge_id,
+  //   item.week_id,
+  //   item.day_id,
+  //   'param',
+  // );
   const dispatch = useDispatch();
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     dispatch(DataWorkPlan(item?.exercises));
+    dispatch(SevenByFour(item?.seven_by_four_challenge_id));
+    dispatch(SevenByFourDay(item?.day_id));
+    dispatch(Workout_Plan_Id(item?.day_id));
+    dispatch(SevenByFourWeek(item?.week_id));
+    // dispatch(Workout_Plan_Id(item?.day_id));
   }, []);
+  const id = useSelector(data => data.id);
+  const GetSeven = async () => {
+    setLoading(true);
+    try {
+      const result = await StartSevenByFourApi(
+        id,
+        item.seven_by_four_challenge_id,
+        item.week_id,
+        item.day_id,
+        moment(new Date()).format('hh:mm:ss'),
+        moment(new Date()).format('YYYY-MM-DD'),
+      );
+      console.log(result, 'hello sir');
+      if (result.status == true) {
+        setLoading(false);
+        // setSevenByFourData(result.result[0].weeks);
+      } else {
+        setLoading(false);
+        console.error(result.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
   const data = useSelector(data => data.workoutPlanData);
   // console.log(data[0]?.exercise_details[0],'this sis ');
   return (
@@ -104,9 +146,9 @@ const SevenFourWorkout = ({navigation, route}) => {
             // console.log(item, 'the flatlist');
             return (
               <TouchableOpacity
-                // onPress={() =>
-                //   navigation.navigate('ExerciseDetail', {item: item})
-                // }
+                onPress={() =>
+                  navigation.navigate('ExerciseDetail', {item: index})
+                }
                 style={[
                   CssStyle.flexData,
                   {

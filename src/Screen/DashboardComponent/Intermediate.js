@@ -92,7 +92,9 @@ const Intermediate = ({navigation, route}) => {
               renderItem={({item, index}) => (
                 <TouchableOpacity
                   onPress={() =>
-                    navigation.navigate('WorkoutDetail', {item: item.workout_plan_id})
+                    navigation.navigate('WorkoutDetail', {
+                      item: item.workout_plan_id,
+                    })
                   }
                   style={{
                     // width: responsiveWidth(50),
@@ -116,6 +118,8 @@ const Intermediate = ({navigation, route}) => {
                       alignSelf: 'center',
                       marginVertical: responsiveHeight(0.6),
                       paddingTop: responsiveHeight(1),
+                      width: responsiveWidth(38),
+                      textAlign: 'center',
                     }}>
                     {item.workout_title}
                   </Text>

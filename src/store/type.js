@@ -6,3 +6,7 @@ export const WaterTrackerId = 'WaterTrackerId';
 export const UserPassword = 'UserPassword';
 export const WorkoutPlanData = 'WorkoutPlanData';
 export const WeightReview = 'WeightReview';
+export const TimeTaken = 'TimeTaken';
+export const SevenByFourDayId = 'SevenByFourDayId';
+export const SevenByFourId = 'SevenByFourId';
+export const SevenByFourWeekId = 'SevenByFourWeekId';

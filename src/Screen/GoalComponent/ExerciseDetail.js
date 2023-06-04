@@ -14,39 +14,16 @@ import {BaseUrl} from '../../Helping/BaseUrl';
 import {useSelector} from 'react-redux';
 
 const ExerciseDetail = ({navigation, route}) => {
-  const {item} = route.params ? route.params : '';
-  // console.log(item);
+  const {item, focus} = route.params ? route.params : '';
   const data = [{item: 1}, {item: 1}, {item: 1}, {item: 1}];
   const [activeIndex, setActiveIndex] = useState(0);
   const flatNode = useRef();
   const id = useSelector(data => data.workoutPlanData);
-  const [staticValue, setStaticValue] = useState(
-    id.workout_plan_exersises[item ? item : 0],
-  );
-  console.log(staticValue, 'hello ');
+  const [staticValue, setStaticValue] = useState(id[item ? item : 0]);
   const dataImages = [{item: 1}, {item: 1}, {item: 1}, {item: 1}];
   const [loading, setLoading] = useState(false);
   const StartWorkoutPlan = async () => {
-    // setLoading(true);
-    // try {
-    //   const result = await StartWorkoutPlanApi(
-    //     id.id,
-    //     id.workoutPlanId,
-    //     time,
-    //     moment(new Date()).format('YYYY-MM-DD'),
-    //   );
-    //   console.log(result, 'workout plan');
-    //   if (result.status == true) {
-    //     setLoading(false);
     navigation.navigate('StartExercise', {item: item});
-    //   } else {
-    //     console.error(result.message);
-    //     setLoading(false);
-    //   }
-    // } catch (error) {
-    //   setLoading(false);
-    //   console.log(error);
-    // }
   };
   const PaginationComponent = () =>
     !staticValue ? (
@@ -94,17 +71,18 @@ const ExerciseDetail = ({navigation, route}) => {
           ref={flatNode}
           index={activeIndex}
           showPagination
-          data={id.workout_plan_exersises}
+          data={id}
           scrollEnabled={false}
           renderItem={({itemData, index}) => {
-            console.log(itemData, 'hello');
             return (
               <View style={{}}>
                 <Text
                   style={[styles.signInText, {marginTop: responsiveHeight(3)}]}>
                   {itemData
                     ? item.exersise_details.title
-                    : staticValue.exersise_details.title}
+                    : staticValue.exersise_details
+                    ? staticValue.exersise_details.title
+                    : staticValue?.exercise_details[0]?.title}
                 </Text>
                 <Text
                   style={[
@@ -144,7 +122,10 @@ const ExerciseDetail = ({navigation, route}) => {
                 <Image
                   //   resizeMode="contain"
                   source={{
-                    uri: `${BaseUrl}` + staticValue.exersise_details.animation,
+                    uri: staticValue?.exercise_details
+                      ? `${BaseUrl}` +
+                        staticValue?.exercise_details[0]?.animation
+                      : `${BaseUrl}` + staticValue?.exersise_details?.animation,
                   }}
                   borderRadius={responsiveWidth(3)}
                   style={{
@@ -163,7 +144,9 @@ const ExerciseDetail = ({navigation, route}) => {
                     width: responsiveWidth(90),
                     marginVertical: responsiveHeight(2),
                   }}>
-                  {staticValue.exersise_details.description}
+                  {staticValue.exercise_details
+                    ? staticValue.exercise_details[0]?.description
+                    : staticValue.exersise_details?.description}
                 </Text>
                 <Text style={[styles.signInText, {fontSize: 16}]}>
                   Focused Area
@@ -197,7 +180,7 @@ const ExerciseDetail = ({navigation, route}) => {
                         fontSize: 17,
                         color: 'white',
                       }}>
-                      {id?.focus_area[0]}
+                      {focus ? focus[0] : 'no focus area'}
                     </Text>
                   </View>
                   <View
@@ -214,7 +197,7 @@ const ExerciseDetail = ({navigation, route}) => {
                         fontSize: 17,
                         color: 'white',
                       }}>
-                      {id?.focus_area[1]}
+                      {focus ? focus[1] : 'no focus area'}
                     </Text>
                   </View>
                 </View>

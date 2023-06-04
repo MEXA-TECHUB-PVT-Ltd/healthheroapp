@@ -9,7 +9,6 @@ import {AppColors} from './AppColor';
 import moment from 'moment';
 
 export const DayOfCount = ({item, index, selectItem, setSelectItem}) => {
-  const arrayData = selectItem.map((item, index) => item.item);
 
   const addItem = (num, id) => {
     selectItem.push({
@@ -95,6 +94,7 @@ export const DaysCounting = ({item, weeklyDaysTraining, index}) => {
     weeklyDaysTraining?.filter(index => index.exersise_done);
   // console.log(findWeek, 'finding weeek');
   const findDay = weeklyDaysTraining && findWeek?.filter(data => data.day);
+  // console.log(findDay,'sfs');
   // console.log(weeklyDaysTraining, 'this is smith');
   // const findTrueDay =
   //   weeklyDaysTraining && weeklyDaysTraining[index].day == index + 1;

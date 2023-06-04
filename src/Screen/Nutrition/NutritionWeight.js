@@ -37,7 +37,7 @@ import {WeightReviewId} from '../../store/action';
 
 const NutritionWeight = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
-  // console.log(item);
+  console.log(updateData);
   const weightUnitData = [{text: 'gm'}, {text: 'kg'}];
   const [weightData, setWeightData] = useState('kg');
   const flatNode = useRef();
@@ -45,11 +45,10 @@ const NutritionWeight = ({navigation, route}) => {
   const [activeIndex, setActiveIndex] = useState(
     item[0]?.current_weight
       ? item[0]?.current_weight
-      : updateDataChanges?.weight
-      ? updateDataChanges.weight
+      : updateData?.weight
+      ? updateData?.weight
       : 35,
   );
-  const [updateDataChanges, setUpdateDataChanges] = useState('');
 
   const [weightValue, setWeightValue] = useState(
     item[0]?.current_weight ? item[0]?.current_weight : 38,
@@ -62,14 +61,12 @@ const NutritionWeight = ({navigation, route}) => {
   const UpdateWeight = async () => {
     setLoadingUser(true);
     try {
-      const result = await (id.WeightReview
-        ? UpdateWeightWithoutProfileApi(
-            id.WeightReview,
-            weightValue,
-            weightData,
-          )
-        : AddWeightWithoutProfileApi(id.id, weightValue, weightData));
-        // console.log(result,'shdfle');
+      const result = await AddWeightWithoutProfileApi(
+        id.id,
+        weightValue,
+        weightData,
+      );
+      console.log(result, 'shdfle');
       if (result.status == true) {
         setOpenUserSuccessfully(true);
         setLoadingUser(false);

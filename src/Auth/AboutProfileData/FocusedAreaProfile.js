@@ -36,6 +36,7 @@ const FocusedAreaProfile = ({navigation, route}) => {
   const [weightValue, setWeightValue] = useState(null);
   const [heightValue, setHeightValue] = useState(null);
   const [focusedData, setFocusedData] = useState('');
+  const CustomLine = [{ie: 1}, {ie: 1}, {ie: 1}, {ie: 1}];
 
   const UpdateProfile = async () => {
     setLoading(true);
@@ -49,7 +50,7 @@ const FocusedAreaProfile = ({navigation, route}) => {
         heightValue,
         weightValue,
       );
-      console.log(result,'data');
+      console.log(result, 'data');
       if (result.status == true) {
         setLoading(false);
         navigation.navigate('main');
@@ -223,7 +224,7 @@ const FocusedAreaProfile = ({navigation, route}) => {
           }}>
           <View
             style={{
-              bottom: responsiveHeight(11.7),
+              bottom: responsiveHeight(6.5),
               left: responsiveWidth(11),
               position: 'absolute',
             }}>
@@ -238,6 +239,25 @@ const FocusedAreaProfile = ({navigation, route}) => {
               buttonText={'Continue'}
             />
           </View>
+        </View>
+        <View
+          style={[
+            CssStyle.flexJustify,
+            {paddingHorizontal: responsiveWidth(10)},
+          ]}>
+          {CustomLine.map((item, index) => (
+            <View
+              key={index}
+              style={{
+                width: responsiveWidth(18),
+                height: responsiveHeight(0.5),
+                backgroundColor:
+                  index == 0 || index == 1 ? AppColors.buttonText : 'white',
+                borderRadius: responsiveWidth(20),
+                marginBottom: responsiveHeight(9.4),
+              }}
+            />
+          ))}
         </View>
       </View>
     </View>

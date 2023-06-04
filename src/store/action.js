@@ -2,6 +2,10 @@ import {
   Addition,
   DietPlanId,
   EXERCISE,
+  SevenByFourDayId,
+  SevenByFourId,
+  SevenByFourWeekId,
+  TimeTaken,
   UserPassword,
   WaterTrackerId,
   WeightReview,
@@ -32,4 +36,16 @@ export const DataWorkPlan = id => {
 };
 export const WeightReviewId = id => {
   return {type: WeightReview, ExId: id};
+};
+export const TimeTakenAction = id => {
+  return {type: TimeTaken, ExId: id};
+};
+export const SevenByFour = id => {
+  return {type: SevenByFourId, ExId: id};
+};
+export const SevenByFourWeek = id => {
+  return {type: SevenByFourWeekId, ExId: id};
+};
+export const SevenByFourDay = id => {
+  return {type: SevenByFourDayId, ExId: id};
 };

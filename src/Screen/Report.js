@@ -47,6 +47,7 @@ const Report = ({navigation}) => {
   const [buttonDataMap, setButtonData] = useState('Weekly Report');
   const [getNoOfDay, setGetNoOfDay] = useState('');
   const id = useSelector(data => data);
+  // console.log(getWeeklyDataReport, 'check the week report');
   const Card = [
     {
       desc: 'Kcal',
@@ -69,7 +70,7 @@ const Report = ({navigation}) => {
   ];
   const ButtonData = [{item: 'Weekly Report'}, {item: 'History'}];
   const data = {
-    labels: ['Lowest weight', 'Current weight', 'Highest weight'],
+    labels: ['Lowest', 'Current weight', 'Highest'],
     datasets: [
       {
         data: [
@@ -95,6 +96,9 @@ const Report = ({navigation}) => {
     color: (opacity = 1) => `white`,
     strokeWidth: 0, // optional, default 3
     useShadowColorFromDataset: true, // optional
+    propsForBackgroundLines: {
+      strokeDasharray: '', // solid background lines with no dashes
+    },
   };
   useEffect(() => {
     getWeightHeight();
@@ -180,6 +184,7 @@ const Report = ({navigation}) => {
     const listener = navigation.addListener('focus', async () => {
       try {
         const result = await GetWeeklyWeightApi(id.id);
+        // console.log(result,'helo');
         if (result.status == true) {
           setGetWeeklyDataReport(result.result);
         } else {
@@ -251,6 +256,7 @@ const Report = ({navigation}) => {
   const GetWeeklyWeightDataReport = async () => {
     try {
       const result = await GetWeeklyWeightApi(id.id);
+      console.log(result,'sdhfs');
       if (result.status == true) {
         setGetWeeklyDataReport(result.result);
       } else {
@@ -267,6 +273,7 @@ const Report = ({navigation}) => {
       : getUserDetail.height / 3.281;
   const totalHeight = heightValue * heightValue;
   const totalBMI = getUserDetail && getUserDetail.weight / totalHeight;
+  // console.log(totalBMI, totalHeight, getUserDetail?.weight);
   const dayDataActive = [
     {day: 'Thu'},
     {day: 'Fri'},
@@ -735,7 +742,7 @@ const Report = ({navigation}) => {
               <View style={{marginHorizontal: responsiveWidth(-3)}}>
                 <LineChart
                   data={data}
-                  width={responsiveWidth(88)}
+                  width={responsiveWidth(81)}
                   height={responsiveHeight(28)}
                   showBarTops={false}
                   bezier

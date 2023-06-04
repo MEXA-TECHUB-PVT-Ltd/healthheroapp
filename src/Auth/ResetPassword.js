@@ -71,9 +71,9 @@ const ResetPassword = ({navigation, route}) => {
   console.log(emailValidError);
   return (
     <LinearGradient
-    colors={['#0F1F5500', '#0B183FBA', '#0A1637']}
-    start={{x: 0, y: -2.5}}
-    end={{x: 0, y: 0.6}}
+      colors={['#0F1F5500', '#0B183FBA', '#0A1637']}
+      start={{x: 0, y: -2.5}}
+      end={{x: 0, y: 0.6}}
       style={{
         paddingHorizontal: responsiveWidth(5),
         flex: 1,
@@ -121,11 +121,13 @@ const ResetPassword = ({navigation, route}) => {
         <Text style={{color: 'red'}}>Enter the password</Text>
       ) : data == 'EnterPassword' ? (
         <Text style={{color: 'red'}}>Fill the fields</Text>
+      ) : data == 'Length' ? (
+        <Text style={{color: 'red'}}>
+          Password must be at least one uppercase
+        </Text>
       ) : (
-        data == 'Length' && (
-          <Text style={{color: 'red'}}>
-            Password must be at least one uppercase
-          </Text>
+        data == 'noMatch' && (
+          <Text style={{color: 'red'}}>Password does not match</Text>
         )
       )}
       <Input
@@ -140,6 +142,13 @@ const ResetPassword = ({navigation, route}) => {
         offIcon={'eye-off-outline'}
         enableIcon={true}
       />
+      {data == 'noMatch' ? (
+        <Text style={{color: 'red'}}>Password does not match</Text>
+      ) : (
+        data == 'EnterPassword' && (
+          <Text style={{color: 'red'}}>Fill the fields</Text>
+        )
+      )}
       <View
         style={{
           paddingHorizontal: responsiveWidth(5),
@@ -150,13 +159,11 @@ const ResetPassword = ({navigation, route}) => {
           buttonText={'Create'}
           onPress={() =>
             password && confirmPassword
-              ? password == confirmPassword
-                ? emailValidError
-                  ? setData('Length')
-                  : ResetPasswordValue()
-                : // : password.length < 7 || confirmPassword.length < 7
-                  // ? setData('Length')
-                  setData('Length')
+              ? password !== confirmPassword
+                ? setData('noMatch')
+                : emailValidError
+                ? setData('Length')
+                : ResetPasswordValue()
               : setData('EnterPassword')
           }
           style={{}}
