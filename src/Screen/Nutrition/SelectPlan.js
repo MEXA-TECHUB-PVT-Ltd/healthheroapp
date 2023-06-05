@@ -23,7 +23,7 @@ import {useSelector} from 'react-redux';
 
 const SelectPlan = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
+  // console.log(item);
 
   const gender = [
     {item: 'balance', id: 1},

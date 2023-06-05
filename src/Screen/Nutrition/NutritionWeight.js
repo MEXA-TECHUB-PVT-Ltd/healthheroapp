@@ -37,7 +37,7 @@ import {WeightReviewId} from '../../store/action';
 
 const NutritionWeight = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
-  console.log(updateData);
+  // console.log(updateData);
   const weightUnitData = [{text: 'gm'}, {text: 'kg'}];
   const [weightData, setWeightData] = useState('kg');
   const flatNode = useRef();

@@ -76,7 +76,7 @@ const Input = ({
           rightIcon ? (
             <TextInput.Icon
               icon={() => (
-                <View style={{marginTop: responsiveHeight(1.5)}}>
+                <View style={{}}>
                   <TouchableOpacity
                     onPress={
                       onPressRightIcon

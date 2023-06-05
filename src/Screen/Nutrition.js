@@ -40,17 +40,11 @@ const Nutrition = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
   const dispatch = useDispatch();
   const id = useSelector(data => data);
-  // const dataitem = useSelector(data => console.log(data));
   const [loading, setLoading] = useState(false);
   const [foodData, setFoodData] = useState([]);
   const [waterData, setWaterData] = useState('');
   const [getDailyRecordTracker, setGetDailyRecordTracker] = useState('');
   const [weeklyWaterData, setWeeklyWaterData] = useState('');
-  // console.log(
-  //   moment(weeklyWaterData[1]?.json_build_object?.created_at).format('dddd'),
-  //   'helso',
-  // );
-  // console.log();
   const chartConfig = {
     backgroundGradientFrom: '#626377',
     backgroundGradientTo: '#626377',
@@ -89,7 +83,6 @@ const Nutrition = ({navigation, route}) => {
     const listener = navigation.addListener('focus', async () => {
       try {
         const result = await GetFoodApi(id.id, id.dietPlanId);
-        // console.log(result, 'Food record');
         if (result) {
           // setLoading(false);
           setFoodData(result.result.foodIntakesToday);
@@ -133,7 +126,6 @@ const Nutrition = ({navigation, route}) => {
     const listener = navigation.addListener('focus', async () => {
       try {
         const result = await GetWaterApi(id.id);
-        // console.log(result, 'get water api');
         if (result) {
           setWaterData(result.result);
         } else {
@@ -154,7 +146,6 @@ const Nutrition = ({navigation, route}) => {
       try {
         const result = await GetDailyWaterApi(id.waterTrackerId, id.id);
         if (result) {
-          // console.log(result.result, 'get daily water api');
           setLoading(false);
           setGetDailyRecordTracker(result.result);
         } else {
@@ -180,7 +171,6 @@ const Nutrition = ({navigation, route}) => {
     setLoading(true);
     try {
       const result = await GetDietPlanApi(id.dietPlanId, id.id);
-      // console.log(result, 'this is the');
       if (result) {
         // setLoading(false);
         setDietPlanData(result.result);
@@ -201,7 +191,6 @@ const Nutrition = ({navigation, route}) => {
     setLoading(true);
     try {
       const result = await GetWaterApi(id.id);
-      // console.log(result, 'get water api');
       if (result.status == true) {
         dispatch(Water_Id(result.result.water_tracker_id));
         await AsyncStorage.setItem(
@@ -222,7 +211,6 @@ const Nutrition = ({navigation, route}) => {
   const GetFoodRecord = async () => {
     try {
       const result = await GetFoodApi(id.id, id.dietPlanId);
-      // console.log(result, 'Food record');
       if (result) {
         setLoading(false);
         setFoodData(result.result?.foodIntakesToday);
@@ -238,7 +226,6 @@ const Nutrition = ({navigation, route}) => {
     // setLoading(true);
     try {
       const result = await GetWeeklyWaterApi(id.waterTrackerId, id.id);
-      // console.log(result.result, 'weeky data');
       if (result) {
         setLoading(false);
         setWeeklyWaterData(result.result);
@@ -297,7 +284,6 @@ const Nutrition = ({navigation, route}) => {
   const GetDailyWaterRecord = async () => {
     try {
       const result = await GetDailyWaterApi(id.waterTrackerId, id.id);
-      // console.log(result, 'get daily water');
       if (result) {
         setLoading(false);
         setGetDailyRecordTracker(result.result);
@@ -314,62 +300,31 @@ const Nutrition = ({navigation, route}) => {
 
   const getHistoryOfWeek = async () => {
     const result = await GetWeeklyWaterApi(id.waterTrackerId, id.id);
-    console.log(result.result);
     if (result.status == true) {
       let responseList = result.result ? result.result : [];
-      // console.log(responseList, 'response api');
-      let weekly_steps_count = 0;
 
       let week_days_list = await getWeekDays();
       let list = [];
       week_days_list?.map(element => {
-        console.log(element, 'element filter');
         let filter = responseList?.filter(
           item =>
             moment(item?.json_build_object?.updated_at).format('YYYY-MM-DD') ==
             moment(element?.date).format('YYYY-MM-DD'),
         );
-        // console.log(filter, 'filter data');
-        // { label: "SUN", percentage: "57.85%", value: 2314 },
         let steps = filter[0]?.json_build_object?.quantity
           ? parseInt(filter[0]?.json_build_object?.quantity)
           : 0;
-        // weekly_steps_count = weekly_steps_count + steps;
 
         let obj = {
           label: element?.name,
-          // percentage: '',
           value: steps,
         };
         list.push(steps);
       });
-
-      // let goalsData = await getUserGoals();
-
-      // let percentage = (weekly_steps_count / weeklygoals_set) * 100;
-
-      // setWeeklySteps_Percentage(percentage?.toFixed(2));
-
-      // setWeeklySteps(weekly_steps_count);
-      // setChartData(list);
-
-      console.log(list, 'list id');
       setChartData(list);
     } else {
     }
-    // })
-    // .catch((error) => {
-    //   Snackbar.show({
-    //     text: "Something went wrong.",
-    //     duration: Snackbar.LENGTH_SHORT,
-    //   });
-    // })
-    // .finally(() => {
-    //   setLoading(false);
-    //   setIsRefreshing(false);
-    // });
   };
-  //get current week day name and date (MON to SUN)
   const getWeekDays = () => {
     return new Promise((resolve, reject) => {
       let daysList = [];
@@ -388,17 +343,14 @@ const Nutrition = ({navigation, route}) => {
 
   useEffect(() => {
     GetDailyWaterRecord();
-  }, []);
-
-  useEffect(() => {
     GetFoodRecord();
     GetWaterTracking();
     id.waterTrackerId ? GetWeeklyReport() : {};
     GetDietPlan();
   }, []);
+
   const idWaterTracker = useSelector(data => data.waterTrackerId);
   const AddDailyRecord = async (system, idWaterTracker, index, Text) => {
-    // console.log('clicked');
     try {
       const result = await GetWaterRecordApi(
         id.id,
@@ -406,7 +358,6 @@ const Nutrition = ({navigation, route}) => {
         getDailyRecordTracker ? getDailyRecordTracker.quantity + 1 : 1,
         moment(new Date()).format('YYYY-MM-DD'),
       );
-      // console.log(result, 'daily record');
       if (result.status == true) {
         // setLoading(false);
         GetDailyWaterRecord();
