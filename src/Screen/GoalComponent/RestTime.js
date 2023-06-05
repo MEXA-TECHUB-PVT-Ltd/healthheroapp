@@ -86,27 +86,6 @@ const RestTime = ({navigation, route}) => {
           <Icon name="chevron-back-outline" size={25} color={'white'} />
         </TouchableOpacity>
         <View style={{alignItems: 'center', flex: 1}}>
-          {/* <ProgressCircle
-            percent={dataNumber * 3.34}
-            radius={50}
-            borderWidth={4}
-            color={'#FF7B27'}
-            shadowColor="#C6C6C6"
-            bgColor={AppColors.blueColor}>
-            <View style={CssStyle.flexData}>
-              <Countdown
-                ref={countdownRef}
-                style={styles.timer}
-                textStyle={styles.watchTime}
-                initialSeconds={sec}
-                onTimes={e => {
-                  setDataNumber(e);
-                }}
-                onPause={e => {}}
-                onEnd={e => {}}
-              />
-            </View>
-          </ProgressCircle> */}
           <CountdownCircleTimer
             isPlaying
             duration={sec}

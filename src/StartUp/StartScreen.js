@@ -141,7 +141,7 @@ const StartScreen = ({navigation}) => {
                   fontFamily: 'Interstate-regular',
                   paddingHorizontal: responsiveWidth(5),
                   lineHeight: responsiveHeight(3),
-                  fontSize: 14,
+                  fontSize: responsiveFontSize(1.82),
                   marginLeft: responsiveWidth(2),
                 }}>
                 {item.description}

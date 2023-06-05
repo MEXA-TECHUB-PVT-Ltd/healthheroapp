@@ -95,7 +95,6 @@ const Dashboard = ({navigation}) => {
     setLoading(true);
     try {
       const result = await GetSevenFourApi();
-      console.log(result, 'seven by four');
       if (result.status == true) {
         setSevenFourData(result.result.array_agg);
         setLoading(false);
@@ -180,7 +179,6 @@ const Dashboard = ({navigation}) => {
         },
       ]}>
       <StatusBar hidden={true} />
-      {/* {console.log(new Date().toDateString())} */}
       <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
         <View style={[CssStyle.flexJustify, {marginTop: responsiveHeight(4)}]}>
           <View>

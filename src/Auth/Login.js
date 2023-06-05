@@ -126,7 +126,7 @@ const Login = ({navigation}) => {
               noIcon={true}
               value={email}
               onChangeText={e => setEmail(e)}
-              fontSize={16}
+              fontSize={15}
               style={{marginTop: responsiveHeight(1)}}
             />
             {errorMessage && (
@@ -154,7 +154,7 @@ const Login = ({navigation}) => {
               bgColor={'#ffffff60'}
               placeholder={'Password'}
               noIcon={true}
-              fontSize={16}
+              fontSize={15}
               value={password}
               onChangeText={e => setPassword(e)}
               rightIcon="eye-outline"

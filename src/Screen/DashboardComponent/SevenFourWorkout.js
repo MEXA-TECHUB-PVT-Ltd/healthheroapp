@@ -17,7 +17,7 @@ import CssStyle from '../../StyleSheet/CssStyle';
 import {AppColors} from '../../Helping/AppColor';
 import CustomButton from '../../component/CustomButton';
 import {GetSevenById, StartSevenByFourApi} from '../../services/SevenFour';
-import Logo from '../../assets/Icon3';
+import NoImage from '../../assets/noImageRed';
 import Clock from '../../assets/Icon';
 import {BaseUrl} from '../../Helping/BaseUrl';
 import {useDispatch, useSelector} from 'react-redux';
@@ -32,13 +32,8 @@ import {
 import moment from 'moment';
 
 const SevenFourWorkout = ({navigation, route}) => {
-  const {item} = route.params ? route.params : '';
-  // console.log(
-  //   item.seven_by_four_challenge_id,
-  //   item.week_id,
-  //   item.day_id,
-  //   'param',
-  // );
+  const {item, exercise_done, upcomingData} = route.params ? route.params : '';
+  // console.log(upcomingData, 'sfsdf ');
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -55,13 +50,13 @@ const SevenFourWorkout = ({navigation, route}) => {
     try {
       const result = await StartSevenByFourApi(
         id,
-        item.seven_by_four_challenge_id,
-        item.week_id,
-        item.day_id,
+        item?.seven_by_four_challenge_id,
+        item?.week_id,
+        item?.day_id,
         moment(new Date()).format('hh:mm:ss'),
         moment(new Date()).format('YYYY-MM-DD'),
       );
-      console.log(result, 'hello sir');
+      // console.log(result, 'hello sir');
       if (result.status == true) {
         setLoading(false);
         // setSevenByFourData(result.result[0].weeks);
@@ -115,7 +110,7 @@ const SevenFourWorkout = ({navigation, route}) => {
             fontFamily: 'Interstate-bold',
             fontSize: 19,
           }}>
-          Day {item.day}
+          Day {item?.day}
         </Text>
 
         <View
@@ -139,11 +134,10 @@ const SevenFourWorkout = ({navigation, route}) => {
           </Text>
         </View>
 
-        {/* {item.exercises > 0 ?( */}
         <FlatList
-          data={item.exercises}
+          data={item?.exercises}
+          showsVerticalScrollIndicator={false}
           renderItem={({item, index}) => {
-            // console.log(item, 'the flatlist');
             return (
               <TouchableOpacity
                 onPress={() =>
@@ -157,19 +151,27 @@ const SevenFourWorkout = ({navigation, route}) => {
                     marginRight: responsiveWidth(7),
                   },
                 ]}>
-                <Image
-                  borderRadius={responsiveWidth(2)}
-                  source={{
-                    uri: `${BaseUrl}` + item.exercise_details[0].animation,
-                  }}
-                  style={{
-                    width: responsiveWidth(19),
-                    height: responsiveHeight(9),
-                    marginRight: responsiveWidth(4),
-                  }}
-                  resizeMode="contain"
-                />
-                <View>
+                {item?.exercise_details ? (
+                  <Image
+                    borderRadius={responsiveWidth(2)}
+                    source={{
+                      uri: `${BaseUrl}` + item?.exercise_details[0]?.animation,
+                    }}
+                    style={{
+                      width: responsiveWidth(19),
+                      height: responsiveHeight(9),
+                      marginRight: responsiveWidth(4),
+                    }}
+                    resizeMode="contain"
+                  />
+                ) : (
+                  <NoImage
+                    width={responsiveWidth(19)}
+                    height={responsiveHeight(9)}
+                    style={{marginRight: responsiveWidth(4)}}
+                  />
+                )}
+                <View style={{}}>
                   <Text
                     style={{
                       color: 'white',
@@ -178,29 +180,15 @@ const SevenFourWorkout = ({navigation, route}) => {
                       marginVertical: responsiveHeight(0.6),
                       paddingTop: responsiveHeight(1),
                     }}>
-                    {item.exercise_details[0].title}
+                    {item?.exercise_details
+                      ? item?.exercise_details[0].title
+                      : 'No title'}
                   </Text>
                   <View
                     style={[
                       CssStyle.flexJustify,
                       {width: responsiveWidth(40)},
                     ]}>
-                    {/* <View
-                      style={[
-                        CssStyle.flexData,
-                        {marginVertical: responsiveHeight(1)},
-                      ]}>
-                      <Logo width={16} height={16} />
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontFamily: 'Interstate-regular',
-                          fontSize: 12,
-                          marginLeft: responsiveWidth(2),
-                        }}>
-                        400 kcal
-                      </Text>
-                    </View> */}
                     <View
                       style={[
                         CssStyle.flexData,
@@ -237,21 +225,25 @@ const SevenFourWorkout = ({navigation, route}) => {
           )}
         />
 
-        {item?.exercises?.length > 0 ? (
-          <View
-            style={{
-              position: 'absolute',
-              top: responsiveHeight(60),
-              width: responsiveWidth(90),
-              left: responsiveWidth(5),
-            }}>
-            <CustomButton
-              onPress={() => navigation.navigate('StartExercise')}
-              buttonText={'Get Started'}
-              fontWeight="500"
-              style={{}}
-            />
-          </View>
+        {!exercise_done ? (
+          upcomingData ? (
+            item?.exercises?.length > 0 ? (
+              <View
+                style={{
+                  position: 'absolute',
+                  top: responsiveHeight(60),
+                  width: responsiveWidth(90),
+                  left: responsiveWidth(5),
+                }}>
+                <CustomButton
+                  onPress={() => navigation.navigate('StartExercise')}
+                  buttonText={'Get Started'}
+                  fontWeight="500"
+                  style={{}}
+                />
+              </View>
+            ) : null
+          ) : null
         ) : null}
       </View>
     </View>

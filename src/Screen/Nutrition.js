@@ -222,7 +222,7 @@ const Nutrition = ({navigation, route}) => {
   const GetFoodRecord = async () => {
     try {
       const result = await GetFoodApi(id.id, id.dietPlanId);
-      console.log(result, 'Food record');
+      // console.log(result, 'Food record');
       if (result) {
         setLoading(false);
         setFoodData(result.result?.foodIntakesToday);
@@ -238,7 +238,7 @@ const Nutrition = ({navigation, route}) => {
     // setLoading(true);
     try {
       const result = await GetWeeklyWaterApi(id.waterTrackerId, id.id);
-      console.log(result.result[1], 'weeky data');
+      // console.log(result.result, 'weeky data');
       if (result) {
         setLoading(false);
         setWeeklyWaterData(result.result);
@@ -248,7 +248,8 @@ const Nutrition = ({navigation, route}) => {
       console.log(error);
     }
   };
-  // console.log(moment(new Date() * 24 * 60 * 60 * 1000).format('dddd'), 'hello');
+  const [chartData, setChartData] = useState([]);
+
   const data = {
     labels: ['Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat', 'Sun'],
     datasets: [
@@ -307,6 +308,83 @@ const Nutrition = ({navigation, route}) => {
       console.log(error);
     }
   };
+  useEffect(() => {
+    getHistoryOfWeek();
+  }, []);
+
+  const getHistoryOfWeek = async () => {
+    const result = await GetWeeklyWaterApi(id.waterTrackerId, id.id);
+    console.log(result.result);
+    if (result.status == true) {
+      let responseList = result.result ? result.result : [];
+      // console.log(responseList, 'response api');
+      let weekly_steps_count = 0;
+
+      let week_days_list = await getWeekDays();
+      let list = [];
+      week_days_list?.map(element => {
+        console.log(element, 'element filter');
+        let filter = responseList?.filter(
+          item =>
+            moment(item?.json_build_object?.updated_at).format('YYYY-MM-DD') ==
+            moment(element?.date).format('YYYY-MM-DD'),
+        );
+        // console.log(filter, 'filter data');
+        // { label: "SUN", percentage: "57.85%", value: 2314 },
+        let steps = filter[0]?.json_build_object?.quantity
+          ? parseInt(filter[0]?.json_build_object?.quantity)
+          : 0;
+        // weekly_steps_count = weekly_steps_count + steps;
+
+        let obj = {
+          label: element?.name,
+          // percentage: '',
+          value: steps,
+        };
+        list.push(steps);
+      });
+
+      // let goalsData = await getUserGoals();
+
+      // let percentage = (weekly_steps_count / weeklygoals_set) * 100;
+
+      // setWeeklySteps_Percentage(percentage?.toFixed(2));
+
+      // setWeeklySteps(weekly_steps_count);
+      // setChartData(list);
+
+      console.log(list, 'list id');
+      setChartData(list);
+    } else {
+    }
+    // })
+    // .catch((error) => {
+    //   Snackbar.show({
+    //     text: "Something went wrong.",
+    //     duration: Snackbar.LENGTH_SHORT,
+    //   });
+    // })
+    // .finally(() => {
+    //   setLoading(false);
+    //   setIsRefreshing(false);
+    // });
+  };
+  //get current week day name and date (MON to SUN)
+  const getWeekDays = () => {
+    return new Promise((resolve, reject) => {
+      let daysList = [];
+      Array.from(Array(7).keys()).map(idx => {
+        const d = new Date();
+        d.setDate(d.getDate() - d.getDay() + idx);
+        let obj = {
+          name: moment(d).format('ddd'),
+          date: moment(d).format('YYYY-MM-DD'),
+        };
+        daysList.push(obj);
+        resolve(daysList);
+      });
+    });
+  };
 
   useEffect(() => {
     GetDailyWaterRecord();
@@ -318,7 +396,6 @@ const Nutrition = ({navigation, route}) => {
     id.waterTrackerId ? GetWeeklyReport() : {};
     GetDietPlan();
   }, []);
-  console.log(moment('2023-06-02T00:00:00+00:00').format('dddd'));
   const idWaterTracker = useSelector(data => data.waterTrackerId);
   const AddDailyRecord = async (system, idWaterTracker, index, Text) => {
     // console.log('clicked');
@@ -505,36 +582,6 @@ const Nutrition = ({navigation, route}) => {
                 </View>
               </TouchableOpacity>
             ))}
-            {/* <FlatList
-              data={foodData}
-              renderItem={({item, index}) => {
-                // console.log(item);
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {}}
-                    style={styles.dailyButton}>
-                    <View style={{}}>
-                      <Text style={styles.dailyText}>
-                        {item.food_details.food_name}
-                      </Text>
-                      <View style={[CssStyle.flexJustify, {}]}>
-                        <Text style={styles.foodType}>
-                          Yogurt with Berries and banana
-                        </Text>
-                        <Text
-                          style={{
-                            color: 'white',
-                            fontFamily: 'Interstate-regular',
-                          }}>
-                          {item.food_details.energy_calories} Kcal
-                        </Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                );
-              }}
-            /> */}
             <View
               style={[
                 CssStyle.flexJustify,
@@ -644,13 +691,17 @@ const Nutrition = ({navigation, route}) => {
               </Text>
               {id.waterTrackerId ? (
                 <BarChart
-                  data={data}
+                  // data={data}
+                  data={{
+                    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'],
+                    datasets: [{data: chartData}],
+                  }}
                   width={responsiveWidth(88)}
                   height={responsiveHeight(28)}
                   showBarTops={false}
                   withInnerLines={false}
                   chartConfig={chartConfig}
-                  withVerticalLabels={false}
+                  // withVerticalLabels={false}
                   style={{
                     borderRadius: responsiveWidth(2),
                     marginLeft: responsiveHeight(-1.7),

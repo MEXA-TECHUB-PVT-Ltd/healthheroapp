@@ -997,7 +997,8 @@ const Report = ({navigation}) => {
             />
             <ScrollView horizontal={true}>
               <FlatList
-                horizontal={false}
+            showsVerticalScrollIndicator={false}
+            horizontal={false}
                 data={historyDataDate}
                 renderItem={({item, index}) => {
                   return (

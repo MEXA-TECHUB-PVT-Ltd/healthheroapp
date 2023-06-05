@@ -24,6 +24,7 @@ import {AppColors} from '../../Helping/AppColor';
 import {Countdown} from 'react-native-element-timer';
 import ProgressCircle from 'react-native-progress-circle';
 import Logo from '../../assets/Icon';
+import NoImage from '../../assets/noImageRed';
 import CustomButton from '../../component/CustomButton';
 import {BaseUrl} from '../../Helping/BaseUrl';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
@@ -71,7 +72,6 @@ const GetExercise = ({navigation, route}) => {
 
     return () => clearInterval(interval);
   }, [running]);
-  console.log(timeElapsed, 'get exercise');
   const formatTime = time => {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
@@ -141,20 +141,6 @@ const GetExercise = ({navigation, route}) => {
       console.log(error);
     }
   };
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const backAction = () => {
-  //       setOpenModel(true);
-  //       BackHandler.addEventListener('hardwareBackPress', backAction);
-  //     };
-  //     const backHandler = BackHandler.addEventListener(
-  //       'hardwareBackPress',
-  //       () => setOpenModel(true),
-  //     );
-  //     return () => backHandler.remove();
-  //   }, []),
-  // );
   useEffect(() => {
     const handleBackPress = () => {
       setOpenModel(true);
@@ -180,13 +166,17 @@ const GetExercise = ({navigation, route}) => {
     <ScrollView style={[CssStyle.mainContainer, {}]}>
       <ImageBackground
         style={{width: responsiveWidth(100), height: responsiveHeight(40)}}
-        source={{
-          uri: dataTakeFromRedux[index]?.exercise_details
-            ? `${BaseUrl}` +
-              dataTakeFromRedux[index]?.exercise_details[0]?.animation
-            : `${BaseUrl}` +
-              dataTakeFromRedux[index]?.exersise_details?.animation,
-        }}></ImageBackground>
+        source={
+          dataTakeFromRedux[index]?.exercise_details
+            ? {
+                uri: dataTakeFromRedux[index]?.exercise_details
+                  ? `${BaseUrl}` +
+                    dataTakeFromRedux[index]?.exercise_details[0]?.animation
+                  : `${BaseUrl}` +
+                    dataTakeFromRedux[index]?.exersise_details?.animation,
+              }
+            : require('../../assets/noImageRed.png')
+        }></ImageBackground>
 
       <View
         style={{
@@ -205,8 +195,10 @@ const GetExercise = ({navigation, route}) => {
           }}>
           <Text style={[styles.signInText]}>
             {dataTakeFromRedux[index]?.exercise_details
-              ? dataTakeFromRedux[index]?.exercise_details[0]?.title
-              : dataTakeFromRedux[index]?.exersise_details?.title}
+              ? dataTakeFromRedux[index]?.exercise_details
+                ? dataTakeFromRedux[index]?.exercise_details[0]?.title
+                : dataTakeFromRedux[index]?.exersise_details?.title
+              : 'No title'}
           </Text>
           <View
             style={[
@@ -227,7 +219,7 @@ const GetExercise = ({navigation, route}) => {
                   ? {}
                   : (setIndex(index - 1),
                     navigation.navigate('RestTime', {item: index - 1}),
-                    setRunning(true));
+                    setRunning(false));
               }}>
               <Icon
                 name="chevron-back-outline"
@@ -315,15 +307,6 @@ const GetExercise = ({navigation, route}) => {
                     alignItems: 'center',
                     paddingVertical: responsiveHeight(2),
                   }}>
-                  {/* <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 17,
-                      fontFamily: 'Interstate-regular',
-                      paddingBottom: responsiveHeight(5),
-                    }}>
-                    {completed ? 'completed' : 'No Next Exercise'}
-                  </Text> */}
                   <CustomButton
                     iconName={'checkmark'}
                     onPress={() => {
@@ -351,22 +334,27 @@ const GetExercise = ({navigation, route}) => {
                     {marginBottom: responsiveHeight(2)},
                   ]}>
                   <View style={{width: responsiveWidth(32)}}>
-                    <Image
-                      source={{
-                        uri: dataTakeFromRedux[index + 1]?.exercise_details
-                          ? `${BaseUrl}` +
-                            dataTakeFromRedux[index + 1]?.exercise_details
-                          : `${BaseUrl}` +
-                            dataTakeFromRedux[index + 1]?.exersise_details
-                              ?.animation,
-                      }}
-                      resizeMode="contain"
-                      style={{
-                        width: 99,
-                        height: 90,
-                        //   marginRight: responsiveWidth(2),
-                      }}
-                    />
+                    {dataTakeFromRedux[index + 1]?.exercise_details ? (
+                      <Image
+                        source={{
+                          uri: dataTakeFromRedux[index + 1]?.exercise_details
+                            ? `${BaseUrl}` +
+                              dataTakeFromRedux[index + 1]?.exercise_details[0]
+                                ?.animation
+                            : `${BaseUrl}` +
+                              dataTakeFromRedux[index + 1]?.exersise_details
+                                ?.animation,
+                        }}
+                        resizeMode="contain"
+                        style={{
+                          width: 99,
+                          height: 90,
+                          //   marginRight: responsiveWidth(2),
+                        }}
+                      />
+                    ) : (
+                      <NoImage width={99} height={90} />
+                    )}
                   </View>
                   <View style={{width: responsiveWidth(53)}}>
                     <Text
