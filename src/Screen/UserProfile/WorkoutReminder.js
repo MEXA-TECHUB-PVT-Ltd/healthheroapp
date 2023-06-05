@@ -242,6 +242,7 @@ const WorkoutReminder = ({navigation, route}) => {
         {dataArrayReminder?.length > 0 ? (
           <FlatList
             data={dataArrayReminder}
+            showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => {
               // console.log(item);
               return (

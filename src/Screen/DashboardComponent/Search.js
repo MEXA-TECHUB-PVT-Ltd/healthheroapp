@@ -676,10 +676,6 @@ const Search = ({navigation}) => {
               Workout Plans
             </Text>
             <View style={[CssStyle.flexData, {flexWrap: 'wrap'}]}>
-              {/* <FlatList
-                data={getAllWorkoutPlanIdea}
-                renderItem={({item, index}) => {
-                  return ( */}
               {getAllWorkoutPlanIdea.map((item, index) => (
                 <TouchableOpacity
                   key={index}

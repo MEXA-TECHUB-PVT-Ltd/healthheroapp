@@ -27,6 +27,7 @@ import {useSelector} from 'react-redux';
 import {BaseUrl} from '../../Helping/BaseUrl';
 import Loader from '../../component/Loader';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
+import NoImage from '../../assets/noImageRed';
 
 const StartExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : 0;
@@ -157,17 +158,25 @@ const StartExercise = ({navigation, route}) => {
           <View
             style={[CssStyle.flexData, {marginBottom: responsiveHeight(2)}]}>
             <View style={{width: responsiveWidth(29)}}>
-              <Image
-                source={{
-                  uri: `${BaseUrl}` + otherExercise_data?.animation,
-                }}
-                resizeMode="contain"
-                style={{
-                  width: 99,
-                  height: 90,
-                  //   marginRight: responsiveWidth(2),
-                }}
-              />
+              {reduxData?.exercise_details ? (
+                <Image
+                  source={{
+                    uri: `${BaseUrl}` + otherExercise_data?.animation,
+                  }}
+                  resizeMode="contain"
+                  style={{
+                    width: 99,
+                    height: 90,
+                    //   marginRight: responsiveWidth(2),
+                  }}
+                />
+              ) : (
+                <NoImage
+                  width={responsiveWidth(19)}
+                  height={responsiveHeight(9)}
+                  style={{marginRight: responsiveWidth(4)}}
+                />
+              )}
             </View>
             <View style={{width: responsiveWidth(53)}}>
               <Text
@@ -178,7 +187,9 @@ const StartExercise = ({navigation, route}) => {
                   opacity: 0.8,
                   textTransform: 'capitalize',
                 }}>
-                {otherExercise_data?.title}
+                {reduxData?.exercise_details
+                  ? otherExercise_data?.title
+                  : 'No title'}
               </Text>
               <Text
                 style={{
@@ -190,7 +201,9 @@ const StartExercise = ({navigation, route}) => {
                   lineHeight: responsiveHeight(2),
                   height: responsiveHeight(2.7),
                 }}>
-                {otherExercise_data?.description}
+                {reduxData?.exercise_details
+                  ? otherExercise_data?.description
+                  : 'no description'}
               </Text>
               <View
                 style={[CssStyle.flexJustify, {width: responsiveWidth(50)}]}>

@@ -1,4 +1,5 @@
 import {
+  Alert,
   FlatList,
   ImageBackground,
   StyleSheet,
@@ -30,12 +31,12 @@ const StartNow = ({navigation, route}) => {
   const [sevenByFourData, setSevenByFourData] = useState([]);
   const [loading, setLoading] = useState(false);
   const id = useSelector(data => data.id);
-
+  const [GEtUserSevenFourRes, setGetUserSevenFour] = useState([]);
+  // console.log(GEtUserSevenFourRes[0]?.days_of_week);
   useEffect(() => {
     GetSeven();
     GetSevenWeeks();
   }, []);
-  const [GEtUserSevenFourRes, setGetUserSevenFour] = useState([]);
   const GetSeven = async () => {
     setLoading(true);
     try {
@@ -43,7 +44,6 @@ const StartNow = ({navigation, route}) => {
         id,
         item?.seven_by_four_challenge_id,
       );
-      // console.log(result.result[1].days_of_week.length, 'hello sir');
       if (result.status == true) {
         setLoading(false);
         setGetUserSevenFour(result.result);
@@ -72,14 +72,17 @@ const StartNow = ({navigation, route}) => {
       console.log(error);
     }
   };
-  // console.log(sevenByFourData[1], 'hello sir');
-  console.log(
-    GEtUserSevenFourRes[0]?.days_of_week.length +
-      GEtUserSevenFourRes[1]?.days_of_week.length +
-      // GEtUserSevenFourRes[2]?.days_of_week.length +
-      // GEtUserSevenFourRes[3]?.days_of_week.length,
-      'lskdj',
-  );
+  const getDays = GEtUserSevenFourRes[3]?.days_of_week
+    ? GEtUserSevenFourRes[3]?.days_of_week?.length
+    : GEtUserSevenFourRes[2]?.days_of_week
+    ? GEtUserSevenFourRes[2]?.days_of_week?.length
+    : GEtUserSevenFourRes[1]?.days_of_week
+    ? GEtUserSevenFourRes[1]?.days_of_week?.length
+    : GEtUserSevenFourRes[0]?.days_of_week
+    ? GEtUserSevenFourRes[0]?.days_of_week?.length
+    : GEtUserSevenFourRes[0]?.days_of_week?.length;
+  const getDayId = GEtUserSevenFourRes?.length;
+
   useEffect(() => {
     var mount = true;
     const listener = navigation.addListener('focus', async () => {
@@ -140,13 +143,31 @@ const StartNow = ({navigation, route}) => {
     {item: 6},
     {item: 7},
   ];
-  // console.log(
-  //   28 -
-  //     (sevenByFourData[0]?.week_days?.length +
-  //       sevenByFourData[1]?.week_days?.length +
-  //       sevenByFourData[2]?.week_days?.length +
-  //       sevenByFourData[3]?.week_days?.length),
-  // );
+  const totalPercentage = GEtUserSevenFourRes[3]?.days_of_week
+    ? (28 -
+        GEtUserSevenFourRes[0]?.days_of_week?.length +
+        GEtUserSevenFourRes[1]?.days_of_week?.length +
+        GEtUserSevenFourRes[2]?.days_of_week?.length +
+        GEtUserSevenFourRes[3]?.days_of_week?.length) *
+      3.57151
+    : GEtUserSevenFourRes[2]?.days_of_week
+    ? (28 -
+        GEtUserSevenFourRes[0]?.days_of_week?.length +
+        GEtUserSevenFourRes[1]?.days_of_week?.length +
+        GEtUserSevenFourRes[2]?.days_of_week?.length) *
+      3.57151
+    : GEtUserSevenFourRes[1]?.days_of_week
+    ? (28 -
+        GEtUserSevenFourRes[0]?.days_of_week?.length +
+        GEtUserSevenFourRes[1]?.days_of_week?.length) *
+      3.57151
+    : GEtUserSevenFourRes[0]?.days_of_week
+    ? (28 - GEtUserSevenFourRes[0]?.days_of_week?.length) * 3.57151
+    : 0;
+
+  const [selectIndex, setSelectIndex] = useState('');
+  const [selectDataIndex, setSelectDataIndex] = useState('');
+
   return loading ? (
     <Loader />
   ) : (
@@ -216,7 +237,7 @@ const StartNow = ({navigation, route}) => {
                   GEtUserSevenFourRes[1]?.days_of_week?.length)
               : GEtUserSevenFourRes[0]?.days_of_week
               ? 28 - GEtUserSevenFourRes[0]?.days_of_week?.length
-              : null}{' '}
+              : 0}{' '}
             days left
           </Text>
           <Text
@@ -226,29 +247,7 @@ const StartNow = ({navigation, route}) => {
               fontFamily: 'Interstate-regular',
               fontSize: 12,
             }}>
-            {GEtUserSevenFourRes[3]?.days_of_week
-              ? 28 -
-                (GEtUserSevenFourRes[0]?.days_of_week?.length +
-                  GEtUserSevenFourRes[1]?.days_of_week?.length +
-                  GEtUserSevenFourRes[2]?.days_of_week?.length +
-                  GEtUserSevenFourRes[3]?.days_of_week?.length)
-              : GEtUserSevenFourRes[2]?.days_of_week
-              ? 28 -
-                (GEtUserSevenFourRes[0]?.days_of_week?.length +
-                  GEtUserSevenFourRes[1]?.days_of_week?.length +
-                  GEtUserSevenFourRes[2]?.days_of_week?.length)
-              : GEtUserSevenFourRes[1]?.days_of_week
-              ? 28 -
-                (GEtUserSevenFourRes[0]?.days_of_week?.length +
-                  GEtUserSevenFourRes[1]?.days_of_week?.length)
-              : GEtUserSevenFourRes[0]?.days_of_week
-              ? 28 - GEtUserSevenFourRes[0]?.days_of_week?.length * 3.57151
-              : GEtUserSevenFourRes[0]?.days_of_week
-              ? 28 - GEtUserSevenFourRes[0]?.days_of_week == null
-                ? null
-                : GEtUserSevenFourRes[0]?.week_days.length * 3.57151
-              : null}
-            %
+            {totalPercentage.toFixed(0)} %
           </Text>
         </View>
         <View
@@ -288,10 +287,10 @@ const StartNow = ({navigation, route}) => {
           />
         </View>
         <View style={{flex: 1, paddingBottom: responsiveHeight(7)}}>
-          {/* {console.log(sevenByFourData[0].week_days,'in screen')} */}
           <FlatList
             data={[{item: 1}, {item: 2}, {item: 3}, {item: 4}]}
-            keyExtractor={item => item.week_no}
+            keyExtractor={item => item.item}
+            showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => {
               return (
                 <View
@@ -346,29 +345,39 @@ const StartNow = ({navigation, route}) => {
                           <>
                             <TouchableOpacity
                               key={indexData}
-                              // disabled={
-                              //   item?.week_days[indexData]?.day ? false : true
-                              // }
                               onPress={() => {
                                 navigation.navigate('SevenFourWorkout', {
                                   item: sevenByFourData[index].week_days[
                                     indexData
                                   ],
+                                  exercise_done:
+                                    GEtUserSevenFourRes[index]?.days_of_week[
+                                      indexData
+                                    ]?.day_id ==
+                                    sevenByFourData[index]?.week_days[indexData]
+                                      ?.day_id,
+                                  upcomingData:
+                                    indexData == 0
+                                      ? true
+                                      : GEtUserSevenFourRes[index]
+                                          ?.days_of_week[indexData - 1]?.day_id,
                                 });
                               }}
                               style={{
                                 width: 29,
                                 height: 29,
                                 borderRadius: responsiveHeight(30),
-                                backgroundColor: sevenByFourData
-                                  ? GEtUserSevenFourRes[index]?.days_of_week[
-                                      indexData
-                                    ]?.day_id ==
-                                    sevenByFourData[index]?.week_days[indexData]
-                                      ?.day_id
-                                    ? AppColors.buttonText
-                                    : '#78798A'
-                                  : '#78798A',
+                                backgroundColor:
+                                  GEtUserSevenFourRes && sevenByFourData
+                                    ? GEtUserSevenFourRes[index]?.days_of_week[
+                                        indexData
+                                      ]?.day_id ==
+                                      sevenByFourData[index]?.week_days[
+                                        indexData
+                                      ]?.day_id
+                                      ? AppColors.buttonText
+                                      : '#78798A'
+                                    : '#78798A',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                               }}>
@@ -380,12 +389,15 @@ const StartNow = ({navigation, route}) => {
                               <View
                                 style={{
                                   backgroundColor:
-                                    // item?.week_days == null
-                                    //   ? 'white'
-                                    //   : item?.week_days[indexData]?.day
-                                    //   ? AppColors.buttonText
-                                    //   :
-                                    'white',
+                                    GEtUserSevenFourRes && sevenByFourData
+                                      ? GEtUserSevenFourRes[index]
+                                          ?.days_of_week[indexData]?.day_id ==
+                                        sevenByFourData[index]?.week_days[
+                                          indexData
+                                        ]?.day_id
+                                        ? AppColors.buttonText
+                                        : '#78798A'
+                                      : '#78798A',
                                   width: responsiveWidth(5.1),
                                   height: 1,
                                   justifyContent: 'center',
@@ -412,7 +424,10 @@ const StartNow = ({navigation, route}) => {
           <CustomButton
             onPress={() =>
               navigation.navigate('SevenFourWorkout', {
-                item: sevenByFourData[0]?.week_days[0],
+                item: sevenByFourData[getDayId - 1 == 0 ? 1 : getDayId]
+                  ?.week_days[getDays == 7 ? 0 : getDays],
+                exercise_done: false,
+                upcomingData: true,
               })
             }
             buttonText={'GO!'}
@@ -428,199 +443,3 @@ const StartNow = ({navigation, route}) => {
 export default StartNow;
 
 const styles = StyleSheet.create({});
-
-{
-  /* <View>
-<TouchableOpacity
-  onPress={() =>
-    navigation.navigate('SevenFourWorkout', {
-      item: item?.week_days,
-    })
-  }
-  style={{
-    width: 29,
-    height: 29,
-    borderRadius: responsiveHeight(30),
-    backgroundColor:
-      item?.week_days == null
-        ? '#78798A'
-        : item?.week_days[1]?.day
-        ? AppColors.buttonText
-        : '#78798A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }}>
-  <Text style={{color: 'white', fontSize: 11}}>2</Text>
-</TouchableOpacity>
-<View
-  style={{
-    backgroundColor:
-      item?.week_days == null
-        ? 'white'
-        : item?.week_days[1]?.day
-        ? AppColors.buttonText
-        : 'white',
-    width: responsiveWidth(5.1),
-    height: 1,
-    justifyContent: 'center',
-  }}
-/>
-<TouchableOpacity
-  onPress={() =>
-    navigation.navigate('SevenFourWorkout', {
-      item: item?.week_days,
-    })
-  }
-  style={{
-    width: 29,
-    height: 29,
-    borderRadius: responsiveHeight(30),
-    backgroundColor:
-      item?.week_days == null
-        ? '#78798A'
-        : item?.week_days[2]?.day
-        ? AppColors.buttonText
-        : '#78798A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }}>
-  <Text style={{color: 'white', fontSize: 11}}>3</Text>
-</TouchableOpacity>
-<View
-  style={{
-    backgroundColor:
-      item?.week_days == null
-        ? 'white'
-        : item?.week_days[2]?.day
-        ? AppColors.buttonText
-        : 'white',
-    width: responsiveWidth(5.1),
-    height: 1,
-    justifyContent: 'center',
-  }}
-/>
-<TouchableOpacity
-  onPress={() =>
-    navigation.navigate('SevenFourWorkout', {
-      item: item?.week_days,
-    })
-  }
-  style={{
-    width: 29,
-    height: 29,
-    borderRadius: responsiveHeight(30),
-    backgroundColor:
-      item?.week_days == null
-        ? '#78798A'
-        : item?.week_days[3]?.day
-        ? AppColors.buttonText
-        : '#78798A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }}>
-  <Text style={{color: 'white', fontSize: 11}}>4</Text>
-</TouchableOpacity>
-<View
-  style={{
-    backgroundColor:
-      item?.week_days == null
-        ? 'white'
-        : item?.week_days[3]?.day
-        ? AppColors.buttonText
-        : 'white',
-    width: responsiveWidth(5.1),
-    height: 1,
-    justifyContent: 'center',
-  }}
-/>
-<TouchableOpacity
-  onPress={() =>
-    navigation.navigate('SevenFourWorkout', {
-      item: item?.week_days,
-    })
-  }
-  style={{
-    width: 29,
-    height: 29,
-    borderRadius: responsiveHeight(30),
-    backgroundColor:
-      item?.week_days == null
-        ? '#78798A'
-        : item?.week_days[4]?.day
-        ? AppColors.buttonText
-        : '#78798A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }}>
-  <Text style={{color: 'white', fontSize: 11}}>5</Text>
-</TouchableOpacity>
-<View
-  style={{
-    backgroundColor:
-      item?.week_days == null
-        ? 'white'
-        : item?.week_days[4]?.day
-        ? AppColors.buttonText
-        : 'white',
-    width: responsiveWidth(5.1),
-    height: 1,
-    justifyContent: 'center',
-  }}
-/>
-<TouchableOpacity
-  onPress={() =>
-    navigation.navigate('SevenFourWorkout', {
-      item: item?.week_days,
-    })
-  }
-  style={{
-    width: 29,
-    height: 29,
-    borderRadius: responsiveHeight(30),
-    backgroundColor:
-      item?.week_days == null
-        ? '#78798A'
-        : item?.week_days[5]?.day
-        ? AppColors.buttonText
-        : '#78798A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }}>
-  <Text style={{color: 'white', fontSize: 11}}>6</Text>
-</TouchableOpacity>
-<View
-  style={{
-    backgroundColor:
-      item?.week_days == null
-        ? 'white'
-        : item?.week_days[5]?.day
-        ? AppColors.buttonText
-        : 'white',
-    width: responsiveWidth(5.1),
-    height: 1,
-    justifyContent: 'center',
-  }}
-/>
-<TouchableOpacity
-  onPress={() =>
-    navigation.navigate('SevenFourWorkout', {
-      item: item?.week_days,
-    })
-  }
-  style={{
-    width: 29,
-    height: 29,
-    borderRadius: responsiveHeight(30),
-    backgroundColor:
-      item?.week_days == null
-        ? '#78798A'
-        : item?.week_days[6]?.day
-        ? AppColors.buttonText
-        : '#78798A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }}>
-  <Text style={{color: 'white', fontSize: 11}}>7</Text>
-</TouchableOpacity>
-</View> */
-}

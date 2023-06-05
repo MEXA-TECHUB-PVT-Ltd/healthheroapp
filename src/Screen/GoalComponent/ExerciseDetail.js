@@ -82,7 +82,9 @@ const ExerciseDetail = ({navigation, route}) => {
                     ? item.exersise_details.title
                     : staticValue.exersise_details
                     ? staticValue.exersise_details.title
-                    : staticValue?.exercise_details[0]?.title}
+                    : staticValue?.exercise_details
+                    ? staticValue?.exercise_details[0]?.title
+                    : 'no title'}
                 </Text>
                 <Text
                   style={[

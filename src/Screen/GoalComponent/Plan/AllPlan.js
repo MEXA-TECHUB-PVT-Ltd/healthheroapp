@@ -160,7 +160,7 @@ const AllPlan = ({navigation, route}) => {
             <FlatList
               data={planData}
               renderItem={({item, index}) => {
-                console.log(item, 'plan id');
+                // console.log(item, 'plan id');
                 return (
                   <TouchableOpacity
                     activeOpacity={0.8}
