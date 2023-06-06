@@ -38,7 +38,7 @@ import {
 
 const GetExercise = ({navigation, route}) => {
   const {item, indexNumber, itemIndex} = route.params ? route.params : '';
-  console.log(item, indexNumber, 'item');
+  // console.log(item, indexNumber, 'item');
   // console.log(item, 'get exercise');
   const countdownRef = useRef();
   const dataRedux = useSelector(data => data.workoutPlanData);
@@ -48,7 +48,34 @@ const GetExercise = ({navigation, route}) => {
   const [index, setIndex] = useState(indexNumber ? indexNumber : 0);
   const [takeNumberOfCircle, setTakeNumberOfCircle] = useState('');
   const [openModel, setOpenModel] = useState(false);
+  const timeStr = dataTakeFromRedux[index]?.time;
+  const timeObj = moment(timeStr, 'HH:mm:ss');
+  const seconds =
+    timeObj.hours() * 3600 + timeObj.minutes() * 60 + timeObj.seconds();
+  // console.log(seconds, 'find the seconds');
+  const calculateY = (x, maxValue) => {
+    // Convert x to a decimal value
+    const xDecimal = x / 100;
 
+    // Calculate y by multiplying xDecimal by the maxValue
+    const y = xDecimal * maxValue;
+
+    return y;
+  };
+  const x = 100; // The x value representing 50%
+  const maxValue = seconds; // The maximum value corresponding to 100%
+
+  const y = calculateY(x, maxValue);
+  // console.log(y); // Output: 100
+  const padDigits = number => {
+    return number.toString().padStart(2, '0');
+  };
+  const id = useSelector(data => data.id);
+  const workplanId = useSelector(data => data.workoutPlanId);
+  const [loading, setLoading] = useState(false);
+
+  const findPercentage = takeNumberOfCircle / seconds;
+  // console.log(findPercentage * 100, 'sdfsa');
   useEffect(() => {
     countdownRef.current.start();
     setRunning(true);
@@ -78,20 +105,8 @@ const GetExercise = ({navigation, route}) => {
     return `${padDigits(hours)}:${padDigits(minutes)}:${padDigits(seconds)}`;
   };
 
-  const timeStr = dataTakeFromRedux[index]?.time;
-  const timeObj = moment(timeStr, 'HH:mm:ss');
-  const seconds =
-    timeObj.hours() * 3600 + timeObj.minutes() * 60 + timeObj.seconds();
-
-  const padDigits = number => {
-    return number.toString().padStart(2, '0');
-  };
-  const id = useSelector(data => data.id);
-  const workplanId = useSelector(data => data.workoutPlanId);
-  const [loading, setLoading] = useState(false);
-
   const StartWorkoutForProgress = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const result = await StartWorkoutPlanApi(
         id,
@@ -101,9 +116,9 @@ const GetExercise = ({navigation, route}) => {
       );
       console.log(result, 'start workout api response');
       if (result.status == true) {
-        setLoading(false);
+        // setLoading(false);
       } else {
-        setLoading(false);
+        // setLoading(false);
         ToastAndroid.show(result.message, ToastAndroid.SHORT);
         console.error(result.message);
       }
@@ -115,7 +130,7 @@ const GetExercise = ({navigation, route}) => {
   const SevenByFour = useSelector(data => data);
 
   const CompleteSevenByFour = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const result = await StartSevenByFourApi(
         id,
@@ -127,9 +142,9 @@ const GetExercise = ({navigation, route}) => {
       );
       console.log(result, 'this is the complete seven by four');
       if (result.status == true) {
-        setLoading(false);
+        // setLoading(false);
       } else {
-        setLoading(false);
+        // setLoading(false);
         ToastAndroid.show(result.message, ToastAndroid.SHORT);
         console.error(result.message);
       }
@@ -226,8 +241,9 @@ const GetExercise = ({navigation, route}) => {
                 color={AppColors.buttonText}
               />
             </TouchableOpacity>
+            {/* {console.log(takeNumberOfCircle/11-20)} */}
             <ProgressCircle
-              percent={takeNumberOfCircle * 8}
+              percent={findPercentage * 100}
               radius={52}
               borderWidth={4}
               color={'#FF7B27'}
@@ -482,7 +498,7 @@ const GetExercise = ({navigation, route}) => {
                       setRunning(false);
                       setOpenModel(false);
                       setCountQuit(0);
-                      BackHandler.removeEventListener('hardwareBackPress');
+                      // BackHandler.removeEventListener('hardwareBackPress');
                     }}
                     activeOpacity={1}
                     buttonColor={'transparent'}

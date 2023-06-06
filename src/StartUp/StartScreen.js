@@ -30,21 +30,21 @@ const StartScreen = ({navigation}) => {
       image: require('../assets/first.png'),
       headerText: 'Lets Explore The Fitness',
       description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elitr, sed diam nonumy',
+        'Engage in fitness challenges designed to push your limits and provide extra motivation.',
       color: 'blue',
     },
     {
       image: require('../assets/second.png'),
-      headerText: 'Lorem ipsum dolor sit amet',
+      headerText: 'Healthy workout plan',
       description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elitr, sed diam nonumy',
+        'Consistency is key! Set your workout schedule and choose the days and times that work best for you',
       color: 'blue',
     },
     {
       image: require('../assets/third.png'),
-      headerText: 'Lorem ipsum dolor sit amet',
+      headerText: 'Get healthy workout plans',
       description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elitr, sed diam nonumy',
+        'Track your strength gains, identify areas for improv- ement, and challenge yourself to reach new milestones',
       color: 'blue',
     },
   ];
@@ -118,7 +118,7 @@ const StartScreen = ({navigation}) => {
                 bottom: responsiveHeight(58.5),
                 // paddingHorizontal: responsiveWidth(5),
                 paddingBottom: responsiveHeight(20),
-                paddingTop: responsiveHeight(26),
+                paddingTop: responsiveHeight(25),
               }}>
               <Text
                 style={{
@@ -135,12 +135,15 @@ const StartScreen = ({navigation}) => {
               </Text>
               <Text
                 style={{
-                  width: width - 60,
+                  width: responsiveWidth(98),
                   color: 'white',
                   fontFamily: 'Interstate-regular',
-                  paddingHorizontal: responsiveWidth(5),
-                  lineHeight: responsiveHeight(3),
-                  fontSize: responsiveFontSize(1.82),
+                  paddingHorizontal: responsiveWidth(3),
+                  lineHeight: responsiveHeight(2.6),
+                  fontSize:
+                    index == 2
+                      ? responsiveFontSize(1.77)
+                      : responsiveFontSize(1.82),
                   marginLeft: responsiveWidth(2),
                 }}>
                 {item.description}

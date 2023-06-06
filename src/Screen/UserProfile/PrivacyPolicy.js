@@ -65,15 +65,37 @@ const PrivacyPolicy = ({navigation, route}) => {
         <Text style={[CssStyle.textInsideSettingComponent]}>
           Privacy Policy
         </Text>
-        <Text style={{color: 'white', marginTop: responsiveHeight(2)}}>
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-          nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-          sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-          rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-          ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-          sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-          dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-          et justo duo dolores et ea.
+        <Text
+          style={{
+            color: 'white',
+            marginTop: responsiveHeight(2),
+            lineHeight: responsiveHeight(2.6),fontSize:13
+          }}>
+          At mtechub llc, accessible from https://mtechub.com, one of our main
+          priorities is the privacy of our visitors. This Privacy Policy
+          document contains types of information that is collected and recorded
+          by mtechub llc and how we use it.
+        </Text>
+        <Text
+          style={{
+            color: 'white',
+            marginTop: responsiveHeight(2),
+            lineHeight: responsiveHeight(2.6),fontSize:13
+          }}>
+          If you have additional questions or require more information about our
+          Privacy Policy, do not hesitate to contact us.
+        </Text>
+        <Text
+          style={{
+            color: 'white',
+            marginTop: responsiveHeight(2),
+            lineHeight: responsiveHeight(2.6),fontSize:13
+          }}>
+          This Privacy Policy applies only to our online activities and is valid
+          for visitors to our website with regards to the information that they
+          shared and/or collect in mtechub llc. This policy is not applicable to
+          any information collected offline or via channels other than this
+          website.
         </Text>
       </View>
     </LinearGradient>

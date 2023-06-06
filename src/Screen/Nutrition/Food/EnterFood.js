@@ -46,7 +46,7 @@ const EnterFood = ({navigation, route}) => {
   const GetFood = async () => {
     try {
       const result = await GetCreateFoodApi();
-      console.log(result, 'get the food');
+      // console.log(result, 'get the food');
       if (result.status == true) {
         setGetFoodData(result.result);
       } else {

@@ -239,7 +239,10 @@ const TypeOfTracker = ({navigation, route}) => {
         </View>
       </View>
       <View style={{flex: 0.3, marginTop: responsiveHeight(6)}}>
-        <View
+        <TouchableOpacity
+          onPress={() => {
+            setMeasureModel(!measureModel), setOpenRestartModel(true);
+          }}
           style={[
             CssStyle.flexJustify,
             {
@@ -254,13 +257,9 @@ const TypeOfTracker = ({navigation, route}) => {
           <Text style={{color: 'white'}}>
             {typeDate ? typeDate : 'Measures'}
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              setMeasureModel(!measureModel), setOpenRestartModel(true);
-            }}>
-            <Icon name="chevron-down-outline" size={25} color="white" />
-          </TouchableOpacity>
-        </View>
+          <Icon name="chevron-down-outline" size={25} color="white" />
+        </TouchableOpacity>
+        {/* </View> */}
         {/* {measureModel ? (
           <View style={[CssStyle.shadow, styles.modelOpenData]}>
             {measureType.map((item, index) => (

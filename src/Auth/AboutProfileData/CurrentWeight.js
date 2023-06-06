@@ -4,6 +4,7 @@ import {
   Image,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -23,12 +24,12 @@ const CurrentWeight = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
   console.log(item);
   const weightUnitData = [{text: 'gm'}, {text: 'kg'}];
-  const [weightData, setWeightData] = useState(null);
+  const [weightData, setWeightData] = useState('kg');
   const [loading, setLoading] = useState(false);
   const CustomLine = [{ie: 1}, {ie: 1}, {ie: 1}, {ie: 1}];
 
-  const [weightValue, setWeightValue] = useState(null);
-  console.log(weightValue);
+  const [weightValue, setWeightValue] = useState(10);
+  // console.log(weightValue);
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -147,9 +148,14 @@ const CurrentWeight = ({navigation, route}) => {
             <CustomButton
               loading={loading}
               onPress={() => {
-                navigation.navigate('CurrentHeight', {
-                  item: {item, weightData, weightValue},
-                });
+                weightData && weightValue
+                  ? navigation.navigate('CurrentHeight', {
+                      item: {item, weightData, weightValue},
+                    })
+                  : ToastAndroid.show(
+                      'Please select unit and value',
+                      ToastAndroid.SHORT,
+                    );
               }}
               activeOpacity={1}
               style={{width: responsiveWidth(78)}}

@@ -64,7 +64,7 @@ const Report = ({navigation}) => {
     {
       desc: 'workout',
       number: historyDataDate[0]
-        ? historyDataDate[0]?.total_week_calories_burned_by_user
+        ? historyDataDate[0]?.total_records_in_this_week
         : '0',
     },
   ];
@@ -256,7 +256,7 @@ const Report = ({navigation}) => {
   const GetWeeklyWeightDataReport = async () => {
     try {
       const result = await GetWeeklyWeightApi(id.id);
-      console.log(result,'sdhfs');
+      // console.log(result, 'sdhfs');
       if (result.status == true) {
         setGetWeeklyDataReport(result.result);
       } else {
@@ -273,16 +273,7 @@ const Report = ({navigation}) => {
       : getUserDetail.height / 3.281;
   const totalHeight = heightValue * heightValue;
   const totalBMI = getUserDetail && getUserDetail.weight / totalHeight;
-  // console.log(totalBMI, totalHeight, getUserDetail?.weight);
-  const dayDataActive = [
-    {day: 'Thu'},
-    {day: 'Fri'},
-    {day: 'Sat'},
-    {day: 'Sun'},
-    {day: 'Mon'},
-    {day: 'Tue'},
-    {day: 'Wed'},
-  ];
+
   // const findTrueDay = weeklyDaysTraining.filter(data =>
   //   data.exersise_done == true ? true : false,
   // );
@@ -304,7 +295,13 @@ const Report = ({navigation}) => {
     }
     return weekdays;
   };
+  const filteredArray = weeklyDaysTraining?.filter(
+    obj => typeof obj === 'object',
+  );
+  const findValue = filteredArray?.filter(data => data.exersise_done);
+  // console.log(findValue, 'hello sir');
 
+  // console.log(getNoOfDay?.first_day_of_week, 'data actuallay');
   const dataFromAPI =
     getNoOfDay?.first_day_of_week == 1
       ? 'Mon'
@@ -319,24 +316,8 @@ const Report = ({navigation}) => {
       : getNoOfDay?.first_day_of_week == 6
       ? 'Sat'
       : 'Sun';
-  // : 'Fri';
 
   const updatedWeekdays = getUpdatedWeekdayOrder(dataFromAPI);
-  // console.log(updatedWeekdays, 'outside of the code');
-  //  if (dataDays) {
-  //   const reorderedWeekdays = dataDays.map(weekday => {
-  //     const index = weekdays.indexOf(weekday);
-  //     return index !== 2 ? weekdays.splice(index, 1)[0] : null;
-  //   });
-
-  //   // Add any remaining weekdays in the original order
-  //   const remainingWeekdays = weekdays.length ? weekdays : [];
-
-  //   // Combine the reordered weekdays with any remaining weekdays
-  //   const finalWeekdays = [...reorderedWeekdays, ...remainingWeekdays];
-
-  //   console.log(finalWeekdays, 'hello'); // Updated weekday order
-  // }
 
   const getWeekFromDate = date => {
     const selectedDate = new Date(date.year, date.month - 1, date.day);
@@ -358,75 +339,13 @@ const Report = ({navigation}) => {
       days,
     };
   };
-  // const handleDayPress = day => {
-  // const createNotificationChannel = () => {
-  //   PushNotification.createChannel(
-  //     {
-  //       channelId: 'channel-id',
-  //       channelName: 'My channel', // (required)
-  //       channelDescription: 'A channel to categorise your notifications', // (optional) default: undefined.
-  //       playSound: true, // (optional) default: true
-  //       importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
-  //       vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
-  //     },
-  //     created => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
-  //   );
-  // };
 
-  // const handleDayPress = () => {
-  //   createNotificationChannel();
-  //   PushNotification.localNotification({
-  //     channelId: 'channel-id',
-  //     title: 'Reminder',
-  //     message: `message`, // (required)
-  //     // date: new Date(Date.now() + 2 * 1000),
-  //     allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
-  //     playSound: true,
-  //     vibrate: true,
-  //     /* Android Only Properties */
-  //     repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
-  //   });
-  // };
-  // const handleNotification = task_id => {
-  // PushNotification.createChannel(
-  //   {
-  //     channelId: 'my-jhjjhgjhk', // (required)
-  //     channelName: 'My kjhkj', // (required)
-  //   },
-  //   created => console.log(`CreateChannel returned '${created}'`),
-  // );
-  // PushNotification.localNotification('hy');
-
-  // pushLocalNotificationAndroid([{}], 'Hello');
-
-  // PushNotification.localNotificationSchedule({
-  //   title: 'Daily Task',
-  //   message: `messsage here.....`, // (required)
-  //   date: new Date(Date.now() + 2 * 1000),
-  //   // allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
-  //   // playSound: true,
-  //   // soundName: 'tick1.mp3',
-  //   // soundName: notification_sound,
-  //   // vibrate: true,
-  //   /* Android Only Properties */
-  //   // repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
-  // });
-  // };
-  // console.log(
-  //   moment(new Date(historyDataDate[0]?.week_start_date)).format('YYYY-MM-DD'),
-  //   new Date(historyDataDate[0]?.week_start_date)
-  //     .toLocaleDateString()
-  //     .replace(/[',']/g, '-'),
-  //   'alsdf as',
-  // );
   const findDay = weeklyDaysTraining?.filter(data => data.exersise_done);
-  // const findTrueDay =
-  //   weeklyDaysTraining && weeklyDaysTraining[index].day == index + 1;
   return loading ? (
     <Loader />
   ) : (
     <ScrollView
-      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
       <View
         style={{
@@ -545,7 +464,7 @@ const Report = ({navigation}) => {
                   <View
                     style={[
                       CssStyle.flexJustify,
-                      {width: responsiveWidth(35)},
+                      {width: responsiveWidth(39)},
                     ]}>
                     <Text
                       style={{
@@ -671,7 +590,9 @@ const Report = ({navigation}) => {
                   {getUserDetail.height
                     ? getUserDetail?.height
                     : 'Not available'}{' '}
-                  {getUserDetail?.height_unit}
+                  {getUserDetail?.height_unit
+                    ? getUserDetail?.height_unit
+                    : 'in'}
                 </Text>
                 <Text
                   style={[
@@ -905,7 +826,7 @@ const Report = ({navigation}) => {
                   ),
                 ).format('YYYY-MM-DD')]: {
                   selected: true,
-                  selectedColor: 'white',
+                  selectedColor: AppColors.buttonText,
                 },
                 [moment(
                   new Date(
@@ -915,7 +836,7 @@ const Report = ({navigation}) => {
                   ),
                 ).format('YYYY-MM-DD')]: {
                   selected: true,
-                  selectedColor: 'white',
+                  selectedColor: AppColors.buttonText,
                 },
                 [moment(
                   new Date(
@@ -925,7 +846,7 @@ const Report = ({navigation}) => {
                   ),
                 ).format('YYYY-MM-DD')]: {
                   selected: true,
-                  selectedColor: 'white',
+                  selectedColor: AppColors.buttonText,
                 },
                 [moment(
                   new Date(
@@ -935,7 +856,7 @@ const Report = ({navigation}) => {
                   ),
                 ).format('YYYY-MM-DD')]: {
                   selected: true,
-                  selectedColor: 'white',
+                  selectedColor: AppColors.buttonText,
                 },
                 [moment(
                   new Date(
@@ -945,7 +866,7 @@ const Report = ({navigation}) => {
                   ),
                 ).format('YYYY-MM-DD')]: {
                   selected: true,
-                  selectedColor: 'white',
+                  selectedColor: AppColors.buttonText,
                 },
                 [moment(
                   new Date(
@@ -955,7 +876,7 @@ const Report = ({navigation}) => {
                   ),
                 ).format('YYYY-MM-DD')]: {
                   selected: true,
-                  selectedColor: 'white',
+                  selectedColor: AppColors.buttonText,
                 },
                 [moment(
                   new Date(
@@ -965,7 +886,7 @@ const Report = ({navigation}) => {
                   ),
                 ).format('YYYY-MM-DD')]: {
                   selected: true,
-                  selectedColor: 'white',
+                  selectedColor: AppColors.buttonText,
                 },
                 [moment(new Date()).format('YYYY-MM-DD')]: {
                   selected: true,
@@ -997,8 +918,8 @@ const Report = ({navigation}) => {
             />
             <ScrollView horizontal={true}>
               <FlatList
-            showsVerticalScrollIndicator={false}
-            horizontal={false}
+                showsVerticalScrollIndicator={false}
+                horizontal={false}
                 data={historyDataDate}
                 renderItem={({item, index}) => {
                   return (
@@ -1092,9 +1013,12 @@ const Report = ({navigation}) => {
                           </View>
                         </View>
                       </View>
-                      <ScrollView horizontal={true}>
+                      <ScrollView
+                        showsHorizontalScrollIndicator={false}
+                        horizontal={true}>
                         <FlatList
                           data={item.records}
+                          showsVerticalScrollIndicator={false}
                           renderItem={({item, index}) => (
                             <TouchableOpacity
                               onPress={
@@ -1174,7 +1098,7 @@ const Report = ({navigation}) => {
                                         fontSize: 12,
                                         marginLeft: responsiveWidth(2),
                                       }}>
-                                      {item.workout_plan.calories_burnt} kcal
+                                      {item.calories_burned_by_user} kcal
                                     </Text>
                                   </View>
                                   <View style={[CssStyle.flexData]}>
@@ -1186,7 +1110,7 @@ const Report = ({navigation}) => {
                                         fontSize: 12,
                                         marginLeft: responsiveWidth(2),
                                       }}>
-                                      {item.workout_plan.time}
+                                      {item.time}
                                     </Text>
                                   </View>
                                 </View>

@@ -34,7 +34,7 @@ const Login = ({navigation}) => {
   const [data, setData] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
-  
+
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
@@ -124,6 +124,7 @@ const Login = ({navigation}) => {
               bgColor={'#ffffff60'}
               placeholder={'Email'}
               noIcon={true}
+              autoCapitalize="none"
               value={email}
               onChangeText={e => setEmail(e)}
               fontSize={15}
