@@ -78,7 +78,7 @@ const SetCalories = ({navigation, route}) => {
             item.item.item.item.item.item.planType.review,
             moment(new Date()).format('YYYY-MM-DD'),
           );
-      console.log(result, 'helo');
+      // console.log(result, 'helo');
       if (result.status == true) {
         setWeightData('');
         {

@@ -25,7 +25,6 @@ import assets from '../../assets';
 
 const MetricUnits = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
   const id = useSelector(data => data.id);
   const [loadingUser, setLoadingUser] = useState(false);
   const [openRestartModel, setOpenRestartModel] = useState(false);
@@ -57,7 +56,6 @@ const MetricUnits = ({navigation, route}) => {
         weightUnitData,
         heightUni,
       );
-      console.log(result);
       if (result.status == true) {
         setOpenModel(false);
         setOpenRestartModel(true);
@@ -73,7 +71,6 @@ const MetricUnits = ({navigation, route}) => {
       console.log(error);
     }
   };
-  console.log(heightUni, weightUnitData);
   return (
     <LinearGradient
       colors={['#0A1F58', '#0A1637']}

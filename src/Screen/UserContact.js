@@ -55,6 +55,7 @@ const UserContact = ({navigation}) => {
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [postFeedBack, setPostFeedBack] = useState(false);
   const id = useSelector(data => data.id);
+  const [loadingFeedback, setLoadingFeedback] = useState(false);
 
   const workOut = [
     {
@@ -373,7 +374,6 @@ const UserContact = ({navigation}) => {
       console.log(error);
     }
   };
-  const [loadingFeedback, setLoadingFeedback] = useState(false);
   const ShareFeedBack = async () => {
     setLoadingFeedback(true);
     try {

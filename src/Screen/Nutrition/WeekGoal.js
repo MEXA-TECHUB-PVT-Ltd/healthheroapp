@@ -28,15 +28,10 @@ import Input from '../../component/Input';
 
 const WeekGoal = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
-  console.log(item);
-  const weightUnitData = [{text: 'cm'}, {text: 'in'}];
-  const [weightData, setWeightData] = useState(null);
-  const flatNode = useRef();
   const [activeIndex, setActiveIndex] = useState('');
   const [loading, setLoading] = useState(false);
-  const [weightValue, setWeightValue] = useState(null);
   const [addWeeklyGoal, setAddWeeklyGoal] = useState(null);
-  console.log(weightValue);
+  // console.log(weightValue);
   const activeAgeData = [
     {item: '2.5 kg per week'},
     {item: '0.5 kg per week'},
@@ -44,7 +39,6 @@ const WeekGoal = ({navigation, route}) => {
     {item: '01 kg per week'},
     {item: 'other'},
   ];
-  console.log(activeIndex);
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>

@@ -27,14 +27,7 @@ import Ruler from '../../Helping/Ruler';
 
 const ActiveAge = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
-  console.log(item);
-  const weightUnitData = [{text: 'cm'}, {text: 'in'}];
-  const [weightData, setWeightData] = useState(null);
-  const flatNode = useRef();
   const [loading, setLoading] = useState(false);
-  const [weightValue, setWeightValue] = useState(null);
-  const [heightValue, setHeightValue] = useState(null);
-  console.log(weightValue);
   const [activeIndex, setActiveIndex] = useState(
     updateData ? updateData.activity_status : '',
   );

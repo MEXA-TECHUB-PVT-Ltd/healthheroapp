@@ -31,7 +31,7 @@ import moment from 'moment';
 
 const TypeOfTracker = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
+  // console.log(item);
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(item ? item.quantity : 12);
   const id = useSelector(data => data);

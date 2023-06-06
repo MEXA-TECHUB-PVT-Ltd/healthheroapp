@@ -34,8 +34,7 @@ import Loader from '../../component/Loader';
 
 const NutritionHeight = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
-  // console.log(updateData, item);
-  console.log(item, updateData);
+  // console.log(item, 'new changes');
   const weightUnitData = [{text: 'ft'}, {text: 'in'}];
   const [weightData, setWeightData] = useState(
     item?.height_unit ? item?.height_unit : 'in',
@@ -53,13 +52,13 @@ const NutritionHeight = ({navigation, route}) => {
     try {
       const result = await UpdateProfileApi(
         id.id,
-        updateDataChanges.user_name,
-        updateDataChanges.device_id,
-        updateDataChanges.gender,
-        updateDataChanges.focused_areas,
+        item?.user_name,
+        item?.device_id,
+        item?.gender,
+        item?.focused_areas,
         heightValue,
-        updateDataChanges.weight,
-        updateDataChanges.weight_unit,
+        item?.weight,
+        item?.weight_unit,
         weightData,
       );
       if (result.status == true) {
@@ -155,7 +154,7 @@ const NutritionHeight = ({navigation, route}) => {
               step={1}
               fractionDigits={0}
               initialValue={
-                updateData ? updateData.height : item ? item?.height : 3
+                updateData ? updateData.height : item?.height ? item?.height : 3
               }
               gapBetweenSteps={5}
               indicatorColor="#FF5100"

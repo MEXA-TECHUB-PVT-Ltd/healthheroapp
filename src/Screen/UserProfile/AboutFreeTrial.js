@@ -183,7 +183,7 @@ const AboutFreeTrial = ({navigation, route}) => {
                     marginTop: responsiveHeight(4),
                     textTransform: 'capitalize',
                   }}>
-                  Time Set Successfully
+                  Free trial subscribed Successfully
                 </Text>
 
                 <View style={[{alignItems: 'center'}]}>
