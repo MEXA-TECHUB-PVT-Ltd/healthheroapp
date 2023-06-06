@@ -29,9 +29,6 @@ import CustomButton from '../../component/CustomButton';
 import {BaseUrl} from '../../Helping/BaseUrl';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import {useSelector} from 'react-redux';
-import SwiperFlatList from 'react-native-swiper-flatlist';
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-import CircularProgress from 'react-native-circular-progress-indicator';
 import {StartWorkoutPlanApi} from '../../services/WorkoutPlan';
 import moment from 'moment';
 import {
@@ -40,15 +37,15 @@ import {
 } from '../../services/SevenFour';
 
 const GetExercise = ({navigation, route}) => {
-  const {item, itemIndex} = route.params ? route.params : '';
-  // console.log(item, 'item');
+  const {item, indexNumber, itemIndex} = route.params ? route.params : '';
+  console.log(item, indexNumber, 'item');
   // console.log(item, 'get exercise');
   const countdownRef = useRef();
   const dataRedux = useSelector(data => data.workoutPlanData);
   const [dataTakeFromRedux, setDataTakeFromRedux] = useState(
     dataRedux ? dataRedux : [],
   );
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(indexNumber ? indexNumber : 0);
   const [takeNumberOfCircle, setTakeNumberOfCircle] = useState('');
   const [openModel, setOpenModel] = useState(false);
 
@@ -72,6 +69,7 @@ const GetExercise = ({navigation, route}) => {
 
     return () => clearInterval(interval);
   }, [running]);
+
   const formatTime = time => {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
@@ -79,20 +77,19 @@ const GetExercise = ({navigation, route}) => {
 
     return `${padDigits(hours)}:${padDigits(minutes)}:${padDigits(seconds)}`;
   };
-  // console.log(dataTakeFromRedux[0]?.time);
-  // console.log(new Date(dataTakeFromRedux[0]?.time));
+
   const timeStr = dataTakeFromRedux[index]?.time;
   const timeObj = moment(timeStr, 'HH:mm:ss');
   const seconds =
     timeObj.hours() * 3600 + timeObj.minutes() * 60 + timeObj.seconds();
 
-  // console.log('Number of seconds:', seconds);
   const padDigits = number => {
     return number.toString().padStart(2, '0');
   };
   const id = useSelector(data => data.id);
   const workplanId = useSelector(data => data.workoutPlanId);
   const [loading, setLoading] = useState(false);
+
   const StartWorkoutForProgress = async () => {
     setLoading(true);
     try {
@@ -143,7 +140,7 @@ const GetExercise = ({navigation, route}) => {
   };
   useEffect(() => {
     const handleBackPress = () => {
-      setOpenModel(true);
+      setOpenModel(true), setCountQuit(10);
       return true;
     };
 
@@ -163,11 +160,13 @@ const GetExercise = ({navigation, route}) => {
   }, []);
   const [countQuit, setCountQuit] = useState(10);
   return (
-    <ScrollView style={[CssStyle.mainContainer, {}]}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={[CssStyle.mainContainer, {}]}>
       <ImageBackground
         style={{width: responsiveWidth(100), height: responsiveHeight(40)}}
         source={
-          dataTakeFromRedux[index]?.exercise_details
+          dataTakeFromRedux[index]?.exercise_details !== null
             ? {
                 uri: dataTakeFromRedux[index]?.exercise_details
                   ? `${BaseUrl}` +
@@ -194,7 +193,7 @@ const GetExercise = ({navigation, route}) => {
             flex: 1,
           }}>
           <Text style={[styles.signInText]}>
-            {dataTakeFromRedux[index]?.exercise_details
+            {dataTakeFromRedux[index]?.exercise_details !== null
               ? dataTakeFromRedux[index]?.exercise_details
                 ? dataTakeFromRedux[index]?.exercise_details[0]?.title
                 : dataTakeFromRedux[index]?.exersise_details?.title
@@ -280,7 +279,7 @@ const GetExercise = ({navigation, route}) => {
                         ? CompleteSevenByFour()
                         : StartWorkoutForProgress())
                     : (navigation.navigate('RestTime', {item: index}),
-                      setRunning(false));
+                      setRunning(true));
               }}>
               <Icon
                 name="chevron-forward-outline"
@@ -334,7 +333,7 @@ const GetExercise = ({navigation, route}) => {
                     {marginBottom: responsiveHeight(2)},
                   ]}>
                   <View style={{width: responsiveWidth(32)}}>
-                    {dataTakeFromRedux[index + 1]?.exercise_details ? (
+                    {dataTakeFromRedux[index + 1]?.exercise_details !== null ? (
                       <Image
                         source={{
                           uri: dataTakeFromRedux[index + 1]?.exercise_details
@@ -493,7 +492,9 @@ const GetExercise = ({navigation, route}) => {
                     buttonText={'Quit'}
                   />
                   <CustomButton
-                    onPress={() => setOpenModel(false)}
+                    onPress={() => {
+                      setOpenModel(false), setCountQuit(false);
+                    }}
                     activeOpacity={1}
                     style={{
                       width: responsiveWidth(38),

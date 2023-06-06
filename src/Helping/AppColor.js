@@ -1,5 +1,5 @@
 export const AppColors = {
   buttonText: '#FF5100',
-  text: '#FF844A',
+  text: '#00000080',
   blueColor:'#0B183C'
 };

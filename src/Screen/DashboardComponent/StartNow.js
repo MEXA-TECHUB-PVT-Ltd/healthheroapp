@@ -82,6 +82,7 @@ const StartNow = ({navigation, route}) => {
     ? GEtUserSevenFourRes[0]?.days_of_week?.length
     : GEtUserSevenFourRes[0]?.days_of_week?.length;
   const getDayId = GEtUserSevenFourRes?.length;
+  console.log(getDays, 'ids');
 
   useEffect(() => {
     var mount = true;
@@ -424,8 +425,11 @@ const StartNow = ({navigation, route}) => {
           <CustomButton
             onPress={() =>
               navigation.navigate('SevenFourWorkout', {
-                item: sevenByFourData[getDayId - 1 == 0 ? 1 : getDayId]
-                  ?.week_days[getDays == 7 ? 0 : getDays],
+                item: sevenByFourData[
+                  getDayId - 1 == -1 ? 0 : getDayId - 1 == 0 ? 1 : getDayId
+                ]?.week_days[
+                  getDays == undefined ? 0 : getDays == 7 ? 0 : getDays
+                ],
                 exercise_done: false,
                 upcomingData: true,
               })

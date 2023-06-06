@@ -15,6 +15,7 @@ import {useSelector} from 'react-redux';
 
 const ExerciseDetail = ({navigation, route}) => {
   const {item, focus} = route.params ? route.params : '';
+  console.log(item);
   const data = [{item: 1}, {item: 1}, {item: 1}, {item: 1}];
   const [activeIndex, setActiveIndex] = useState(0);
   const flatNode = useRef();
@@ -153,55 +154,54 @@ const ExerciseDetail = ({navigation, route}) => {
                 <Text style={[styles.signInText, {fontSize: 16}]}>
                   Focused Area
                 </Text>
-                <View
-                  style={[CssStyle.flexJustify, {width: responsiveWidth(90)}]}>
-                  {/* <Image
-                  //   resizeMode="contain"
-                  source={require('../../assets/Rectangle32.png')}
-                  borderRadius={responsiveWidth(2)}
-                  style={{
-                    width: responsiveWidth(42),
-                    height: responsiveHeight(13),
-                    marginVertical: responsiveHeight(2),
-                  }}
-                /> */}
-
-                  <View
-                    style={{
-                      width: responsiveWidth(42),
-                      height: responsiveHeight(13),
-                      marginVertical: responsiveHeight(2),
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      // borderWidth: 1,
-                      // borderColor: 'white',
-                    }}>
-                    <Text
+                <View style={[CssStyle.flexData, {width: responsiveWidth(90)}]}>
+                  {focus ? (
+                    focus.map((item, index) => (
+                      <View
+                        style={{
+                          marginVertical: responsiveHeight(2),
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          backgroundColor: '#FF510055',
+                          paddingVertical: responsiveHeight(0.9),
+                          paddingHorizontal: responsiveWidth(2),
+                          marginVertical: responsiveHeight(1),
+                          marginRight: responsiveWidth(4),
+                          borderRadius: responsiveWidth(10),
+                        }}>
+                        <Text
+                          style={{
+                            fontFamily: 'Interstate-regular',
+                            fontSize: 17,
+                            color: 'white',
+                          }}>
+                          {item}
+                        </Text>
+                      </View>
+                    ))
+                  ) : (
+                    <View
                       style={{
-                        fontFamily: 'Interstate-regular',
-                        fontSize: 17,
-                        color: 'white',
+                        marginVertical: responsiveHeight(2),
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: '#FF510055',
+                        paddingVertical: responsiveHeight(0.9),
+                        paddingHorizontal: responsiveWidth(2),
+                        marginVertical: responsiveHeight(1),
+                        marginRight: responsiveWidth(4),
+                        borderRadius: responsiveWidth(10),
                       }}>
-                      {focus ? focus[0] : 'no focus area'}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      width: responsiveWidth(42),
-                      height: responsiveHeight(13),
-                      marginVertical: responsiveHeight(2),
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text
-                      style={{
-                        fontFamily: 'Interstate-regular',
-                        fontSize: 17,
-                        color: 'white',
-                      }}>
-                      {focus ? focus[1] : 'no focus area'}
-                    </Text>
-                  </View>
+                      <Text
+                        style={{
+                          fontFamily: 'Interstate-regular',
+                          fontSize: 17,
+                          color: 'white',
+                        }}>
+                        Not Specified
+                      </Text>
+                    </View>
+                  )}
                 </View>
               </View>
             );

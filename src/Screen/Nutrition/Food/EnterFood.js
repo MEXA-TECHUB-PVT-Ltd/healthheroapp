@@ -26,7 +26,6 @@ import Lottie from 'lottie-react-native';
 import assets from '../../../assets';
 import {AddFoodUserApi} from '../../../services/DietPlan';
 import {GetCreateFoodApi, GetFoodApi} from '../../../services/FoodApi';
-import Moment from 'react-moment';
 import moment from 'moment';
 
 const EnterFood = ({navigation, route}) => {
@@ -200,7 +199,7 @@ const EnterFood = ({navigation, route}) => {
               <Icon name="add" size={23} color="black" />
               <Text
                 style={{
-                  color: AppColors.textColor,
+                  color: AppColors.text,
                   marginLeft: responsiveWidth(3),
                 }}>
                 Add Food
@@ -226,7 +225,7 @@ const EnterFood = ({navigation, route}) => {
                         }}>
                         <Text
                           style={{
-                            color: AppColors.textColor,
+                            color: AppColors.text,
                             marginLeft: responsiveWidth(3),
                           }}>
                           {item.food_name}
@@ -263,7 +262,7 @@ const EnterFood = ({navigation, route}) => {
                   }}>
                   <Text
                     style={{
-                      color: AppColors.textColor,
+                      color: AppColors.text,
                       marginLeft: responsiveWidth(3),
                     }}>
                     {item.item}

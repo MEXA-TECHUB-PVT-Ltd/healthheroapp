@@ -158,7 +158,7 @@ const StartExercise = ({navigation, route}) => {
           <View
             style={[CssStyle.flexData, {marginBottom: responsiveHeight(2)}]}>
             <View style={{width: responsiveWidth(29)}}>
-              {reduxData?.exercise_details ? (
+              {reduxData?.exercise_details !== null ? (
                 <Image
                   source={{
                     uri: `${BaseUrl}` + otherExercise_data?.animation,
@@ -187,7 +187,7 @@ const StartExercise = ({navigation, route}) => {
                   opacity: 0.8,
                   textTransform: 'capitalize',
                 }}>
-                {reduxData?.exercise_details
+                {reduxData?.exercise_details !== null
                   ? otherExercise_data?.title
                   : 'No title'}
               </Text>
@@ -201,7 +201,7 @@ const StartExercise = ({navigation, route}) => {
                   lineHeight: responsiveHeight(2),
                   height: responsiveHeight(2.7),
                 }}>
-                {reduxData?.exercise_details
+                {reduxData?.exercise_details !== null
                   ? otherExercise_data?.description
                   : 'no description'}
               </Text>
@@ -230,7 +230,10 @@ const StartExercise = ({navigation, route}) => {
           <View style={{alignItems: 'center', marginTop: responsiveHeight(4)}}>
             <CustomButton
               onPress={() =>
-                navigation.navigate('GetExercise', {item: 'StartExercise'})
+                navigation.navigate('GetExercise', {
+                  item: 'StartExercise',
+                  indexNumber: item,
+                })
               }
               activeOpacity={1}
               buttonColor={AppColors.buttonText}
