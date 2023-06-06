@@ -68,7 +68,10 @@ export const FlatListData = ({category, navigation}) => {
                     fontFamily: 'Interstate-regular',
                     marginTop: responsiveHeight(0.3),
                   }}>
-                  {item?.time?.slice(0, 8)} | {item.calories_burnt} k
+                  {item?.time?.length > 10
+                    ? item?.time?.slice(0, 10)
+                    : item?.time}
+                  | {item.calories_burnt} k
                 </Text>
               </TouchableOpacity>
             );

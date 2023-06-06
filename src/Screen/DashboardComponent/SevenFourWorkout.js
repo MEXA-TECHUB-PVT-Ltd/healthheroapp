@@ -32,8 +32,10 @@ import {
 import moment from 'moment';
 
 const SevenFourWorkout = ({navigation, route}) => {
-  const {item, exercise_done, upcomingData} = route.params ? route.params : '';
-  // console.log(upcomingData, 'sfsdf ');
+  const {item, exercise_done, imageBackground, upcomingData} = route.params
+    ? route.params
+    : '';
+  console.log(item, 'sfsdf ');
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -75,7 +77,11 @@ const SevenFourWorkout = ({navigation, route}) => {
     <View style={CssStyle.mainContainer}>
       <ImageBackground
         style={{width: responsiveWidth(100), height: responsiveHeight(30)}}
-        source={{uri: `${BaseUrl}` + item?.image}}>
+        source={
+          imageBackground
+            ? {uri: `${BaseUrl}` + imageBackground}
+            : require('../../assets/noImageRed.png')
+        }>
         <View
           style={[
             CssStyle.flexJustify,

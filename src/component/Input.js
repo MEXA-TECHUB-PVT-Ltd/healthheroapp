@@ -30,71 +30,73 @@ const Input = ({
   marginVertical,
   borderRadius,
   maxLength,
+  autoCapitalize,
 }) => {
   const [showIcon, setShowIcon] = useState(true);
   return (
-      <TextInput
-        keyboardType={keyboardType}
-        numberOfLines={numLine}
-        disabled={disabled}
-        multiline={multiline}
-        maxLength={maxLength}
-        cursorColor="white"
-        placeholder={placeholder}
-        value={value}
-        outlineStyle={{
-          borderRadius: borderRadius ? borderRadius : responsiveHeight(20),
-          borderColor: '#00000001',
-        }}
-        mode="outlined"
-        secureTextEntry={enableIcon && showIcon ? true : false}
-        onChangeText={onChangeText}
-        style={[
-          style,
-          {
-            backgroundColor: bgColor ? bgColor : '#232441',
-            marginVertical: marginVertical ? marginVertical : 5,
-            paddingVertical: paddingVertical ? paddingVertical : 0,
-            fontWeight: fontWeight ? fontWeight : '500',
-            // height: height ? height : responsiveHeight(6),
-            fontSize: fontSize ? fontSize : 11,
-            fontFamily: 'Roboto-bold',
-            letterSpacing: 0.4,
-            paddingLeft: responsiveWidth(1.4),
-          },
-        ]}
-        textColor="white"
-        placeholderTextColor={'white'}
-        left={
-          !noIcon && (
-            <TextInput.Icon
-              icon={() => <Icon name={leftIcon} size={23} color="white" />}
-            />
-          )
-        }
-        right={
-          rightIcon ? (
-            <TextInput.Icon
-              icon={() => (
-                <View style={{}}>
-                  <TouchableOpacity
-                    onPress={
-                      onPressRightIcon
-                        ? onPressRightIcon
-                        : () => setShowIcon(!showIcon)
-                    }>
-                    <Icon
-                      name={!showIcon ? offIcon : rightIcon}
-                      size={23}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
-            />
-          ) : null
-        }
-      />
+    <TextInput
+      keyboardType={keyboardType}
+      numberOfLines={numLine}
+      disabled={disabled}
+      multiline={multiline}
+      maxLength={maxLength}
+      cursorColor="white"
+      placeholder={placeholder}
+      value={value}
+      autoCapitalize={autoCapitalize}
+      outlineStyle={{
+        borderRadius: borderRadius ? borderRadius : responsiveHeight(20),
+        borderColor: '#00000001',
+      }}
+      mode="outlined"
+      secureTextEntry={enableIcon && showIcon ? true : false}
+      onChangeText={onChangeText}
+      style={[
+        style,
+        {
+          backgroundColor: bgColor ? bgColor : '#232441',
+          marginVertical: marginVertical ? marginVertical : 5,
+          paddingVertical: paddingVertical ? paddingVertical : 0,
+          fontWeight: fontWeight ? fontWeight : '500',
+          // height: height ? height : responsiveHeight(6),
+          fontSize: fontSize ? fontSize : 11,
+          fontFamily: 'Roboto-bold',
+          letterSpacing: 0.4,
+          paddingLeft: responsiveWidth(1.4),
+        },
+      ]}
+      textColor="white"
+      placeholderTextColor={'white'}
+      left={
+        !noIcon && (
+          <TextInput.Icon
+            icon={() => <Icon name={leftIcon} size={23} color="white" />}
+          />
+        )
+      }
+      right={
+        rightIcon ? (
+          <TextInput.Icon
+            icon={() => (
+              <View style={{}}>
+                <TouchableOpacity
+                  onPress={
+                    onPressRightIcon
+                      ? onPressRightIcon
+                      : () => setShowIcon(!showIcon)
+                  }>
+                  <Icon
+                    name={!showIcon ? offIcon : rightIcon}
+                    size={23}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        ) : null
+      }
+    />
   );
 };
 

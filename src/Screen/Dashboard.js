@@ -172,6 +172,7 @@ const Dashboard = ({navigation}) => {
     <Loader />
   ) : (
     <ScrollView
+      showsVerticalScrollIndicator={false}
       style={[
         CssStyle.mainContainer,
         {

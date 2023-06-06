@@ -45,12 +45,12 @@ const Discover = ({navigation}) => {
     {btn: 'Body Focus'},
   ];
 
-  const [selectItem, setSelect] = useState('Picks for you');
+  const [selectItem, setSelect] = useState(0);
   const [categoryIdIndex, setCategoryIdIndex] = useState('');
   const [workoutData, setWorkoutData] = useState([]);
 
   const ExerciseDay = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const result = await ExerciseOfTheDay();
       console.log(result,'sfsd');

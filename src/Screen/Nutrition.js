@@ -45,6 +45,7 @@ const Nutrition = ({navigation, route}) => {
   const [waterData, setWaterData] = useState('');
   const [getDailyRecordTracker, setGetDailyRecordTracker] = useState('');
   const [weeklyWaterData, setWeeklyWaterData] = useState('');
+
   const chartConfig = {
     backgroundGradientFrom: '#626377',
     backgroundGradientTo: '#626377',
@@ -85,7 +86,7 @@ const Nutrition = ({navigation, route}) => {
         const result = await GetFoodApi(id.id, id.dietPlanId);
         if (result) {
           // setLoading(false);
-          setFoodData(result.result.foodIntakesToday);
+          setFoodData(result.result);
         } else {
           setLoading(false);
           // navigation.navigate('SelectPlan');
@@ -162,6 +163,7 @@ const Nutrition = ({navigation, route}) => {
     };
   }, []);
   const [dietPlanData, setDietPlanData] = useState('');
+  const [dietPlanConsumption, setDietPlanConsumption] = useState('');
 
   useEffect(() => {
     id.dietPlanId ? GetDietPlan() : navigation.navigate('SelectPlan');
@@ -182,10 +184,11 @@ const Nutrition = ({navigation, route}) => {
       console.log(error);
     }
   };
+  console.log(foodData, 'hello');
   const Card = [
-    {desc: 'Protein', number: dietPlanData?.macros?.protein},
-    {desc: 'Sugar', number: dietPlanData?.macros?.sugar},
-    {desc: 'carb', number: dietPlanData?.macros?.carb},
+    {desc: 'Protein', number: foodData?.macrosTaken?.protein},
+    {desc: 'Fats', number: foodData?.macrosTaken?.fats},
+    {desc: 'carb', number: foodData?.macrosTaken?.carbs},
   ];
   const GetWaterTracking = async () => {
     setLoading(true);
@@ -211,9 +214,10 @@ const Nutrition = ({navigation, route}) => {
   const GetFoodRecord = async () => {
     try {
       const result = await GetFoodApi(id.id, id.dietPlanId);
+      // console.log(result.result, 'sdfj');
       if (result) {
         setLoading(false);
-        setFoodData(result.result?.foodIntakesToday);
+        setFoodData(result.result);
       } else {
         setLoading(false);
         // navigation.navigate('SelectPlan');
@@ -322,6 +326,7 @@ const Nutrition = ({navigation, route}) => {
         list.push(steps);
       });
       setChartData(list);
+      console.log(list, 'list description');
     } else {
     }
   };
@@ -361,7 +366,7 @@ const Nutrition = ({navigation, route}) => {
       if (result.status == true) {
         // setLoading(false);
         GetDailyWaterRecord();
-        GetWeeklyReport();
+        getHistoryOfWeek();
       } else {
         // setLoading(false);
         console.log('record error');
@@ -434,7 +439,7 @@ const Nutrition = ({navigation, route}) => {
                   fontFamily: 'Interstate-regular',
                   fontSize: 27,
                 }}>
-                {dietPlanData ? dietPlanData?.calories_needed_per_day : '2000'}{' '}
+                {dietPlanData ? dietPlanData?.calories_needed_per_day : '0'}{' '}
                 <Text style={{fontSize: 12}}>Kcal</Text>
               </Text>
               <View
@@ -509,7 +514,7 @@ const Nutrition = ({navigation, route}) => {
                 <Octicons name="diff-added" size={23} color={'white'} />
               </TouchableOpacity>
             </View>
-            {foodData?.map((item, index) => (
+            {foodData?.foodIntakesToday?.map((item, index) => (
               <TouchableOpacity
                 key={index}
                 onPress={() => {}}

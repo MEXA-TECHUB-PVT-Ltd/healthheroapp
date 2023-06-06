@@ -230,3 +230,21 @@ export const GetFoodApi = async (userId, planId) => {
     return error;
   }
 };
+export const GetDietPlanIDApi = async id => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrlDietPlan}getDietPlanOfUser/?user_id=${id}`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};

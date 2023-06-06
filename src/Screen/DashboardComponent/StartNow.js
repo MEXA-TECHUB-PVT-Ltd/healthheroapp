@@ -29,6 +29,7 @@ const StartNow = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
   // console.log(item, 'jhela ');
   const [sevenByFourData, setSevenByFourData] = useState([]);
+  const itemOfBackgroundImage = item ? item?.image : null;
   const [loading, setLoading] = useState(false);
   const id = useSelector(data => data.id);
   const [GEtUserSevenFourRes, setGetUserSevenFour] = useState([]);
@@ -60,6 +61,7 @@ const StartNow = ({navigation, route}) => {
     setLoading(true);
     try {
       const result = await GetSevenAll(item?.seven_by_four_challenge_id);
+      // console.log(result.result[0].weeks[1], 'afdsa');
       if (result.status == true) {
         setLoading(false);
         setSevenByFourData(result.result[0].weeks);
@@ -82,7 +84,6 @@ const StartNow = ({navigation, route}) => {
     ? GEtUserSevenFourRes[0]?.days_of_week?.length
     : GEtUserSevenFourRes[0]?.days_of_week?.length;
   const getDayId = GEtUserSevenFourRes?.length;
-  console.log(getDays, 'ids');
 
   useEffect(() => {
     var mount = true;
@@ -144,28 +145,52 @@ const StartNow = ({navigation, route}) => {
     {item: 6},
     {item: 7},
   ];
+  // console.log(
+  //   28 -
+  //     (GEtUserSevenFourRes[0]?.days_of_week?.length +
+  //       GEtUserSevenFourRes[1]?.days_of_week?.length +
+  //       GEtUserSevenFourRes[2]?.days_of_week?.length),
+  // );
   const totalPercentage = GEtUserSevenFourRes[3]?.days_of_week
     ? (28 -
-        GEtUserSevenFourRes[0]?.days_of_week?.length +
+        (GEtUserSevenFourRes[0]?.days_of_week?.length +
+          GEtUserSevenFourRes[1]?.days_of_week?.length +
+          GEtUserSevenFourRes[2]?.days_of_week?.length +
+          GEtUserSevenFourRes[3]?.days_of_week?.length)) *
+      3.57151
+    : GEtUserSevenFourRes[2]?.days_of_week
+    ? (28 -
+        (GEtUserSevenFourRes[0]?.days_of_week?.length +
+          GEtUserSevenFourRes[1]?.days_of_week?.length +
+          GEtUserSevenFourRes[2]?.days_of_week?.length)) *
+      3.57151
+    : GEtUserSevenFourRes[1]?.days_of_week
+    ? (28 -
+        (GEtUserSevenFourRes[0]?.days_of_week?.length +
+          GEtUserSevenFourRes[1]?.days_of_week?.length)) *
+      3.57151
+    : GEtUserSevenFourRes[0]?.days_of_week
+    ? (28 - GEtUserSevenFourRes[0]?.days_of_week?.length) * 3.57151
+    : 0;
+  const totalWidthLine = GEtUserSevenFourRes[3]?.days_of_week
+    ? (GEtUserSevenFourRes[0]?.days_of_week?.length +
         GEtUserSevenFourRes[1]?.days_of_week?.length +
         GEtUserSevenFourRes[2]?.days_of_week?.length +
         GEtUserSevenFourRes[3]?.days_of_week?.length) *
       3.57151
     : GEtUserSevenFourRes[2]?.days_of_week
-    ? (28 -
-        GEtUserSevenFourRes[0]?.days_of_week?.length +
+    ? (GEtUserSevenFourRes[0]?.days_of_week?.length +
         GEtUserSevenFourRes[1]?.days_of_week?.length +
         GEtUserSevenFourRes[2]?.days_of_week?.length) *
       3.57151
     : GEtUserSevenFourRes[1]?.days_of_week
-    ? (28 -
-        GEtUserSevenFourRes[0]?.days_of_week?.length +
+    ? (GEtUserSevenFourRes[0]?.days_of_week?.length +
         GEtUserSevenFourRes[1]?.days_of_week?.length) *
       3.57151
     : GEtUserSevenFourRes[0]?.days_of_week
-    ? (28 - GEtUserSevenFourRes[0]?.days_of_week?.length) * 3.57151
+    ? GEtUserSevenFourRes[0]?.days_of_week?.length * 3.57151
     : 0;
-
+  // console.log(totalWidthLine, 'wdith');
   const [selectIndex, setSelectIndex] = useState('');
   const [selectDataIndex, setSelectDataIndex] = useState('');
 
@@ -261,26 +286,7 @@ const StartNow = ({navigation, route}) => {
           }}>
           <View
             style={{
-              width: responsiveWidth(
-                3.2 * GEtUserSevenFourRes[3]?.week_days
-                  ? 28 -
-                      (GEtUserSevenFourRes[0]?.days_of_week?.length +
-                        GEtUserSevenFourRes[1]?.days_of_week?.length +
-                        GEtUserSevenFourRes[2]?.days_of_week?.length +
-                        GEtUserSevenFourRes[3]?.days_of_week?.length)
-                  : GEtUserSevenFourRes[2]?.days_of_week
-                  ? 28 -
-                    (GEtUserSevenFourRes[0]?.days_of_week?.length +
-                      GEtUserSevenFourRes[1]?.days_of_week?.length +
-                      GEtUserSevenFourRes[2]?.days_of_week?.length)
-                  : GEtUserSevenFourRes[1]?.days_of_week
-                  ? 28 -
-                    (GEtUserSevenFourRes[0]?.days_of_week?.length +
-                      GEtUserSevenFourRes[1]?.days_of_week?.length)
-                  : GEtUserSevenFourRes[0]?.days_of_week
-                  ? 28 - GEtUserSevenFourRes[0]?.days_of_week?.length
-                  : null,
-              ),
+              width: responsiveWidth(totalWidthLine.toFixed(0)),
               backgroundColor: AppColors.buttonText,
               borderRadius: responsiveWidth(20),
               height: responsiveHeight(0.9),
@@ -289,7 +295,7 @@ const StartNow = ({navigation, route}) => {
         </View>
         <View style={{flex: 1, paddingBottom: responsiveHeight(7)}}>
           <FlatList
-            data={[{item: 1}, {item: 2}, {item: 3}, {item: 4}]}
+            data={sevenByFourData}
             keyExtractor={item => item.item}
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => {
@@ -317,7 +323,7 @@ const StartNow = ({navigation, route}) => {
                         fontFamily: 'Interstate-bold',
                         fontSize: 16,
                       }}>
-                      Week {item.item}
+                      Week {item.week_no}
                     </Text>
                     <Text
                       style={{
@@ -362,6 +368,7 @@ const StartNow = ({navigation, route}) => {
                                       ? true
                                       : GEtUserSevenFourRes[index]
                                           ?.days_of_week[indexData - 1]?.day_id,
+                                  imageBackground: itemOfBackgroundImage,
                                 });
                               }}
                               style={{
@@ -369,7 +376,8 @@ const StartNow = ({navigation, route}) => {
                                 height: 29,
                                 borderRadius: responsiveHeight(30),
                                 backgroundColor:
-                                  GEtUserSevenFourRes && sevenByFourData
+                                  GEtUserSevenFourRes[index] &&
+                                  sevenByFourData[index]
                                     ? GEtUserSevenFourRes[index]?.days_of_week[
                                         indexData
                                       ]?.day_id ==
@@ -390,7 +398,8 @@ const StartNow = ({navigation, route}) => {
                               <View
                                 style={{
                                   backgroundColor:
-                                    GEtUserSevenFourRes && sevenByFourData
+                                    GEtUserSevenFourRes[index] &&
+                                    sevenByFourData[index]
                                       ? GEtUserSevenFourRes[index]
                                           ?.days_of_week[indexData]?.day_id ==
                                         sevenByFourData[index]?.week_days[
@@ -415,6 +424,19 @@ const StartNow = ({navigation, route}) => {
             }}
           />
         </View>
+        {console.log(
+          GEtUserSevenFourRes.length,
+          getDayId !== undefined
+            ? getDays > 6
+              ? getDayId
+              : getDayId - 1 == 0
+              ? 0
+              : getDayId - 1
+            : 0,
+          'between data',
+          getDays,
+          getDays == undefined ? 0 : getDays == 7 ? 0 : getDays,
+        )}
         <View
           style={{
             position: 'absolute',
@@ -426,12 +448,19 @@ const StartNow = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate('SevenFourWorkout', {
                 item: sevenByFourData[
-                  getDayId - 1 == -1 ? 0 : getDayId - 1 == 0 ? 1 : getDayId
+                  getDayId !== undefined
+                    ? getDays > 6
+                      ? getDayId
+                      : getDayId - 1 == 0
+                      ? 0
+                      : getDayId - 1
+                    : 0
                 ]?.week_days[
                   getDays == undefined ? 0 : getDays == 7 ? 0 : getDays
                 ],
                 exercise_done: false,
                 upcomingData: true,
+                imageBackground: item?.image,
               })
             }
             buttonText={'GO!'}

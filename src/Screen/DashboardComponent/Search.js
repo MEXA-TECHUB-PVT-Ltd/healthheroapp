@@ -196,7 +196,12 @@ const Search = ({navigation}) => {
                 data={getSearch}
                 showsVerticalScrollIndicator={false}
                 renderItem={({item, index}) => (
-                  <View
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('WorkoutDetail', {
+                        item: item.workout_plan_id,
+                      })
+                    }
                     style={[
                       CssStyle.flexJustify,
                       {
@@ -221,7 +226,7 @@ const Search = ({navigation}) => {
                         {item.workout_title}
                       </Text>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 )}
               />
             )}

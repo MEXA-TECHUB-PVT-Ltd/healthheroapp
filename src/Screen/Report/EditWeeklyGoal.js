@@ -14,6 +14,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
+  responsiveFontSize,
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
@@ -109,7 +110,10 @@ const EditWeeklyGoal = ({navigation, route}) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss(), setFoodModel(false);
+      }}>
       <LinearGradient
         colors={['#0A1F58', '#0A1637']}
         start={{x: 0, y: 0}}
@@ -131,7 +135,11 @@ const EditWeeklyGoal = ({navigation, route}) => {
           />
         </TouchableOpacity>
         <View style={{marginTop: responsiveHeight(3), flex: 0.5}}>
-          <Text style={[CssStyle.textInsideSettingComponent, {fontSize: 41}]}>
+          <Text
+            style={[
+              CssStyle.textInsideSettingComponent,
+              {fontSize: responsiveFontSize(5.4)},
+            ]}>
             Edit Weekly Goal
           </Text>
           <Text
@@ -140,7 +148,7 @@ const EditWeeklyGoal = ({navigation, route}) => {
               {
                 lineHeight: responsiveHeight(3),
                 paddingTop: responsiveHeight(1),
-                fontSize: 13,
+                fontSize: responsiveFontSize(1.6),
               },
             ]}>
             To accurately track your nutrition and provide personalized
@@ -200,10 +208,15 @@ const EditWeeklyGoal = ({navigation, route}) => {
                     }}
                     style={{
                       paddingVertical: responsiveHeight(1),
+                      backgroundColor:
+                        item.item == typeDateFood
+                          ? AppColors.buttonText
+                          : 'transparent',
                     }}>
                     <Text
                       style={{
-                        color: AppColors.text,
+                        color:
+                          item.item == typeDateFood ? 'white' : AppColors.text,
                         marginLeft: responsiveWidth(3),
                       }}>
                       {item.item}

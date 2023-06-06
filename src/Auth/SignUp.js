@@ -144,6 +144,7 @@ const SignUp = ({navigation}) => {
               bgColor={'#ffffff60'}
               placeholder={'Email'}
               noIcon={true}
+              autoCapitalize="none"
               value={email}
               onChangeText={e => {
                 setEmail(e), handleValidEmail(e);

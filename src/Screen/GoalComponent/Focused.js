@@ -65,7 +65,7 @@ const Focused = ({navigation, route}) => {
             buttonColor="transparent"
             colorText={'#FF6700'}
             borderColor="transparent"
-            onPress={() => navigation.navigate('WorkoutExercise')}
+            onPress={() => navigation.navigate('main')}
             mode="outlined"
             style={{marginRight: responsiveWidth(-3)}}
             styleText={{letterSpacing: 0.4}}
@@ -164,11 +164,7 @@ const Focused = ({navigation, route}) => {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={openModel}
-        onRequestClose={() => setOpenModel(false)}>
-        <TouchableWithoutFeedback
-          style={{flex: 1}}
-          onPress={() => setOpenModel(false)}>
+        visible={openModel}>
           <View style={{flex: 1, backgroundColor: '#00000060'}}>
             <View
               style={{
@@ -231,7 +227,6 @@ const Focused = ({navigation, route}) => {
               </View>
             </View>
           </View>
-        </TouchableWithoutFeedback>
       </Modal>
     </View>
   );
