@@ -22,7 +22,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from '../assets/icon1';
 import CustomButton from '../component/CustomButton';
 import {AppColors} from '../Helping/AppColor';
-import StepIndicator from 'react-native-step-indicator';
 
 const StartScreen = ({navigation}) => {
   const [activeIndex, setActiveIndex] = useState(0);

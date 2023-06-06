@@ -203,7 +203,7 @@ const EditWeeklyGoal = ({navigation, route}) => {
                     }}>
                     <Text
                       style={{
-                        color: AppColors.textColor,
+                        color: AppColors.text,
                         marginLeft: responsiveWidth(3),
                       }}>
                       {item.item}
