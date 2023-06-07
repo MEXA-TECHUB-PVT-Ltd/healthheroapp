@@ -19,25 +19,20 @@ import {
 } from 'react-native-responsive-dimensions';
 import {AppColors} from '../../Helping/AppColor';
 import Icon from 'react-native-vector-icons/Ionicons';
-import SwiperFlatList from 'react-native-swiper-flatlist';
-import {useFocusEffect} from '@react-navigation/native';
 import CustomButton from '../../component/CustomButton';
 import {RulerPicker} from 'react-native-ruler-picker';
-import Ruler from '../../Helping/Ruler';
-import {GetUserDetailApi, UpdateProfileApi} from '../../services/AuthScreen';
 import {useDispatch, useSelector} from 'react-redux';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
-import {
-  AddWeightWithoutProfileApi,
-  UpdateWeightWithoutProfileApi,
-} from '../../services/HeightApi';
+import {AddWeightWithoutProfileApi} from '../../services/HeightApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {WeightReviewId} from '../../store/action';
 
 const NutritionWeight = ({navigation, route}) => {
-  const {item, updateData} = route.params ? route.params : '';
-  // console.log(updateData);
+  const {item, updateData, userData, getUserDetail} = route.params
+    ? route.params
+    : '';
+  console.log(item, updateData, userData);
   const weightUnitData = [{text: 'gm'}, {text: 'kg'}];
   const [weightData, setWeightData] = useState('kg');
   const flatNode = useRef();
@@ -47,11 +42,21 @@ const NutritionWeight = ({navigation, route}) => {
       ? item[0]?.current_weight
       : updateData?.weight
       ? updateData?.weight
-      : 35,
+      : userData
+      ? userData?.weight
+      : getUserDetail
+      ? getUserDetail?.weight
+      : 22,
   );
 
   const [weightValue, setWeightValue] = useState(
-    item[0]?.current_weight ? item[0]?.current_weight : 38,
+    item[0]?.current_weight
+      ? item[0]?.current_weight
+      : userData
+      ? userData?.weight
+      : updateData
+      ? updateData?.weight
+      : 22,
   );
   // console.log(weightValue);
   const [loadingUser, setLoadingUser] = useState(false);
@@ -206,6 +211,7 @@ const NutritionWeight = ({navigation, route}) => {
                     : navigation.navigate('NutritionTargeted', {
                         item: {item, weightValue},
                         updateData,
+                        userData,
                       })
                   : ToastAndroid.show(
                       'Please select weight value',

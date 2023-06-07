@@ -56,9 +56,9 @@ const SetCalories = ({navigation, route}) => {
         ? await UpdateDietPlanApi(
             id.dietPlanId,
             id.id,
-            item.item.item.heightValue,
             item.item.item.item.item.weightValue,
             item.item.item.item.weightTargeted,
+            item.item.item.heightValue,
             item.item.item.item.item.item.age,
             item.item.item.item.item.item.addData,
             weightData,
@@ -68,9 +68,9 @@ const SetCalories = ({navigation, route}) => {
           )
         : await AddDietPlan(
             id.id,
-            item.item.item.heightValue,
             item.item.item.item.item.weightValue,
             item.item.item.item.weightTargeted,
+            item.item.item.heightValue,
             item.item.item.item.item.item.age,
             item.item.item.item.item.item.addData,
             weightData,

@@ -40,9 +40,11 @@ const Input = ({
       disabled={disabled}
       multiline={multiline}
       maxLength={maxLength}
+      selectionColor='white'
       cursorColor="white"
       placeholder={placeholder}
       value={value}
+      // theme={{colors: 'yellow'}}
       autoCapitalize={autoCapitalize}
       outlineStyle={{
         borderRadius: borderRadius ? borderRadius : responsiveHeight(20),

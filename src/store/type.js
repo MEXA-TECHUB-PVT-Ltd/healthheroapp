@@ -10,3 +10,4 @@ export const TimeTaken = 'TimeTaken';
 export const SevenByFourDayId = 'SevenByFourDayId';
 export const SevenByFourId = 'SevenByFourId';
 export const SevenByFourWeekId = 'SevenByFourWeekId';
+export const PlanDataExerciseID = 'PlanDataExerciseID';

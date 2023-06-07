@@ -23,17 +23,16 @@ import {useSelector} from 'react-redux';
 
 const CurrentHeight = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item.item.item.item);
-  const [addData, setAddData] = useState('male');
-  const [focusedArea, setFocusedArea] = useState('Arms');
-  const [dataArray, setDataArray] = useState([]);
+  // console.log(item.item.item.item);
   const CustomLine = [{ie: 1}, {ie: 1}, {ie: 1}, {ie: 1}];
 
   const heightUnitData = [{text: 'ft'}, {text: 'in'}];
-  const [heightData, setHeightData] = useState(null);
+  const [heightData, setHeightData] = useState('ft');
   const [loading, setLoading] = useState(false);
-  const [heightValue, setHeightValue] = useState(null);
+  const [heightValueItem, setHeightValue] = useState(5);
   const id = useSelector(data => data.id);
+  const [inchNumber, setInchNumber] = useState(0);
+
   const UpdateProfile = async () => {
     setLoading(true);
     try {
@@ -43,10 +42,10 @@ const CurrentHeight = ({navigation, route}) => {
         item?.item?.item?.item.itemResult.device_id,
         item.item.item.addData,
         [item.item.focusedData],
-        heightValue,
+        heightValueItem + '.' + inchNumber,
         item.weightValue,
         item.weightData,
-        heightData,
+        'ft',
       );
       console.log(result);
       if (result.status == true) {
@@ -61,6 +60,7 @@ const CurrentHeight = ({navigation, route}) => {
       setLoading(false);
     }
   };
+  const heightValue = heightValueItem + '.' + inchNumber;
   return (
     <View style={[CssStyle.mainContainer, {backgroundColor: '#0B183C'}]}>
       <View style={{flex: 1}}>
@@ -135,14 +135,27 @@ const CurrentHeight = ({navigation, route}) => {
                 />
               ))}
             </View>
+            <Text
+              style={{
+                alignSelf: 'center',
+                color: 'white',
+                fontSize: responsiveFontSize(5),
+                fontWeight: 'bold',
+                marginTop: responsiveHeight(7),
+                marginBottom: responsiveHeight(-10),
+                marginLeft: responsiveWidth(7),
+              }}>
+              {heightValue}
+              <Text style={{fontSize: 23}}> {'ft'}</Text>
+            </Text>
             <RulerPicker
               min={0}
-              max={210}
+              max={heightData == 'ft' ? 15 : 12}
               step={1}
               fractionDigits={0}
-              initialValue={0}
+              initialValue={10}
               decelerationRate={0.3}
-              gapBetweenSteps={5}
+              gapBetweenSteps={15}
               indicatorColor="#FF5100"
               longStepColor="#FF5100"
               indicatorHeight={75}
@@ -150,14 +163,21 @@ const CurrentHeight = ({navigation, route}) => {
               shortStepHeight={20}
               stepWidth={3}
               width={responsiveWidth(90)}
-              unitTextStyle={{color: 'white', fontSize: responsiveFontSize(2)}}
+              unitTextStyle={{
+                color: 'transparent',
+                fontSize: responsiveFontSize(2),
+              }}
               valueTextStyle={{
-                color: 'white',
+                color: 'transparent',
                 fontSize: responsiveFontSize(6),
               }}
               // onValueChange={number => console.log(number)}
               height={responsiveHeight(38)}
-              onValueChangeEnd={number => setHeightValue(number)}
+              onValueChange={number =>
+                heightData == 'ft'
+                  ? setHeightValue(number)
+                  : setInchNumber(number)
+              }
               unit={heightData}
             />
           </View>

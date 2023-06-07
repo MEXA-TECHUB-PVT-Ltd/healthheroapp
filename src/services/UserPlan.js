@@ -13,7 +13,7 @@ export const GetPlanApi = async id => {
       },
     };
     const response = await fetch(
-      `${BaseUrlPlan}getAllUserPlans?user_id=${id}&page=1&limit=20
+      `${BaseUrlPlan}getAllUserPlans?user_id=${id}&page=1&limit=50
           `,
       requestOptions,
     );
@@ -55,15 +55,15 @@ export const CreatePlanApi = async (
     return error;
   }
 };
-export const AddExercise = async (id, exercise, planId) => {
-  console.log(id, exercise, planId);
+export const AddExercise = async (id, workout_plan_id, array) => {
+  console.log(id, workout_plan_id, array);
   try {
     const requestOptions = {
       method: 'PUT',
       body: JSON.stringify({
         user_id: id,
-        exersise_id: exercise,
-        plan_id: planId,
+        workout_plan_id: workout_plan_id,
+        array: array,
       }).toString(),
       headers: {
         'Content-Type': 'application/json',
@@ -79,4 +79,3 @@ export const AddExercise = async (id, exercise, planId) => {
     return error;
   }
 };
-

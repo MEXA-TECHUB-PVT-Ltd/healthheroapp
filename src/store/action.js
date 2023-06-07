@@ -2,6 +2,7 @@ import {
   Addition,
   DietPlanId,
   EXERCISE,
+  PlanDataExerciseID,
   SevenByFourDayId,
   SevenByFourId,
   SevenByFourWeekId,
@@ -48,4 +49,8 @@ export const SevenByFourWeek = id => {
 };
 export const SevenByFourDay = id => {
   return {type: SevenByFourDayId, ExId: id};
+};
+
+export const PlanDataExercise = id => {
+  return {type: PlanDataExerciseID, ExId: id};
 };

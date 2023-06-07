@@ -17,7 +17,7 @@ import {GetDietPlanIDApi} from '../services/DietPlan';
 const MainApplication = () => {
   const [data, setData] = useState('');
   const dispatch = useDispatch();
-  const dataId = useSelector(data => console.log(data, 'redux'));
+  // const dataId = useSelector(data => console.log(data, 'redux'));
   const Storage = async () => {
     const result = await AsyncStorage.getItem('userID');
     const dietPlanId = await AsyncStorage.getItem('DietPlanId');
@@ -39,7 +39,7 @@ const MainApplication = () => {
   const getDietPlanId = async id => {
     try {
       const result = await GetDietPlanIDApi(id);
-      console.log(result.result.fetched_record.diet_plan_id, 'get plan id');
+      // console.log(result.result.fetched_record.diet_plan_id, 'get plan id');
       if (result.status == true) {
         await AsyncStorage.setItem(
           'DietPlanId',

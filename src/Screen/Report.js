@@ -208,6 +208,7 @@ const Report = ({navigation}) => {
   const GetHistoryData = async () => {
     try {
       const result = await GetWeeklyReport(id.id);
+      console.log(result, 'ehllo ');
       if (result.status == true) {
         setHistoryDataDate(result.result);
       } else {
@@ -505,9 +506,9 @@ const Report = ({navigation}) => {
                         color: 'white',
                         marginRight: responsiveWidth(2),
                       }}>
-                      {weeklyDaysTraining ? 'Edit' : ' Add'}
+                      {getNoOfDay ? 'Edit' : ' Add'}
                     </Text>
-                    {weeklyDaysTraining ? (
+                    {getNoOfDay ? (
                       <Image
                         resizeMode="contain"
                         style={{width: 13, height: 13}}
@@ -639,6 +640,7 @@ const Report = ({navigation}) => {
                           getWeeklyDataReport.length > 0
                             ? getWeeklyDataReport
                             : 'Update',
+                        getUserDetail,
                       })
                     }>
                     <Image
@@ -656,6 +658,8 @@ const Report = ({navigation}) => {
                 ]}>
                 {getWeeklyDataReport[0]?.current_weight
                   ? getWeeklyDataReport[0]?.current_weight
+                  : getUserDetail?.weight
+                  ? getUserDetail?.weight
                   : 'Not Available'}{' '}
                 {getUserDetail?.weight_unit}
               </Text>
@@ -667,6 +671,8 @@ const Report = ({navigation}) => {
                   height={responsiveHeight(28)}
                   showBarTops={false}
                   bezier
+                  fromZero={true}
+                  fromNumber={90}
                   withInnerLines={false}
                   chartConfig={chartConfig}
                   style={{

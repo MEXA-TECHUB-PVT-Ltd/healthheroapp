@@ -26,17 +26,16 @@ import {RulerPicker} from 'react-native-ruler-picker';
 import Ruler from '../../Helping/Ruler';
 
 const NutritionTargeted = ({navigation, route}) => {
-  const {item, updateData} = route.params ? route.params : '';
-  console.log(item);
+  const {item, updateData, userData} = route.params ? route.params : '';
+  // console.log(item);
   const weightUnitData = [{text: 'gm'}, {text: 'kg'}];
-  const [weightData, setWeightData] = useState('gm');
-  const flatNode = useRef();
+  const [weightData, setWeightData] = useState('kg');
   const [activeIndex, setActiveIndex] = useState(
-    updateData ? updateData?.targetted_weight : 36,
+    updateData ? updateData?.targetted_weight : 25,
   );
   const [loading, setLoading] = useState(false);
-  const [weightTargeted, setWeightTargeted] = useState(36);
-  const [heightValue, setHeightValue] = useState(null);
+  const [weightTargeted, setWeightTargeted] = useState(25);
+  console.log(weightTargeted, 'fsadlfk');
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -155,6 +154,7 @@ const NutritionTargeted = ({navigation, route}) => {
                   ? navigation.navigate('NutritionHeight', {
                       item: {item, weightTargeted},
                       updateData,
+                      userData,
                     })
                   : ToastAndroid.show(
                       'Select the targeted weight',

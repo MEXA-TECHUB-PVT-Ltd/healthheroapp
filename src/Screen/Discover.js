@@ -20,10 +20,15 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Logo from '../assets/Icon3';
 import NoImage from '../assets/noImageRed';
 import Loader from '../component/Loader';
-import {ExerciseOfTheDay, GetWorkoutById} from '../services/WorkoutPlan';
+import {
+  ExerciseOfTheDay,
+  GetAllWorkoutPlanAPI,
+  GetWorkoutById,
+} from '../services/WorkoutPlan';
 import {GetAllCategories} from '../services/WorkoutCategory';
 import {BaseUrl} from '../Helping/BaseUrl';
 import {FlatListData} from '../Helping/FlatListData';
+import moment from 'moment';
 
 const Discover = ({navigation}) => {
   const advance = [{item: 1}, {item: 2}, {item: 3}];
@@ -32,28 +37,18 @@ const Discover = ({navigation}) => {
   const [category, setCategory] = useState('');
 
   useEffect(() => {
-    ExerciseDay();
+    GetAllWorkout();
     GetCategory();
   }, []);
-  const buttonMapData = [
-    {btn: 'Picks for you'},
-    {btn: 'Quarantine workout'},
-    {btn: 'For Beginners'},
-    {btn: 'Fast Workouts'},
-    {btn: 'With Equipment'},
-    {btn: 'Sleep'},
-    {btn: 'Body Focus'},
-  ];
-
   const [selectItem, setSelect] = useState(0);
   const [categoryIdIndex, setCategoryIdIndex] = useState('');
   const [workoutData, setWorkoutData] = useState([]);
 
-  const ExerciseDay = async () => {
+  const GetAllWorkout = async () => {
     // setLoading(true);
     try {
-      const result = await ExerciseOfTheDay();
-      console.log(result,'sfsd');
+      const result = await GetAllWorkoutPlanAPI();
+      // console.log(result, 'sfsd');
       if (result.status == true) {
         setExerciseData(result.result);
         setLoading(false);
@@ -66,7 +61,7 @@ const Discover = ({navigation}) => {
       console.log(error);
     }
   };
-
+  const indexNumberGet = 3;
   useEffect(() => {
     WorkoutPlan();
   }, [categoryIdIndex]);
@@ -105,7 +100,7 @@ const Discover = ({navigation}) => {
       console.log(error);
     }
   };
-  
+
   return loading ? (
     <Loader />
   ) : (
@@ -225,20 +220,12 @@ const Discover = ({navigation}) => {
                   // width: responsiveWidth(34),
                   flexWrap: 'wrap',
                   // lineHeight: responsiveHeight(4.4),
-                  textAlign: 'center',
+                  // textAlign: 'center',
                 }}>
                 {exerciseData
-                  ? exerciseData?.title?.slice(0, 22)
+                  ? exerciseData[indexNumberGet]?.workout_title?.slice(0, 22)
                   : 'Exercise Name'}
               </Text>
-              {/* <Text
-              style={{
-                color: 'white',
-                fontFamily: 'Interstate-bold',
-                fontSize: 27,
-              }}>
-              Name
-            </Text> */}
               <Text
                 style={{
                   color: 'white',
@@ -247,7 +234,7 @@ const Discover = ({navigation}) => {
                   lineHeight: responsiveHeight(2.5),
                   marginVertical: responsiveHeight(1),
                 }}>
-                {exerciseData?.description?.slice(0, 33)}
+                No description
               </Text>
               <View
                 style={[
@@ -262,7 +249,10 @@ const Discover = ({navigation}) => {
                     fontSize: 12,
                     marginLeft: responsiveWidth(2),
                   }}>
-                  400 kcal
+                  {exerciseData[indexNumberGet]?.calories_burnt
+                    ? exerciseData[indexNumberGet]?.calories_burnt
+                    : '0'}{' '}
+                  kcal
                 </Text>
               </View>
               <View
@@ -280,14 +270,18 @@ const Discover = ({navigation}) => {
                     marginLeft: responsiveWidth(2),
                     fontSize: 12,
                   }}>
-                  45 min
+                  {exerciseData[indexNumberGet]?.time
+                    ? moment(exerciseData[indexNumberGet]?.time).format(
+                        'hh:mm:ss',
+                      )
+                    : '0 sec'}
                 </Text>
               </View>
               <TouchableOpacity
                 onPress={() =>
                   exerciseData
                     ? navigation.navigate('WorkoutDetail', {
-                        // item: item.workout_plan_id,
+                        item: exerciseData[indexNumberGet].workout_plan_id,
                       })
                     : ToastAndroid.show(
                         'No Exercise of the day available',

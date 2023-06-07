@@ -27,6 +27,7 @@ import Ruler from '../../Helping/Ruler';
 
 const ActiveAge = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
+  console.log(item);
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(
     updateData ? updateData.activity_status : '',

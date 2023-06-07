@@ -42,7 +42,7 @@ const StartScreen = ({navigation}) => {
     },
     {
       image: require('../assets/third.png'),
-      headerText: 'Get healthy workout plans',
+      headerText: 'Get Diet & nutrition plans',
       description:
         'Track your strength gains, identify areas for improv- ement, and challenge yourself to reach new milestones',
       color: 'blue',

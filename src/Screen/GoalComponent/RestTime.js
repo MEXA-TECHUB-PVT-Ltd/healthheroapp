@@ -153,9 +153,11 @@ const RestTime = ({navigation, route}) => {
                     fontFamily: 'Interstate-regular',
                     opacity: 0.8,
                   }}>
-                  {dataTakeFromRedux[item + 1]?.exercise_details
-                    ? dataTakeFromRedux[item + 1]?.exercise_details[0]?.title
-                    : dataTakeFromRedux[item + 1]?.exersise_details?.title}
+                  {dataTakeFromRedux[item + 1]?.exersise_details !== null
+                    ? dataTakeFromRedux[item + 1]?.exercise_details
+                      ? dataTakeFromRedux[item + 1]?.exercise_details[0]?.title
+                      : dataTakeFromRedux[item + 1]?.exersise_details?.title
+                    : 'No title'}
                 </Text>
                 <Text
                   style={{
@@ -166,13 +168,15 @@ const RestTime = ({navigation, route}) => {
                     opacity: 0.5,
                     lineHeight: responsiveHeight(2),
                   }}>
-                  {dataTakeFromRedux[item + 1]?.exercise_details
-                    ? dataTakeFromRedux[
-                        item + 1
-                      ]?.exercise_details[0]?.description.slice(0, 72)
-                    : dataTakeFromRedux[
-                        item + 1
-                      ]?.exersise_details?.description?.slice(0, 72)}
+                  {dataTakeFromRedux[item + 1]?.exersise_details !== null
+                    ? dataTakeFromRedux[item + 1]?.exercise_details
+                      ? dataTakeFromRedux[
+                          item + 1
+                        ]?.exercise_details[0]?.description.slice(0, 72)
+                      : dataTakeFromRedux[
+                          item + 1
+                        ]?.exersise_details?.description?.slice(0, 72)
+                    : 'NO description'}
                   {/* {dataTakeFromRedux[item + 1]?.exersise_details?.description
                     ?.length > 71 && (
                     <Text
@@ -204,7 +208,9 @@ const RestTime = ({navigation, route}) => {
                         marginLeft: responsiveWidth(2),
                         opacity: 0.5,
                       }}>
-                      {dataTakeFromRedux[item + 1]?.time}
+                      {dataTakeFromRedux[item + 1]?.time !== null
+                        ? dataTakeFromRedux[item + 1]?.time
+                        : '0'}
                     </Text>
                   </View>
                 </View>

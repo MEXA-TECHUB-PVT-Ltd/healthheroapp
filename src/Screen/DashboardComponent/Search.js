@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Keyboard,
   StatusBar,
   StyleSheet,
   Text,
@@ -185,8 +186,7 @@ const Search = ({navigation}) => {
               rightIcon="search"
               offIcon={'search'}
               onPressRightIcon={() => {
-                dataArray.push({searchItem: search}), setSearch('');
-                setDataArray([...dataArray]);
+                Keyboard.dismiss();
               }}
               value={search}
               onChangeText={e => setSearch(e)}
