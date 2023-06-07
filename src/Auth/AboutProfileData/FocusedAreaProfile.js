@@ -35,7 +35,7 @@ const FocusedAreaProfile = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [weightValue, setWeightValue] = useState(null);
   const [heightValue, setHeightValue] = useState(null);
-  const [focusedData, setFocusedData] = useState('');
+  const [focusedData, setFocusedData] = useState('Full Body');
   const CustomLine = [{ie: 1}, {ie: 1}, {ie: 1}, {ie: 1}];
 
   const UpdateProfile = async () => {
@@ -50,7 +50,7 @@ const FocusedAreaProfile = ({navigation, route}) => {
         heightValue,
         weightValue,
       );
-      console.log(result, 'data');
+      // console.log(result, 'data');
       if (result.status == true) {
         setLoading(false);
         navigation.navigate('main');
@@ -146,7 +146,7 @@ const FocusedAreaProfile = ({navigation, route}) => {
           <View style={[CssStyle.flexData, {}]}>
             <View>
               {focusedAreaCollection.map((item, index) => (
-                <TouchableOpacity
+                <TouchableOpacity key={index}
                   onPress={() => setFocusedData(item.text)}
                   style={[
                     {

@@ -32,9 +32,12 @@ import {
 import {GetSevenFourApi} from '../services/SevenFour';
 import {BaseUrl} from '../Helping/BaseUrl';
 import {GetUserDetailApi} from '../services/AuthScreen';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Loader from '../component/Loader';
 import Geolocation from '@react-native-community/geolocation';
+import {GetDietPlanIDApi} from '../services/DietPlan';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Diet_Id} from '../store/action';
 
 const Dashboard = ({navigation}) => {
   useFocusEffect(
@@ -108,6 +111,24 @@ const Dashboard = ({navigation}) => {
       console.log(error);
     }
   };
+  const dispatch = useDispatch();
+  const getDietPlanId = async () => {
+    try {
+      const result = await GetDietPlanIDApi(id);
+      // console.log(result, 'get plan id');
+      if (result.status == true) {
+        await AsyncStorage.setItem(
+          'DietPlanId',
+          `${result.result.fetched_record.diet_plan_id}`,
+        );
+        dispatch(Diet_Id(result.result.fetched_record.diet_plan_id));
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const AdvanceApi = async () => {
     try {
       const result = await GetAdvance();
@@ -163,6 +184,7 @@ const Dashboard = ({navigation}) => {
     BeginnerApi();
     AdvanceApi();
     GetSevenByFour();
+    getDietPlanId();
     IntermediateApi();
   }, []);
   useEffect(() => {

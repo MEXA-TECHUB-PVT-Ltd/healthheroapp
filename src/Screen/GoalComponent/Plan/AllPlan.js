@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   FlatList,
   Image,
   Modal,
@@ -25,23 +26,20 @@ import {AddExercise, GetPlanApi} from '../../../services/UserPlan';
 import {useDispatch, useSelector} from 'react-redux';
 import Loader from '../../../component/Loader';
 import {GetExerciseID} from '../../../services/WorkoutPlan';
-import {ExerCise} from '../../../store/action';
+import {ExerCise, PlanDataExercise} from '../../../store/action';
 
 const AllPlan = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  const ExerciseIdParam = item && item?.exersise_details?.exersise_id;
-  // console.log(ExerciseIdParam, 'je ');
+  const ExerciseIdParam = useSelector(data => data.PlanDataExerciseID);
+  // console.log(ExerciseIdParam?.exersise_id);
   const [selectItem, setSelectItem] = useState('');
-  const dataPlan = [
-    {indoor: 'Beginner', lesson: 'Exercises', text: 'hello'},
-    {indoor: 'Indoor', lesson: 'lessons', text: 'sarkar'},
-    {indoor: 'Indoor', lesson: 'lessons', text: 'laro'},
-  ];
+  // const dataPlanREdux = useSelector(data =>
+  //   console.log(data.PlanDataExerciseID, 'plan redux'),
+  // );
   const [openModel, setOpenModel] = useState(false);
   const data = useSelector(data => data.id);
   const [planData, setPlanData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [addToExerciseData, setAddToExerciseData] = useState('');
   const GetPlan = async () => {
     setLoading(true);
     try {
@@ -59,37 +57,30 @@ const AllPlan = ({navigation, route}) => {
       console.log(error);
     }
   };
+  const itemData = [
+    {
+      exersise_id: !ExerciseIdParam?.SevenByFourChallenge_week_day_exercise_id
+        ? ExerciseIdParam?.exersise_details?.exersise_id
+        : ExerciseIdParam?.exersise_id,
+      time: ExerciseIdParam?.time,
+      reps: ExerciseIdParam?.reps,
+    },
+  ];
   const dispatch = useDispatch();
-  // const [exerciseId, setExerciseId] = useState('');
-  // const GetExerciseId = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const result = await GetExerciseID();
-  //     // console.log(result.result[0], 'get exercise id');
-  //     if (result.status == true) {
-  //       setExerciseId(result.result);
-  //       setLoading(false);
-  //     } else {
-  //       console.error(result.message);
-  //       setLoading(false);
-  //     }
-  //   } catch (error) {
-  //     setLoading;
-  //     console.log(error);
-  //   }
-  // };
-  const AddToExercise = async (data, item, itemData) => {
-    // console.log(data, item, itemData);
+  const AddToExercise = async () => {
     setLoading(true);
-    // console.log(data, ExerciseIdParam, itemData);
     try {
-      const result = await AddExercise(data, ExerciseIdParam, itemData);
+      const result = await AddExercise(data, indexNumber, itemData);
       console.log(result, 'add to exercise in plan');
       if (result.status == true) {
         setOpenModel(true);
         setLoading(false);
       } else {
         console.error(result.message);
+        ToastAndroid.show(
+          'This exercise already added to this plan',
+          ToastAndroid.SHORT,
+        );
         setLoading(false);
       }
     } catch (error) {
@@ -126,6 +117,28 @@ const AllPlan = ({navigation, route}) => {
       mount = false;
     };
   }, []);
+  useEffect(() => {
+    const handleBackPress = () => {
+      navigation.goBack();
+      dispatch(PlanDataExercise(null));
+      return true;
+    };
+
+    const addBackPressListener = () => {
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    };
+
+    const removeBackPressListener = () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+
+    addBackPressListener();
+
+    return () => {
+      removeBackPressListener();
+    };
+  }, []);
+  const [indexNumber, setTakeIndex] = useState(0);
   return loading ? (
     <Loader />
   ) : (
@@ -138,7 +151,9 @@ const AllPlan = ({navigation, route}) => {
             style={{
               marginLeft: responsiveWidth(0),
             }}
-            onPress={() => navigation.goBack()}>
+            onPress={() => {
+              navigation.goBack(), dispatch(PlanDataExercise(null));
+            }}>
             <Icon name="chevron-back-outline" size={28} color={'white'} />
           </TouchableOpacity>
           <Text
@@ -155,25 +170,27 @@ const AllPlan = ({navigation, route}) => {
             <Octicons name="diff-added" size={23} color={'white'} />
           </TouchableOpacity>
         </View>
-        <View style={{marginTop: responsiveHeight(6), flex: 1}}>
+        <View
+          style={{
+            marginTop: responsiveHeight(6),
+            flex: 1,
+            paddingBottom: responsiveHeight(8),
+          }}>
           {planData.length > 0 ? (
             <FlatList
               data={planData}
+              showsVerticalScrollIndicator={false}
+              // inverted={true}
               renderItem={({item, index}) => {
-                // console.log(item, 'plan id');
                 return (
                   <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => {
-                      ExerciseIdParam
-                        ? AddToExercise(
-                            data,
-                            ExerciseIdParam,
-                            item.workout_plan_id,
-                          )
-                        : navigation.navigate('WorkoutDetail', {
+                      !ExerciseIdParam
+                        ? navigation.navigate('WorkoutDetail', {
                             item: item,
-                          });
+                          })
+                        : setTakeIndex(item.workout_plan_id);
                     }}
                     style={[
                       CssStyle.flexData,
@@ -181,7 +198,7 @@ const AllPlan = ({navigation, route}) => {
                         marginBottom: responsiveHeight(1.9),
                         borderWidth: 1,
                         borderColor:
-                          selectItem == item.plan_name
+                          indexNumber == item.workout_plan_id
                             ? AppColors.buttonText
                             : '#00000022',
                         borderRadius: 12,
@@ -301,34 +318,32 @@ const AllPlan = ({navigation, route}) => {
             </View>
           )}
         </View>
-        {/* <View
-          style={{
-            position: 'absolute',
-            top: responsiveHeight(90),
-            left: responsiveWidth(10),
-          }}>
-          <CustomButton
-            onPress={() =>
-              selectItem
-                ? AddToExercise()
-                : ToastAndroid.show(
-                    'Please select one option',
-                    ToastAndroid.SHORT,
-                  )
-            }
-            activeOpacity={1}
-            buttonColor={AppColors.buttonText}
-            paddingVertical={2}
-            style={{width: responsiveWidth(80)}}
-            buttonText={'Add Exercise'}
-          />
-        </View> */}
+        {ExerciseIdParam && (
+          <View
+            style={{
+              position: 'absolute',
+              top: responsiveHeight(90),
+              left: responsiveWidth(10),
+            }}>
+            <CustomButton
+              onPress={() =>
+                indexNumber
+                  ? AddToExercise()
+                  : ToastAndroid.show(
+                      'Please select one option',
+                      ToastAndroid.SHORT,
+                    )
+              }
+              activeOpacity={1}
+              buttonColor={AppColors.buttonText}
+              paddingVertical={2}
+              style={{width: responsiveWidth(80)}}
+              buttonText={'Add Exercise'}
+            />
+          </View>
+        )}
       </View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={openModel}
-        onRequestClose={() => setOpenModel(false)}>
+      <Modal animationType="slide" transparent={true} visible={openModel}>
         <View style={{flex: 1, backgroundColor: '#00000060'}}>
           <View
             style={{
@@ -378,7 +393,9 @@ const AllPlan = ({navigation, route}) => {
               <CustomButton
                 buttonText={'Go Back'}
                 onPress={() => {
-                  setOpenModel(false), navigation.goBack();
+                  setOpenModel(false),
+                    navigation.goBack(),
+                    dispatch(PlanDataExercise(null));
                 }}
                 buttonColor={'transparent'}
                 mode="outlined"

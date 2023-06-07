@@ -50,14 +50,16 @@ const EditWeeklyGoal = ({navigation, route}) => {
     {item: 'Sat', id: 6},
     {item: 'Sun', id: 7},
   ];
-  const [typeDateFood, setTypeFood] = useState('');
+  const filterDay = foodType.filter(data => data.id == item?.first_day_of_week);
+  // console.log(filterDay, 'sdhf');
+  const [typeDateFood, setTypeFood] = useState(
+    filterDay ? filterDay[0]?.item : '',
+  );
   // const measureType = [{item: 'Food 1'}, {item: 'Food 2'}, {item: 'Food 3'}];
   const [measureModel, setMeasureModel] = useState(false);
   const [foodModel, setFoodModel] = useState(false);
   const [indexNumber, setIndexNumber] = useState('');
-  const [noOfDays, setNoOfDays] = useState(
-    item?.no_of_days ? `${item?.no_of_days}` : '',
-  );
+  const [noOfDays, setNoOfDays] = useState(item ? `${item?.no_of_days}` : '');
   const [data, setData] = useState('');
 
   const PostWeeklyReportUser = async () => {
@@ -81,6 +83,7 @@ const EditWeeklyGoal = ({navigation, route}) => {
         SetFirstDayWeekUser();
         setNoOfDays('');
       } else {
+        setData('FromSeven');
         setLoading(false);
         // navigation.navigate('SelectPlan');
       }
@@ -108,6 +111,11 @@ const EditWeeklyGoal = ({navigation, route}) => {
       console.log(error);
     }
   };
+  useEffect(() => {
+    setTimeout(() => {
+      setData('');
+    }, 2500);
+  }, [data]);
 
   return (
     <TouchableWithoutFeedback
@@ -168,6 +176,16 @@ const EditWeeklyGoal = ({navigation, route}) => {
             fontSize={16}
             style={{marginTop: responsiveHeight(1)}}
           />
+          {data == 'FromSeven' && (
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 12,
+                fontFamily: 'Interstate-regular',
+              }}>
+              Enter the number from 1 to 7
+            </Text>
+          )}
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {
@@ -195,7 +213,7 @@ const EditWeeklyGoal = ({navigation, route}) => {
                 CssStyle.shadow,
                 styles.modelOpenData,
                 {
-                  top: responsiveHeight(13.9),
+                  top: responsiveHeight(15),
                 },
               ]}>
               {foodType.map((item, index) => (

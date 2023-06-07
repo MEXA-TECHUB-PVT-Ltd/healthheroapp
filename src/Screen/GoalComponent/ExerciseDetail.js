@@ -11,11 +11,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import CustomButton from '../../component/CustomButton';
 import SwiperFlatList from 'react-native-swiper-flatlist';
 import {BaseUrl} from '../../Helping/BaseUrl';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {PlanDataExercise} from '../../store/action';
 
 const ExerciseDetail = ({navigation, route}) => {
   const {item, focus} = route.params ? route.params : '';
-  console.log(item);
+  // console.log(item);
   const data = [{item: 1}, {item: 1}, {item: 1}, {item: 1}];
   const [activeIndex, setActiveIndex] = useState(0);
   const flatNode = useRef();
@@ -46,6 +47,7 @@ const ExerciseDetail = ({navigation, route}) => {
     ) : (
       <Text></Text>
     );
+  const dispatch = useDispatch();
   return (
     <View
       style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
@@ -74,17 +76,20 @@ const ExerciseDetail = ({navigation, route}) => {
           showPagination
           data={id}
           scrollEnabled={false}
-          renderItem={({itemData, index}) => {
+          renderItem={({item: itemData, index}) => {
+            // console.log(itemData, 'item data');
             return (
               <View style={{}}>
                 <Text
                   style={[styles.signInText, {marginTop: responsiveHeight(3)}]}>
-                  {itemData
-                    ? item.exersise_details.title
-                    : staticValue.exersise_details
-                    ? staticValue.exersise_details.title
+                  {itemData?.exersise_details
+                    ? itemData?.exersise_details?.title
+                    : staticValue?.exersise_details
+                    ? staticValue?.exersise_details?.title
                     : staticValue?.exercise_details
                     ? staticValue?.exercise_details[0]?.title
+                    : itemData?.title
+                    ? itemData?.title
                     : 'no title'}
                 </Text>
                 <Text
@@ -92,7 +97,7 @@ const ExerciseDetail = ({navigation, route}) => {
                     styles.signInText,
                     {fontFamily: 'Interstate-regular'},
                   ]}>
-                  {staticValue?.time}
+                  {staticValue?.time ? staticValue?.time : '0'}
                 </Text>
                 <View
                   style={[CssStyle.flexData, {marginTop: responsiveHeight(2)}]}>
@@ -107,9 +112,10 @@ const ExerciseDetail = ({navigation, route}) => {
                     buttonText={'Start'}
                   />
                   <CustomButton
-                    onPress={() =>
-                      navigation.navigate('AllPlan', {item: staticValue})
-                    }
+                    onPress={() => {
+                      navigation.navigate('AllPlan', {item: staticValue}),
+                        dispatch(PlanDataExercise(staticValue));
+                    }}
                     activeOpacity={1}
                     buttonColor={'transparent'}
                     style={{
@@ -158,6 +164,7 @@ const ExerciseDetail = ({navigation, route}) => {
                   {focus ? (
                     focus.map((item, index) => (
                       <View
+                        key={index}
                         style={{
                           marginVertical: responsiveHeight(2),
                           justifyContent: 'center',

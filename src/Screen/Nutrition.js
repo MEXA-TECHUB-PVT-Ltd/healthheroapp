@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import React, {useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -35,6 +35,8 @@ import {BarChart} from 'react-native-chart-kit';
 import {Diet_Id, Water_Id} from '../store/action';
 import moment from 'moment';
 import {GetWaterTracker, WaterTracking} from '../Helping/WaterTracking';
+import CustomButton from '../component/CustomButton';
+import {GetUserDetailApi} from '../services/AuthScreen';
 
 const Nutrition = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -82,16 +84,18 @@ const Nutrition = ({navigation, route}) => {
   useEffect(() => {
     var mount = true;
     const listener = navigation.addListener('focus', async () => {
+      setLoading(true);
       try {
         const result = await GetFoodApi(id.id, id.dietPlanId);
         if (result) {
-          // setLoading(false);
+          setLoading(false);
           setFoodData(result.result);
         } else {
           setLoading(false);
           // navigation.navigate('SelectPlan');
         }
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     });
@@ -166,7 +170,10 @@ const Nutrition = ({navigation, route}) => {
   const [dietPlanConsumption, setDietPlanConsumption] = useState('');
 
   useEffect(() => {
-    id.dietPlanId ? GetDietPlan() : navigation.navigate('SelectPlan');
+    id.dietPlanId
+      ? GetDietPlan()
+      : navigation.navigate('SelectPlan', {userData: getUserDetailData});
+    GetUserDetail();
   }, [id.dietPlanId]);
 
   const GetDietPlan = async () => {
@@ -184,11 +191,16 @@ const Nutrition = ({navigation, route}) => {
       console.log(error);
     }
   };
-  console.log(foodData, 'hello');
+  // console.log(foodData, 'hello');
+  const remainingCalories =
+    foodData?.caloreis_required - foodData?.calories_consumed;
   const Card = [
     {desc: 'Protein', number: foodData?.macrosTaken?.protein},
-    {desc: 'Fats', number: foodData?.macrosTaken?.fats},
-    {desc: 'carb', number: foodData?.macrosTaken?.carbs},
+    {desc: 'Eaten Calories', number: foodData?.calories_consumed},
+    {
+      desc: 'Remaining Calories',
+      number: remainingCalories ? remainingCalories?.toFixed(2) : 0,
+    },
   ];
   const GetWaterTracking = async () => {
     setLoading(true);
@@ -214,9 +226,9 @@ const Nutrition = ({navigation, route}) => {
   const GetFoodRecord = async () => {
     try {
       const result = await GetFoodApi(id.id, id.dietPlanId);
-      // console.log(result.result, 'sdfj');
+      console.log(result.result, 'sdfj');
       if (result) {
-        setLoading(false);
+        // setLoading(false);
         setFoodData(result.result);
       } else {
         setLoading(false);
@@ -240,7 +252,23 @@ const Nutrition = ({navigation, route}) => {
     }
   };
   const [chartData, setChartData] = useState([]);
-
+  const [getUserDetailData, setGetUserDetailData] = useState('');
+  const GetUserDetail = async () => {
+    // setLoading(true);
+    try {
+      const result = await GetUserDetailApi(id.id);
+      if (result.status == true) {
+        // setLoading(false);
+        setGetUserDetailData(result.result);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
   const data = {
     labels: ['Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat', 'Sun'],
     datasets: [
@@ -352,7 +380,7 @@ const Nutrition = ({navigation, route}) => {
     GetWaterTracking();
     id.waterTrackerId ? GetWeeklyReport() : {};
     GetDietPlan();
-  }, []);
+  }, [id.dietPlanId]);
 
   const idWaterTracker = useSelector(data => data.waterTrackerId);
   const AddDailyRecord = async (system, idWaterTracker, index, Text) => {
@@ -377,6 +405,12 @@ const Nutrition = ({navigation, route}) => {
     }
   };
 
+  const gender = [
+    {item: 'balance', id: 1},
+    {item: 'mildWeightLoss', id: 2},
+    {item: 'mildWeightGain', id: 3},
+  ];
+  const [review, setReview] = useState(item ? item?.purpose : '');
   return loading ? (
     <Loader />
   ) : (
@@ -387,39 +421,43 @@ const Nutrition = ({navigation, route}) => {
       <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
         <View
           style={{alignItems: 'flex-end', marginTop: responsiveHeight(1.8)}}>
-          <View
-            style={[
-              CssStyle.flexJustify,
-              {
-                marginVertical: responsiveHeight(3.7),
-                width: responsiveWidth(70),
-              },
-            ]}>
-            <Text
-              style={{
-                fontWeight: '500',
-                fontSize: 20,
-                color: 'white',
-                fontFamily: 'Interstate-regular',
-              }}>
-              Nutrition & Diet Plan
-            </Text>
-            <TouchableOpacity
-              style={{marginRight: responsiveWidth(2)}}
-              onPress={() =>
-                id.dietPlanId
-                  ? navigation.navigate('SelectPlan', {
-                      item: dietPlanData?.fetched_record,
-                    })
-                  : navigation.navigate('SelectPlan')
-              }>
-              <Image
-                resizeMode="contain"
-                style={{width: 19, height: 19}}
-                source={require('../assets/Health-Hero/Iconfeather-edit-3.png')}
-              />
-            </TouchableOpacity>
-          </View>
+          {id.dietPlanId && (
+            <View
+              style={[
+                CssStyle.flexJustify,
+                {
+                  marginVertical: responsiveHeight(3.7),
+                  width: responsiveWidth(70),
+                },
+              ]}>
+              <Text
+                style={{
+                  fontWeight: '500',
+                  fontSize: 20,
+                  color: 'white',
+                  fontFamily: 'Interstate-regular',
+                }}>
+                Nutrition & Diet Plan
+              </Text>
+              <TouchableOpacity
+                style={{marginRight: responsiveWidth(2)}}
+                onPress={() =>
+                  id.dietPlanId
+                    ? navigation.navigate('SelectPlan', {
+                        item: foodData?.diet_plan_details,
+                      })
+                    : navigation.navigate('SelectPlan', {
+                        userData: getUserDetailData,
+                      })
+                }>
+                <Image
+                  resizeMode="contain"
+                  style={{width: 19, height: 19}}
+                  source={require('../assets/Health-Hero/Iconfeather-edit-3.png')}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
         {id.dietPlanId ? (
           <>
@@ -439,7 +477,7 @@ const Nutrition = ({navigation, route}) => {
                   fontFamily: 'Interstate-regular',
                   fontSize: 27,
                 }}>
-                {dietPlanData ? dietPlanData?.calories_needed_per_day : '0'}{' '}
+                {foodData ? foodData?.caloreis_required : '0'}{' '}
                 <Text style={{fontSize: 12}}>Kcal</Text>
               </Text>
               <View
@@ -452,7 +490,7 @@ const Nutrition = ({navigation, route}) => {
               />
               <View style={[CssStyle.flexJustify]}>
                 {Card.map((item, index) => (
-                  <>
+                  <Fragment key={index}>
                     <View
                       key={index}
                       style={[
@@ -493,7 +531,7 @@ const Nutrition = ({navigation, route}) => {
                         }}
                       />
                     )}
-                  </>
+                  </Fragment>
                 ))}
               </View>
             </View>
@@ -514,30 +552,42 @@ const Nutrition = ({navigation, route}) => {
                 <Octicons name="diff-added" size={23} color={'white'} />
               </TouchableOpacity>
             </View>
-            {foodData?.foodIntakesToday?.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {}}
-                style={styles.dailyButton}>
-                <View style={{}}>
-                  <Text style={styles.dailyText}>
-                    {item.food_details.food_name}
-                  </Text>
-                  <View style={[CssStyle.flexJustify, {}]}>
-                    <Text style={styles.foodType}>
-                      Yogurt with Berries and banana
-                    </Text>
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontFamily: 'Interstate-regular',
-                      }}>
-                      {item.food_details.energy_calories} Kcal
-                    </Text>
+            {foodData?.foodIntakesToday?.map((item, index) => {
+              console.log(item, 'hse');
+              return (
+                <View key={index} style={[styles.dailyButton]}>
+                  <View
+                    style={[
+                      CssStyle.flexJustify,
+                      // {width: responsiveWidth(100)},
+                    ]}>
+                    <View style={{}}>
+                      <Text style={styles.dailyText}>
+                        {item.food_details.food_name}
+                      </Text>
+                      <Text style={styles.foodType}>{item.meal_time}</Text>
+                    </View>
+                    <View>
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontFamily: 'Interstate-regular',
+                          marginBottom: responsiveHeight(1),
+                        }}>
+                        {item.quantity} {item.unit}
+                      </Text>
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontFamily: 'Interstate-regular',
+                        }}>
+                        {item.food_details.energy_calories} Kcal
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </TouchableOpacity>
-            ))}
+              );
+            })}
             <View
               style={[
                 CssStyle.flexJustify,
@@ -569,7 +619,7 @@ const Nutrition = ({navigation, route}) => {
                     styles.dailyText,
                     {fontSize: 13, fontFamily: 'Interstate-regular'},
                   ]}>
-                  08 Glass
+                  {waterData?.quantity} Glass
                 </Text>
                 {id.waterTrackerId ? (
                   <>
@@ -650,11 +700,17 @@ const Nutrition = ({navigation, route}) => {
                   // data={data}
                   data={{
                     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'],
-                    datasets: [{data: chartData}],
+                    datasets: [
+                      {
+                        data:
+                          chartData !== [] ? chartData : [0, 1, 0, 0, 0, 0, 0],
+                      },
+                    ],
                   }}
                   width={responsiveWidth(88)}
                   height={responsiveHeight(28)}
                   showBarTops={false}
+                  fromNumber={waterData ? waterData?.quantity : 32}
                   withInnerLines={false}
                   chartConfig={chartConfig}
                   // withVerticalLabels={false}
@@ -684,25 +740,99 @@ const Nutrition = ({navigation, route}) => {
             </View>
           </>
         ) : (
-          <View
-            style={[
-              {
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: responsiveHeight(37),
-              },
-            ]}>
-            {/* <Text style={{color: 'white'}}>No</Text> */}
-            <Text
+          <View style={{paddingTop: responsiveHeight(3)}}>
+            <TouchableOpacity
+              style={{marginLeft: responsiveWidth(-3)}}
+              onPress={() => navigation.goBack()}>
+              <Icon
+                name="chevron-back"
+                size={29}
+                style={{padding: '2%'}}
+                color={AppColors.buttonText}
+              />
+            </TouchableOpacity>
+            <View style={{marginTop: responsiveHeight(4), flex: 0.4}}>
+              <Text
+                style={[CssStyle.textInsideSettingComponent, {fontSize: 41}]}>
+                Select Plan Type
+              </Text>
+              <Text
+                style={[
+                  CssStyle.textInfoSetting,
+                  {
+                    lineHeight: responsiveHeight(3),
+                    paddingTop: responsiveHeight(1),
+                    fontSize: 13,
+                    letterSpacing: 0.4,
+                  },
+                ]}>
+                To help you reach your fitness goals, we offer a variety of
+                workout plan types tailored to different objectives and
+                preferences.
+              </Text>
+            </View>
+            <ScrollView
+              horizontal={true}
+              style={{flex: 0.7, paddingTop: responsiveHeight(2)}}>
+              <FlatList
+                data={gender}
+                showsVerticalScrollIndicator={false}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item, index}) => {
+                  return (
+                    <View key={index} style={{width: responsiveWidth(90)}}>
+                      <TouchableOpacity
+                        style={[
+                          styles.buttonGender,
+                          {
+                            backgroundColor:
+                              review !== item.item ? '#626377' : '#0A1F58',
+                            borderColor:
+                              review !== item.item
+                                ? '#626377'
+                                : AppColors.buttonText,
+                            borderWidth: 1,
+                          },
+                        ]}
+                        onPress={() => {
+                          setReview(item.item);
+                        }}>
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontFamily: 'Interstate-regular',
+                            fontSize: 16,
+                          }}>
+                          {item.item}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  );
+                }}
+              />
+            </ScrollView>
+            <View
               style={{
-                color: 'white',
-                // opacity: 0.4,
-                fontSize: 15,
-                marginTop: responsiveHeight(2),
+                alignItems: 'center',
+                paddingTop: responsiveHeight(2),
+                flex: 0.3,
               }}>
-              No Nutrition & Diet Plans added yet
-            </Text>
+              <CustomButton
+                onPress={() =>
+                  review
+                    ? navigation.navigate('NutritionGender', {
+                        planType: {review},
+                        updateData: item,
+                      })
+                    : ToastAndroid.show('Please Select One', ToastAndroid.SHORT)
+                }
+                activeOpacity={1}
+                buttonColor={AppColors.buttonText}
+                style={{width: responsiveWidth(78)}}
+                buttonText={'Continue'}
+                paddingVertical={1}
+              />
+            </View>
           </View>
         )}
       </View>
@@ -719,7 +849,7 @@ const styles = StyleSheet.create({
     borderColor: '#00000022',
     borderRadius: 10,
     paddingHorizontal: responsiveWidth(3.7),
-    paddingVertical: responsiveHeight(1.2),
+    paddingVertical: responsiveHeight(1.5),
     backgroundColor: '#626377',
   },
   dailyText: {
@@ -728,13 +858,21 @@ const styles = StyleSheet.create({
     fontFamily: 'Interstate-bold',
   },
   foodType: {
-    fontSize: 12,
-    paddingVertical: responsiveHeight(1),
+    fontSize: 14,
+    paddingTop: responsiveHeight(1),
     color: 'white',
     fontFamily: 'Interstate-regular',
-    width: responsiveWidth(40),
+    // width: responsiveWidth(40),
     letterSpacing: 0.7,
     lineHeight: responsiveHeight(2.3),
+  },
+  buttonGender: {
+    paddingVertical: responsiveHeight(2.6),
+    paddingHorizontal: responsiveWidth(6),
+    borderRadius: responsiveHeight(1),
+    // flexDirection: "row",
+    alignItems: 'center',
+    marginBottom: responsiveHeight(3),
   },
 });
 

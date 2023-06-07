@@ -82,6 +82,7 @@ const GetExercise = ({navigation, route}) => {
   }, [item, index]);
   const [running, setRunning] = useState(true);
   const [timeElapsed, setTimeElapsed] = useState(0);
+  const SevenByFour = useSelector(data => data);
 
   useEffect(() => {
     let interval = null;
@@ -117,17 +118,17 @@ const GetExercise = ({navigation, route}) => {
       console.log(result, 'start workout api response');
       if (result.status == true) {
         // setLoading(false);
+        setRunning(false);
       } else {
+        setRunning(false);
         // setLoading(false);
-        ToastAndroid.show(result.message, ToastAndroid.SHORT);
+        // ToastAndroid.show(result.message, ToastAndroid.SHORT);
         console.error(result.message);
       }
     } catch (error) {
-      setLoading(false);
       console.log(error);
     }
   };
-  const SevenByFour = useSelector(data => data);
 
   const CompleteSevenByFour = async () => {
     // setLoading(true);
@@ -143,13 +144,14 @@ const GetExercise = ({navigation, route}) => {
       console.log(result, 'this is the complete seven by four');
       if (result.status == true) {
         // setLoading(false);
+        setRunning(false);
       } else {
+        setRunning(false);
         // setLoading(false);
-        ToastAndroid.show(result.message, ToastAndroid.SHORT);
+        // ToastAndroid.show(result.message, ToastAndroid.SHORT);
         console.error(result.message);
       }
     } catch (error) {
-      setLoading(false);
       console.log(error);
     }
   };
@@ -208,10 +210,12 @@ const GetExercise = ({navigation, route}) => {
             flex: 1,
           }}>
           <Text style={[styles.signInText]}>
-            {dataTakeFromRedux[index]?.exercise_details !== null
-              ? dataTakeFromRedux[index]?.exercise_details
-                ? dataTakeFromRedux[index]?.exercise_details[0]?.title
-                : dataTakeFromRedux[index]?.exersise_details?.title
+            {dataTakeFromRedux[index]?.exersise_details !== null
+              ? dataTakeFromRedux[index]?.exercise_details !== null
+                ? dataTakeFromRedux[index]?.exercise_details
+                  ? dataTakeFromRedux[index]?.exercise_details[0]?.title
+                  : dataTakeFromRedux[index]?.exersise_details?.title
+                : 'No title'
               : 'No title'}
           </Text>
           <View
@@ -379,10 +383,13 @@ const GetExercise = ({navigation, route}) => {
                         fontFamily: 'Interstate-regular',
                         opacity: 0.8,
                       }}>
-                      {dataTakeFromRedux[index + 1]?.exercise_details
-                        ? dataTakeFromRedux[index + 1]?.exercise_details[0]
-                            ?.title
-                        : dataTakeFromRedux[index + 1]?.exersise_details?.title}
+                      {dataTakeFromRedux[index + 1]?.exersise_details !== null
+                        ? dataTakeFromRedux[index + 1]?.exercise_details
+                          ? dataTakeFromRedux[index + 1]?.exercise_details[0]
+                              ?.title
+                          : dataTakeFromRedux[index + 1]?.exersise_details
+                              ?.title
+                        : 'No Title'}
                     </Text>
                     <Text
                       style={{
@@ -393,13 +400,15 @@ const GetExercise = ({navigation, route}) => {
                         opacity: 0.5,
                         lineHeight: responsiveHeight(2),
                       }}>
-                      {dataTakeFromRedux[index + 1]?.exercise_details
-                        ? dataTakeFromRedux[
-                            index + 1
-                          ]?.exercise_details[0]?.description.slice(0, 62)
-                        : dataTakeFromRedux[
-                            index + 1
-                          ]?.exersise_details?.description.slice(0, 72)}
+                      {dataTakeFromRedux[index + 1]?.exersise_details !== null
+                        ? dataTakeFromRedux[index + 1]?.exercise_details
+                          ? dataTakeFromRedux[
+                              index + 1
+                            ]?.exercise_details[0]?.description.slice(0, 62)
+                          : dataTakeFromRedux[
+                              index + 1
+                            ]?.exersise_details?.description.slice(0, 72)
+                        : 'No Description'}
                       {/* {(dataTakeFromRedux[index + 1]?.exersise_details
                         ?.description?.length > 71 ||
                         dataTakeFromRedux[index + 1]?.exercise_details
@@ -435,7 +444,9 @@ const GetExercise = ({navigation, route}) => {
                             marginLeft: responsiveWidth(2),
                             opacity: 0.5,
                           }}>
-                          {dataTakeFromRedux[index + 1]?.time}
+                          {dataTakeFromRedux[index + 1]?.time !== null
+                            ? dataTakeFromRedux[index + 1]?.time
+                            : '0'}
                         </Text>
                       </View>
                     </View>

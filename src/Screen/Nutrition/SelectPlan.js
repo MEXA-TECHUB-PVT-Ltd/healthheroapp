@@ -20,11 +20,36 @@ import {AppColors} from '../../Helping/AppColor';
 import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
 import {useSelector} from 'react-redux';
+import {GetUserDetailApi} from '../../services/AuthScreen';
+import Loader from '../../component/Loader';
 
 const SelectPlan = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  // console.log(item);
+  console.log(item);
+  const [loading, setLoading] = useState(false);
+  const id = useSelector(data => data.id);
+  const [userData, setGetUserDetailData] = useState('');
 
+  useEffect(() => {
+    item?.activity_status ? item?.activity_status : GetUserDetail();
+  }, []);
+  const GetUserDetail = async () => {
+    setLoading(true);
+    try {
+      const result = await GetUserDetailApi(id);
+      console.log(result,'this is the performance');
+      if (result.status == true) {
+        setLoading(false);
+        setGetUserDetailData(result.result);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
   const gender = [
     {item: 'balance', id: 1},
     {item: 'mildWeightLoss', id: 2},
@@ -32,7 +57,9 @@ const SelectPlan = ({navigation, route}) => {
   ];
   const [review, setReview] = useState(item ? item?.purpose : '');
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <LinearGradient
       colors={['#0A1F58', '#0A1637']}
       start={{x: 0, y: 0}}
@@ -119,6 +146,7 @@ const SelectPlan = ({navigation, route}) => {
               ? navigation.navigate('NutritionGender', {
                   planType: {review},
                   updateData: item,
+                  userData,
                 })
               : ToastAndroid.show('Please Select One', ToastAndroid.SHORT)
           }

@@ -191,7 +191,7 @@ export const GetAllWorkoutPlanAPI = async id => {
       },
     };
     const response = await fetch(
-      `${BaseUrlWorkout}getAllWorkoutPlans?page=1&limit=20`,
+      `${BaseUrlWorkout}getAllWorkoutPlans?page=1&limit=50`,
       requestOptions,
     );
     const result = await response.json();

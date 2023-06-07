@@ -22,7 +22,7 @@ import {RulerPicker} from 'react-native-ruler-picker';
 
 const CurrentWeight = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item);
+  // console.log(item);
   const weightUnitData = [{text: 'gm'}, {text: 'kg'}];
   const [weightData, setWeightData] = useState('kg');
   const [loading, setLoading] = useState(false);

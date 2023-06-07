@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
   responsiveHeight,
@@ -349,7 +349,7 @@ const StartNow = ({navigation, route}) => {
                       ]}>
                       {weekData.map((itemData, indexData) => {
                         return (
-                          <>
+                          <Fragment key={indexData}>
                             <TouchableOpacity
                               key={indexData}
                               onPress={() => {
@@ -364,7 +364,17 @@ const StartNow = ({navigation, route}) => {
                                     sevenByFourData[index]?.week_days[indexData]
                                       ?.day_id,
                                   upcomingData:
-                                    indexData == 0
+                                    indexData == 0 &&
+                                    index ==
+                                      (getDayId !== undefined
+                                        ? getDays > 6
+                                          ? getDayId
+                                          : getDayId - 1 == 0
+                                          ? 0
+                                          : getDayId - 1 == -1
+                                          ? 0
+                                          : getDayId - 1
+                                        : 0)
                                       ? true
                                       : GEtUserSevenFourRes[index]
                                           ?.days_of_week[indexData - 1]?.day_id,
@@ -414,7 +424,7 @@ const StartNow = ({navigation, route}) => {
                                 }}
                               />
                             ) : null}
-                          </>
+                          </Fragment>
                         );
                       })}
                     </View>
@@ -430,6 +440,8 @@ const StartNow = ({navigation, route}) => {
             ? getDays > 6
               ? getDayId
               : getDayId - 1 == 0
+              ? 0
+              : getDayId - 1 == -1
               ? 0
               : getDayId - 1
             : 0,
@@ -452,6 +464,8 @@ const StartNow = ({navigation, route}) => {
                     ? getDays > 6
                       ? getDayId
                       : getDayId - 1 == 0
+                      ? 0
+                      : getDayId - 1 == -1
                       ? 0
                       : getDayId - 1
                     : 0

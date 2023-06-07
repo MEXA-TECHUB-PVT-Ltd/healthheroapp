@@ -132,7 +132,7 @@ const Login = ({navigation}) => {
             />
             {errorMessage && (
               <Text style={{color: 'red', marginLeft: responsiveWidth(3)}}>
-                {errorMessage}
+                Unregistered email
               </Text>
             )}
             {data == 'email' ? (

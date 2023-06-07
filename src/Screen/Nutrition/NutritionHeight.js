@@ -33,20 +33,23 @@ import assets from '../../assets';
 import Loader from '../../component/Loader';
 
 const NutritionHeight = ({navigation, route}) => {
-  const {item, updateData} = route.params ? route.params : '';
-  // console.log(item, 'new changes');
+  const {item, updateData, userData} = route.params ? route.params : '';
+  console.log(userData.height, 'new changes');
   const weightUnitData = [{text: 'ft'}, {text: 'in'}];
   const [weightData, setWeightData] = useState(
-    item?.height_unit ? item?.height_unit : 'in',
+    item?.height_unit ? item?.height_unit : 'ft',
   );
-  const [heightValue, setHeightValue] = useState(
-    updateData ? updateData.height : 23,
+  const [heightValueItem, setHeightValue] = useState(
+    updateData ? updateData?.height : item ? item?.height : 9,
   );
-  // console.log(updateDataChanges, 'heig');
   const id = useSelector(data => data);
   const [loading, setLoading] = useState(false);
   const [loadingUser, setLoadingUser] = useState(false);
   const [openUserSuccessfully, setOpenUserSuccessfully] = useState(false);
+  const [inchNumber, setInchNumber] = useState(0);
+  const [startIndex, setStartIndex] = useState(3);
+  console.log(parseInt(updateData?.height), 'heig');
+
   const UpdateUserName = async () => {
     setLoadingUser(true);
     try {
@@ -56,10 +59,10 @@ const NutritionHeight = ({navigation, route}) => {
         item?.device_id,
         item?.gender,
         item?.focused_areas,
-        heightValue,
+        heightValueItem + '.' + inchNumber,
         item?.weight,
         item?.weight_unit,
-        weightData,
+        'ft',
       );
       if (result.status == true) {
         setOpenUserSuccessfully(true);
@@ -73,6 +76,10 @@ const NutritionHeight = ({navigation, route}) => {
       console.log(error);
     }
   };
+  const heightValue = heightValueItem + '.' + inchNumber;
+  // console.log(updateData?.height);
+  // console.log(heightValue, 'index');
+
   return loading ? (
     <Loader />
   ) : (
@@ -148,31 +155,55 @@ const NutritionHeight = ({navigation, route}) => {
                 />
               ))}
             </View>
+            <Text
+              style={{
+                alignSelf: 'center',
+                color: 'white',
+                fontSize: responsiveFontSize(5),
+                fontWeight: 'bold',
+                marginTop: responsiveHeight(7),
+                marginBottom: responsiveHeight(-10),
+                marginLeft: responsiveWidth(7),
+              }}>
+              {heightValue !== '0.0'
+                ? heightValue
+                : item?.height
+                ? item?.height
+                : updateData
+                ? updateData?.height
+                : userData
+                ? userData?.height
+                : heightValue}
+              <Text style={{fontSize: 23}}> {'ft'}</Text>
+            </Text>
             <RulerPicker
               min={0}
-              max={weightData == 'in' ? 180 : 20}
+              max={weightData == 'ft' ? 15 : 12}
               step={1}
               fractionDigits={0}
-              initialValue={
-                updateData ? updateData.height : item?.height ? item?.height : 3
-              }
-              gapBetweenSteps={5}
+              initialValue={startIndex}
+              gapBetweenSteps={15}
               indicatorColor="#FF5100"
               longStepColor="#FF5100"
               indicatorHeight={75}
               longStepHeight={70}
               shortStepHeight={20}
               stepWidth={3}
+              decelerationRate={0.1}
               unitTextStyle={{
-                color: 'white',
+                color: 'transparent',
                 fontSize: responsiveFontSize(2),
               }}
               valueTextStyle={{
-                color: 'white',
+                color: 'transparent',
                 fontSize: responsiveFontSize(6),
               }}
               height={responsiveHeight(38)}
-              onValueChangeEnd={number => setHeightValue(number)}
+              onValueChange={number => {
+                weightData == 'ft'
+                  ? setHeightValue(number)
+                  : setInchNumber(number);
+              }}
               unit={weightData}
             />
           </View>
@@ -190,12 +221,13 @@ const NutritionHeight = ({navigation, route}) => {
             <CustomButton
               loading={loadingUser}
               onPress={() => {
-                heightValue
+                heightValueItem
                   ? item?.email
                     ? UpdateUserName()
                     : navigation.navigate('ActiveAge', {
                         item: {item, heightValue},
                         updateData,
+                        // userData,
                       })
                   : ToastAndroid.show(
                       'Please select the current height',

@@ -161,7 +161,9 @@ const StartExercise = ({navigation, route}) => {
               {reduxData?.exercise_details !== null ? (
                 <Image
                   source={{
-                    uri: `${BaseUrl}` + otherExercise_data?.animation,
+                    uri: otherExercise_data
+                      ? `${BaseUrl}` + otherExercise_data?.animation
+                      : reduxData?.animation,
                   }}
                   resizeMode="contain"
                   style={{
@@ -187,9 +189,11 @@ const StartExercise = ({navigation, route}) => {
                   opacity: 0.8,
                   textTransform: 'capitalize',
                 }}>
-                {reduxData?.exercise_details !== null
-                  ? otherExercise_data?.title
-                  : 'No title'}
+                {otherExercise_data
+                  ? reduxData?.exercise_details !== null
+                    ? otherExercise_data?.title
+                    : 'No title'
+                  : reduxData?.title}
               </Text>
               <Text
                 style={{
@@ -201,9 +205,11 @@ const StartExercise = ({navigation, route}) => {
                   lineHeight: responsiveHeight(2),
                   height: responsiveHeight(2.7),
                 }}>
-                {reduxData?.exercise_details !== null
-                  ? otherExercise_data?.description
-                  : 'no description'}
+                {otherExercise_data
+                  ? reduxData?.exercise_details !== null
+                    ? otherExercise_data?.description
+                    : 'no description'
+                  : reduxData?.description}
               </Text>
               <View
                 style={[CssStyle.flexJustify, {width: responsiveWidth(50)}]}>
