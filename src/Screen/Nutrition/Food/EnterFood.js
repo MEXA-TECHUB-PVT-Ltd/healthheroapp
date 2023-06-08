@@ -4,7 +4,6 @@ import {
   Modal,
   StyleSheet,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -21,12 +20,13 @@ import CssStyle from '../../../StyleSheet/CssStyle';
 import CustomButton from '../../../component/CustomButton';
 import {useSelector} from 'react-redux';
 import {Line} from '../../../component/Line';
-
+import Toast from 'react-native-toast-message';
 import Lottie from 'lottie-react-native';
 import assets from '../../../assets';
 import {AddFoodUserApi} from '../../../services/DietPlan';
 import {GetCreateFoodApi, GetFoodApi} from '../../../services/FoodApi';
 import moment from 'moment';
+import ToastContainer from '../../../Helping/ToastContainer';
 
 const EnterFood = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -365,10 +365,7 @@ const EnterFood = ({navigation, route}) => {
             onPress={() =>
               typeDate && typeDateFood
                 ? AddFood()
-                : ToastAndroid.show(
-                    'Please fill the required data',
-                    ToastAndroid.SHORT,
-                  )
+                : Toast.show({text2: 'Please fill the required date'})
             }
             activeOpacity={1}
             buttonColor={AppColors.buttonText}
@@ -448,6 +445,7 @@ const EnterFood = ({navigation, route}) => {
           </View>
         </Modal>
       </LinearGradient>
+      <ToastContainer />
     </TouchableWithoutFeedback>
   );
 };

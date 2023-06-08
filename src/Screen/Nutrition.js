@@ -20,23 +20,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../component/Loader';
 import {GetDietPlanApi, GetFoodApi} from '../services/DietPlan';
 import {useDispatch, useSelector} from 'react-redux';
-
+import Toast from 'react-native-toast-message';
 import {
   GetDailyWaterApi,
   GetWaterApi,
   GetWaterRecordApi,
   GetWeeklyWaterApi,
 } from '../services/WaterTrackerApi';
-import Glass from '../assets/redGlas';
-import Bottle from '../assets/water';
-import FillGlass from '../assets/glass-of-water';
-import {Calendar} from 'react-native-calendars';
 import {BarChart} from 'react-native-chart-kit';
 import {Diet_Id, Water_Id} from '../store/action';
 import moment from 'moment';
 import {GetWaterTracker, WaterTracking} from '../Helping/WaterTracking';
 import CustomButton from '../component/CustomButton';
 import {GetUserDetailApi} from '../services/AuthScreen';
+import ToastContainer from '../Helping/ToastContainer';
 
 const Nutrition = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -176,6 +173,9 @@ const Nutrition = ({navigation, route}) => {
     GetUserDetail();
   }, [id.dietPlanId]);
 
+  useEffect(() => {
+    GetFoodRecord();
+  }, [id.dietPlanId, foodData == null]);
   const GetDietPlan = async () => {
     setLoading(true);
     try {
@@ -376,12 +376,10 @@ const Nutrition = ({navigation, route}) => {
 
   useEffect(() => {
     GetDailyWaterRecord();
-    GetFoodRecord();
     GetWaterTracking();
     id.waterTrackerId ? GetWeeklyReport() : {};
     GetDietPlan();
   }, [id.dietPlanId]);
-
   const idWaterTracker = useSelector(data => data.waterTrackerId);
   const AddDailyRecord = async (system, idWaterTracker, index, Text) => {
     try {
@@ -553,7 +551,6 @@ const Nutrition = ({navigation, route}) => {
               </TouchableOpacity>
             </View>
             {foodData?.foodIntakesToday?.map((item, index) => {
-              console.log(item, 'hse');
               return (
                 <View key={index} style={[styles.dailyButton]}>
                   <View
@@ -824,7 +821,7 @@ const Nutrition = ({navigation, route}) => {
                         planType: {review},
                         updateData: item,
                       })
-                    : ToastAndroid.show('Please Select One', ToastAndroid.SHORT)
+                    : Toast.show({text2: 'Please Select One'})
                 }
                 activeOpacity={1}
                 buttonColor={AppColors.buttonText}
@@ -836,6 +833,7 @@ const Nutrition = ({navigation, route}) => {
           </View>
         )}
       </View>
+      <ToastContainer />
     </ScrollView>
   );
 };

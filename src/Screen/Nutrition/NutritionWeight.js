@@ -32,7 +32,7 @@ const NutritionWeight = ({navigation, route}) => {
   const {item, updateData, userData, getUserDetail} = route.params
     ? route.params
     : '';
-  console.log(item, updateData, userData);
+  // console.log(item, updateData, userData);
   const weightUnitData = [{text: 'gm'}, {text: 'kg'}];
   const [weightData, setWeightData] = useState('kg');
   const flatNode = useRef();
@@ -44,10 +44,11 @@ const NutritionWeight = ({navigation, route}) => {
       ? updateData?.weight
       : userData
       ? userData?.weight
-      : getUserDetail
+      : getUserDetail?.weight
       ? getUserDetail?.weight
       : 22,
   );
+  // console.log(updateData);
 
   const [weightValue, setWeightValue] = useState(
     item[0]?.current_weight
@@ -63,6 +64,7 @@ const NutritionWeight = ({navigation, route}) => {
   const [openUserSuccessfully, setOpenUserSuccessfully] = useState(false);
   // console.log(weightValue, 'hello');
   const dispatch = useDispatch();
+
   const UpdateWeight = async () => {
     setLoadingUser(true);
     try {

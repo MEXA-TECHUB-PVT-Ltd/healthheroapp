@@ -208,7 +208,7 @@ const Report = ({navigation}) => {
   const GetHistoryData = async () => {
     try {
       const result = await GetWeeklyReport(id.id);
-      console.log(result, 'ehllo ');
+      // console.log(result, 'ehllo ');
       if (result.status == true) {
         setHistoryDataDate(result.result);
       } else {
@@ -219,11 +219,33 @@ const Report = ({navigation}) => {
     }
   };
 
+  useEffect(() => {
+    var mount = true;
+    const listener = navigation.addListener('focus', async () => {
+      setLoading(true);
+      try {
+        const result = await GetProgressReportApi(id.id);
+        if (result.status == true) {
+          setLoading(false);
+          setWeeklyDaysTraining(result.result);
+        } else {
+          setLoading(false);
+          // navigation.navigate('SelectPlan');
+        }
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+      }
+    });
+    return () => {
+      listener;
+      mount = false;
+    };
+  }, []);
   const WeekProgressReport = async () => {
     setLoading(true);
     try {
       const result = await GetProgressReportApi(id.id);
-      // console.log(result.result[2], 'hello sir');
       if (result.status == true) {
         setLoading(false);
         setWeeklyDaysTraining(result.result);
@@ -275,11 +297,6 @@ const Report = ({navigation}) => {
   const totalHeight = heightValue * heightValue;
   const totalBMI = getUserDetail && getUserDetail.weight / totalHeight;
 
-  // const findTrueDay = weeklyDaysTraining.filter(data =>
-  //   data.exersise_done == true ? true : false,
-  // );
-  // console.log(findTrueDay[0], 'thia si');
-  // console.log(getNoOfDay.first_day_of_week, 'hello');
   const getUpdatedWeekdayOrder = dataDays => {
     const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -300,9 +317,6 @@ const Report = ({navigation}) => {
     obj => typeof obj === 'object',
   );
   const findValue = filteredArray?.filter(data => data.exersise_done);
-  // console.log(findValue, 'hello sir');
-
-  // console.log(getNoOfDay?.first_day_of_week, 'data actuallay');
   const dataFromAPI =
     getNoOfDay?.first_day_of_week == 1
       ? 'Mon'
@@ -1136,142 +1150,6 @@ const Report = ({navigation}) => {
                 }}
               />
             </ScrollView>
-            {/* <View
-                style={[
-                  CssStyle.flexJustify,
-                  {marginVertical: responsiveHeight(2)},
-                ]}>
-                <View>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      fontFamily: 'Interstate-regular',
-                      color: 'white',
-                      paddingBottom: responsiveHeight(1),
-                    }}>
-                    {new Date().toDateString().slice(4, 15).replace(' ', ', ')}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 13,
-                      fontFamily: 'Interstate-regular',
-                      color: 'white',
-                    }}>
-                    02 Workouts
-                  </Text>
-                </View>
-                <View>
-                  <View
-                    style={[
-                      CssStyle.flexData,
-                      {marginVertical: responsiveHeight(1)},
-                    ]}>
-                    <Logo width={16} height={16} />
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontFamily: 'Interstate-regular',
-                        fontSize: 12,
-                        marginLeft: responsiveWidth(2),
-                      }}>
-                      400 kcal
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      CssStyle.flexData,
-                      {marginVertical: responsiveHeight(1)},
-                    ]}>
-                    <IconSvg width={16} height={16} />
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontFamily: 'Interstate-regular',
-                        fontSize: 12,
-                        marginLeft: responsiveWidth(2),
-                      }}>
-                      90 sec
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <TouchableOpacity
-                onPress={
-                  () => {}
-                  // navigation.navigate('ExerciseDetail', {item: item})
-                }
-                style={[
-                  CssStyle.flexData,
-                  {
-                    // width: responsiveWidth(50),
-                    marginBottom: responsiveHeight(2),
-                    marginRight: responsiveWidth(7),
-                  },
-                ]}>
-                <Image
-                  borderRadius={responsiveWidth(2)}
-                  // source={{uri: `${BaseUrl}` + item.video_link}}
-                  style={{
-                    width: responsiveWidth(19),
-                    height: responsiveHeight(9),
-                    marginRight: responsiveWidth(4),
-                  }}
-                  resizeMode="contain"
-                />
-                <View>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 13,
-                      fontFamily: 'Interstate-regular',
-                      marginVertical: responsiveHeight(0.6),
-                      paddingTop: responsiveHeight(1),
-                    }}>
-                    Yoga Exercise
-                  </Text>
-                  <View
-                    style={[
-                      CssStyle.flexJustify,
-                      {width: responsiveWidth(40)},
-                    ]}>
-                    <View
-                      style={[
-                        CssStyle.flexData,
-                        {marginVertical: responsiveHeight(1)},
-                      ]}>
-                      <Logo width={16} height={16} />
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontFamily: 'Interstate-regular',
-                          fontSize: 12,
-                          marginLeft: responsiveWidth(2),
-                        }}>
-                        400 kcal
-                      </Text>
-                    </View>
-                    <View
-                      style={[
-                        CssStyle.flexData,
-                        {marginVertical: responsiveHeight(1)},
-                      ]}>
-                      <IconSvg width={16} height={16} />
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontFamily: 'Interstate-regular',
-                          fontSize: 12,
-                          marginLeft: responsiveWidth(2),
-                        }}>
-                        45 sec
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </TouchableOpacity> */}
-            {/* <View
-                style={{borderBottomColor: 'white', borderBottomWidth: 1}}
-              /> */}
           </View>
         ) : (
           <View
@@ -1286,286 +1164,6 @@ const Report = ({navigation}) => {
             </Text>
           </View>
         )}
-        {/* : (
-          <View>
-            <View
-              style={[
-                {
-                  marginBottom: responsiveHeight(2.9),
-                  borderRadius: 8,
-                  paddingHorizontal: responsiveWidth(3),
-                  paddingVertical: responsiveHeight(1.6),
-                  marginTop: responsiveHeight(0.8),
-                  backgroundColor: '#62637790',
-                },
-              ]}>
-              <View style={[CssStyle.flexJustify, {}]}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    color: 'white',
-                    letterSpacing: 0.9,
-                    fontFamily: 'Interstate-bold',
-                  }}>
-                  Weekly Goal
-                </Text>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    padding: '2%',
-                  }}
-                  onPress={() =>
-                    navigation.navigate('EditWeeklyGoal', {
-                      item: historyDataDate,
-                    })
-                  }>
-                  <Text
-                    style={{
-                      color: 'white',
-                      marginRight: responsiveWidth(2),
-                    }}>
-                    {historyDataDate ? 'Edit' : ' Add'}
-                  </Text>
-                  {historyDataDate ? (
-                    <Image
-                      resizeMode="contain"
-                      style={{width: 13, height: 13}}
-                      source={require('../assets/Health-Hero/Iconfeather-edit-3.png')}
-                    />
-                  ) : (
-                    <Octicons name="diff-added" size={18} color="white" />
-                  )}
-                </TouchableOpacity>
-              </View>
-              <View style={{alignItems: 'center'}}>
-                <View
-                  style={[
-                    CssStyle.flexJustify,
-                    {
-                      paddingTop: responsiveHeight(0.7),
-                      width: responsiveWidth(79),
-                    },
-                  ]}>
-                  {console.log(weeklyDaysTraining, 'hello')}
-                  {dayDataActive.map((item, index) => (
-                    <DaysCounting
-                      weeklyDaysTraining={weeklyDaysTraining}
-                      key={index}
-                      selectItem={selectItem}
-                      setSelectItem={setSelectItem}
-                      item={item}
-                      index={index}
-                    />
-                  ))}
-                </View>
-              </View>
-            </View>
-            <View
-              style={[
-                CssStyle.flexJustify,
-                {marginVertical: responsiveHeight(2)},
-              ]}>
-              <View>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontFamily: 'Interstate-regular',
-                    color: 'white',
-                    paddingBottom: responsiveHeight(1),
-                  }}>
-                  {new Date().toDateString().slice(4, 15).replace(' ', ', ')}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 13,
-                    fontFamily: 'Interstate-regular',
-                    color: 'white',
-                  }}>
-                  02 Workouts
-                </Text>
-              </View>
-              <View>
-                <View
-                  style={[
-                    CssStyle.flexData,
-                    {marginVertical: responsiveHeight(1)},
-                  ]}>
-                  <Logo width={16} height={16} />
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontFamily: 'Interstate-regular',
-                      fontSize: 12,
-                      marginLeft: responsiveWidth(2),
-                    }}>
-                    400 kcal
-                  </Text>
-                </View>
-                <View
-                  style={[
-                    CssStyle.flexData,
-                    {marginVertical: responsiveHeight(1)},
-                  ]}>
-                  <IconSvg width={16} height={16} />
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontFamily: 'Interstate-regular',
-                      fontSize: 12,
-                      marginLeft: responsiveWidth(2),
-                    }}>
-                    90 sec
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <TouchableOpacity
-              onPress={
-                () => {}
-                // navigation.navigate('ExerciseDetail', {item: item})
-              }
-              style={[
-                CssStyle.flexData,
-                {
-                  // width: responsiveWidth(50),
-                  marginBottom: responsiveHeight(2),
-                  marginRight: responsiveWidth(7),
-                },
-              ]}>
-              <Image
-                borderRadius={responsiveWidth(2)}
-                // source={{uri: `${BaseUrl}` + item.video_link}}
-                style={{
-                  width: responsiveWidth(19),
-                  height: responsiveHeight(9),
-                  marginRight: responsiveWidth(4),
-                }}
-                resizeMode="contain"
-              />
-              <View>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 13,
-                    fontFamily: 'Interstate-regular',
-                    marginVertical: responsiveHeight(0.6),
-                    paddingTop: responsiveHeight(1),
-                  }}>
-                  Yoga Exercise
-                </Text>
-                <View
-                  style={[CssStyle.flexJustify, {width: responsiveWidth(40)}]}>
-                  <View
-                    style={[
-                      CssStyle.flexData,
-                      {marginVertical: responsiveHeight(1)},
-                    ]}>
-                    <Logo width={16} height={16} />
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontFamily: 'Interstate-regular',
-                        fontSize: 12,
-                        marginLeft: responsiveWidth(2),
-                      }}>
-                      400 kcal
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      CssStyle.flexData,
-                      {marginVertical: responsiveHeight(1)},
-                    ]}>
-                    <IconSvg width={16} height={16} />
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontFamily: 'Interstate-regular',
-                        fontSize: 12,
-                        marginLeft: responsiveWidth(2),
-                      }}>
-                      45 sec
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={
-                () => {}
-                // navigation.navigate('ExerciseDetail', {item: item})
-              }
-              style={[
-                CssStyle.flexData,
-                {
-                  // width: responsiveWidth(50),
-                  marginBottom: responsiveHeight(2),
-                  marginRight: responsiveWidth(7),
-                },
-              ]}>
-              <Image
-                borderRadius={responsiveWidth(2)}
-                // source={{uri: `${BaseUrl}` + item.video_link}}
-                style={{
-                  width: responsiveWidth(19),
-                  height: responsiveHeight(9),
-                  marginRight: responsiveWidth(4),
-                }}
-                resizeMode="contain"
-              />
-              <View>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 13,
-                    fontFamily: 'Interstate-regular',
-                    marginVertical: responsiveHeight(0.6),
-                    paddingTop: responsiveHeight(1),
-                  }}>
-                  Yoga Exercise
-                </Text>
-                <View
-                  style={[CssStyle.flexJustify, {width: responsiveWidth(40)}]}>
-                  <View
-                    style={[
-                      CssStyle.flexData,
-                      {marginVertical: responsiveHeight(1)},
-                    ]}>
-                    <Logo width={16} height={16} />
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontFamily: 'Interstate-regular',
-                        fontSize: 12,
-                        marginLeft: responsiveWidth(2),
-                      }}>
-                      400 kcal
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      CssStyle.flexData,
-                      {marginVertical: responsiveHeight(1)},
-                    ]}>
-                    <IconSvg width={16} height={16} />
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontFamily: 'Interstate-regular',
-                        fontSize: 12,
-                        marginLeft: responsiveWidth(2),
-                      }}>
-                      45 sec
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </TouchableOpacity>
-            <View style={{borderBottomColor: 'white', borderBottomWidth: 1}} />
-          </View>
-        ) */}
       </View>
     </ScrollView>
   );
@@ -1591,52 +1189,3 @@ const styles = StyleSheet.create({
     fontFamily: 'Interstate-bold',
   },
 });
-
-// import React, { useState, useEffect } from 'react';
-// import { View } from 'react-native';
-// import { Calendar } from 'react-native-calendars';
-
-// const CalendarComponent = () => {
-//   const [markedDates, setMarkedDates] = useState({});
-
-//   useEffect(() => {
-//     fetchMarkedDates(); // Fetch marked dates from the API when the component mounts
-//   }, []);
-
-//   const fetchMarkedDates = async () => {
-//     try {
-//       // Make an API request to fetch the marked dates
-//       const response = await fetch('YOUR_API_ENDPOINT');
-//       const data = await response.json();
-
-//       // Process the API data and update the marked dates state
-//       const processedMarkedDates = processMarkedDates(data);
-//       setMarkedDates(processedMarkedDates);
-//     } catch (error) {
-//       console.error('Error fetching marked dates:', error);
-//     }
-//   };
-
-//   const processMarkedDates = (apiData) => {
-//     // Process the API data and format it to match the required format for markedDates prop
-//     // The returned object should have date strings as keys and marker configurations as values
-//     // Example: { '2023-06-01': { marked: true, dotColor: 'blue' }, ... }
-//     // You may need to customize this based on your API response structure
-
-//     // Here's an example assuming the API data contains an array of date strings
-//     const processedDates = {};
-//     apiData.forEach((date) => {
-//       processedDates[date] = { marked: true, dotColor: 'blue' };
-//     });
-
-//     return processedDates;
-//   };
-
-//   return (
-//     <View>
-//       <Calendar markedDates={markedDates} />
-//     </View>
-//   );
-// };
-
-// export default CalendarComponent;

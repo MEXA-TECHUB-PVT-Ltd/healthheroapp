@@ -6,7 +6,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -34,10 +33,11 @@ import {Line} from '../../component/Line';
 import CustomButton from '../../component/CustomButton';
 import Input from '../../component/Input';
 import moment from 'moment';
+import Toast from 'react-native-toast-message';
+import ToastContainer from '../../Helping/ToastContainer';
 
 const EditWeeklyGoal = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item, 'this si the ');
   const [loading, setLoading] = useState(false);
   const id = useSelector(data => data);
   const [openRestartModel, setOpenRestartModel] = useState(false);
@@ -258,10 +258,7 @@ const EditWeeklyGoal = ({navigation, route}) => {
             onPress={() =>
               indexNumber + 1 || noOfDays
                 ? PostWeeklyReportUser()
-                : ToastAndroid.show(
-                    'Please fill the required data',
-                    ToastAndroid.SHORT,
-                  )
+                : Toast.show({text2: 'Please fill the required data'})
             }
             activeOpacity={1}
             buttonColor={AppColors.buttonText}
@@ -342,6 +339,7 @@ const EditWeeklyGoal = ({navigation, route}) => {
           </View>
         </Modal>
       </LinearGradient>
+      <ToastContainer />
     </TouchableWithoutFeedback>
   );
 };

@@ -12,7 +12,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {Fragment, useCallback, useEffect, useRef, useState} from 'react';
 import CssStyle from '../../StyleSheet/CssStyle';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
@@ -70,6 +70,7 @@ const GetExercise = ({navigation, route}) => {
   const padDigits = number => {
     return number.toString().padStart(2, '0');
   };
+  // console.log(dataTakeFromRedux[index]?.time);
   const id = useSelector(data => data.id);
   const workplanId = useSelector(data => data.workoutPlanId);
   const [loading, setLoading] = useState(false);
@@ -77,7 +78,7 @@ const GetExercise = ({navigation, route}) => {
   const findPercentage = takeNumberOfCircle / seconds;
   // console.log(findPercentage * 100, 'sdfsa');
   useEffect(() => {
-    countdownRef.current.start();
+    dataTakeFromRedux[index]?.time != '0' ? countdownRef.current.start() : {};
     setRunning(true);
   }, [item, index]);
   const [running, setRunning] = useState(true);
@@ -179,7 +180,7 @@ const GetExercise = ({navigation, route}) => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      style={[CssStyle.mainContainer, {}]}>
+      style={[CssStyle.mainContainer, {backgroundColor: AppColors.blueColor}]}>
       <ImageBackground
         style={{width: responsiveWidth(100), height: responsiveHeight(40)}}
         source={
@@ -246,36 +247,71 @@ const GetExercise = ({navigation, route}) => {
               />
             </TouchableOpacity>
             {/* {console.log(takeNumberOfCircle/11-20)} */}
-            <ProgressCircle
-              percent={findPercentage * 100}
-              radius={52}
-              borderWidth={4}
-              color={'#FF7B27'}
-              shadowColor="#C6C6C6"
-              bgColor={AppColors.blueColor}>
-              <View style={CssStyle.flexData}>
-                <Countdown
-                  ref={countdownRef}
-                  style={styles.timer}
-                  textStyle={[
-                    styles.watchTime,
-                    {
-                      fontSize: responsiveWidth(5.5),
-                    },
-                  ]}
-                  initialSeconds={seconds}
-                  onTimes={e => setTakeNumberOfCircle(e)}
-                  onPause={e => {}}
-                  onEnd={e =>
+            {dataTakeFromRedux[index]?.time !== '0' ? (
+              <ProgressCircle
+                percent={findPercentage * 100}
+                radius={52}
+                borderWidth={4}
+                color={'#FF7B27'}
+                shadowColor="#C6C6C6"
+                bgColor={AppColors.blueColor}>
+                <View style={CssStyle.flexData}>
+                  <Countdown
+                    ref={countdownRef}
+                    style={styles.timer}
+                    textStyle={[
+                      styles.watchTime,
+                      {
+                        fontSize: responsiveWidth(5.5),
+                      },
+                    ]}
+                    initialSeconds={seconds}
+                    onTimes={e => setTakeNumberOfCircle(e)}
+                    onPause={e => {}}
+                    onEnd={e =>
+                      index == dataTakeFromRedux.length - 1
+                        ? {}
+                        : (setIndex(index + 1),
+                          navigation.navigate('RestTime', {item: index}),
+                          setRunning(false))
+                    }
+                  />
+                </View>
+              </ProgressCircle>
+            ) : (
+              <View
+                style={{
+                  marginVertical: responsiveHeight(4),
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontFamily: 'Interstate-regular',
+                    fontSize: 28,
+                    marginBottom: responsiveHeight(1),
+                  }}>
+                  {dataTakeFromRedux[index]?.reps}{' '}
+                  <Text style={{fontSize: 19}}>X</Text>
+                </Text>
+                {/* <CustomButton
+                  buttonText={'Rest Time'}
+                  paddingVertical={2}
+                  style={{width: responsiveWidth(35)}}
+                  onPress={() => {
                     index == dataTakeFromRedux.length - 1
-                      ? {}
+                      ? (navigation.navigate('Focused', {item: 'hello'}),
+                        setRunning(false),
+                        dataTakeFromRedux[index]?.exercise_details
+                          ? CompleteSevenByFour()
+                          : StartWorkoutForProgress())
                       : (setIndex(index + 1),
                         navigation.navigate('RestTime', {item: index}),
-                        setRunning(false))
-                  }
-                />
+                        setRunning(false));
+                  }}
+                /> */}
               </View>
-            </ProgressCircle>
+            )}
             <TouchableOpacity
               style={{
                 backgroundColor:
@@ -444,9 +480,11 @@ const GetExercise = ({navigation, route}) => {
                             marginLeft: responsiveWidth(2),
                             opacity: 0.5,
                           }}>
-                          {dataTakeFromRedux[index + 1]?.time !== null
-                            ? dataTakeFromRedux[index + 1]?.time
-                            : '0'}
+                          {!dataTakeFromRedux[index + 1]?.reps
+                            ? dataTakeFromRedux[index + 1]?.time !== null
+                              ? dataTakeFromRedux[index + 1]?.time
+                              : '0'
+                            : dataTakeFromRedux[index + 1]?.reps}
                         </Text>
                       </View>
                     </View>
