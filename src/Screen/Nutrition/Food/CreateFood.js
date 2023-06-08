@@ -6,7 +6,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -23,12 +22,13 @@ import CssStyle from '../../../StyleSheet/CssStyle';
 import CustomButton from '../../../component/CustomButton';
 import {useSelector} from 'react-redux';
 import {Line} from '../../../component/Line';
-
+import Toast from 'react-native-toast-message';
 import Lottie from 'lottie-react-native';
 import assets from '../../../assets';
 import {AddFoodUserApi} from '../../../services/DietPlan';
 import {CreateFoodApi} from '../../../services/FoodApi';
 import Input from '../../../component/Input';
+import ToastContainer from '../../../Helping/ToastContainer';
 
 const CreateFood = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -415,10 +415,7 @@ const CreateFood = ({navigation, route}) => {
             onPress={() =>
               foodName && energy && unit && protein && carbs && fats
                 ? AddFood()
-                : ToastAndroid.show(
-                    'Please fill the required data',
-                    ToastAndroid.SHORT,
-                  )
+                : Toast.show({text2: 'Please fill the required data'})
             }
             activeOpacity={1}
             buttonColor={AppColors.buttonText}
@@ -534,6 +531,7 @@ const CreateFood = ({navigation, route}) => {
           </View>
         </Modal>
       </LinearGradient>
+      <ToastContainer />
     </ScrollView>
   );
 };

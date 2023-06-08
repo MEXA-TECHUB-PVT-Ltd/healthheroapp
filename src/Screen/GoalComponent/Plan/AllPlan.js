@@ -1,4 +1,5 @@
 import {
+  Alert,
   BackHandler,
   FlatList,
   Image,
@@ -27,6 +28,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import Loader from '../../../component/Loader';
 import {GetExerciseID} from '../../../services/WorkoutPlan';
 import {ExerCise, PlanDataExercise} from '../../../store/action';
+import Toast from 'react-native-toast-message';
+import ToastContainer from '../../../Helping/ToastContainer';
 
 const AllPlan = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -66,6 +69,15 @@ const AllPlan = ({navigation, route}) => {
       reps: ExerciseIdParam?.reps,
     },
   ];
+  const AddDataToExercise = () => {
+    indexNumber
+      ? AddToExercise()
+      : Toast.show({
+          text1: 'Warning',
+          text2: 'Select a plan to add exercise',
+        });
+  };
+  const [dataError, setData] = useState('');
   const dispatch = useDispatch();
   const AddToExercise = async () => {
     setLoading(true);
@@ -76,12 +88,13 @@ const AllPlan = ({navigation, route}) => {
         setOpenModel(true);
         setLoading(false);
       } else {
-        console.error(result.message);
-        ToastAndroid.show(
-          'This exercise already added to this plan',
-          ToastAndroid.SHORT,
-        );
         setLoading(false);
+        Toast.show({
+          text1: 'Warning',
+          text2: 'Exercise already added to this plan',
+        });
+        // setData('errorMessage');
+        // Alert.alert('hello')
       }
     } catch (error) {
       setLoading(false);
@@ -138,6 +151,9 @@ const AllPlan = ({navigation, route}) => {
       removeBackPressListener();
     };
   }, []);
+  // useEffect(() => {
+  //   Toast.show({text1: 'Warning', text2: 'Select one root'});
+  // }, [dataError == 'errorMessage']);
   const [indexNumber, setTakeIndex] = useState(0);
   return loading ? (
     <Loader />
@@ -326,14 +342,7 @@ const AllPlan = ({navigation, route}) => {
               left: responsiveWidth(10),
             }}>
             <CustomButton
-              onPress={() =>
-                indexNumber
-                  ? AddToExercise()
-                  : ToastAndroid.show(
-                      'Please select one option',
-                      ToastAndroid.SHORT,
-                    )
-              }
+              onPress={() => AddDataToExercise()}
               activeOpacity={1}
               buttonColor={AppColors.buttonText}
               paddingVertical={2}
@@ -342,6 +351,11 @@ const AllPlan = ({navigation, route}) => {
             />
           </View>
         )}
+        {/* {dataError == 'errorMessage' &&
+          Toast.show({
+            text1: 'Warning',
+            text2: 'Select one item',
+          })} */}
       </View>
       <Modal animationType="slide" transparent={true} visible={openModel}>
         <View style={{flex: 1, backgroundColor: '#00000060'}}>
@@ -410,6 +424,7 @@ const AllPlan = ({navigation, route}) => {
           </View>
         </View>
       </Modal>
+      <ToastContainer />
     </View>
   );
 };

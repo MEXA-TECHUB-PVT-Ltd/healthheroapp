@@ -4,7 +4,6 @@ import {
   Modal,
   StyleSheet,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -15,6 +14,7 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
+import Toast from 'react-native-toast-message';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {AppColors} from '../../../Helping/AppColor';
 import CssStyle from '../../../StyleSheet/CssStyle';
@@ -32,7 +32,7 @@ const SelectFood = ({navigation, route}) => {
     {item: 'lunch', id: 3},
     {item: 'dinner', id: 4},
   ];
-  const [review, setReview] = useState( '');
+  const [review, setReview] = useState('');
 
   return (
     <LinearGradient
@@ -119,7 +119,7 @@ const SelectFood = ({navigation, route}) => {
           onPress={() =>
             review
               ? navigation.navigate('EnterFood', {item: review})
-              : ToastAndroid.show('Please Select One', ToastAndroid.SHORT)
+              : Toast.show({text2: 'Please select one'})
           }
           activeOpacity={1}
           buttonColor={AppColors.buttonText}

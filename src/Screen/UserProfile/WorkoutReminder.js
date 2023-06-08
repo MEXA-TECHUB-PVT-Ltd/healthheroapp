@@ -4,13 +4,13 @@ import {
   StyleSheet,
   Switch,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
+import Toast from 'react-native-toast-message';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -34,6 +34,7 @@ import {
 import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../../component/Loader';
+import ToastContainer from '../../Helping/ToastContainer';
 
 const WorkoutReminder = ({navigation, route}) => {
   const {item, itemData} = route.params ? route.params : '';
@@ -112,7 +113,7 @@ const WorkoutReminder = ({navigation, route}) => {
       const updatedData = dataArrayReminder.filter(item => item.id !== id);
       await AsyncStorage.setItem('data', JSON.stringify(updatedData));
       console.log('Data updated successfully.');
-      ToastAndroid.show('alarm deleted successfully', ToastAndroid.SHORT);
+      Toast.show({text2: 'Alarm deleted successfully'});
       GetData();
     } catch (error) {
       console.log('Error updating data:', error);
@@ -216,10 +217,7 @@ const WorkoutReminder = ({navigation, route}) => {
           style={{marginRight: responsiveWidth(2)}}
           onPress={() =>
             dataArrayReminder?.length > 4
-              ? ToastAndroid.show(
-                  'Cannot add more data. Maximum limit 5',
-                  ToastAndroid.SHORT,
-                )
+              ? Toast.show({text2: 'Cannot add more data. Maximum limit 5'})
               : navigation.navigate('SetReminder')
           }>
           <Octicons name="diff-added" size={23} color={'white'} />
@@ -390,6 +388,7 @@ const WorkoutReminder = ({navigation, route}) => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      <ToastContainer />
     </LinearGradient>
   );
 };

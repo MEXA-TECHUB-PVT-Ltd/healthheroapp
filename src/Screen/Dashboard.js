@@ -7,7 +7,6 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -24,6 +23,7 @@ import Timer from '../assets/Icon';
 import CustomButton from '../component/CustomButton';
 import {useFocusEffect} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Toast from 'react-native-toast-message';
 import {
   GetAdvance,
   GetBeginner,
@@ -38,6 +38,7 @@ import Geolocation from '@react-native-community/geolocation';
 import {GetDietPlanIDApi} from '../services/DietPlan';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Diet_Id} from '../store/action';
+import ToastContainer from '../Helping/ToastContainer';
 
 const Dashboard = ({navigation}) => {
   useFocusEffect(
@@ -201,6 +202,7 @@ const Dashboard = ({navigation}) => {
           backgroundColor: AppColors.blueColor,
         },
       ]}>
+      <ToastContainer />
       <StatusBar hidden={true} />
       <View style={{paddingHorizontal: responsiveWidth(5), flex: 1}}>
         <View style={[CssStyle.flexJustify, {marginTop: responsiveHeight(4)}]}>
@@ -342,10 +344,10 @@ const Dashboard = ({navigation}) => {
               onPress={() =>
                 sevenFourData
                   ? navigation.navigate('StartNow', {item: sevenFourData[0]})
-                  : ToastAndroid.show(
-                      'No exercise available',
-                      ToastAndroid.SHORT,
-                    )
+                  : Toast.show({
+                      text1: 'Alert',
+                      text2: 'No exercise available',
+                    })
               }
               style={{
                 borderRadius: responsiveWidth(2),

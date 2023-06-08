@@ -4,7 +4,6 @@ import {
   Image,
   StyleSheet,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -15,6 +14,7 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
+import Toast from 'react-native-toast-message';
 import {AppColors} from '../../Helping/AppColor';
 import Icon from 'react-native-vector-icons/Ionicons';
 import SwiperFlatList from 'react-native-swiper-flatlist';
@@ -25,6 +25,7 @@ import {UpdateProfileApi} from '../../';
 import {RulerPicker} from 'react-native-ruler-picker';
 import Ruler from '../../Helping/Ruler';
 import Input from '../../component/Input';
+import ToastContainer from '../../Helping/ToastContainer';
 
 const WeekGoal = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
@@ -172,10 +173,7 @@ const WeekGoal = ({navigation, route}) => {
                       item: {item, activeIndex},
                       updateData,
                     })
-                  : ToastAndroid.show(
-                      'Please enter the weekly goal',
-                      ToastAndroid.SHORT,
-                    );
+                  : Toast.show({text2: 'Please enter the weekly goal'});
               }}
               activeOpacity={1}
               style={{width: responsiveWidth(78)}}
@@ -184,6 +182,7 @@ const WeekGoal = ({navigation, route}) => {
           </View>
         </View>
       </View>
+      <ToastContainer />
     </View>
   );
 };

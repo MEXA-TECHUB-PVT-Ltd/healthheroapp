@@ -208,9 +208,11 @@ const RestTime = ({navigation, route}) => {
                         marginLeft: responsiveWidth(2),
                         opacity: 0.5,
                       }}>
-                      {dataTakeFromRedux[item + 1]?.time !== null
+                      {!dataTakeFromRedux[item + 1]?.reps
                         ? dataTakeFromRedux[item + 1]?.time
-                        : '0'}
+                          ? dataTakeFromRedux[item + 1]?.time
+                          : '0'
+                        : dataTakeFromRedux[item + 1]?.reps}
                     </Text>
                   </View>
                 </View>

@@ -34,11 +34,8 @@ import Loader from '../../component/Loader';
 
 const NutritionHeight = ({navigation, route}) => {
   const {item, updateData, userData} = route.params ? route.params : '';
-  console.log(userData.height, 'new changes');
   const weightUnitData = [{text: 'ft'}, {text: 'in'}];
-  const [weightData, setWeightData] = useState(
-    item?.height_unit ? item?.height_unit : 'ft',
-  );
+  const [weightData, setWeightData] = useState('ft');
   const [heightValueItem, setHeightValue] = useState(
     updateData ? updateData?.height : item ? item?.height : 9,
   );
@@ -48,7 +45,7 @@ const NutritionHeight = ({navigation, route}) => {
   const [openUserSuccessfully, setOpenUserSuccessfully] = useState(false);
   const [inchNumber, setInchNumber] = useState(0);
   const [startIndex, setStartIndex] = useState(3);
-  console.log(parseInt(updateData?.height), 'heig');
+  // console.log(parseInt(updateData?.height), 'heig');
 
   const UpdateUserName = async () => {
     setLoadingUser(true);
@@ -79,6 +76,23 @@ const NutritionHeight = ({navigation, route}) => {
   const heightValue = heightValueItem + '.' + inchNumber;
   // console.log(updateData?.height);
   // console.log(heightValue, 'index');
+  // Function to generate a random number using the current date and time as a seed
+  // useEffect(() => {
+  //   generateRandomNumber();
+  // }, []);
+  // function generateRandomNumber() {
+  //   const currentDate = new Date('2023-06-08T06:05:54.746Z');
+  //   const day = currentDate.getDate();
+  //   const month = currentDate.getMonth() + 1; // Month is zero-indexed, so we add 1
+  //   const year = currentDate.getFullYear();
+
+  //   const uniqueNumber = (day + month + year) % 31; // Remainder after dividing by 21
+  //   return uniqueNumber;
+  // }
+
+  // // Generate and display the unique number
+  // const uniqueNum = generateRandomNumber();
+  // console.log(uniqueNum);
 
   return loading ? (
     <Loader />

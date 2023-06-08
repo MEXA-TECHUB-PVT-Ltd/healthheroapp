@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Switch,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -23,9 +22,11 @@ import {useSelector} from 'react-redux';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 import moment from 'moment';
+import Toast from 'react-native-toast-message';
 import {DayOfCount} from '../../Helping/DayOfCount';
 import DatePicker from 'react-native-date-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ToastContainer from '../../Helping/ToastContainer';
 
 const SetReminder = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -219,7 +220,7 @@ const SetReminder = ({navigation, route}) => {
             onPress={() => {
               apiTime && selectItem.length > 0
                 ? setOpenRestartModel(true)
-                : ToastAndroid.show('Please select day', ToastAndroid.SHORT);
+                : Toast.show({text2: 'Select Day to set reminder'});
             }}
             fontWeight={'500'}
             borderColor={'white'}
@@ -342,6 +343,7 @@ const SetReminder = ({navigation, route}) => {
           </View>
         </View>
       </Modal>
+      <ToastContainer />
     </LinearGradient>
   );
 };

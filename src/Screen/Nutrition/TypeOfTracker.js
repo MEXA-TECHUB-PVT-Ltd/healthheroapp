@@ -5,7 +5,6 @@ import {
   Modal,
   StyleSheet,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -17,6 +16,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Toast from 'react-native-toast-message';
 import {AppColors} from '../../Helping/AppColor';
 import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
@@ -28,6 +28,7 @@ import assets from '../../assets';
 import {AddWaterApi, UpdateWaterApi} from '../../services/WaterTrackerApi';
 import {Water_Id} from '../../store/action';
 import moment from 'moment';
+import ToastContainer from '../../Helping/ToastContainer';
 
 const TypeOfTracker = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -297,10 +298,7 @@ const TypeOfTracker = ({navigation, route}) => {
           onPress={() =>
             typeDate && time
               ? AddTracker()
-              : ToastAndroid.show(
-                  'Please select all option',
-                  ToastAndroid.SHORT,
-                )
+              : Toast.show({text2: 'Please select all option'})
           }
           activeOpacity={1}
           buttonColor={AppColors.buttonText}
@@ -408,6 +406,7 @@ const TypeOfTracker = ({navigation, route}) => {
           </View>
         </View>
       </Modal>
+      <ToastContainer />
     </LinearGradient>
   );
 };

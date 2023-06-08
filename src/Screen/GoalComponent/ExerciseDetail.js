@@ -97,7 +97,11 @@ const ExerciseDetail = ({navigation, route}) => {
                     styles.signInText,
                     {fontFamily: 'Interstate-regular'},
                   ]}>
-                  {staticValue?.time ? staticValue?.time : '0'}
+                  {!staticValue?.reps
+                    ? staticValue?.time
+                      ? staticValue?.time
+                      : '0'
+                    : staticValue?.reps}
                 </Text>
                 <View
                   style={[CssStyle.flexData, {marginTop: responsiveHeight(2)}]}>
@@ -160,7 +164,11 @@ const ExerciseDetail = ({navigation, route}) => {
                 <Text style={[styles.signInText, {fontSize: 16}]}>
                   Focused Area
                 </Text>
-                <View style={[CssStyle.flexData, {width: responsiveWidth(90)}]}>
+                <View
+                  style={[
+                    CssStyle.flexData,
+                    {width: responsiveWidth(100), flexWrap: 'wrap'},
+                  ]}>
                   {focus ? (
                     focus.map((item, index) => (
                       <View

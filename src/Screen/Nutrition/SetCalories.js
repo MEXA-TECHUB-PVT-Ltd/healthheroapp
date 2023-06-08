@@ -6,7 +6,6 @@ import {
   Modal,
   StyleSheet,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -18,6 +17,7 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
+import Toast from 'react-native-toast-message';
 import {AppColors} from '../../Helping/AppColor';
 import Icon from 'react-native-vector-icons/Ionicons';
 import SwiperFlatList from 'react-native-swiper-flatlist';
@@ -35,6 +35,7 @@ import {AddDietPlan, UpdateDietPlanApi} from '../../services/DietPlan';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Diet_Id} from '../../store/action';
 import moment from 'moment';
+import ToastContainer from '../../Helping/ToastContainer';
 
 const SetCalories = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
@@ -99,7 +100,7 @@ const SetCalories = ({navigation, route}) => {
         setSuccessfully(true);
       } else {
         setOpenRestartModel(false);
-        ToastAndroid.show(result.message, ToastAndroid.SHORT);
+        Toast.show({text2: result.message});
       }
     } catch (error) {
       setOpenRestartModel(false);
@@ -192,10 +193,7 @@ const SetCalories = ({navigation, route}) => {
             onPress={() => {
               weightData
                 ? MakePlan()
-                : ToastAndroid.show(
-                    'Please enter calories budget',
-                    ToastAndroid.SHORT,
-                  );
+                : Toast.show({text2: 'Please enter calories budget'});
             }}
             activeOpacity={1}
             style={{width: responsiveWidth(78)}}
@@ -344,6 +342,7 @@ const SetCalories = ({navigation, route}) => {
           </View>
         </View>
       </Modal> */}
+      <ToastContainer />
     </View>
   );
 };

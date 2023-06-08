@@ -27,7 +27,7 @@ import {DataWorkPlan, Workout_Plan_Id} from '../../store/action';
 
 const WorkoutDetail = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  console.log(item, 'sf');
+  // console.log(item, 'sf');
   const [loading, setLoading] = useState(false);
   const [workoutPlanData, setWorkoutPlanData] = useState([]);
   const id = useSelector(data => data.workoutPlanId);
@@ -103,7 +103,7 @@ const WorkoutDetail = ({navigation, route}) => {
           </Text>
           <View
             style={[
-              CssStyle.flexJustify,
+              !item?.workout_plan_exersises && CssStyle.flexJustify,
               {
                 borderWidth: 1,
                 borderColor: 'white',
@@ -111,6 +111,7 @@ const WorkoutDetail = ({navigation, route}) => {
                 paddingVertical: responsiveHeight(1.8),
                 paddingHorizontal: responsiveWidth(8),
                 marginTop: responsiveHeight(2.6),
+                alignItems: 'center',
               },
             ]}>
             <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
@@ -121,18 +122,24 @@ const WorkoutDetail = ({navigation, route}) => {
                 : 0}{' '}
               <Text style={{color: 'white'}}>exercises</Text>
             </Text>
-            <Text
-              style={{
-                color: '#FF5100',
-                fontFamily: 'Interstate-bold',
-                textTransform: 'capitalize',
-              }}>
-              {workoutPlanData?.level_of_workout}
-            </Text>
-            <Text style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
-              {workoutPlanData?.time ? workoutPlanData?.time?.slice(0, 10) : 0}
-              {/* <Text style={{color: 'white'}}>min</Text> */}
-            </Text>
+            {!item?.workout_plan_exersises && (
+              <>
+                <Text
+                  style={{
+                    color: '#FF5100',
+                    fontFamily: 'Interstate-bold',
+                    textTransform: 'capitalize',
+                  }}>
+                  {workoutPlanData?.level_of_workout}
+                </Text>
+                <Text
+                  style={{color: '#FF5100', fontFamily: 'Interstate-regular'}}>
+                  {workoutPlanData?.time
+                    ? workoutPlanData?.time?.slice(0, 10)
+                    : 0}
+                </Text>
+              </>
+            )}
           </View>
           <View style={{marginTop: responsiveHeight(2), flex: 1}}>
             <Text
@@ -240,7 +247,11 @@ const WorkoutDetail = ({navigation, route}) => {
                                 marginLeft: responsiveWidth(2),
                                 opacity: 0.8,
                               }}>
-                              {item?.time ? item?.time : '0 sec'}
+                              {!item.reps
+                                ? item?.time
+                                  ? item?.time
+                                  : '0 sec'
+                                : item?.reps}
                             </Text>
                           </View>
                         </View>

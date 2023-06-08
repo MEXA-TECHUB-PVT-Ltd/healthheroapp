@@ -17,7 +17,7 @@ import {GetDietPlanIDApi} from '../services/DietPlan';
 const MainApplication = () => {
   const [data, setData] = useState('');
   const dispatch = useDispatch();
-  // const dataId = useSelector(data => console.log(data, 'redux'));
+  const dataId = useSelector(data => console.log(data, 'redux'));
   const Storage = async () => {
     const result = await AsyncStorage.getItem('userID');
     const dietPlanId = await AsyncStorage.getItem('DietPlanId');

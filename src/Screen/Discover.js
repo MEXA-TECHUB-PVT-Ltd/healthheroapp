@@ -18,6 +18,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Logo from '../assets/Icon3';
+import Timer from '../assets/Icon';
 import NoImage from '../assets/noImageRed';
 import Loader from '../component/Loader';
 import {
@@ -61,7 +62,22 @@ const Discover = ({navigation}) => {
       console.log(error);
     }
   };
-  const indexNumberGet = 3;
+  useEffect(() => {
+    generateRandomNumber();
+  }, []);
+  function generateRandomNumber() {
+    const currentDate = new Date('2023-06-08T06:05:54.746Z');
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; // Month is zero-indexed, so we add 1
+    const year = currentDate.getFullYear();
+
+    const uniqueNumber = (day + month + year) % 21; // Remainder after dividing by 21
+    return uniqueNumber;
+  }
+
+  // Generate and display the unique number
+  // const uniqueNum = generateRandomNumber();
+  const indexNumberGet = generateRandomNumber();
   useEffect(() => {
     WorkoutPlan();
   }, [categoryIdIndex]);
@@ -210,7 +226,7 @@ const Discover = ({navigation}) => {
               }}
             />
           </View>
-          {exerciseData ? (
+          {exerciseData[indexNumberGet] ? (
             <View style={{width: responsiveWidth(40)}}>
               <Text
                 style={{
@@ -262,7 +278,7 @@ const Discover = ({navigation}) => {
                     overflow: 'visible',
                   },
                 ]}>
-                <Logo width={16} height={16} />
+                <Timer width={16} height={16} />
                 <Text
                   style={{
                     color: 'white',
@@ -271,9 +287,11 @@ const Discover = ({navigation}) => {
                     fontSize: 12,
                   }}>
                   {exerciseData[indexNumberGet]?.time
-                    ? moment(exerciseData[indexNumberGet]?.time).format(
-                        'hh:mm:ss',
-                      )
+                    ? exerciseData[indexNumberGet]?.time?.length > 10
+                      ? moment(exerciseData[indexNumberGet]?.time).format(
+                          'hh:mm:ss',
+                        )
+                      : exerciseData[indexNumberGet]?.time?.slice(0, 10)
                     : '0 sec'}
                 </Text>
               </View>

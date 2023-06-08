@@ -29,9 +29,9 @@ import Input from '../../component/Input';
 
 const NutritionGender = ({navigation, route}) => {
   const {planType, updateData, userData} = route.params ? route.params : '';
-  // console.log(planType, updateData, 'helo', userData, 'hello');
+  console.log(planType, updateData, 'helo', userData, 'hello');
   const [addData, setAddData] = useState(
-    updateData ? updateData?.gender : userData ? userData?.gender : 'male',
+    updateData ? updateData?.gender : userData?.gender ? userData?.gender : 'male',
   );
   const [age, setAge] = useState(updateData ? `${updateData?.age}` : '');
   const genderCollectionData = [
