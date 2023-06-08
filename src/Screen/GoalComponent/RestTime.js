@@ -24,10 +24,11 @@ import {GetRestTimeApi} from '../../services/RestApi';
 import Loader from '../../component/Loader';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import {BaseUrl} from '../../Helping/BaseUrl';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 
 const RestTime = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
-  // console.log(item);
+  console.log(item, 'from exercise');
   const countdownRef = useRef();
 
   const data = useSelector(data => data);
@@ -78,13 +79,25 @@ const RestTime = ({navigation, route}) => {
           style={{
             marginLeft: responsiveWidth(3),
             paddingTop: responsiveHeight(3),
-            flex: 1.5,
+            flex: 1,
           }}
           onPress={() => {
-            navigation.navigate('GetExercise', {item: Math.random()});
+            navigation.navigate('GetExercise', {
+              item: Math.random(),
+              indexData: item + 1,
+            });
           }}>
           <Icon name="chevron-back-outline" size={25} color={'white'} />
         </TouchableOpacity>
+        <View style={{alignItems: 'center', marginBottom: responsiveHeight(4)}}>
+          <BannerAd
+            unitId={TestIds.BANNER}
+            size={BannerAdSize.LARGE_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: true,
+            }}
+          />
+        </View>
         <View style={{alignItems: 'center', flex: 1}}>
           <CountdownCircleTimer
             isPlaying
@@ -92,7 +105,10 @@ const RestTime = ({navigation, route}) => {
             size={120}
             strokeWidth={8}
             onComplete={() => {
-              navigation.navigate('GetExercise', {item: Math.random()});
+              navigation.navigate('GetExercise', {
+                item: Math.random(),
+                indexData: item + 1,
+              });
             }}
             colors={['#FF5100', '#FF5100', '#FF5100']}>
             {({remainingTime}) => (
@@ -254,7 +270,10 @@ const RestTime = ({navigation, route}) => {
               />
               <CustomButton
                 onPress={() => {
-                  navigation.navigate('GetExercise', {item: Math.random()});
+                  navigation.navigate('GetExercise', {
+                    item: Math.random(),
+                    indexData: item + 1,
+                  });
                 }}
                 buttonText={'Skip'}
                 style={{width: responsiveWidth(38)}}

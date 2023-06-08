@@ -28,6 +28,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {CreatePlanApi} from '../../../services/UserPlan';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
+import LottieGif from '../../../Helping/LottieGif';
 const CreatePlan = ({navigation}) => {
   const [planTitle, setPlanTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -188,36 +189,8 @@ const CreatePlan = ({navigation}) => {
                       borderTopLeftRadius: responsiveHeight(3),
                       paddingVertical: responsiveHeight(4.8),
                     }}>
-                    <View
-                      // activeOpacity={1}
-                      style={{
-                        // height: wp(28),
-                        width: 90,
-                        // backgroundColor: 'red',
-                        aspectRatio: 1,
-                        alignSelf: 'center',
-                        marginTop: responsiveHeight(1),
-                      }}>
-                      <Lottie
-                        source={assets.loader}
-                        autoPlay
-                        loop={true}
-                        resizeMode="cover"
-                        speed={1}
-                        colorFilter={[{color: 'red'}]}
-                      />
-                    </View>
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontSize: 23,
-                        fontFamily: 'Interstate-regular',
-                        width: responsiveWidth(75),
-                        textAlign: 'center',
-                        lineHeight: responsiveHeight(4),
-                        marginTop: responsiveHeight(4),
-                        textTransform: 'capitalize',
-                      }}>
+                    <LottieGif />
+                    <Text style={CssStyle.modelTextStyle}>
                       Workout Plan Created Successfully
                     </Text>
                     <CustomButton

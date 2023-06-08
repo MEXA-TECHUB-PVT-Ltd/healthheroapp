@@ -25,6 +25,7 @@ import {TakeCountDownApi} from '../../services/CountDownApi';
 import {CustomModelCenter} from '../../component/CustomModel';
 import {GetPremiumApi} from '../../services/AuthScreen';
 import Loader from '../../component/Loader';
+import LottieGif from '../../Helping/LottieGif';
 
 const GetPremium = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
@@ -193,35 +194,14 @@ const GetPremium = ({navigation, route}) => {
                   paddingHorizontal: responsiveWidth(6),
                   alignItems: 'center',
                 }}>
-                <View
-                  // activeOpacity={1}
-                  style={{
-                    // height: wp(28),
-                    width: 110,
-                    // backgroundColor: 'red',
-                    aspectRatio: 1,
-                    alignSelf: 'center',
-                  }}>
-                  <Lottie
-                    source={assets.loader}
-                    autoPlay
-                    loop={true}
-                    resizeMode="cover"
-                    speed={1}
-                    colorFilter={[{color: 'red'}]}
-                  />
-                </View>
+                <LottieGif />
                 <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 23,
-                    fontFamily: 'Interstate-regular',
-                    width: responsiveWidth(90),
-                    textAlign: 'center',
-                    lineHeight: responsiveHeight(4),
-                    marginTop: responsiveHeight(4),
-                    textTransform: 'capitalize',
-                  }}>
+                  style={[
+                    CssStyle.modelTextStyle,
+                    {
+                      width: responsiveWidth(90),
+                    },
+                  ]}>
                   Subscription Payed Successfully
                 </Text>
 

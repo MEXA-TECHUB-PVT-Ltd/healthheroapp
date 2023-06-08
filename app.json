@@ -1,4 +1,8 @@
 {
   "name": "healthHeroMtechub",
-  "displayName": "healthHeroMtechub"
+  "displayName": "healthHeroMtechub",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-8391410353522493~6357803750",
+    "ios_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx"
+  }
 }

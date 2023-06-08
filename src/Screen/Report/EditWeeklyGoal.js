@@ -35,9 +35,11 @@ import Input from '../../component/Input';
 import moment from 'moment';
 import Toast from 'react-native-toast-message';
 import ToastContainer from '../../Helping/ToastContainer';
+import LottieGif from '../../Helping/LottieGif';
 
 const EditWeeklyGoal = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
+  console.log(item, 'shle');
   const [loading, setLoading] = useState(false);
   const id = useSelector(data => data);
   const [openRestartModel, setOpenRestartModel] = useState(false);
@@ -50,7 +52,9 @@ const EditWeeklyGoal = ({navigation, route}) => {
     {item: 'Sat', id: 6},
     {item: 'Sun', id: 7},
   ];
-  const filterDay = foodType.filter(data => data.id == item?.first_day_of_week);
+  const filterDay = foodType?.filter(
+    data => data.id == item?.first_day_of_week,
+  );
   // console.log(filterDay, 'sdhf');
   const [typeDateFood, setTypeFood] = useState(
     filterDay ? filterDay[0]?.item : '',
@@ -286,36 +290,8 @@ const EditWeeklyGoal = ({navigation, route}) => {
                   borderTopLeftRadius: responsiveHeight(3),
                   paddingVertical: responsiveHeight(4.8),
                 }}>
-                <View
-                  // activeOpacity={1}
-                  style={{
-                    // height: wp(28),
-                    width: 90,
-                    // backgroundColor: 'red',
-                    aspectRatio: 1,
-                    alignSelf: 'center',
-                    marginTop: responsiveHeight(1),
-                  }}>
-                  <Lottie
-                    source={assets.loader}
-                    autoPlay
-                    loop={true}
-                    resizeMode="cover"
-                    speed={1}
-                    colorFilter={[{color: 'red'}]}
-                  />
-                </View>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 23,
-                    fontFamily: 'Interstate-regular',
-                    width: responsiveWidth(75),
-                    textAlign: 'center',
-                    lineHeight: responsiveHeight(4),
-                    marginTop: responsiveHeight(4),
-                    textTransform: 'capitalize',
-                  }}>
+                <LottieGif />
+                <Text style={CssStyle.modelTextStyle}>
                   {data
                     ? 'First Week Added Successfully'
                     : 'Weekly Goal Added Successfully'}
@@ -338,8 +314,8 @@ const EditWeeklyGoal = ({navigation, route}) => {
             </View>
           </View>
         </Modal>
+        <ToastContainer />
       </LinearGradient>
-      <ToastContainer />
     </TouchableWithoutFeedback>
   );
 };

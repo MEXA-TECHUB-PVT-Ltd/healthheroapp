@@ -36,6 +36,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Diet_Id} from '../../store/action';
 import moment from 'moment';
 import ToastContainer from '../../Helping/ToastContainer';
+import LottieGif from '../../Helping/LottieGif';
 
 const SetCalories = ({navigation, route}) => {
   const {item, updateData} = route.params ? route.params : '';
@@ -258,35 +259,14 @@ const SetCalories = ({navigation, route}) => {
                 </>
               ) : (
                 <>
-                  <View
-                    // activeOpacity={1}
-                    style={{
-                      // height: wp(28),
-                      width: 110,
-                      // backgroundColor: 'red',
-                      aspectRatio: 1,
-                      alignSelf: 'center',
-                    }}>
-                    <Lottie
-                      source={assets.loader}
-                      autoPlay
-                      loop={true}
-                      resizeMode="cover"
-                      speed={1}
-                      colorFilter={[{color: 'red'}]}
-                    />
-                  </View>
+                  <LottieGif />
                   <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 23,
-                      fontFamily: 'Interstate-regular',
-                      width: responsiveWidth(90),
-                      textAlign: 'center',
-                      lineHeight: responsiveHeight(4),
-                      marginTop: responsiveHeight(4),
-                      textTransform: 'capitalize',
-                    }}>
+                    style={[
+                      CssStyle.modelTextStyle,
+                      {
+                        width: responsiveWidth(90),
+                      },
+                    ]}>
                     Nutrition & Diet plan added successfully
                   </Text>
                   <View
