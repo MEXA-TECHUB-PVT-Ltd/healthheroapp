@@ -37,6 +37,7 @@ import {
 import PushNotification, {Importance} from 'react-native-push-notification';
 import {BaseUrl} from '../Helping/BaseUrl';
 import {pushLocalNotificationAndroid} from '../Helping/NotifService';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 
 const Report = ({navigation}) => {
   const [historyDataDate, setHistoryDataDate] = useState([]);
@@ -461,7 +462,7 @@ const Report = ({navigation}) => {
             <View
               style={[
                 {
-                  marginBottom: responsiveHeight(2.9),
+                  marginBottom: responsiveHeight(1),
                   borderRadius: 8,
                   paddingHorizontal: responsiveWidth(3),
                   paddingVertical: responsiveHeight(1.6),
@@ -553,6 +554,16 @@ const Report = ({navigation}) => {
                   </View>
                 </View>
               </>
+            </View>
+            <View
+              style={{alignItems: 'center', marginBottom: responsiveHeight(1)}}>
+              <BannerAd
+                unitId={TestIds.BANNER}
+                size={BannerAdSize.LARGE_BANNER}
+                requestOptions={{
+                  requestNonPersonalizedAdsOnly: true,
+                }}
+              />
             </View>
             <View style={styles.dailyButton}>
               <View style={{}}>
@@ -1145,6 +1156,19 @@ const Report = ({navigation}) => {
                           borderBottomWidth: 1,
                         }}
                       />
+                      <View
+                        style={{
+                          alignItems: 'center',
+                          marginBottom: responsiveHeight(1),
+                        }}>
+                        <BannerAd
+                          unitId={TestIds.BANNER}
+                          size={BannerAdSize.LARGE_BANNER}
+                          requestOptions={{
+                            requestNonPersonalizedAdsOnly: true,
+                          }}
+                        />
+                      </View>
                     </View>
                   );
                 }}

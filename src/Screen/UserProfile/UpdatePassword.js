@@ -27,6 +27,7 @@ import Input from '../../component/Input';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {UpdatePasswordApi} from '../../services/AuthScreen';
 import {User_password} from '../../store/action';
+import LottieGif from '../../Helping/LottieGif';
 
 const UpdatePassword = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -317,36 +318,14 @@ const UpdatePassword = ({navigation, route}) => {
                     paddingHorizontal: responsiveWidth(6),
                     alignItems: 'center',
                   }}>
-                  <View
-                    // activeOpacity={1}
-                    style={{
-                      // height: wp(28),
-                      width: 125,
-                      // backgroundColor: 'red',
-                      aspectRatio: 1,
-                      alignSelf: 'center',
-                    }}>
-                    <Lottie
-                      source={assets.loader}
-                      autoPlay
-                      loop={true}
-                      resizeMode="cover"
-                      speed={1}
-                      // style={{width}}
-                      colorFilter={[{color: 'red'}]}
-                    />
-                  </View>
+                  <LottieGif />
                   <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 23,
-                      fontFamily: 'Interstate-regular',
-                      width: responsiveWidth(75),
-                      textAlign: 'center',
-                      lineHeight: responsiveHeight(4),
-                      marginTop: responsiveHeight(2),
-                      textTransform: 'capitalize',
-                    }}>
+                    style={[
+                      CssStyle.modelTextStyle,
+                      {
+                        marginTop: responsiveHeight(2),
+                      },
+                    ]}>
                     Password Updated Successfully
                   </Text>
 

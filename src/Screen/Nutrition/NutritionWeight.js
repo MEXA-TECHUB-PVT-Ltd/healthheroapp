@@ -27,6 +27,7 @@ import assets from '../../assets';
 import {AddWeightWithoutProfileApi} from '../../services/HeightApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {WeightReviewId} from '../../store/action';
+import LottieGif from '../../Helping/LottieGif';
 
 const NutritionWeight = ({navigation, route}) => {
   const {item, updateData, userData, getUserDetail} = route.params
@@ -42,7 +43,7 @@ const NutritionWeight = ({navigation, route}) => {
       ? item[0]?.current_weight
       : updateData?.weight
       ? updateData?.weight
-      : userData
+      : userData?.weight
       ? userData?.weight
       : getUserDetail?.weight
       ? getUserDetail?.weight
@@ -254,36 +255,15 @@ const NutritionWeight = ({navigation, route}) => {
                   paddingHorizontal: responsiveWidth(6),
                   alignItems: 'center',
                 }}>
-                <View
-                  // activeOpacity={1}
-                  style={{
-                    // height: wp(28),
-                    width: 125,
-                    // backgroundColor: 'red',
-                    aspectRatio: 1,
-                    alignSelf: 'center',
-                  }}>
-                  <Lottie
-                    source={assets.loader}
-                    autoPlay
-                    loop={true}
-                    resizeMode="cover"
-                    speed={1}
-                    // style={{width}}
-                    colorFilter={[{color: 'red'}]}
-                  />
-                </View>
+                <LottieGif />
                 <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 23,
-                    fontFamily: 'Interstate-regular',
-                    width: responsiveWidth(60),
-                    textAlign: 'center',
-                    lineHeight: responsiveHeight(4),
-                    marginTop: responsiveHeight(2),
-                    textTransform: 'capitalize',
-                  }}>
+                  style={[
+                    CssStyle.modelTextStyle,
+                    {
+                      width: responsiveWidth(60),
+                      marginTop: responsiveHeight(2),
+                    },
+                  ]}>
                   Changes saved Successfully
                 </Text>
 

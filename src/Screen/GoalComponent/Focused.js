@@ -23,6 +23,7 @@ import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 import {PostReview} from '../../services/WorkoutPlan';
 import {useSelector} from 'react-redux';
+import LottieGif from '../../Helping/LottieGif';
 
 const Focused = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -161,72 +162,48 @@ const Focused = ({navigation, route}) => {
           />
         </View>
       </View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={openModel}>
-          <View style={{flex: 1, backgroundColor: '#00000060'}}>
+      <Modal animationType="slide" transparent={true} visible={openModel}>
+        <View style={{flex: 1, backgroundColor: '#00000060'}}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}>
             <View
               style={{
-                flex: 1,
-                justifyContent: 'flex-end',
+                backgroundColor: AppColors.blueColor,
+                alignItems: 'center',
+                borderTopEndRadius: responsiveHeight(3),
+                borderTopLeftRadius: responsiveHeight(3),
+                paddingVertical: responsiveHeight(4.8),
               }}>
-              <View
-                style={{
-                  backgroundColor: AppColors.blueColor,
-                  alignItems: 'center',
-                  borderTopEndRadius: responsiveHeight(3),
-                  borderTopLeftRadius: responsiveHeight(3),
-                  paddingVertical: responsiveHeight(4.8),
-                }}>
-                <View
-                  // activeOpacity={1}
-                  style={{
-                    // height: wp(28),
-                    width: 90,
-                    // backgroundColor: 'red',
-                    aspectRatio: 1,
-                    alignSelf: 'center',
-                    marginTop: responsiveHeight(1),
-                  }}>
-                  <Lottie
-                    source={assets.loader}
-                    autoPlay
-                    loop={true}
-                    resizeMode="cover"
-                    speed={1}
-                    colorFilter={[{color: 'red'}]}
-                  />
-                </View>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 23,
-                    fontFamily: 'Interstate-regular',
+              <LottieGif />
+              <Text
+                style={[
+                  CssStyle.modelTextStyle,
+                  {
                     width: responsiveWidth(60),
-                    textAlign: 'center',
-                    lineHeight: responsiveHeight(3),
-                    marginTop: responsiveHeight(4),
-                  }}>
-                  Review Submitted Successfully
-                </Text>
-                <CustomButton
-                  buttonText={'Go Back'}
-                  onPress={() => {
-                    setOpenModel(false), navigation.navigate('main');
-                  }}
-                  buttonColor={'transparent'}
-                  mode="outlined"
-                  fontWeight={'500'}
-                  borderColor={'white'}
-                  style={{
-                    marginTop: responsiveHeight(3.7),
-                    width: responsiveWidth(46),
-                  }}
-                />
-              </View>
+                  },
+                ]}>
+                Review Submitted Successfully
+              </Text>
+              <CustomButton
+                buttonText={'Go Back'}
+                onPress={() => {
+                  setOpenModel(false), navigation.navigate('main');
+                }}
+                buttonColor={'transparent'}
+                mode="outlined"
+                fontWeight={'500'}
+                borderColor={'white'}
+                style={{
+                  marginTop: responsiveHeight(3.7),
+                  width: responsiveWidth(46),
+                }}
+              />
             </View>
           </View>
+        </View>
       </Modal>
     </View>
   );

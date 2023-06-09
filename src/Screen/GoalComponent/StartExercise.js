@@ -28,6 +28,7 @@ import {BaseUrl} from '../../Helping/BaseUrl';
 import Loader from '../../component/Loader';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import NoImage from '../../assets/noImageRed';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 
 const StartExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : 0;
@@ -88,11 +89,20 @@ const StartExercise = ({navigation, route}) => {
           style={{
             marginLeft: responsiveWidth(1),
             paddingTop: responsiveHeight(3),
-            flex: 1.5,
+            flex: 1,
           }}
           onPress={() => navigation.goBack()}>
           <Icon name="chevron-back-outline" size={25} color={'white'} />
         </TouchableOpacity>
+        <View style={{alignItems: 'center', marginBottom: responsiveHeight(4)}}>
+          <BannerAd
+            unitId={TestIds.BANNER}
+            size={BannerAdSize.LARGE_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: true,
+            }}
+          />
+        </View>
         <View style={{alignItems: 'center', flex: 1}}>
           {/* <ProgressCircle
             percent={countdownRef * 40}
@@ -241,7 +251,6 @@ const StartExercise = ({navigation, route}) => {
             <CustomButton
               onPress={() =>
                 navigation.navigate('GetExercise', {
-                  item: 'StartExercise',
                   indexNumber: item,
                 })
               }

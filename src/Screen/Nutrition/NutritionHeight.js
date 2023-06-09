@@ -31,6 +31,7 @@ import {useSelector} from 'react-redux';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 import Loader from '../../component/Loader';
+import LottieGif from '../../Helping/LottieGif';
 
 const NutritionHeight = ({navigation, route}) => {
   const {item, updateData, userData} = route.params ? route.params : '';
@@ -278,36 +279,12 @@ const NutritionHeight = ({navigation, route}) => {
                   paddingHorizontal: responsiveWidth(6),
                   alignItems: 'center',
                 }}>
-                <View
-                  // activeOpacity={1}
-                  style={{
-                    // height: wp(28),
-                    width: 125,
-                    // backgroundColor: 'red',
-                    aspectRatio: 1,
-                    alignSelf: 'center',
-                  }}>
-                  <Lottie
-                    source={assets.loader}
-                    autoPlay
-                    loop={true}
-                    resizeMode="cover"
-                    speed={1}
-                    // style={{width}}
-                    colorFilter={[{color: 'red'}]}
-                  />
-                </View>
+                <LottieGif />
                 <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 23,
-                    fontFamily: 'Interstate-regular',
+                  style={[CssStyle.modelTextStyle,{
                     width: responsiveWidth(60),
-                    textAlign: 'center',
-                    lineHeight: responsiveHeight(4),
                     marginTop: responsiveHeight(2),
-                    textTransform: 'capitalize',
-                  }}>
+                  }]}>
                   Changes saved Successfully
                 </Text>
 

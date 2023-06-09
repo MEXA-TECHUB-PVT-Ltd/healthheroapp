@@ -30,6 +30,7 @@ import {GetExerciseID} from '../../../services/WorkoutPlan';
 import {ExerCise, PlanDataExercise} from '../../../store/action';
 import Toast from 'react-native-toast-message';
 import ToastContainer from '../../../Helping/ToastContainer';
+import LottieGif from '../../../Helping/LottieGif';
 
 const AllPlan = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -372,36 +373,9 @@ const AllPlan = ({navigation, route}) => {
                 borderTopLeftRadius: responsiveHeight(3),
                 paddingVertical: responsiveHeight(4.8),
               }}>
-              <View
-                // activeOpacity={1}
-                style={{
-                  // height: wp(28),
-                  width: 90,
-                  // backgroundColor: 'red',
-                  aspectRatio: 1,
-                  alignSelf: 'center',
-                  marginTop: responsiveHeight(1),
-                }}>
-                <Lottie
-                  source={assets.loader}
-                  autoPlay
-                  loop={true}
-                  resizeMode="cover"
-                  speed={1}
-                  colorFilter={[{color: 'red'}]}
-                />
-              </View>
+              <LottieGif />
               <Text
-                style={{
-                  color: 'white',
-                  fontSize: 23,
-                  fontFamily: 'Interstate-regular',
-                  width: responsiveWidth(75),
-                  textAlign: 'center',
-                  lineHeight: responsiveHeight(4),
-                  marginTop: responsiveHeight(4),
-                  textTransform: 'capitalize',
-                }}>
+                style={CssStyle.modelTextStyle}>
                 Exercise added to my plans Successfully
               </Text>
               <CustomButton

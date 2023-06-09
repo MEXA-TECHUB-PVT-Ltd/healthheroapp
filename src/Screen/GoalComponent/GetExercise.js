@@ -35,9 +35,16 @@ import {
   CompleteSevenByFourApi,
   StartSevenByFourApi,
 } from '../../services/SevenFour';
+import {
+  AdEventType,
+  InterstitialAd,
+  TestIds,
+} from 'react-native-google-mobile-ads';
 
 const GetExercise = ({navigation, route}) => {
-  const {item, indexNumber, itemIndex} = route.params ? route.params : '';
+  const {item, indexNumber, indexData, itemIndex} = route.params
+    ? route.params
+    : '';
   // console.log(item, indexNumber, 'item');
   // console.log(item, 'get exercise');
   const countdownRef = useRef();
@@ -176,6 +183,34 @@ const GetExercise = ({navigation, route}) => {
       removeBackPressListener();
     };
   }, []);
+  const adUnitId = TestIds.INTERSTITIAL;
+  const interStitial = InterstitialAd.createForAdRequest(adUnitId, {
+    requestNonPersonalizedAdsOnly: true,
+    keywords: ['fashion'],
+  });
+  useEffect(() => {
+    const unsubscribe = interStitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        index == 5 && indexData == 5 && interStitial.show();
+      },
+    );
+    interStitial.load();
+    return unsubscribe;
+  }, [indexData == 5]);
+
+  useEffect(() => {
+    const unsubscribe = interStitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        index == 1 && indexData == 1 && interStitial.show();
+      },
+    );
+    interStitial.load();
+    return unsubscribe;
+  }, [item]);
+  // console.log(index, indexData,item, 'sdfds');
+  
   const [countQuit, setCountQuit] = useState(10);
   return (
     <ScrollView

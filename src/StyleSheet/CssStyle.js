@@ -99,4 +99,14 @@ export default CssStyle = StyleSheet.create({
     marginVertical: responsiveHeight(2),
     marginLeft: responsiveWidth(1),
   },
+  modelTextStyle: {
+    color: 'white',
+    fontSize: 23,
+    fontFamily: 'Interstate-regular',
+    width: responsiveWidth(75),
+    textAlign: 'center',
+    lineHeight: responsiveHeight(4),
+    marginTop: responsiveHeight(4),
+    textTransform: 'capitalize',
+  },
 });

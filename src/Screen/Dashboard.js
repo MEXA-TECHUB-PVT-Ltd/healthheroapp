@@ -39,6 +39,7 @@ import {GetDietPlanIDApi} from '../services/DietPlan';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Diet_Id} from '../store/action';
 import ToastContainer from '../Helping/ToastContainer';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 
 const Dashboard = ({navigation}) => {
   useFocusEffect(
@@ -469,7 +470,7 @@ const Dashboard = ({navigation}) => {
             </View>
           )}
         </View>
-
+        
         <View
           style={[CssStyle.flexJustify, {marginVertical: responsiveHeight(2)}]}>
           <Text
@@ -655,6 +656,15 @@ const Dashboard = ({navigation}) => {
               </Text>
             </View>
           )}
+        </View>
+        <View style={{alignItems: 'center', marginTop: responsiveHeight(2)}}>
+          <BannerAd
+            unitId={TestIds.BANNER}
+            size={BannerAdSize.LARGE_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: true,
+            }}
+          />
         </View>
         <View
           style={{marginVertical: responsiveHeight(2), alignItems: 'center'}}>

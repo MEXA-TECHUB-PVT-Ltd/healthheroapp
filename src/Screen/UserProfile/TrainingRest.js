@@ -20,6 +20,7 @@ import {GetRestTimeApi, TakeTrainingRest} from '../../services/RestApi';
 import {useSelector} from 'react-redux';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
+import LottieGif from '../../Helping/LottieGif';
 
 const TrainingRest = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
@@ -185,36 +186,8 @@ const TrainingRest = ({navigation, route}) => {
                   paddingHorizontal: responsiveWidth(6),
                   alignItems: 'center',
                 }}>
-                <View
-                  // activeOpacity={1}
-                  style={{
-                    // height: wp(28),
-                    width: 90,
-                    // backgroundColor: 'red',
-                    aspectRatio: 1,
-                    alignSelf: 'center',
-                    marginTop: responsiveHeight(1),
-                  }}>
-                  <Lottie
-                    source={assets.loader}
-                    autoPlay
-                    loop={true}
-                    resizeMode="cover"
-                    speed={1}
-                    colorFilter={[{color: 'red'}]}
-                  />
-                </View>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 23,
-                    fontFamily: 'Interstate-regular',
-                    width: responsiveWidth(75),
-                    textAlign: 'center',
-                    lineHeight: responsiveHeight(4),
-                    marginTop: responsiveHeight(4),
-                    textTransform: 'capitalize',
-                  }}>
+                <LottieGif />
+                <Text style={CssStyle.modelTextStyle}>
                   Time Set Successfully
                 </Text>
 

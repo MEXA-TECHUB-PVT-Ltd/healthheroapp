@@ -30,6 +30,7 @@ import Timer from '../../assets/Icon';
 import {HelpingComponent} from '../../Helping/HelpingComponent';
 import {BaseUrl} from '../../Helping/BaseUrl';
 import Loader from '../../component/Loader';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 const Search = ({navigation}) => {
   const buttonMap = [
@@ -712,6 +713,16 @@ const Search = ({navigation}) => {
               {/* ); */}
               {/* }}
               /> */}
+            </View>
+            <View
+              style={{alignItems: 'center', marginTop: responsiveHeight(2)}}>
+              <BannerAd
+                unitId={TestIds.BANNER}
+                size={BannerAdSize.LARGE_BANNER}
+                requestOptions={{
+                  requestNonPersonalizedAdsOnly: true,
+                }}
+              />
             </View>
           </View>
         )}

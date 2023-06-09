@@ -89,7 +89,6 @@ const StartScreen = ({navigation}) => {
     labelSize: 13,
     currentStepLabelColor: '#3E94A6',
   };
-  console.log(activeIndex, 'hello');
   return (
     <>
       <StatusBar hidden={true} backgroundColor="white" />
@@ -98,7 +97,8 @@ const StartScreen = ({navigation}) => {
         index={activeIndex}
         showPagination
         data={dataImages}
-        scrollEnabled={false}
+        onChangeIndex={i => setActiveIndex(i.index)}
+        // scrollEnabled={false}
         renderItem={({item, index}) => (
           <View key={index} style={{flex: 1}}>
             <Image
@@ -123,7 +123,10 @@ const StartScreen = ({navigation}) => {
               <Text
                 style={{
                   color: 'white',
-                  fontSize: responsiveFontSize(5.67),
+                  fontSize:
+                    index == 2
+                      ? responsiveFontSize(5.58)
+                      : responsiveFontSize(5.67),
                   marginBottom: 4,
                   fontFamily: 'Interstate-bold',
                   marginLeft: responsiveWidth(1.2),
@@ -152,6 +155,7 @@ const StartScreen = ({navigation}) => {
           </View>
         )}
         paginationStyle={{}}
+        paginationTapDisabled={true}
         paginationActiveColor={AppColors.buttonText}
         paginationStyleItem={{
           width: responsiveWidth(26),

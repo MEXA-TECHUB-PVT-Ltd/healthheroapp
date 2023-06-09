@@ -22,6 +22,7 @@ import {useSelector} from 'react-redux';
 import {UpdateProfileApi} from '../../services/AuthScreen';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
+import LottieGif from '../../Helping/LottieGif';
 
 const MetricUnits = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -39,8 +40,6 @@ const MetricUnits = ({navigation, route}) => {
   );
   const heightUnit = [{item: 'ft'}, {item: 'in'}];
   const weightUnit = [{item: 'kg'}, {item: 'gm'}];
-
-
 
   const UpdateMetric = async () => {
     setLoadingUser(true);
@@ -210,7 +209,8 @@ const MetricUnits = ({navigation, route}) => {
                   ]}>
                   {data == 'Height'
                     ? heightUnit.map((item, index) => (
-                        <CustomButton key={index}
+                        <CustomButton
+                          key={index}
                           buttonText={item.item}
                           onPress={() => {
                             setHeightUnit(item.item);
@@ -229,7 +229,8 @@ const MetricUnits = ({navigation, route}) => {
                         />
                       ))
                     : weightUnit.map((item, index) => (
-                        <CustomButton key={index}
+                        <CustomButton
+                          key={index}
                           buttonText={item.item}
                           onPress={() => {
                             setWeightUnit(item.item);
@@ -294,36 +295,14 @@ const MetricUnits = ({navigation, route}) => {
                   paddingHorizontal: responsiveWidth(6),
                   alignItems: 'center',
                 }}>
-                <View
-                  // activeOpacity={1}
-                  style={{
-                    // height: wp(28),
-                    width: 125,
-                    // backgroundColor: 'red',
-                    aspectRatio: 1,
-                    alignSelf: 'center',
-                  }}>
-                  <Lottie
-                    source={assets.loader}
-                    autoPlay
-                    loop={true}
-                    resizeMode="cover"
-                    speed={1}
-                    // style={{width}}
-                    colorFilter={[{color: 'red'}]}
-                  />
-                </View>
+                <LottieGif />
                 <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 23,
-                    fontFamily: 'Interstate-regular',
-                    width: responsiveWidth(80),
-                    textAlign: 'center',
-                    lineHeight: responsiveHeight(4),
-                    marginTop: responsiveHeight(2),
-                    textTransform: 'capitalize',
-                  }}>
+                  style={[
+                    CssStyle.modelTextStyle,
+                    {
+                      width: responsiveWidth(80),
+                    },
+                  ]}>
                   Changes saved successfully
                 </Text>
                 <View style={[{alignItems: 'center'}]}>

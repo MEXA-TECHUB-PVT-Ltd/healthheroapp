@@ -35,6 +35,7 @@ import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../../component/Loader';
 import ToastContainer from '../../Helping/ToastContainer';
+import LottieGif from '../../Helping/LottieGif';
 
 const WorkoutReminder = ({navigation, route}) => {
   const {item, itemData} = route.params ? route.params : '';
@@ -334,36 +335,8 @@ const WorkoutReminder = ({navigation, route}) => {
                   paddingHorizontal: responsiveWidth(6),
                   alignItems: 'center',
                 }}>
-                <View
-                  // activeOpacity={1}
-                  style={{
-                    // height: wp(28),
-                    width: 90,
-                    // backgroundColor: 'red',
-                    aspectRatio: 1,
-                    alignSelf: 'center',
-                    marginTop: responsiveHeight(1),
-                  }}>
-                  <Lottie
-                    source={assets.loader}
-                    autoPlay
-                    loop={true}
-                    resizeMode="cover"
-                    speed={1}
-                    colorFilter={[{color: 'red'}]}
-                  />
-                </View>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 23,
-                    fontFamily: 'Interstate-regular',
-                    width: responsiveWidth(75),
-                    textAlign: 'center',
-                    lineHeight: responsiveHeight(4),
-                    marginTop: responsiveHeight(4),
-                    textTransform: 'capitalize',
-                  }}>
+                <LottieGif />
+                <Text style={CssStyle.modelTextStyle}>
                   Time Set Successfully
                 </Text>
 

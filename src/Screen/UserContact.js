@@ -44,6 +44,8 @@ import {
   Water_Id,
   Workout_Plan_Id,
 } from '../store/action';
+import LottieGif from '../Helping/LottieGif';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 
 const UserContact = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -490,7 +492,11 @@ const UserContact = ({navigation}) => {
         <GeneralSettings />
         <SupportUsComponent />
         <View
-          style={{alignItems: 'center', marginVertical: responsiveHeight(4.5)}}>
+          style={{
+            alignItems: 'center',
+            marginTop: responsiveHeight(4.5),
+            marginBottom: responsiveHeight(2.5),
+          }}>
           <CustomButton
             onPress={() => setOpenModel(true)}
             activeOpacity={1}
@@ -505,6 +511,15 @@ const UserContact = ({navigation}) => {
             buttonColor={AppColors.buttonText}
             style={{width: responsiveWidth(80)}}
             buttonText={'Logout'}
+          />
+        </View>
+        <View style={{alignItems: 'center', marginBottom: responsiveHeight(4)}}>
+          <BannerAd
+            unitId={TestIds.BANNER}
+            size={BannerAdSize.LARGE_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: true,
+            }}
           />
         </View>
       </View>
@@ -770,36 +785,14 @@ const UserContact = ({navigation}) => {
                   paddingHorizontal: responsiveWidth(6),
                   alignItems: 'center',
                 }}>
-                <View
-                  // activeOpacity={1}
-                  style={{
-                    // height: wp(28),
-                    width: 125,
-                    // backgroundColor: 'red',
-                    aspectRatio: 1,
-                    alignSelf: 'center',
-                  }}>
-                  <Lottie
-                    source={assets.loader}
-                    autoPlay
-                    loop={true}
-                    resizeMode="cover"
-                    speed={1}
-                    // style={{width}}
-                    colorFilter={[{color: 'red'}]}
-                  />
-                </View>
+                <LottieGif />
                 <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 23,
-                    fontFamily: 'Interstate-regular',
-                    width: responsiveWidth(75),
-                    textAlign: 'center',
-                    lineHeight: responsiveHeight(4),
-                    marginTop: responsiveHeight(2),
-                    textTransform: 'capitalize',
-                  }}>
+                  style={[
+                    CssStyle.modelTextStyle,
+                    {
+                      marginTop: responsiveHeight(2),
+                    },
+                  ]}>
                   Username Updated Successfully
                 </Text>
 

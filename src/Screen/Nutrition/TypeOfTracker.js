@@ -29,6 +29,7 @@ import {AddWaterApi, UpdateWaterApi} from '../../services/WaterTrackerApi';
 import {Water_Id} from '../../store/action';
 import moment from 'moment';
 import ToastContainer from '../../Helping/ToastContainer';
+import LottieGif from '../../Helping/LottieGif';
 
 const TypeOfTracker = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -354,36 +355,9 @@ const TypeOfTracker = ({navigation, route}) => {
                 </View>
               ) : (
                 <>
-                  <View
-                    // activeOpacity={1}
-                    style={{
-                      // height: wp(28),
-                      width: 120,
-                      // backgroundColor: 'red',
-                      aspectRatio: 1,
-                      alignSelf: 'center',
-                      marginTop: responsiveHeight(1),
-                    }}>
-                    <Lottie
-                      source={assets.loader}
-                      autoPlay
-                      loop={true}
-                      resizeMode="cover"
-                      speed={1}
-                      colorFilter={[{color: 'red'}]}
-                    />
-                  </View>
+                 <LottieGif />
                   <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 23,
-                      fontFamily: 'Interstate-regular',
-                      width: responsiveWidth(75),
-                      textAlign: 'center',
-                      lineHeight: responsiveHeight(4),
-                      marginTop: responsiveHeight(4),
-                      textTransform: 'capitalize',
-                    }}>
+                    style={CssStyle.modelTextStyle}>
                     water consumption added successfully
                   </Text>
                   <CustomButton

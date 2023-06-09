@@ -27,6 +27,7 @@ import {DayOfCount} from '../../Helping/DayOfCount';
 import DatePicker from 'react-native-date-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastContainer from '../../Helping/ToastContainer';
+import LottieGif from '../../Helping/LottieGif';
 
 const SetReminder = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -45,7 +46,7 @@ const SetReminder = ({navigation, route}) => {
     {day: 'Sa'},
     {day: 'S'},
   ];
-  const [selectItem, setSelectItem] = useState(item ? item?.day : []);
+  const [selectItem, setSelectItem] = useState([]);
 
   const getExistingData = async () => {
     try {
@@ -57,7 +58,7 @@ const SetReminder = ({navigation, route}) => {
     }
   };
   const storeData = async newData => {
-    console.log(newData);
+    // console.log(newData);
     try {
       const existingData = await getExistingData();
       const updatedData = [...existingData, newData];
@@ -246,7 +247,6 @@ const SetReminder = ({navigation, route}) => {
           moment(date).format('hh:mm:ss');
         }}
       />
-      {/* {console.log(apiTime, 'asdf')} */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -268,36 +268,8 @@ const SetReminder = ({navigation, route}) => {
                 paddingHorizontal: responsiveWidth(6),
                 alignItems: 'center',
               }}>
-              <View
-                // activeOpacity={1}
-                style={{
-                  // height: wp(28),
-                  width: 90,
-                  // backgroundColor: 'red',
-                  aspectRatio: 1,
-                  alignSelf: 'center',
-                  marginTop: responsiveHeight(1),
-                }}>
-                <Lottie
-                  source={assets.loader}
-                  autoPlay
-                  loop={true}
-                  resizeMode="cover"
-                  speed={1}
-                  colorFilter={[{color: 'red'}]}
-                />
-              </View>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 21,
-                  fontFamily: 'Interstate-regular',
-                  width: responsiveWidth(75),
-                  textAlign: 'center',
-                  lineHeight: responsiveHeight(4),
-                  marginTop: responsiveHeight(4),
-                  textTransform: 'capitalize',
-                }}>
+              <LottieGif />
+              <Text style={CssStyle.modelTextStyle}>
                 Workout Reminder Set Successfully
               </Text>
               <View style={[{alignItems: 'center'}]}>

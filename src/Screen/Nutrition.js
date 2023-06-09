@@ -34,6 +34,7 @@ import {GetWaterTracker, WaterTracking} from '../Helping/WaterTracking';
 import CustomButton from '../component/CustomButton';
 import {GetUserDetailApi} from '../services/AuthScreen';
 import ToastContainer from '../Helping/ToastContainer';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 const Nutrition = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -585,6 +586,16 @@ const Nutrition = ({navigation, route}) => {
                 </View>
               );
             })}
+            <View
+              style={{alignItems: 'center', marginBottom: responsiveHeight(4)}}>
+              <BannerAd
+                unitId={TestIds.BANNER}
+                size={BannerAdSize.LARGE_BANNER}
+                requestOptions={{
+                  requestNonPersonalizedAdsOnly: true,
+                }}
+              />
+            </View>
             <View
               style={[
                 CssStyle.flexJustify,

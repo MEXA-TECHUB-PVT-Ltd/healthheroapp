@@ -22,6 +22,7 @@ import {CustomModel} from '../component/CustomModel';
 import Lottie from 'lottie-react-native';
 import assets from '../assets';
 import {ResetPasswordApi} from '../services/AuthScreen';
+import LottieGif from '../Helping/LottieGif';
 
 const ResetPassword = ({navigation, route}) => {
   const {item} = route.params;
@@ -191,35 +192,15 @@ const ResetPassword = ({navigation, route}) => {
                   borderTopLeftRadius: responsiveHeight(3),
                   paddingVertical: responsiveHeight(4.8),
                 }}>
-                <View
-                  // activeOpacity={1}
-                  style={{
-                    // height: wp(28),
-                    width: 90,
-                    // backgroundColor: 'red',
-                    aspectRatio: 1,
-                    alignSelf: 'center',
-                    marginTop: responsiveHeight(1),
-                  }}>
-                  <Lottie
-                    source={assets.loader}
-                    autoPlay
-                    loop={true}
-                    resizeMode="cover"
-                    speed={1}
-                    colorFilter={[{color: 'red'}]}
-                  />
-                </View>
+                <LottieGif />
                 <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 23,
-                    fontFamily: 'Interstate-regular',
-                    width: responsiveWidth(60),
-                    textAlign: 'center',
-                    lineHeight: responsiveHeight(3),
-                    marginTop: responsiveHeight(4),
-                  }}>
+                  style={[
+                    CssStyle.modelTextStyle,
+                    {
+                      width: responsiveWidth(60),
+                      lineHeight: responsiveHeight(3),
+                    },
+                  ]}>
                   Password Updated Successfully
                 </Text>
                 <CustomButton

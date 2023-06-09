@@ -20,6 +20,7 @@ import {AppColors} from '../../../Helping/AppColor';
 import CssStyle from '../../../StyleSheet/CssStyle';
 import CustomButton from '../../../component/CustomButton';
 import {useSelector} from 'react-redux';
+import ToastContainer from '../../../Helping/ToastContainer';
 
 const SelectFood = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
@@ -128,6 +129,7 @@ const SelectFood = ({navigation, route}) => {
           paddingVertical={1}
         />
       </View>
+      <ToastContainer />
     </LinearGradient>
   );
 };

@@ -23,10 +23,12 @@ end
 
 target 'healthHeroMtechub' do
   config = use_native_modules!
-
+  
   # Flags change depending on the env values.
   flags = get_default_flags()
-
+  
+  pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
+  
   use_react_native!(
     :path => config[:reactNativePath],
     # Hermes is now enabled by default. Disable by setting this flag to false.
