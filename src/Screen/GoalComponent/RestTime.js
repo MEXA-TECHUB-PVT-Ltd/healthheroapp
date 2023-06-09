@@ -29,14 +29,17 @@ import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 const RestTime = ({navigation, route}) => {
   const {item} = route.params ? route.params : '';
   console.log(item, 'from exercise');
-  const countdownRef = useRef();
-
   const data = useSelector(data => data);
   const [loading, setLoading] = useState(false);
-  const [dataTakeFromRedux, setDataTakeFromRedux] = useState(
-    data.workoutPlanData,
-  );
+  // const [data.workoutPlanData, setDataTakeFromRedux] = useState(
+  //   data.workoutPlanData,
+  // );
   const [sec, setSec] = useState(12);
+  
+  useEffect(() => {
+    GetPlan();
+  }, [item]);
+
   const GetPlan = async () => {
     setLoading(true);
     try {
@@ -53,12 +56,7 @@ const RestTime = ({navigation, route}) => {
       console.log(error);
     }
   };
-  useEffect(() => {
-    GetPlan();
-  }, [data]);
-  useEffect(() => {
-    // countdownRef.current.start();
-  }, []);
+
   return loading ? (
     <Loader />
   ) : (
@@ -79,7 +77,7 @@ const RestTime = ({navigation, route}) => {
           style={{
             marginLeft: responsiveWidth(3),
             paddingTop: responsiveHeight(3),
-            flex: 1,
+            flex: 0.7,
           }}
           onPress={() => {
             navigation.navigate('GetExercise', {
@@ -89,7 +87,7 @@ const RestTime = ({navigation, route}) => {
           }}>
           <Icon name="chevron-back-outline" size={25} color={'white'} />
         </TouchableOpacity>
-        <View style={{alignItems: 'center', marginBottom: responsiveHeight(4)}}>
+        <View style={{alignItems: 'center', marginBottom: responsiveHeight(3)}}>
           <BannerAd
             unitId={TestIds.BANNER}
             size={BannerAdSize.LARGE_BANNER}
@@ -138,18 +136,18 @@ const RestTime = ({navigation, route}) => {
             }}>
             Next Exercise
           </Text>
-          {dataTakeFromRedux[item + 1] ? (
+          {data.workoutPlanData[item + 1] ? (
             <View
               style={[CssStyle.flexData, {marginBottom: responsiveHeight(2)}]}>
               <View style={{width: responsiveWidth(34)}}>
                 <Image
                   source={{
-                    uri: dataTakeFromRedux[item + 1]?.exercise_details
+                    uri: data.workoutPlanData[item + 1]?.exercise_details
                       ? `${BaseUrl}` +
-                        dataTakeFromRedux[item + 1]?.exercise_details[0]
+                        data.workoutPlanData[item + 1]?.exercise_details[0]
                           .animation
                       : `${BaseUrl}` +
-                        dataTakeFromRedux[item + 1]?.exersise_details
+                        data.workoutPlanData[item + 1]?.exersise_details
                           ?.animation,
                   }}
                   // resizeMode="contain"
@@ -169,10 +167,11 @@ const RestTime = ({navigation, route}) => {
                     fontFamily: 'Interstate-regular',
                     opacity: 0.8,
                   }}>
-                  {dataTakeFromRedux[item + 1]?.exersise_details !== null
-                    ? dataTakeFromRedux[item + 1]?.exercise_details
-                      ? dataTakeFromRedux[item + 1]?.exercise_details[0]?.title
-                      : dataTakeFromRedux[item + 1]?.exersise_details?.title
+                  {data.workoutPlanData[item + 1]?.exersise_details !== null
+                    ? data.workoutPlanData[item + 1]?.exercise_details
+                      ? data.workoutPlanData[item + 1]?.exercise_details[0]
+                          ?.title
+                      : data.workoutPlanData[item + 1]?.exersise_details?.title
                     : 'No title'}
                 </Text>
                 <Text
@@ -184,23 +183,23 @@ const RestTime = ({navigation, route}) => {
                     opacity: 0.5,
                     lineHeight: responsiveHeight(2),
                   }}>
-                  {dataTakeFromRedux[item + 1]?.exersise_details !== null
-                    ? dataTakeFromRedux[item + 1]?.exercise_details
-                      ? dataTakeFromRedux[
+                  {data.workoutPlanData[item + 1]?.exersise_details !== null
+                    ? data.workoutPlanData[item + 1]?.exercise_details
+                      ? data.workoutPlanData[
                           item + 1
                         ]?.exercise_details[0]?.description.slice(0, 72)
-                      : dataTakeFromRedux[
+                      : data.workoutPlanData[
                           item + 1
                         ]?.exersise_details?.description?.slice(0, 72)
                     : 'NO description'}
-                  {/* {dataTakeFromRedux[item + 1]?.exersise_details?.description
+                  {/* {data.workoutPlanData[item + 1]?.exersise_details?.description
                     ?.length > 71 && (
                     <Text
                       style={{color: 'blue'}}
                       onPress={() =>
                         Alert.alert(
                           'Information',
-                          dataTakeFromRedux[item + 1]?.exersise_details
+                          data.workoutPlanData[item + 1]?.exersise_details
                             ?.description,
                         )
                       }>
@@ -224,11 +223,11 @@ const RestTime = ({navigation, route}) => {
                         marginLeft: responsiveWidth(2),
                         opacity: 0.5,
                       }}>
-                      {!dataTakeFromRedux[item + 1]?.reps
-                        ? dataTakeFromRedux[item + 1]?.time
-                          ? dataTakeFromRedux[item + 1]?.time
+                      {!data.workoutPlanData[item + 1]?.reps
+                        ? data.workoutPlanData[item + 1]?.time
+                          ? data.workoutPlanData[item + 1]?.time
                           : '0'
-                        : dataTakeFromRedux[item + 1]?.reps}
+                        : data.workoutPlanData[item + 1]?.reps}
                     </Text>
                   </View>
                 </View>

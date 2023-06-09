@@ -42,24 +42,25 @@ import {
 } from 'react-native-google-mobile-ads';
 
 const GetExercise = ({navigation, route}) => {
+  const id = useSelector(data => data.id);
+  const workplanId = useSelector(data => data.workoutPlanId);
+
   const {item, indexNumber, indexData, itemIndex} = route.params
     ? route.params
     : '';
-  // console.log(item, indexNumber, 'item');
-  // console.log(item, 'get exercise');
   const countdownRef = useRef();
+  const [countQuit, setCountQuit] = useState(10);
   const dataRedux = useSelector(data => data.workoutPlanData);
+  const [index, setIndex] = useState(indexNumber ? indexNumber : 0);
   const [dataTakeFromRedux, setDataTakeFromRedux] = useState(
     dataRedux ? dataRedux : [],
   );
-  const [index, setIndex] = useState(indexNumber ? indexNumber : 0);
   const [takeNumberOfCircle, setTakeNumberOfCircle] = useState('');
   const [openModel, setOpenModel] = useState(false);
   const timeStr = dataTakeFromRedux[index]?.time;
   const timeObj = moment(timeStr, 'HH:mm:ss');
   const seconds =
     timeObj.hours() * 3600 + timeObj.minutes() * 60 + timeObj.seconds();
-  // console.log(seconds, 'find the seconds');
   const calculateY = (x, maxValue) => {
     // Convert x to a decimal value
     const xDecimal = x / 100;
@@ -71,23 +72,18 @@ const GetExercise = ({navigation, route}) => {
   };
   const x = 100; // The x value representing 50%
   const maxValue = seconds; // The maximum value corresponding to 100%
-
   const y = calculateY(x, maxValue);
   // console.log(y); // Output: 100
   const padDigits = number => {
     return number.toString().padStart(2, '0');
   };
-  // console.log(dataTakeFromRedux[index]?.time);
-  const id = useSelector(data => data.id);
-  const workplanId = useSelector(data => data.workoutPlanId);
-  const [loading, setLoading] = useState(false);
-
   const findPercentage = takeNumberOfCircle / seconds;
-  // console.log(findPercentage * 100, 'sdfsa');
+
   useEffect(() => {
     dataTakeFromRedux[index]?.time != '0' ? countdownRef.current.start() : {};
     setRunning(true);
   }, [item, index]);
+  
   const [running, setRunning] = useState(true);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const SevenByFour = useSelector(data => data);
@@ -105,6 +101,49 @@ const GetExercise = ({navigation, route}) => {
 
     return () => clearInterval(interval);
   }, [running]);
+
+  useEffect(() => {
+    const handleBackPress = () => {
+      setOpenModel(true), setCountQuit(10);
+      return true;
+    };
+
+    const addBackPressListener = () => {
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    };
+
+    const removeBackPressListener = () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+
+    addBackPressListener();
+
+    return () => {
+      removeBackPressListener();
+    };
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = interStitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        index == 5 && indexData == 5 && interStitial.show();
+      },
+    );
+    interStitial.load();
+    return unsubscribe;
+  }, [indexData == 5]);
+
+  useEffect(() => {
+    const unsubscribe = interStitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        index == 1 && indexData == 1 && interStitial.show();
+      },
+    );
+    interStitial.load();
+    return unsubscribe;
+  }, [item]);
 
   const formatTime = time => {
     const hours = Math.floor(time / 3600);
@@ -137,7 +176,6 @@ const GetExercise = ({navigation, route}) => {
       console.log(error);
     }
   };
-
   const CompleteSevenByFour = async () => {
     // setLoading(true);
     try {
@@ -163,55 +201,14 @@ const GetExercise = ({navigation, route}) => {
       console.log(error);
     }
   };
-  useEffect(() => {
-    const handleBackPress = () => {
-      setOpenModel(true), setCountQuit(10);
-      return true;
-    };
 
-    const addBackPressListener = () => {
-      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-    };
-
-    const removeBackPressListener = () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
-    };
-
-    addBackPressListener();
-
-    return () => {
-      removeBackPressListener();
-    };
-  }, []);
   const adUnitId = TestIds.INTERSTITIAL;
   const interStitial = InterstitialAd.createForAdRequest(adUnitId, {
     requestNonPersonalizedAdsOnly: true,
     keywords: ['fashion'],
   });
-  useEffect(() => {
-    const unsubscribe = interStitial.addAdEventListener(
-      AdEventType.LOADED,
-      () => {
-        index == 5 && indexData == 5 && interStitial.show();
-      },
-    );
-    interStitial.load();
-    return unsubscribe;
-  }, [indexData == 5]);
+  // console.log(running, index, 'sdfds');
 
-  useEffect(() => {
-    const unsubscribe = interStitial.addAdEventListener(
-      AdEventType.LOADED,
-      () => {
-        index == 1 && indexData == 1 && interStitial.show();
-      },
-    );
-    interStitial.load();
-    return unsubscribe;
-  }, [item]);
-  // console.log(index, indexData,item, 'sdfds');
-  
-  const [countQuit, setCountQuit] = useState(10);
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -369,8 +366,8 @@ const GetExercise = ({navigation, route}) => {
                       dataTakeFromRedux[index]?.exercise_details
                         ? CompleteSevenByFour()
                         : StartWorkoutForProgress())
-                    : (navigation.navigate('RestTime', {item: index}),
-                      setRunning(true));
+                    : (setRunning(false),
+                      navigation.navigate('RestTime', {item: index}));
               }}>
               <Icon
                 name="chevron-forward-outline"

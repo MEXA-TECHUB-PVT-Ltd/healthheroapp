@@ -417,8 +417,8 @@ const EnterFood = ({navigation, route}) => {
             </View>
           </View>
         </Modal>
-      </LinearGradient>
       <ToastContainer />
+      </LinearGradient>
     </TouchableWithoutFeedback>
   );
 };

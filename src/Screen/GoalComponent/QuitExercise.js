@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   responsiveFontSize,
   responsiveHeight,
@@ -13,6 +13,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import LinearGradient from 'react-native-linear-gradient';
 import {AppColors} from '../../Helping/AppColor';
+import {RewardedAd, TestIds} from 'react-native-google-mobile-ads';
 
 const QuitExercise = ({navigation}) => {
   const quitExerciseData = [
@@ -21,12 +22,22 @@ const QuitExercise = ({navigation}) => {
     {text: `Don't know how to do it`},
     {text: `Quit`},
   ];
+  // const rewarded = RewardedAd.createForAdRequest(TestIds.GAM_REWARDED, {
+  //   requestNonPersonalizedAdsOnly: true,
+  //   keywords: ['fashion', 'clothing'],
+  // });
+  // useEffect(() => {
+  //   rewarded.load();
+  //   console.log(rewarded.loaded);
+  // }, [!rewarded.loaded]);
+  // useEffect(() => {}, []);
+  // console.log(rewarded, 'hellos ');
   return (
     <ImageBackground
       style={{
         flex: 1,
       }}
-      imageStyle={{paddingTop: responsiveHeight(3),}}
+      imageStyle={{paddingTop: responsiveHeight(3)}}
       //   resizeMode="contain"
       source={require('../../assets/Health-Hero/backgroundOther.png')}>
       <LinearGradient
@@ -60,7 +71,10 @@ const QuitExercise = ({navigation}) => {
                   width: responsiveWidth(90),
                 },
               ]}
-              onPress={() => {navigation.navigate('main')}}>
+              onPress={() => {
+                 navigation.navigate('main')
+                // rewarded.load();
+              }}>
               <Text
                 style={{
                   color: 'white',
