@@ -38,11 +38,11 @@ const StartExercise = ({navigation, route}) => {
     setLoading(true);
     try {
       const result = await GetCountDownApi(id.id);
-      console.log(result);
+      // console.log(result);
       if (result.status == true) {
         setCountDownData(result.result.time);
         setLoading(false);
-        countdownRef.current.start();
+        // countdownRef.current.start();
       } else {
         console.error(result.message);
         setLoading(false);
@@ -89,7 +89,7 @@ const StartExercise = ({navigation, route}) => {
           style={{
             marginLeft: responsiveWidth(1),
             paddingTop: responsiveHeight(3),
-            flex: 1,
+            flex: 0.7,
           }}
           onPress={() => navigation.goBack()}>
           <Icon name="chevron-back-outline" size={25} color={'white'} />
@@ -134,8 +134,7 @@ const StartExercise = ({navigation, route}) => {
             size={120}
             strokeWidth={8}
             onComplete={e => {
-              navigation.navigate('GetExercise', {item: 'StartExercise'}),
-                setDataTime(true);
+              navigation.navigate('GetExercise'), setDataTime(true);
             }}
             colors={['#FF5100', '#FF510090', '#FF5100b1', '#FF5100e1']}>
             {({remainingTime}) => (
