@@ -22,16 +22,37 @@ const QuitExercise = ({navigation}) => {
     {text: `Don't know how to do it`},
     {text: `Quit`},
   ];
+  // const [rewardedAd,setRewardedAds]=useState(null)
   // const rewarded = RewardedAd.createForAdRequest(TestIds.GAM_REWARDED, {
   //   requestNonPersonalizedAdsOnly: true,
   //   keywords: ['fashion', 'clothing'],
   // });
+
   // useEffect(() => {
   //   rewarded.load();
-  //   console.log(rewarded.loaded);
-  // }, [!rewarded.loaded]);
-  // useEffect(() => {}, []);
-  // console.log(rewarded, 'hellos ');
+  //   if (rewarded.load()) {
+  //     rewarded.show();
+  //   } else {
+  //   }
+  // }, []);
+  const [rewarded, setRewarded] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => {
+    const ad = RewardedAd.createForAdRequest(TestIds.GAM_REWARDED, {
+      requestNonPersonalizedAdsOnly: true,
+      keywords: ['fashion', 'clothing'],
+    });
+    ad.onAdLoaded(() => {
+      setIsLoaded(true);
+    });
+    setRewarded(ad);
+  }, []);
+  useEffect(() => {
+    if (rewarded) {
+      rewarded.load();
+      rewarded.show();
+    }
+  }, [rewarded]);
   return (
     <ImageBackground
       style={{
@@ -72,7 +93,7 @@ const QuitExercise = ({navigation}) => {
                 },
               ]}
               onPress={() => {
-                 navigation.navigate('main')
+                navigation.navigate('main');
                 // rewarded.load();
               }}>
               <Text
