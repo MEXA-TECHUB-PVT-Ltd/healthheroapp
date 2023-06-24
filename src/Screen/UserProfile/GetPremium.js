@@ -26,6 +26,7 @@ import {CustomModelCenter} from '../../component/CustomModel';
 import {GetPremiumApi} from '../../services/AuthScreen';
 import Loader from '../../component/Loader';
 import LottieGif from '../../Helping/LottieGif';
+import InAppPurchase from './InAppPurchase';
 
 const GetPremium = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
@@ -57,6 +58,11 @@ const GetPremium = ({navigation, route}) => {
     {item: 'Monthly', id: '$80', month: 'mon'},
     {item: 'Yearly', id: '$700', month: 'year'},
   ];
+  const PaymentMethod=async()=>{
+    setOpenModel(false), setOpenRestartModel(true);
+    // const result=await InAppPurchase.makePurchase('com.tencent.ig')
+    // console.log(result,'ehadl ');
+  }
   const [review, setReview] = useState('Monthly');
   const [openModel, setOpenModel] = useState(false);
   return loading ? (
@@ -300,7 +306,7 @@ const GetPremium = ({navigation, route}) => {
             colorText="#cc66ff"
             // mode='outlined'
             onPress={() => {
-              setOpenModel(false), setOpenRestartModel(true);
+              PaymentMethod()
             }}
           />
         </View>

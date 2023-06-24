@@ -1,13 +1,14 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import StartScreen from '../StartUp/StartScreen';
+
 import Login from '../Auth/Login';
 import SignUp from '../Auth/SignUp';
 import ForgotPassword from '../Auth/ForgotPassword';
 import Verification from '../Auth/Verification';
 import ResetPassword from '../Auth/ResetPassword';
 import { UserNavigation } from './BottomTab';
+import StartScreen from '../Screen/UserProfile/StartScreen';
 
 const AuthNavigation = () => {
   const AuthStack = createStackNavigator();
