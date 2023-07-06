@@ -1,7 +1,9 @@
 import {
   Addition,
   DietPlanId,
+  EmailRegisteredId,
   EXERCISE,
+  PaymentSuccessfulId,
   PlanDataExerciseID,
   SevenByFourDayId,
   SevenByFourId,
@@ -53,4 +55,10 @@ export const SevenByFourDay = id => {
 
 export const PlanDataExercise = id => {
   return {type: PlanDataExerciseID, ExId: id};
+};
+export const EmailRegistered = id => {
+  return {type: EmailRegisteredId, ExId: id};
+};
+export const PaymentSuccessful = id => {
+  return {type: PaymentSuccessfulId, ExId: id};
 };

@@ -27,6 +27,8 @@ import {BaseUrl} from '../../Helping/BaseUrl';
 import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 
 const RestTime = ({navigation, route}) => {
+  const PaymentSuccessful = useSelector(item => item.PaymentSuccessfulId);
+
   const {item} = route.params ? route.params : '';
   console.log(item, 'from exercise');
   const data = useSelector(data => data);
@@ -35,7 +37,7 @@ const RestTime = ({navigation, route}) => {
   //   data.workoutPlanData,
   // );
   const [sec, setSec] = useState(12);
-  
+
   useEffect(() => {
     GetPlan();
   }, [item]);
@@ -87,15 +89,18 @@ const RestTime = ({navigation, route}) => {
           }}>
           <Icon name="chevron-back-outline" size={25} color={'white'} />
         </TouchableOpacity>
-        <View style={{alignItems: 'center', marginBottom: responsiveHeight(3)}}>
-          <BannerAd
-            unitId={TestIds.BANNER}
-            size={BannerAdSize.LARGE_BANNER}
-            requestOptions={{
-              requestNonPersonalizedAdsOnly: true,
-            }}
-          />
-        </View>
+        {!PaymentSuccessful && (
+          <View
+            style={{alignItems: 'center', marginBottom: responsiveHeight(3)}}>
+            <BannerAd
+              unitId={TestIds.BANNER}
+              size={BannerAdSize.LARGE_BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+            />
+          </View>
+        )}
         <View style={{alignItems: 'center', flex: 1}}>
           <CountdownCircleTimer
             isPlaying

@@ -63,6 +63,7 @@ const UserContact = ({navigation}) => {
   const [postFeedBack, setPostFeedBack] = useState(false);
   const id = useSelector(data => data.id);
   const [loadingFeedback, setLoadingFeedback] = useState(false);
+  const PaymentSuccessful = useSelector(item => item.PaymentSuccessfulId);
 
   const workOut = [
     {
@@ -513,15 +514,18 @@ const UserContact = ({navigation}) => {
             buttonText={'Logout'}
           />
         </View>
-        <View style={{alignItems: 'center', marginBottom: responsiveHeight(4)}}>
-          <BannerAd
-            unitId={TestIds.BANNER}
-            size={BannerAdSize.LARGE_BANNER}
-            requestOptions={{
-              requestNonPersonalizedAdsOnly: true,
-            }}
-          />
-        </View>
+        {!PaymentSuccessful && (
+          <View
+            style={{alignItems: 'center', marginBottom: responsiveHeight(4)}}>
+            <BannerAd
+              unitId={TestIds.BANNER}
+              size={BannerAdSize.LARGE_BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+            />
+          </View>
+        )}
       </View>
       <Modal
         animationType="slide"

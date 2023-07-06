@@ -30,7 +30,8 @@ import Timer from '../../assets/Icon';
 import {HelpingComponent} from '../../Helping/HelpingComponent';
 import {BaseUrl} from '../../Helping/BaseUrl';
 import Loader from '../../component/Loader';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+import {useSelector} from 'react-redux';
 
 const Search = ({navigation}) => {
   const buttonMap = [
@@ -38,6 +39,7 @@ const Search = ({navigation}) => {
     {text: 'Intermediate', nav: 'Intermediate'},
     {text: 'Advance', nav: 'Advance'},
   ];
+  const PaymentSuccessful = useSelector(item => item.PaymentSuccessfulId);
   const workoutPlan = [
     {text: 'Lorem ipsum', nav: 'WorkoutPlan'},
     {text: 'Lorem ipsum', nav: 'WorkoutPlan'},
@@ -714,16 +716,18 @@ const Search = ({navigation}) => {
               {/* }}
               /> */}
             </View>
-            <View
-              style={{alignItems: 'center', marginTop: responsiveHeight(2)}}>
-              <BannerAd
-                unitId={TestIds.BANNER}
-                size={BannerAdSize.LARGE_BANNER}
-                requestOptions={{
-                  requestNonPersonalizedAdsOnly: true,
-                }}
-              />
-            </View>
+            {!PaymentSuccessful && (
+              <View
+                style={{alignItems: 'center', marginTop: responsiveHeight(2)}}>
+                <BannerAd
+                  unitId={TestIds.BANNER}
+                  size={BannerAdSize.LARGE_BANNER}
+                  requestOptions={{
+                    requestNonPersonalizedAdsOnly: true,
+                  }}
+                />
+              </View>
+            )}
           </View>
         )}
       </View>

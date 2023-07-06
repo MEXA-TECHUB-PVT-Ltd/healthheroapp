@@ -23,7 +23,7 @@ import {AppColors} from '../Helping/AppColor';
 import {LoginApi, SignUpApi} from '../services/AuthScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
-import {Add} from '../store/action';
+import {Add, EmailRegistered} from '../store/action';
 import {CustomModelCenter} from '../component/CustomModel';
 
 const SignUp = ({navigation}) => {
@@ -47,6 +47,7 @@ const SignUp = ({navigation}) => {
         // await AsyncStorage.setItem('userName', result.result.);
         await AsyncStorage.setItem('userPassword', password);
         dispatch(Add(result.result.user_id));
+        dispatch(EmailRegistered(email));
         setEmail('');
         setPassword('');
         setResultData(result.result);

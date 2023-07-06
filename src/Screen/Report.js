@@ -49,6 +49,8 @@ const Report = ({navigation}) => {
   const [getNoOfDay, setGetNoOfDay] = useState('');
   const id = useSelector(data => data);
   // console.log(getWeeklyDataReport, 'check the week report');
+  const PaymentSuccessful = useSelector(item => item.PaymentSuccessfulId);
+
   const Card = [
     {
       desc: 'Kcal',
@@ -555,16 +557,21 @@ const Report = ({navigation}) => {
                 </View>
               </>
             </View>
-            <View
-              style={{alignItems: 'center', marginBottom: responsiveHeight(1)}}>
-              <BannerAd
-                unitId={TestIds.BANNER}
-                size={BannerAdSize.LARGE_BANNER}
-                requestOptions={{
-                  requestNonPersonalizedAdsOnly: true,
-                }}
-              />
-            </View>
+            {!PaymentSuccessful && (
+              <View
+                style={{
+                  alignItems: 'center',
+                  marginBottom: responsiveHeight(1),
+                }}>
+                <BannerAd
+                  unitId={TestIds.BANNER}
+                  size={BannerAdSize.LARGE_BANNER}
+                  requestOptions={{
+                    requestNonPersonalizedAdsOnly: true,
+                  }}
+                />
+              </View>
+            )}
             <View style={styles.dailyButton}>
               <View style={{}}>
                 <View style={[CssStyle.flexJustify, {}]}>
@@ -1156,19 +1163,21 @@ const Report = ({navigation}) => {
                           borderBottomWidth: 1,
                         }}
                       />
-                      <View
-                        style={{
-                          alignItems: 'center',
-                          marginBottom: responsiveHeight(1),
-                        }}>
-                        <BannerAd
-                          unitId={TestIds.BANNER}
-                          size={BannerAdSize.LARGE_BANNER}
-                          requestOptions={{
-                            requestNonPersonalizedAdsOnly: true,
-                          }}
-                        />
-                      </View>
+                      {!PaymentSuccessful && (
+                        <View
+                          style={{
+                            alignItems: 'center',
+                            marginBottom: responsiveHeight(1),
+                          }}>
+                          <BannerAd
+                            unitId={TestIds.BANNER}
+                            size={BannerAdSize.LARGE_BANNER}
+                            requestOptions={{
+                              requestNonPersonalizedAdsOnly: true,
+                            }}
+                          />
+                        </View>
+                      )}
                     </View>
                   );
                 }}

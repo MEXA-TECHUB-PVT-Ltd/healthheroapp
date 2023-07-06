@@ -34,6 +34,8 @@ const StartExercise = ({navigation, route}) => {
   const {item} = route.params ? route.params : 0;
   const [countDownData, setCountDownData] = useState(9);
   const id = useSelector(data => data);
+  const PaymentSuccessful = useSelector(item => item.PaymentSuccessfulId);
+
   const GetCategory = async () => {
     setLoading(true);
     try {
@@ -94,15 +96,18 @@ const StartExercise = ({navigation, route}) => {
           onPress={() => navigation.goBack()}>
           <Icon name="chevron-back-outline" size={25} color={'white'} />
         </TouchableOpacity>
-        <View style={{alignItems: 'center', marginBottom: responsiveHeight(4)}}>
-          <BannerAd
-            unitId={TestIds.BANNER}
-            size={BannerAdSize.LARGE_BANNER}
-            requestOptions={{
-              requestNonPersonalizedAdsOnly: true,
-            }}
-          />
-        </View>
+        {!PaymentSuccessful && (
+          <View
+            style={{alignItems: 'center', marginBottom: responsiveHeight(4)}}>
+            <BannerAd
+              unitId={TestIds.BANNER}
+              size={BannerAdSize.LARGE_BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+            />
+          </View>
+        )}
         <View style={{alignItems: 'center', flex: 1}}>
           {/* <ProgressCircle
             percent={countdownRef * 40}

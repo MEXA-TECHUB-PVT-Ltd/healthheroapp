@@ -199,6 +199,87 @@ export const GetPremiumApi = async id => {
     return error;
   }
 };
+export const GetProductApi = async () => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      // body: JSON.stringify({
+      //   user_id: id,
+      //   user_name: name,
+      //   device_id: deviceId,
+      //   gender: gender,
+      //   focusedAreas: focusedArea,
+      //   height: height,
+      //   weight: weight,
+      //   weight_unit: weightUnit,
+      //   height_unit: heightUnit,
+      // }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrl}payment/getProducts`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+export const GetPricingApi = async price => {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      // body: JSON.stringify({
+      //   user_id: id,
+      //   user_name: name,
+      //   device_id: deviceId,
+      //   gender: gender,
+      //   focusedAreas: focusedArea,
+      //   height: height,
+      //   weight: weight,
+      //   weight_unit: weightUnit,
+      //   height_unit: heightUnit,
+      // }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrl}payment/getProductPricings?product_id=${price}`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+export const InitiatePaymentApi = async (props) => {
+  try {
+    const requestOptions = {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: props.id,
+        userEmail: props.email,
+        price_id: props.priceId,
+      }).toString(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await fetch(
+      `${BaseUrl}payment/initiate_payment`,
+      requestOptions,
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
 export const GetUserDetailApi = async id => {
   try {
     const requestOptions = {

@@ -15,33 +15,31 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import SwiperFlatList from 'react-native-swiper-flatlist';
-import CssStyle from '../StyleSheet/CssStyle';
 import {useFocusEffect} from '@react-navigation/native';
 const {width, height} = Dimensions.get('screen');
 import LinearGradient from 'react-native-linear-gradient';
-import Icon from '../assets/icon1';
-import CustomButton from '../component/CustomButton';
-import {AppColors} from '../Helping/AppColor';
+import { AppColors } from '../../Helping/AppColor';
+import CustomButton from '../../component/CustomButton';
 
 const StartScreen = ({navigation}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const dataImages = [
     {
-      image: require('../assets/first.png'),
+      image: require('../../assets/first.png'),
       headerText: 'Lets Explore The Fitness',
       description:
         'Engage in fitness challenges designed to push your limits and provide extra motivation.',
       color: 'blue',
     },
     {
-      image: require('../assets/second.png'),
+      image: require('../../assets/second.png'),
       headerText: 'Healthy workout plan',
       description:
         'Consistency is key! Set your workout schedule and choose the days and times that work best for you',
       color: 'blue',
     },
     {
-      image: require('../assets/third.png'),
+      image: require('../../assets/third.png'),
       headerText: 'Get Diet & nutrition plans',
       description:
         'Track your strength gains, identify areas for improv- ement, and challenge yourself to reach new milestones',
