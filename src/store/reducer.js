@@ -14,6 +14,7 @@ const initialState = {
   PlanDataExerciseID: [],
   EmailRegisteredId: null,
   PaymentSuccessfulId: null,
+  PaymentPriceId: null,
 };
 const mainReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -47,6 +48,8 @@ const mainReducer = (state = initialState, action) => {
       return {...state, EmailRegisteredId: action.ExId};
     case 'PaymentSuccessfulId':
       return {...state, PaymentSuccessfulId: action.ExId};
+      case 'PaymentPriceId':
+      return {...state, PaymentPriceId: action.ExId};
     default:
       break;
   }

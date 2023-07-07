@@ -83,7 +83,7 @@ const GetExercise = ({navigation, route}) => {
     dataTakeFromRedux[index]?.time != '0' ? countdownRef.current.start() : {};
     setRunning(true);
   }, [item, index]);
-  
+
   const [running, setRunning] = useState(true);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const SevenByFour = useSelector(data => data);
@@ -122,6 +122,7 @@ const GetExercise = ({navigation, route}) => {
       removeBackPressListener();
     };
   }, []);
+  const PaymentSuccessful = useSelector(item => item.PaymentSuccessfulId);
 
   useEffect(() => {
     const unsubscribe = interStitial.addAdEventListener(
@@ -130,10 +131,9 @@ const GetExercise = ({navigation, route}) => {
         index == 5 && indexData == 5 && interStitial.show();
       },
     );
-    interStitial.load();
+    !PaymentSuccessful && interStitial.load();
     return unsubscribe;
   }, [indexData == 5]);
-
   useEffect(() => {
     const unsubscribe = interStitial.addAdEventListener(
       AdEventType.LOADED,
@@ -141,7 +141,7 @@ const GetExercise = ({navigation, route}) => {
         index == 1 && indexData == 1 && interStitial.show();
       },
     );
-    interStitial.load();
+    !PaymentSuccessful && interStitial.load();
     return unsubscribe;
   }, [item]);
 
