@@ -11,3 +11,5 @@ export const SevenByFourDayId = 'SevenByFourDayId';
 export const SevenByFourId = 'SevenByFourId';
 export const SevenByFourWeekId = 'SevenByFourWeekId';
 export const PlanDataExerciseID = 'PlanDataExerciseID';
+export const EmailRegisteredId = 'EmailRegisteredId';
+export const PaymentSuccessfulId = 'PaymentSuccessfulId';

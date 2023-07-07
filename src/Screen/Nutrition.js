@@ -374,6 +374,7 @@ const Nutrition = ({navigation, route}) => {
       });
     });
   };
+  const PaymentSuccessful=useSelector((item)=>item.PaymentSuccessfulId)
 
   useEffect(() => {
     GetDailyWaterRecord();
@@ -586,7 +587,7 @@ const Nutrition = ({navigation, route}) => {
                 </View>
               );
             })}
-            <View
+            {!PaymentSuccessful&& <View
               style={{alignItems: 'center', marginBottom: responsiveHeight(4)}}>
               <BannerAd
                 unitId={TestIds.BANNER}
@@ -595,7 +596,7 @@ const Nutrition = ({navigation, route}) => {
                   requestNonPersonalizedAdsOnly: true,
                 }}
               />
-            </View>
+            </View>}
             <View
               style={[
                 CssStyle.flexJustify,

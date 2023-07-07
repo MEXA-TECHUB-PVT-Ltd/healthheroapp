@@ -12,6 +12,8 @@ const initialState = {
   SevenByFourWeekId: null,
   SevenByFourDayId: null,
   PlanDataExerciseID: [],
+  EmailRegisteredId: null,
+  PaymentSuccessfulId: null,
 };
 const mainReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -41,6 +43,10 @@ const mainReducer = (state = initialState, action) => {
       return {...state, SevenByFourDayId: action.ExId};
     case 'PlanDataExerciseID':
       return {...state, PlanDataExerciseID: action.ExId};
+    case 'EmailRegisteredId':
+      return {...state, EmailRegisteredId: action.ExId};
+    case 'PaymentSuccessfulId':
+      return {...state, PaymentSuccessfulId: action.ExId};
     default:
       break;
   }

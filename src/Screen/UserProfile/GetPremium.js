@@ -23,46 +23,113 @@ import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 import {TakeCountDownApi} from '../../services/CountDownApi';
 import {CustomModelCenter} from '../../component/CustomModel';
-import {GetPremiumApi} from '../../services/AuthScreen';
+import {
+  GetPremiumApi,
+  GetPricingApi,
+  GetProductApi,
+  InitiatePaymentApi,
+} from '../../services/AuthScreen';
 import Loader from '../../component/Loader';
 import LottieGif from '../../Helping/LottieGif';
 import InAppPurchase from './InAppPurchase';
 
 const GetPremium = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
-  const [time, setTime] = useState(13);
-  const id = useSelector(data => data.id);
+  const [getPriceProductId, setGetPriceProductId] = useState('');
+
   const [premiumData, setPremiumData] = useState('');
-  const AddCountDown = async () => {
+  // const AddCountDown = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const result = await GetPremiumApi(id);
+  //     console.log(result.result.user_subscription);
+  //     if (result.status == true) {
+  //       setLoading(false);
+  //       setPremiumData(true);
+  //     } else {
+  //       console.error(result.message);
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.log(error);
+  //   }
+  // };
+  const GetProduct = async () => {
     setLoading(true);
     try {
-      const result = await GetPremiumApi(id);
-      console.log(result.result.user_subscription);
+      const result = await GetProductApi();
+      console.log(result.result, 'product');
       if (result.status == true) {
-        setLoading(false);
-        setPremiumData(true);
+        // setLoading(false);
+        // setPremiumData(true);
+        GetPricing(result.result[0].id);
       } else {
         console.error(result.message);
         setLoading(false);
       }
     } catch (error) {
-      setLoading;
+      setLoading(false);
       console.log(error);
     }
   };
+  const GetPricing = async price => {
+    // setLoading(true);
+    try {
+      const result = await GetPricingApi(price);
+      console.log(result, 'pricing');
+      if (result.status == true) {
+        setLoading(false);
+        // setPremiumData(true);
+        const obj = result.result;
+        const itemData = obj.filter(item => item.lookup_key);
+        console.log(itemData[0].id, 'filter');
+        setGetPriceProductId(itemData[0].id);
+      } else {
+        console.error(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+  // const InitiatePayment = async () => {
+  //   // setLoading(true);
+  //   try {
+  //     const result = await InitiatePaymentApi(id, email, getPriceProductId);
+  //     console.log(result, 'initiate payment');
+  //     if (result.status == true) {
+  //       // setLoading(false);
+  //       // setPremiumData(true);
+  //       const obj = result.result;
+  //       const itemData = obj.filter(item => item.lookup_key);
+  //       console.log(itemData[0].id, 'filter');
+  //     } else {
+  //       console.error(result.message);
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.log(error);
+  //   }
+  // };
+
   useEffect(() => {
-    AddCountDown();
+    GetProduct();
+    // AddCountDown();
   }, []);
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const premiumQuality = [
     {item: 'Monthly', id: '$80', month: 'mon'},
     {item: 'Yearly', id: '$700', month: 'year'},
   ];
-  const PaymentMethod=async()=>{
-    setOpenModel(false), setOpenRestartModel(true);
+  const PaymentMethod = async () => {
+    setOpenModel(false);
+    navigation.navigate('PaymentScreen', {priceId: getPriceProductId});
     // const result=await InAppPurchase.makePurchase('com.tencent.ig')
     // console.log(result,'ehadl ');
-  }
+  };
   const [review, setReview] = useState('Monthly');
   const [openModel, setOpenModel] = useState(false);
   return loading ? (
@@ -123,7 +190,7 @@ const GetPremium = ({navigation, route}) => {
                     },
                   ]}
                   onPress={() => {
-                    setReview(item.item), setOpenModel(true);
+                    setReview(item.item), navigation.navigate('PaymentScreen');
                   }}>
                   <Text
                     style={{
@@ -306,7 +373,7 @@ const GetPremium = ({navigation, route}) => {
             colorText="#cc66ff"
             // mode='outlined'
             onPress={() => {
-              PaymentMethod()
+              PaymentMethod();
             }}
           />
         </View>

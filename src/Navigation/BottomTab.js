@@ -63,6 +63,7 @@ import TypeOfTracker from '../Screen/Nutrition/TypeOfTracker';
 import Report from '../Screen/Report';
 import CreateFood from '../Screen/Nutrition/Food/CreateFood';
 import EditWeeklyGoal from '../Screen/Report/EditWeeklyGoal';
+import PaymentScreen from '../Screen/UserProfile/PaymentScreen';
 
 export const BottomTab = () => {
   const Bottom = createBottomTabNavigator();
@@ -218,6 +219,7 @@ export const UserNavigation = () => {
       <Stack.Screen name="CreatePlan" component={CreatePlan} />
       <Stack.Screen name="StartExercise" component={StartExercise} />
       <Stack.Screen name="RestTime" component={RestTime} />
+      <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
       <Stack.Screen name="QuitExercise" component={QuitExercise} />
       <Stack.Screen name="CountDownTime" component={CountDownTime} />
       <Stack.Screen name="Faq" component={Faq} />

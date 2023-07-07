@@ -15,6 +15,7 @@ import NoImage from '../assets/noImageRed';
 import {BaseUrl} from './BaseUrl';
 import CssStyle from '../StyleSheet/CssStyle';
 import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+import { useSelector } from 'react-redux';
 
 export const FlatListData = ({category, navigation}) => {
   let firstArray = [];
@@ -23,6 +24,7 @@ export const FlatListData = ({category, navigation}) => {
     firstArray = category.slice(0, 4);
     secondArray = category.slice(4, category.length);
   }
+  const PaymentSuccessful=useSelector((item)=>item.PaymentSuccessfulId)
   return (
     <View style={{marginTop: responsiveHeight(3)}}>
       {category.length > 0 ? (
@@ -32,19 +34,23 @@ export const FlatListData = ({category, navigation}) => {
             showsVerticalScrollIndicator={false}
             numColumns={2}
             ListFooterComponent={
-              <View
-                style={{
-                  alignItems: 'center',
-                  marginVertical: responsiveHeight(2),
-                }}>
-                <BannerAd
-                  unitId={TestIds.BANNER}
-                  size={BannerAdSize.LARGE_BANNER}
-                  requestOptions={{
-                    requestNonPersonalizedAdsOnly: true,
-                  }}
-                />
-              </View>
+              !PaymentSuccessful ? (
+                <View
+                  style={{
+                    alignItems: 'center',
+                    marginVertical: responsiveHeight(2),
+                  }}>
+                  <BannerAd
+                    unitId={TestIds.BANNER}
+                    size={BannerAdSize.LARGE_BANNER}
+                    requestOptions={{
+                      requestNonPersonalizedAdsOnly: true,
+                    }}
+                  />
+                </View>
+              ) : (
+                <Text></Text>
+              )
             }
             renderItem={({item, index}) => {
               return (

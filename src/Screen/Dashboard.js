@@ -37,9 +37,10 @@ import Loader from '../component/Loader';
 import Geolocation from '@react-native-community/geolocation';
 import {GetDietPlanIDApi} from '../services/DietPlan';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Diet_Id} from '../store/action';
+import {Diet_Id, EmailRegistered, PaymentSuccessful} from '../store/action';
 import ToastContainer from '../Helping/ToastContainer';
 import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+import {PaymentSuccessfulId} from '../store/type';
 
 const Dashboard = ({navigation}) => {
   useFocusEffect(
@@ -79,9 +80,13 @@ const Dashboard = ({navigation}) => {
     setLoading(true);
     try {
       const result = await GetUserDetailApi(id);
+      console.log(result);
       if (result.status == true) {
         setLoading(false);
         setUserDetailData(result.result);
+
+        dispatch(EmailRegistered(result.result.email));
+        dispatch(PaymentSuccessful(result.result.subscribe_status));
       } else {
         console.error(result.message);
         WeatherApi();
@@ -145,6 +150,7 @@ const Dashboard = ({navigation}) => {
       console.log(error);
     }
   };
+  const PaymentSuccessfulAd = useSelector(item => item.PaymentSuccessfulId);
   const IntermediateApi = async () => {
     try {
       const result = await GetIntermediate();
@@ -470,7 +476,7 @@ const Dashboard = ({navigation}) => {
             </View>
           )}
         </View>
-        
+
         <View
           style={[CssStyle.flexJustify, {marginVertical: responsiveHeight(2)}]}>
           <Text
@@ -657,15 +663,17 @@ const Dashboard = ({navigation}) => {
             </View>
           )}
         </View>
-        <View style={{alignItems: 'center', marginTop: responsiveHeight(2)}}>
-          <BannerAd
-            unitId={TestIds.BANNER}
-            size={BannerAdSize.LARGE_BANNER}
-            requestOptions={{
-              requestNonPersonalizedAdsOnly: true,
-            }}
-          />
-        </View>
+        {!PaymentSuccessfulAd && (
+          <View style={{alignItems: 'center', marginTop: responsiveHeight(2)}}>
+            <BannerAd
+              unitId={TestIds.BANNER}
+              size={BannerAdSize.LARGE_BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+            />
+          </View>
+        )}
         <View
           style={{marginVertical: responsiveHeight(2), alignItems: 'center'}}>
           <CustomButton

@@ -23,7 +23,7 @@ import {AppColors} from '../Helping/AppColor';
 import {LoginApi} from '../services/AuthScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
-import {Add} from '../store/action';
+import {Add, EmailRegistered} from '../store/action';
 import {useFocusEffect} from '@react-navigation/native';
 
 const Login = ({navigation}) => {
@@ -58,6 +58,7 @@ const Login = ({navigation}) => {
         await AsyncStorage.setItem('userPassword', password);
         await AsyncStorage.setItem('userID', `${result.result.user_id}`);
         dispatch(Add(result.result.user_id));
+        dispatch(EmailRegistered(email));
         setLoading(false);
         setEmail('');
         setPassword('');
