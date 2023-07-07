@@ -41,6 +41,8 @@ import Share from 'react-native-share';
 import {
   DataWorkPlan,
   Diet_Id,
+  PaymentPrice,
+  PaymentSuccessful,
   Water_Id,
   Workout_Plan_Id,
 } from '../store/action';
@@ -63,7 +65,7 @@ const UserContact = ({navigation}) => {
   const [postFeedBack, setPostFeedBack] = useState(false);
   const id = useSelector(data => data.id);
   const [loadingFeedback, setLoadingFeedback] = useState(false);
-  const PaymentSuccessful = useSelector(item => item.PaymentSuccessfulId);
+  const PaymentSuccessfulAd = useSelector(item => item.PaymentSuccessfulId);
 
   const workOut = [
     {
@@ -160,7 +162,7 @@ const UserContact = ({navigation}) => {
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
       text: 'Remove ads',
-      nav: '',
+      nav: 'GetPremium',
     },
     {
       icon: <Icon name="chevron-forward-outline" size={25} color="white" />,
@@ -247,7 +249,7 @@ const UserContact = ({navigation}) => {
                   : item.text == 'Rate us'
                   ? {}
                   : item.text == 'Remove ads'
-                  ? navigation.navigate('GoPremium')
+                  ? navigation.navigate('GetPremium')
                   : navigation.navigate('PrivacyPolicy');
               }}
               key={index}>
@@ -287,6 +289,8 @@ const UserContact = ({navigation}) => {
     dispatch(Diet_Id(null));
     dispatch(Workout_Plan_Id(null));
     dispatch(DataWorkPlan([]));
+    dispatch(PaymentPrice(null))
+
     navigation.navigate('Auth', {screen: 'Login'});
     setOpenModel(false);
   };
@@ -319,6 +323,8 @@ const UserContact = ({navigation}) => {
         // console.log(result);
         if (result.status == true) {
           setLoadingUser(false);
+        dispatch(PaymentSuccessful(result.result.subscribe_status));
+
           setUserDetailData(result.result);
         } else {
           console.error(result.message);
@@ -514,7 +520,7 @@ const UserContact = ({navigation}) => {
             buttonText={'Logout'}
           />
         </View>
-        {!PaymentSuccessful && (
+        {!PaymentSuccessfulAd && (
           <View
             style={{alignItems: 'center', marginBottom: responsiveHeight(4)}}>
             <BannerAd

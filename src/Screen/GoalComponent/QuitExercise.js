@@ -37,22 +37,22 @@ const QuitExercise = ({navigation}) => {
   // }, []);
   const [rewarded, setRewarded] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  useEffect(() => {
-    const ad = RewardedAd.createForAdRequest(TestIds.GAM_REWARDED, {
-      requestNonPersonalizedAdsOnly: true,
-      keywords: ['fashion', 'clothing'],
-    });
-    ad.onAdLoaded(() => {
-      setIsLoaded(true);
-    });
-    setRewarded(ad);
-  }, []);
-  useEffect(() => {
-    if (rewarded) {
-      rewarded.load();
-      rewarded.show();
-    }
-  }, [rewarded]);
+  // useEffect(() => {
+  //   const ad = RewardedAd.createForAdRequest(TestIds.GAM_REWARDED, {
+  //     requestNonPersonalizedAdsOnly: true,
+  //     keywords: ['fashion', 'clothing'],
+  //   });
+  //   ad.onAdLoaded(() => {
+  //     setIsLoaded(true);
+  //   });
+  //   setRewarded(ad);
+  // }, []);
+  // useEffect(() => {
+  //   if (rewarded) {
+  //     rewarded.load();
+  //     rewarded.show();
+  //   }
+  // }, [rewarded]);
   return (
     <ImageBackground
       style={{

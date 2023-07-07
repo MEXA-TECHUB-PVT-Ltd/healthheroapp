@@ -13,3 +13,4 @@ export const SevenByFourWeekId = 'SevenByFourWeekId';
 export const PlanDataExerciseID = 'PlanDataExerciseID';
 export const EmailRegisteredId = 'EmailRegisteredId';
 export const PaymentSuccessfulId = 'PaymentSuccessfulId';
+export const PaymentPriceId = 'PaymentPriceId';

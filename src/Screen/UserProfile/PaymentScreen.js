@@ -64,7 +64,6 @@ import CustomButton from '../../component/CustomButton';
 
 const PaymentScreen = ({navigation, route}) => {
   const [loading1, setLoading1] = useState(false);
-  const {priceId} = route.params ? route.params : '';
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const id = useSelector(data => data.id);
   const email = useSelector(data => data.EmailRegisteredId);
@@ -89,7 +88,8 @@ const PaymentScreen = ({navigation, route}) => {
     }
   };
   const [currentPaymentIntent, setCurrentPaymentIntent] = useState('');
-
+  const priceId = useSelector(item => item.PaymentPriceId);
+  console.log(priceId);
   useEffect(() => {
     initializePaymentSheet();
   }, []);
@@ -180,7 +180,7 @@ const PaymentScreen = ({navigation, route}) => {
       //     value: 'Something went wrong',
       //     color: 'red',
       //   });
-    //   setVisible(true);
+      //   setVisible(true);
     }
   };
 
@@ -190,18 +190,17 @@ const PaymentScreen = ({navigation, route}) => {
     const {error} = res;
     console.log('res  :  ', res);
     if (error?.code == 'Canceled') {
-        console.log('user cancel .......');
-        navigation?.goBack();
+      console.log('user cancel .......');
+      navigation?.goBack();
     } else if (error) {
-        Alert.alert(`Error code: ${error.code}`, error.message);
+      Alert.alert(`Error code: ${error.code}`, error.message);
     } else {
-        setOpenRestartModel(true);
+      setOpenRestartModel(true);
 
       // Alert.alert("Success", "Your order is confirmed!");
       // navigation.goBack();
     }
   };
-
 
   return (
     <LinearGradient

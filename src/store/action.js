@@ -3,6 +3,7 @@ import {
   DietPlanId,
   EmailRegisteredId,
   EXERCISE,
+  PaymentPriceId,
   PaymentSuccessfulId,
   PlanDataExerciseID,
   SevenByFourDayId,
@@ -61,4 +62,7 @@ export const EmailRegistered = id => {
 };
 export const PaymentSuccessful = id => {
   return {type: PaymentSuccessfulId, ExId: id};
+};
+export const PaymentPrice = id => {
+  return {type: PaymentPriceId, ExId: id};
 };

@@ -18,7 +18,7 @@ import {AppColors} from '../../Helping/AppColor';
 import CssStyle from '../../StyleSheet/CssStyle';
 import CustomButton from '../../component/CustomButton';
 import {TakeTrainingRest} from '../../services/RestApi';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Lottie from 'lottie-react-native';
 import assets from '../../assets';
 import {TakeCountDownApi} from '../../services/CountDownApi';
@@ -32,6 +32,7 @@ import {
 import Loader from '../../component/Loader';
 import LottieGif from '../../Helping/LottieGif';
 import InAppPurchase from './InAppPurchase';
+import { PaymentPrice } from '../../store/action';
 
 const GetPremium = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
@@ -73,6 +74,7 @@ const GetPremium = ({navigation, route}) => {
       console.log(error);
     }
   };
+  const dispatch=useDispatch()
   const GetPricing = async price => {
     // setLoading(true);
     try {
@@ -85,6 +87,7 @@ const GetPremium = ({navigation, route}) => {
         const itemData = obj.filter(item => item.lookup_key);
         console.log(itemData[0].id, 'filter');
         setGetPriceProductId(itemData[0].id);
+        dispatch(PaymentPrice(itemData[0].id))
       } else {
         console.error(result.message);
         setLoading(false);
@@ -117,18 +120,14 @@ const GetPremium = ({navigation, route}) => {
 
   useEffect(() => {
     GetProduct();
-    // AddCountDown();
   }, []);
   const [openRestartModel, setOpenRestartModel] = useState(false);
   const premiumQuality = [
     {item: 'Monthly', id: '$80', month: 'mon'},
     {item: 'Yearly', id: '$700', month: 'year'},
   ];
-  const PaymentMethod = async () => {
-    setOpenModel(false);
-    navigation.navigate('PaymentScreen', {priceId: getPriceProductId});
-    // const result=await InAppPurchase.makePurchase('com.tencent.ig')
-    // console.log(result,'ehadl ');
+  const PaymentMethod = () => {
+    navigation.navigate('PaymentScreen');
   };
   const [review, setReview] = useState('Monthly');
   const [openModel, setOpenModel] = useState(false);
